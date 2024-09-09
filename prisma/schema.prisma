@@ -1,0 +1,561 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  
+}
+
+
+
+
+
+
+// Tunipod db
+
+enum UserType {
+// Sellers who create and manage products
+    SELLER
+
+    // Administrators who manage the platform
+    ADMIN
+
+    // General users who browse and purchase products
+    USER
+
+    // Factories responsible for printing the products
+    FACTORY
+}
+
+enum OrderStatus {
+  DELIVERED
+  PROCESSING
+  REFUSED
+  CANCELED
+}
+enum OrderType {
+  CANCELED
+  CONFIRMED
+  NOT_CONFIRMED
+}
+
+
+model User {
+  id              String  @id @default(cuid())
+  username        String
+  email           String @unique
+  emailVerified   Boolean @default(false)
+  password        String
+  verificationToken String @unique
+  resetPassToken    String? @unique
+
+
+  userType        UserType @default(USER)
+
+  orders          Order[]
+  preOrder        PreOrderPreview[]
+
+
+  clientDesigns     ClientDesign[]
+
+
+  isUserBanned      Boolean @default(false)
+
+  store           Store?
+
+  favList         FavList?
+
+  storeLikes      Like[]
+
+  cart            Cart?
+
+
+
+
+
+
+
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime? @updatedAt
+}
+
+model Platform {
+  id              String  @id @default(cuid())
+  userId          String  @unique
+  profit          Int     @default(0)
+
+  topBarContent   String[] 
+  totalIncome     Int     @default(0)
+
+  closeStoreCreation Boolean     @default(false)
+
+  maxProductSellerProfit     Int     @default(20)
+  ExtraDesignForProductPrice Int     @default(5)
+  maxDesignSellerProfit      Int     @default(10)
+  platformDesignProfit       Int     @default(3)
+  clientDesignPrice           Int    @default(5)
+  shippingFee                Int     @default(7)
+  maxProductQuantity          Int     @default(5)
+  
+}
+
+model Notification {
+    id              String  @id @default(cuid())
+
+    storeId         String  
+    store           Store        @relation(fields: [storeId], references: [id], onDelete: Cascade)
+
+    sender          String
+    content         String
+
+    isViewed        Boolean @default(false)
+
+    createdAt       DateTime @default(now())
+    updatedAt       DateTime? @updatedAt
+}
+
+
+model Store {
+  id              String  @id @default(cuid())
+
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id] , onDelete: Cascade)
+
+  userPhoneNumber String?
+
+
+  storeName       String @unique
+  logoUrl         String
+  storeBio        String?
+  facebookLink    String?
+  instagramLink   String?
+
+  revenue         Float         @default(0)
+  receivedPayments  Float         @default(0)
+  totalSales      Int           @default(0)
+
+  products        Product[]
+  designs         SellerDesign[]
+
+
+  notifications   Notification[]
+
+  totalRejectedElements  Int      @default(0)
+
+  totalLikes      Int           @default(0)
+
+  likes           Like[]
+
+  paymentRequest  PaymentRequest[]
+
+  createdAt       DateTime       @default(now())
+  updatedAt      DateTime?      @updatedAt
+}
+
+
+
+
+
+model Like {
+  id        String   @id @default(cuid())
+  userId    String
+  storeId   String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  store     Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Product {
+  id              String       @id @default(cuid())
+  category        String
+  colors          String[]
+  croppedFrontProduct   String[]
+  croppedBackProduct    String[]
+
+  collection        Collection  @default(CASUAL_WEAR)
+
+  title           String
+  description     String
+  tags            String[]
+  oldPrice        Int?
+  price           Int
+  basePrice       Int           @default(0)
+  sellerProfit    Int           @default(0)
+
+  isDiscountEnabled   Boolean        @default(false)
+  discount        Float?         
+
+
+
+  isProductAccepted Boolean      @default(false)
+
+  isProductRefused Boolean      @default(false)
+
+  revenue         Float         @default(0)
+  totalSales      Int           @default(0)
+
+  topSales        Boolean       @default(false)
+  NewProduct      Boolean       @default(true)
+
+
+
+  frontDesignId   String? 
+  frontDesign     SellerDesign? @relation("FrontDesign", fields: [frontDesignId], references: [id], onDelete: Cascade)
+
+  backDesignId    String? 
+  backDesign      SellerDesign? @relation("BackDesign", fields: [backDesignId], references: [id], onDelete: Cascade)
+
+  storeId         String  
+  store           Store        @relation(fields: [storeId], references: [id], onDelete: Cascade)
+ 
+  favLists        FavList[]     @relation("FavListProducts")
+
+  cartProducts    CartProduct[] 
+  order           OrderItem[]
+
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime?      @updatedAt
+}
+
+
+enum Collection {
+  STREET_WEAR
+  CINEMATIC_WEAR
+  ANIME_WEAR
+  WALL_ART_WEAR
+  SPORTS_WEAR
+  CARTOON_WEAR
+  QUOTES_WEAR
+  TUNISIAN_TRADITION_WEAR
+  CASUAL_WEAR
+}
+
+
+model CartProduct {
+  id              String  @id @default (cuid())
+
+  productId       String?
+  product         Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  price           Int?
+  quantity        Int?
+  color           String?
+  size            String?
+  category        String?
+  productImg      String[]
+
+
+  cartId          String? 
+  cart            Cart? @relation(fields: [cartId], references: [id], onDelete: Cascade)
+}
+
+model Cart {
+  id              String  @id @default(cuid())
+
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id] , onDelete: Cascade)
+
+  selectedProducts   CartProduct[]
+
+}
+
+
+model FavList {
+  id              String  @id @default(cuid())
+
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id] , onDelete: Cascade)
+
+  products        Product[]  @relation("FavListProducts")
+
+}
+
+model SellerDesign {
+  id              String  @id @default(cuid())
+  name            String
+  width           Int
+  height          Int
+  imageUrl        String
+  tags            String[]
+  price           Int           @default(3)
+  sellerProfit    Int           @default(1)
+
+  collection        Collection  @default(CASUAL_WEAR)
+
+
+  isDesignForSale Boolean      @default(false)
+
+  isDesignAccepted Boolean      @default(false)
+
+  isDesignRefused Boolean      @default(false)
+
+
+  revenue         Float         @default(0)
+  totalSales      Int           @default(0)
+
+  frontOrders     OrderItem[]   @relation("FrontDesign")
+  backOrders      OrderItem[]   @relation("BackDesign")
+
+  frontProducts   Product[]   @relation("FrontDesign")
+  backProducts    Product[]   @relation("BackDesign")
+
+  storeId         String 
+  store           Store  @relation(fields: [storeId], references: [id] , onDelete: Cascade)
+
+  createdAt       DateTime @default(now())
+}
+
+model ClientDesign {
+  id              String  @id @default(cuid())
+  name            String?
+  width           Int?
+  height          Int?
+  imageUrl        String
+
+  userId          String?  
+  user            User?    @relation(fields: [userId], references: [id] , onDelete: Cascade)
+
+
+
+  frontOrders   OrderItem[]   @relation("ClientFrontDesign")
+  backOrders    OrderItem[]   @relation("ClientBackDesign")
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime? @updatedAt
+}
+
+model Order {
+  id              String  @id @default(cuid())
+  amount          Float
+  isPaid          Boolean @default(false)
+  status          OrderStatus @default(PROCESSING)
+  type            OrderType  @default(NOT_CONFIRMED)
+
+  isSellerOrder  Boolean     @default(false)
+  sellerStore    String?
+
+
+  isClientMadeOrder Boolean  @default(false)
+
+  updated           Boolean   @default(false)
+
+  printed           Boolean   @default(false)
+  
+  
+  userId          String  
+  user            User    @relation(fields: [userId], references: [id] ,onDelete: Cascade)
+
+  shippingFee     Int     @default(7)
+
+  shippingAddress String
+  phoneNumber     String
+  clientName      String? 
+
+  orderItems      OrderItem[]
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime? @updatedAt
+}
+
+model OrderItem {
+  id                    String  @id @default(cuid())
+
+  orderId               String 
+  order                 Order   @relation(fields: [orderId], references: [id] , onDelete: Cascade)
+
+
+  frontsellerDesignId   String?
+  frontsellerDesign     SellerDesign? @relation("FrontDesign",fields: [frontsellerDesignId], references: [id],onDelete: Cascade )
+
+  backsellerDesignId    String?  
+  backsellerDesign      SellerDesign? @relation("BackDesign",fields: [backsellerDesignId], references: [id],onDelete: Cascade )
+
+  frontclientDesignId   String?
+  frontclientDesign     ClientDesign? @relation("ClientFrontDesign",fields: [frontclientDesignId], references: [id],onDelete: Cascade )
+
+  backclientDesignId    String?
+  backclientDesign      ClientDesign? @relation("ClientBackDesign",fields: [backclientDesignId], references: [id],onDelete: Cascade )
+
+  productId             String? 
+  product               Product? @relation(fields: [productId], references: [id] , onDelete: Cascade)
+
+  productPrice          Int
+  productTitle          String?
+  quantity              Int
+  productColor          String
+  productSize           String
+  productCategory       String
+  capturedMockup        String[]
+
+
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime? @updatedAt
+}
+
+
+model PreOrderPreview {
+    id                    String  @id @default(cuid())
+
+    userId                String 
+    user                  User    @relation(fields: [userId] , references: [id] , onDelete: Cascade)
+
+    frontsellerDesignId   String?
+    backsellerDesignId    String?
+
+    frontclientDesign   String?  
+    backclientDesign    String?
+ 
+    amount                Int
+    productPrice          Int
+    quantity              Int
+    productColor          String
+    productSize           String
+    productCategory       String
+    capturedMockup        String[]
+
+
+    createdAt             DateTime @default(now())
+    updatedAt             DateTime? @updatedAt
+}
+
+
+// category section : 
+model Category {
+  id              String          @id @default(cuid())
+  bacProduct      Boolean         @default(false)
+  label           String
+  quality         String[]
+  value           String
+  price           Float
+  discount        Float?         
+  colors          Color[]
+  sizes           Size[]
+  frontBorders    FrontBorder[]
+  backBorders     BackBorder[]     
+}
+
+model Color {
+  id              String          @id @default(cuid())
+  label           String
+  value           String
+  tw              String
+  frontImageUrl   String
+  backImageUrl    String
+  categoryId      String
+  category        Category        @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+}
+
+model Size {
+  id              String          @id @default(cuid())
+  label           String
+  value           String
+  categoryId      String
+  category        Category        @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+}
+
+model FrontBorder {
+  id              String          @id @default(cuid())
+  label           String
+  value           String
+  categoryId      String
+  category        Category     @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+}
+
+model BackBorder {
+  id              String          @id @default(cuid())
+  label           String
+  value           String
+  categoryId      String
+  category        Category      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// payment schema : 
+model PaymentRequest {
+  id             String      @id @default(cuid())
+  storeId        String      
+  store            Store     @relation(fields: [storeId], references: [id] , onDelete: Cascade)
+
+
+  method         PaymentMethod
+  cardHolder     String?
+  cardPhoneNumber String?
+  bankAccount    String?
+  bankName       String?
+  accountHolder  String?
+  requestedAmount Float      @default(0)
+  status         PaymentStatus @default(PENDING)
+
+
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime?   @updatedAt
+}
+
+enum PaymentMethod {
+  D17
+  Flouci
+  BankDeposit
+}
+
+enum PaymentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+
+
+
+

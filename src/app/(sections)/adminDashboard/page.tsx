@@ -1,0 +1,154 @@
+/* eslint-disable react/no-unescaped-entities */
+'use server'
+
+import {
+  Activity,
+  ArrowUpRight,
+  CircleUser,
+  CreditCard,
+  DollarSign,
+  Heart,
+  Menu,
+  Package2,
+  Palette,
+  Search,
+  Shirt,
+  Store,
+  Users,
+} from "lucide-react"
+
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+
+import Link from "next/link";
+
+import { cn } from "@/lib/utils";
+import { fetchProducts, getPlatform, getTotalCounts, getUser } from "@/actions/actions";
+import React from "react"
+import OrderedDesigns from "@/components/sellerDashboard/OrderedDesigns"
+import OrderedProducts from "@/components/sellerDashboard/OrderedProducts"
+import { db } from "@/db"
+import UsersTable from "@/components/adminDashboard/UsersTable"
+
+
+
+
+import { unstable_noStore as noStore } from "next/cache"
+
+
+export default async function Page() {
+    noStore()
+    
+    const count = await getTotalCounts()
+    const user = await getUser()
+    const platform = await getPlatform(user!.id)
+
+  return (
+    <>
+
+
+  
+         <h1 className="text-2xl font-semibold">Admin Dashboard</h1>
+         {count.awaitingActionProductCount + count.awaitingActionDesignCount > 0 && (
+         <Link 
+         href={"/adminDashboard/stores"}>
+          <Button variant={"link"}>
+            You Have {count.awaitingActionProductCount + count.awaitingActionDesignCount} elements awaiting action
+            </Button>
+          </Link>
+         )}
+
+
+
+  
+
+
+      <div className="flex mt-4 flex-col gap-5 w-full">
+
+    <section className="grid w-full grid-cols-1 gap-4 gap-x-8 transition-all sm:grid-cols-2 xl:grid-cols-4">
+
+
+          <Card x-chunk="dashboard-01-chunk-0">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Total Revenue
+              </CardTitle>
+              <DollarSign className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{(platform!.profit)!.toFixed(2)} TND</div>
+              <p className="text-gray-600 text-xs mt-2">Total Income : <span className="font-bold">{platform?.totalIncome?.toFixed(2)} TND</span></p>
+
+            </CardContent>
+          </Card>
+          <Card x-chunk="dashboard-01-chunk-1">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Total Products
+              </CardTitle>
+              <Shirt className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{count.productCount} products</div>
+            </CardContent>
+          </Card>
+          <Card x-chunk="dashboard-01-chunk-3">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Total Designs
+              </CardTitle>
+              <Palette className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{count.sellerDesignCount} designs</div>
+            </CardContent>
+          </Card>
+          <Card x-chunk="dashboard-01-chunk-4">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Total Stores
+                </CardTitle>
+              <Store className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{count.storeCount} stores</div>
+            </CardContent>
+          </Card>
+
+         <UsersTable/>
+
+
+      
+    </section>
+
+
+
+
+
+  </div>
+
+  </>
+  );
+}
+
