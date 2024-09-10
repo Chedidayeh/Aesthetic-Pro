@@ -1,11 +1,10 @@
 import {PrismaAdapter} from "@auth/prisma-adapter"
-import authConfig from "@/auth.config"
 import { db } from "@/db"
 import { getUserById } from "./userData/user"
 import NextAuth, { type DefaultSession } from "next-auth"
 import { JWT } from "next-auth/jwt"
 import { UserType } from "@prisma/client"
-
+import authConfig from "./auth.config"
 // Extend the `Session` interface to include `role` and `id`
 declare module "next-auth" {
   interface Session {
@@ -45,7 +44,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return session
     },
     async jwt ({token}) {
-      console.log("token",token)
       if(!token.sub) return token
       const existingUser = await getUserById(token.sub)
       if(!existingUser) return token

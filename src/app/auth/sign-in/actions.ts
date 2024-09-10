@@ -84,14 +84,17 @@ export const resetPassword = async (user: User) => {
         });
 
         // Send verification token email
-        await sendResetPassEmail(user.email, user.username, resetPassToken);
-
+        await sendResetPassEmail(user.email, user.username || user.name, resetPassToken);
         return true;
     } catch (error) {
         console.error("Error resetting password:", error);
         return false;
     }
 };
+
+export const GoogleLogin = async () => {
+    await signIn("google", { redirectTo: "/home" });
+}
 
 
 

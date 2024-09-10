@@ -33,13 +33,13 @@ import { FormError } from "@/components/form-error"
 import { FormSuccess } from "@/components/form-success"
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes"
 import { ArrowRight, Eye, EyeOff, Loader } from "lucide-react"
-import { login, resetPassword } from "./actions"
+import { GoogleLogin, login, resetPassword } from "./actions"
 import { useRouter } from "next/navigation"
 import { getUserByEmail } from "@/userData/user"
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/store/reducers/reducers"
 import { saveRedirectUrl } from "@/store/actions/action"
-import { signIn } from 'next-auth/react';
+import { signIn } from "@/auth"
 const emailSchema = z.string().email("Invalid email address");
 
 const Page = () => {
@@ -117,7 +117,7 @@ const Page = () => {
 
 
   const handleClick = async () => {
-     await signIn("google");
+   await GoogleLogin()
   };
 
 

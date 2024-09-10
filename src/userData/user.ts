@@ -12,6 +12,23 @@ export const  getUserByEmail = async(email : string)=>{
     }
 }
 
+//check if user logged in with google 
+
+export const checkGoogleLoggedInUser = async (email : string) => {
+    try {
+        const user = await db.user.findUnique({
+            where: { email },
+            select : {
+                accounts : true
+            }
+            })
+            return !user?.accounts;
+
+            } catch {
+                return null;
+     }
+}
+
 export const  getUserById = async(id : string)=>{
     try{
         const user = await db.user.findUnique({

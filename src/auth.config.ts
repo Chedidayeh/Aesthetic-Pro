@@ -4,11 +4,13 @@ import { getUserByEmail } from "./userData/user"
 import bcrypt from 'bcryptjs';
 import Google from "next-auth/providers/google"
 import { LoginSchema } from "./app/auth/schemas";
+
+
 export  default {
     providers: [
         Google({
-            clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            clientId: process.env.GOOGLE_CLIENT_ID as string,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
         }),
         Credentials({
             async authorize(credentials) {
