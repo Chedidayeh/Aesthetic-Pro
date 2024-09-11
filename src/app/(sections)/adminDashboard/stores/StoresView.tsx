@@ -325,7 +325,7 @@ interface StoresViewProps {
         <TableCell className="text-left">{store.storeName}</TableCell>
 
         {/* User Name cell */}
-        <TableCell className="hidden md:table-cell text-left">{store.user.isUserBanned ?  "User Banned" : store.user.userType === "SELLER" ? store.user.username  : "No User"}</TableCell>
+        <TableCell className="hidden md:table-cell text-left">{store.user.isUserBanned ?  "User Banned" : store.user.userType === "SELLER" ? store.user.name  : "No User"}</TableCell>
 
         {/* User Phone Number cell */}
         <TableCell className="hidden lg:table-cell text-left">{store.userPhoneNumber ?? 'N/A'}</TableCell>

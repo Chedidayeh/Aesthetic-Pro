@@ -44,7 +44,7 @@ import LoadingState from "@/components/LoadingState"
 import { getStoreByUserId, getUser } from "@/actions/actions"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/components/ui/use-toast"
-import { addTopBarContent, deleteTopBarContent, updatePlatformData, updateStoreCreation } from "./actions"
+import { addTopBarContent, deleteTopBarContent, updateCreation, updatePlatformData, updateStoreCreation } from "./actions"
 import { Platform } from '@prisma/client';
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
@@ -66,6 +66,9 @@ const SettingsView = ({ platform }: ViewProps ) => {
     const [newContent, setNewContent] = useState("");
 
     const [isStoreCreationEnabled, setIsStoreCreationEnabled] = useState(!platform.closeStoreCreation);
+
+    const [isCreationEnabled, setIsCreationEnabled] = useState(!platform.closeCreation);
+
 
     const [updatedPlatformData, setUpdatedPlatformData] = useState({
         maxProductSellerProfit: platform.maxProductSellerProfit,
@@ -161,6 +164,27 @@ const SettingsView = ({ platform }: ViewProps ) => {
         }
     };
 
+    const handleToggleCreation = async () => {
+      try {
+          setOpen(true);
+          const res = await updateCreation(platform.id, isCreationEnabled);
+          if (res) {
+              setIsCreationEnabled(!isCreationEnabled);
+              setOpen(false);
+              toast({ title: 'Creation Updated Successfully', variant: 'default' });
+              router.refresh();
+          } else {
+              setOpen(false);
+              toast({ title: 'Failed to Update Creation', variant: 'destructive' });
+              router.refresh();
+          }
+      } catch (error) {
+          console.log(error);
+          setOpen(false);
+          toast({ title: 'Error', variant: 'destructive' });
+      }
+  };
+
 
     const handleUpdatePlatformData = async () => {
         try {
@@ -200,6 +224,9 @@ const SettingsView = ({ platform }: ViewProps ) => {
                     </Link>
                     <Link href="#" className={`font-semibold ${selectedSection === "StoreCreation" ? "text-primary" : ""}`} onClick={() => setSelectedSection("StoreCreation")}>
                         Store Creation
+                    </Link>
+                    <Link href="#" className={`font-semibold ${selectedSection === "Creation" ? "text-primary" : ""}`} onClick={() => setSelectedSection("Creation")}>
+                        Creation
                     </Link>
                     <Link href="#" className={`font-semibold ${selectedSection === "data" ? "text-primary" : ""}`} onClick={() => setSelectedSection("data")}>
                         Platform Data
@@ -293,6 +320,29 @@ const SettingsView = ({ platform }: ViewProps ) => {
                                                 onCheckedChange={handleToggleStoreCreation}
                                             />
                                             <Label htmlFor="store-creation-switch">{!platform.closeStoreCreation ? "Disable Store Creation" : "Enable Store Creation"}</Label>
+                                        </div>    
+                           </CardContent>
+
+                        </Card>
+
+                    )}
+
+                    {selectedSection === "Creation" && (
+                            <Card x-chunk="dashboard-04-chunk-1">
+                            <CardHeader>
+                                <CardTitle>Creation</CardTitle>
+                                <CardDescription>
+                                    Configure Creation: 
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                            <div className="flex items-center space-x-2">
+                                            <Switch
+                                                id="creation-switch"
+                                                checked={isCreationEnabled}
+                                                onCheckedChange={handleToggleCreation}
+                                            />
+                                            <Label htmlFor="creation-switch">{!platform.closeCreation ? "Disable Creation" : "Enable Creation"}</Label>
                                         </div>    
                            </CardContent>
 

@@ -2,6 +2,7 @@ import { getPlatformForTheWebsite } from '@/actions/actions'
 import Marquee from 'react-fast-marquee'
 
 const TopBar = async () => {
+  
   const platform = await getPlatformForTheWebsite()
 
   return (

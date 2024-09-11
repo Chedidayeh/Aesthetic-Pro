@@ -1,11 +1,7 @@
-/* eslint-disable jsx-a11y/alt-text */
-/* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unescaped-entities */
 'use client'
 import NextImage from 'next/image'
 import {  RocketIcon } from 'lucide-react'
-import {  useState } from 'react'
-import Confetti from 'react-dom-confetti'
 import { Separator } from "@/components/ui/separator"
 
 

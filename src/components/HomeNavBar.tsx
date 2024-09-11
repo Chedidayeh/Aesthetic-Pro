@@ -30,11 +30,12 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
-import { getAllCategories, getUser } from '@/actions/actions'
+import { getUser } from '@/actions/actions'
 import { HamburgerMenuIcon } from '@radix-ui/react-icons'
 import UserProfile from './UserProfile'
 import { ModeToggle } from './ModeToggle'
 import { db } from '@/db'
+
 
 const Navbar = async () => {
 
@@ -65,7 +66,7 @@ const Navbar = async () => {
             <SheetTrigger className="md:hidden">
               <HamburgerMenuIcon />
             </SheetTrigger>
-            <SheetContent side="left" className='w-[60%]'>
+            <SheetContent side="left" className='w-[60%] mt-4'>
               {/* Middle Section for small devices */}
               <div className='md:hidden flex flex-col mt-16 space-y-2'>
                 <DialogClose>
@@ -100,30 +101,6 @@ const Navbar = async () => {
               Bac Products✨
             </Link>
                 </DialogClose>
-
-                {/* <DialogClose>
-                <Link href="/fripMarket" className={buttonVariants({
-              size: 'sm',
-              variant: 'ghost',
-              className: "hover:text-purple-500"
-            })}>
-              <Shirt size={15} className='mr-1' />
-              Frip Market ✨
-            </Link>
-                </DialogClose> */}
-
-
-
-                {/* <DialogClose>
-                <Link href="/GraduationProducts" className={buttonVariants({
-              size: 'sm',
-              variant: 'ghost',
-              className: "hover:text-yellow-500"
-            })}>
-              <GraduationCap size={15} className='mr-1' />
-              Graduation Products✨
-            </Link>
-                </DialogClose> */}
                 {
                   isAdmin && (
             <DialogClose>
@@ -213,41 +190,6 @@ const Navbar = async () => {
               <BookOpenText size={15} className='mr-1' />
               About Us ✨
             </Link>
-
-
-
-
-
-            {/* <Link href="/Bac" className={buttonVariants({
-              size: 'sm',
-              variant: 'ghost',
-              className: "hover:text-yellow-500"
-            })}>
-              <Box size={15} className='mr-1' />
-              Bac Products ✨
-            </Link> */}
-
-            {/* <div className='h-8 w-px bg-zinc-200 hidden sm:block' /> */}
-
-            {/* <Link href="/fripMarket" className={buttonVariants({
-              size: 'sm',
-              variant: 'ghost',
-              className: "hover:text-purple-500"
-            })}>
-              <Shirt size={15} className='mr-1' />
-              Frip Market ✨
-            </Link>  */}
-
-            {/* <div className='h-8 w-px bg-zinc-200 hidden sm:block' />
-
-            <Link href="/GraduationProducts" className={buttonVariants({
-              size: 'sm',
-              variant: 'ghost',
-              className: "hover:text-yellow-500"
-            })}>
-              <GraduationCap size={15} className='mr-1' />
-              Graduation Products ✨
-            </Link> */}
           </div>
 
                     {/* Right Section */}
@@ -308,14 +250,14 @@ const Navbar = async () => {
 
                  {/* User Profile */}
 
-            <UserProfile user={user!} platform={platform} />
+            <UserProfile user={user!} platform={platform!} />
             <ModeToggle/>
 
           </div>
 
           {/* User Profile for small devices */}
           <div className='md:hidden flex items-center space-x-2'>
-            <UserProfile user={user!} platform={platform} />
+            <UserProfile user={user!} platform={platform!} />
             <ModeToggle/>
           </div>
 

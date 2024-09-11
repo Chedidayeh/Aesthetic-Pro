@@ -8,6 +8,9 @@ export async function getNotificationsForStore(storeId :string) {
         where: {
           storeId: storeId,
         },
+        orderBy  : {
+          createdAt: 'desc',
+        }
       });
   
       return notifications;
@@ -51,3 +54,19 @@ export async function markNotificationAsViewed(notificationId : string) {
       throw error;
     }
   }
+
+  export async function markAllNotificationsAsViewed() {
+    try {
+      const updatedNotifications = await db.notification.updateMany({
+        data: {
+          isViewed: true,
+        },
+      });
+  
+      return updatedNotifications;
+    } catch (error) {
+      console.error('Error marking notifications as viewed:', error);
+      throw error;
+    }
+  }
+  

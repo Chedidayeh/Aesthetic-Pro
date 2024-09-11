@@ -31,10 +31,8 @@ import ProductSlider from '@/components/PodProducts/ProductSlider'
 import HeroSection from '@/components/PodProducts/HeroSection'
 import { fetchDiscountProductsDeals } from './discountDeals/actions'
 
-
-
-
 export default async function Page() {
+
   const newProducts = await fetchNewProducts();
   const productsGroupedByCollection  = await getProductsGroupedByCollection()
   const bestSellingProducts = await fetchBestSellingProducts();

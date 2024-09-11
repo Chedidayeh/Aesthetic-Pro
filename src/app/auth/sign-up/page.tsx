@@ -3,6 +3,7 @@
 
 import * as React from "react"
 import Link from 'next/link'
+import NextImage from "next/image"
 
 import { Button, buttonVariants } from "@/components/ui/button"
 
@@ -24,6 +25,10 @@ import { FormError } from "@/components/form-error"
 import { FormSuccess } from "@/components/form-success"
 import { register } from "./actions"
 import { ArrowRight, Eye, EyeOff } from "lucide-react"
+import { GoogleLogin } from "../sign-in/actions"
+import { useDispatch, useSelector } from "react-redux"
+import { RootState } from "@/store/reducers/reducers"
+import { saveRedirectUrl } from "@/store/actions/action"
 const Page = () => {
   
   const [error , setError] = useState<string | undefined>("")
@@ -36,6 +41,8 @@ const Page = () => {
     setShowPassword(!showPassword);
   };
 
+  const redirectUrl = useSelector((state: RootState) => state.url);
+  const dispatch = useDispatch();
   
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
@@ -58,6 +65,13 @@ const Page = () => {
       })
     })
   }
+
+  const handleClick = async () => {
+    dispatch(saveRedirectUrl(null));
+    await GoogleLogin(redirectUrl)
+  };
+
+   
   return (
     <>
       <div className='container relative flex pt-8 flex-col items-center justify-center lg:px-0'>
@@ -67,17 +81,33 @@ const Page = () => {
           <h1 className='text-2xl font-semibold tracking-tight'>
               Create an account
             </h1>
-
-            <Link
-              className={buttonVariants({
-                variant: 'link',
-                className: 'gap-1.5',
-              })}
-              href='/auth/sign-in'>
-              Already have an account? Sign-in
-              <ArrowRight className='h-4 w-4' />
-            </Link>
           </div>
+
+          <div className="flex flex-col items-center space-y-2 text-center">
+          <Button onClick={handleClick} variant={"outline"} style={{ display: 'flex', alignItems: 'center' }}>
+                <NextImage 
+                  src="/google.png" 
+                  alt="google" 
+                  width={24} 
+                  height={24} 
+                  style={{ marginRight: '8px' }} 
+                />
+                Sign In with Google
+              </Button>
+          </div>
+
+          <div className='relative'>
+              <div
+                aria-hidden='true'
+                className='absolute inset-0 flex items-center'>
+                <span className='w-full border-t' />
+              </div>
+              <div className='relative flex justify-center text-xs uppercase'>
+                <span className='bg-background px-2 text-muted-foreground'>
+                  or
+                </span>
+              </div>
+            </div>
 
           <div className='grid gap-6'>
           <Form {...form}>
@@ -162,18 +192,24 @@ const Page = () => {
               </div>
             </form>
             </Form>
-            <div className='relative'>
-              <div
+
+            <div
                 aria-hidden='true'
-                className='absolute inset-0 flex items-center'>
+                className=' flex items-center'>
                 <span className='w-full border-t' />
-              </div>
-              <div className='relative flex justify-center text-xs uppercase'>
-                <span className='bg-background px-2 text-muted-foreground'>
-                  or
-                </span>
-              </div>
             </div>
+            
+            <Link
+              className={buttonVariants({
+                variant: 'link',
+                className: 'gap-1.5',
+              })}
+              href='/auth/sign-in'>
+              Already have an account? Sign-in
+              <ArrowRight className='h-4 w-4' />
+            </Link>
+
+
 
           </div>
         </div>

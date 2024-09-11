@@ -73,7 +73,6 @@ interface fetchedCat extends Category {
   
   
   
-    const [selectedSizes, setSelectedSizes] = React.useState<string[]>([]);
 
   
   
@@ -328,7 +327,7 @@ interface fetchedCat extends Category {
             <Card className={cn("border", selectedCard === index && "border-primary")}>
                 <CardContent className="flex  justify-center p-1 relative">
                 <NextImage
-                src={category.value!}
+                src={`/api/getImage?imageUrl=${encodeURIComponent(category.value!)}`}
                 alt={category.label}
                 width={1000}
                 height={1000}
@@ -604,7 +603,7 @@ interface fetchedCat extends Category {
         <div
           aria-hidden='true'
           className='relative mb-4 h-40 w-40 text-muted-foreground'>
-          <img
+          <NextImage
             src='/hippo-empty-cart.png'
             loading='eager'
             alt='empty shopping cart hippo'

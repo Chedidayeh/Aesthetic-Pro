@@ -1,6 +1,7 @@
 'use server'
 
 import { db } from "@/db";
+import { Collection } from "@prisma/client";
 
 // search query : 
 export async function searchProducts(query: string) {
@@ -38,6 +39,11 @@ export async function searchProducts(query: string) {
               category: {
                 contains: decodedQuery,
                 mode: 'insensitive', // Case insensitive search for category
+              },
+            },
+            {
+              collection: {
+                equals: decodedQuery.toUpperCase() as Collection, // Exact match for collection name
               },
             },
           ],

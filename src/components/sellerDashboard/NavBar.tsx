@@ -54,9 +54,10 @@ import { Separator } from "../ui/separator"
 import { ScrollArea } from "../ui/scroll-area"
 import { useEffect, useState } from "react"
 import { getSideBarTotalCounts, getStoreByUserId, getUnreadNotificationsForStore, getUser } from "@/actions/actions"
-import { Notification } from "@prisma/client"
+import { Notification, User } from "@prisma/client"
 import { ModeToggle } from "../ModeToggle"
 import React from "react"
+import SellerProfile from "./SellerProfile"
 
 interface Count {
   printedOrdersCount: number;
@@ -70,12 +71,15 @@ const NavBar = () => {
   const router = useRouter()
   const [notifications, setNotifications] = useState<Notification[]>([]); 
   const [storeName, setStore] = useState(""); 
+// user state
+const [user, setUser] = useState<User>();
 
   useEffect(() => {
     const fetchCounts = async () => {
       try {
         const user = await getUser()
         if(!user) return
+        setUser(user)
         const store = await getStoreByUserId(user!.id!)
         setStore(store.storeName)
         const notifications = await getUnreadNotificationsForStore(store.id)
@@ -325,6 +329,11 @@ const NavBar = () => {
 </DropdownMenu>
 
       <ModeToggle/>
+
+      {/* user Image */}
+
+    <SellerProfile user={user!}/>
+
     </header>
   );
 };

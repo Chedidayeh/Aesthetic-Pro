@@ -92,8 +92,7 @@ import {
   import { tree } from "next/dist/build/templates/app-page"
   import { useRouter } from "next/navigation"
   import { useToast } from "@/components/ui/use-toast"
-  import { Input } from "@/components/ui/input"
-  import { TooltipProvider } from "@/components/ui/tooltip"
+
 import { Separator } from "@/components/ui/separator"
 import { Item } from "@radix-ui/react-dropdown-menu"
 import { togglePrinted } from "./actions"

@@ -67,7 +67,7 @@ const UsersTable = () => {
   const filteredUsers = users?.filter((user) => {
     const matchesSearchQuery =
       user.id.includes(searchQuery) ||
-      user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.name!.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.email.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesFilter = filter ? user.userType === filter.toUpperCase() : true;
     return matchesSearchQuery && matchesFilter;
@@ -199,7 +199,7 @@ const UsersTable = () => {
               {filteredUsers.map((user) => (
                 <TableRow key={user.id}>
                   <TableCell>{user.id}</TableCell>
-                  <TableCell>{user.username}</TableCell>
+                  <TableCell>{user.name}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.emailVerified ? "Yes" : "No"}</TableCell>
                   <TableCell>{user.isUserBanned ? "Yes" : "No"}</TableCell>

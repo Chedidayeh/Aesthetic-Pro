@@ -5,10 +5,11 @@ import { LoginSchema } from "../schemas"
 import {signIn} from "@/auth"
 import { AuthError } from "next-auth"
 import { db } from "@/db"
-import { getUserByEmail } from "@/userData/user"
+import { checkGoogleLoggedInUser, comparePassword, getUserByEmail } from "@/userData/user"
 import { User } from "@prisma/client"
 import crypto from 'crypto';
 import { sendResetPassEmail } from "@/lib/mailer"
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes"
 
 
 
@@ -27,16 +28,29 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
 
             // Fetch the user by email
             const user = await getUserByEmail(email)
+            const isGoogleLoggedInUser = await checkGoogleLoggedInUser(email)
+            console.log(isGoogleLoggedInUser)
         
             if (!user) {
-                return { error: "No account found or Wrong Password !", success: "" };
+                return { error: "No account found !", success: "" };
             }
-        
+
+            if(isGoogleLoggedInUser){
+                return { error: "Try to Sign In with Google !", success: "" };
+            }
+
+
             // Check if the user's email is verified
             if (!user.emailVerified) {
                 return { error: "Email not verified!", success: "" };
             }
 
+            const isPasswordMatch = await comparePassword(email , password)
+
+            if (!isPasswordMatch) {
+                return { error: "Wrong Password!", success: "" };
+            }
+            
             // check if the user is banned 
             if (user.isUserBanned) {
                 return { error: "You've been banned from the platform !", success: "" };
@@ -84,7 +98,7 @@ export const resetPassword = async (user: User) => {
         });
 
         // Send verification token email
-        await sendResetPassEmail(user.email, user.username || user.name, resetPassToken);
+        await sendResetPassEmail(user.email, user.name!, resetPassToken);
         return true;
     } catch (error) {
         console.error("Error resetting password:", error);
@@ -92,8 +106,9 @@ export const resetPassword = async (user: User) => {
     }
 };
 
-export const GoogleLogin = async () => {
-    await signIn("google", { redirectTo: "/home" });
+
+export const GoogleLogin = async (redirectUrl : any) => {
+    await signIn("google", { redirectTo: redirectUrl ? redirectUrl : DEFAULT_LOGIN_REDIRECT });
 }
 
 

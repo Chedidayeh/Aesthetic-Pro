@@ -698,7 +698,7 @@ export async function fetchProducts(): Promise<Productswithstore[] | null> {
 export async function getProductsGroupedByCollection() {
     try {
       // Fetch all products from the database
-      const products = await db.product.findMany({include : {store : true}});
+      const products = await db.product.findMany({where : {isProductAccepted : true} ,include : {store : true}});
   
       // Group products by collection
       const groupedByCollection = products.reduce((acc, product) => {

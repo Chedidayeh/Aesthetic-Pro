@@ -53,12 +53,30 @@ export async function deleteTopBarContent(platformId: string, contentToDelete: s
   }
 }
 
-export async function updateStoreCreation(platformId: string, enableStoreCreation: boolean) {
+export async function updateStoreCreation(platformId: string, closeStoreCreation: boolean) {
   try {
     const updatedPlatform = await db.platform.update({
       where: { id: platformId },
-      data: { closeStoreCreation : enableStoreCreation },
+      data: { closeStoreCreation : closeStoreCreation },
     });
+    return updatedPlatform;
+  } catch (error) {
+    console.error("Failed to update store creation setting:", error);
+    return null;
+  }
+}
+
+export async function updateCreation(platformId: string, closeCreation: boolean) {
+  try {
+    const updatedPlatform = await db.platform.update({
+      where: { id: platformId },
+      data: { closeCreation : closeCreation },
+    });
+    if(closeCreation === true){
+      await createNotificationForAllStores("Hi Sellers, product and design creation is temporarily paused. " , "Admin")
+    }else{
+      await createNotificationForAllStores("Hi Sellers, Great news! The product and design creation features are now back online. Happy designing! " , "Admin")
+    }
     return updatedPlatform;
   } catch (error) {
     console.error("Failed to update store creation setting:", error);
@@ -70,6 +88,7 @@ export async function updateStoreCreation(platformId: string, enableStoreCreatio
 
 
 import { Platform } from "@prisma/client";
+import { createNotificationForAllStores } from "../notifications/action";
 
 export const updatePlatformData = async (
   platformId: string,

@@ -23,6 +23,7 @@ const Page = async ({ params }: PageProps) => {
     const categories = await getAllPodProductsCategories()
     const collections = await getAllPodProductsCollections()
 
+    
 
     return (
       <>
@@ -35,6 +36,7 @@ const Page = async ({ params }: PageProps) => {
                      products={products!}
                      categories={categories!}
                      collections={collections}
+                     searchQuery={searchQuery}
                 />
                 </div>
               </section>

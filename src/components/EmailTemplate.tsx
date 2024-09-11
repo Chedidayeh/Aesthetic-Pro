@@ -402,7 +402,7 @@ export const generateOrderEmailHTML = (order: OrderWithItems) => {
           <h1>Thank You for Your Order!</h1>
         </div>
         <div class="content">
-          <p>Hi ${order.user.username},</p>
+          <p>Hi ${order.user.name},</p>
           <p>We are currently processing your order and will call you to confirm the details shortly.</p>
           <div class="order-details">
             <h2>Order Details</h2>

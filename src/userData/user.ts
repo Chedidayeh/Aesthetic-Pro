@@ -1,5 +1,6 @@
 'use server'
 import {db} from "@/db"
+import bcrypt from 'bcryptjs';
 
 export const  getUserByEmail = async(email : string)=>{
     try{
@@ -12,6 +13,24 @@ export const  getUserByEmail = async(email : string)=>{
     }
 }
 
+// compare user password 
+export const comparePassword = async (email: string, password: string) => {
+    try {
+        const user = await getUserByEmail(email);
+        if (!user) {
+            return false;
+            }
+            const passwordMatch = await bcrypt.compare(
+                password,
+                user.password!,
+            );            
+            return passwordMatch;
+            } catch {
+                return false;
+ }
+  }
+
+
 //check if user logged in with google 
 
 export const checkGoogleLoggedInUser = async (email : string) => {
@@ -22,7 +41,7 @@ export const checkGoogleLoggedInUser = async (email : string) => {
                 accounts : true
             }
             })
-            return !user?.accounts;
+            return user?.accounts.length! > 0;
 
             } catch {
                 return null;

@@ -43,7 +43,7 @@ import { RootState } from '@/store/reducers/reducers';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
-import { CircleCheckBig, CircleDollarSign, FileText, FolderPen, Loader, Loader2, MousePointerClick, Receipt, Smile, Tags } from 'lucide-react';
+import { CircleCheckBig, CircleDollarSign, FileText, FolderPen, Loader, Loader2, MousePointerClick, OctagonAlert, Receipt, Smile, Tags } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { toPng } from 'html-to-image';
 import { SingleImageDropzone } from '@/components/sellerDashboard/SingleImageDropzone';
@@ -52,28 +52,39 @@ import LoadingState from "@/components/LoadingState"
 import { getAllCategories, getPlatformForTheWebsite } from "@/actions/actions"
 import { Category, Color, Size, FrontBorder, BackBorder } from "@prisma/client"
 import CreateProductView from "./CreateProductView";
-
-
-
-
-
-
-type SelectedColorsState = {
-  [colorLabel: string]: boolean; // Use string index signature to represent color labels as keys with boolean values
-};
-
-interface fetchedCat extends Category {
-  colors : Color[]
-  sizes : Size[]
-  frontBorders : FrontBorder[]
-  backBorders : BackBorder[]
-}
+import Link from "next/link";
 
 
 const Page =  async () => {
   
   const categories = await getAllCategories()
   const platform  = await getPlatformForTheWebsite()
+
+  if(platform?.closeCreation) {
+    return (
+      <AlertDialog open={true} >
+      <AlertDialogContent>
+      <AlertDialogHeader className="flex flex-col items-center">
+          <div className="text-red-500 mb-2">
+              <OctagonAlert className=''/>
+          </div>
+          <AlertDialogTitle className="text-xl font-bold text-center">
+              Product Creation is Deactivated ! 
+          </AlertDialogTitle>
+          <AlertDialogDescription>
+              We will send you a notification when product creation is activated !
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <Link  href="/sellerDashboard" ><Button variant="link">
+            Return to Seller Dashboard
+              </Button>
+              </Link>
+          </AlertDialogFooter>
+      </AlertDialogContent>
+  </AlertDialog>
+    )
+  }
 
 
   return (

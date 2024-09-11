@@ -291,7 +291,9 @@ const downloadMockup = async (imageUrls: string[]) => {
                                               {productImgs.map((image, index) => (
                                                 <CarouselItem key={index}>
                                                   <div className="p-1">
-                                                        <NextImage width={900} height={900} src={image} alt={`Product Image ${index + 1}`} className="object-cover" />
+                                                        <NextImage width={900} height={900}
+                                                         src={`/api/getImage?imageUrl=${encodeURIComponent(image)}`}
+                                                         alt={`Product Image ${index + 1}`} className="object-cover" />
                                                   </div>
                                                 </CarouselItem>
                                               ))}

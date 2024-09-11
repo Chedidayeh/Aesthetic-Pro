@@ -1,6 +1,6 @@
 
 'use client'
-
+import NextImage from "next/image"
 import { CircleUserRound, ShoppingBasket, UserRoundCheck, UserRoundCog, UserRoundPlus, UserRoundX } from "lucide-react"
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
@@ -41,6 +41,21 @@ const UserProfile = ({ user } : {user : User})=>{
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className=" w-56 mt-2 mr-2">
+      {user && (
+
+      <div className="flex justify-center items-center">
+        <div className="relative w-[100px] h-[100px] rounded-full bg-gray-100 border-2 border-gray-500 overflow-hidden">
+          <NextImage
+            src={user?.image ? user.image : "/clientImage.png"}
+            // src={`/api/getImage?imageUrl=${encodeURIComponent(store.logoUrl)}`}
+            alt="clientImage"
+            width={500}
+            height={500}
+            className="rounded-full object-fill"
+          />
+        </div>
+      </div>
+      )}
         <DropdownMenuLabel>
           {user ? (
           <p>My Account</p>

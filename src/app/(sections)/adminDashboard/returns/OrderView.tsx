@@ -224,19 +224,7 @@ interface OrderViewProps {
   const alertDialogCancelRef = useRef<HTMLButtonElement>(null);
 
     
-                // function will trigger the dialog
-                const openDialog = () => {
-                  if (alertDialogTriggerRef.current) {
-                    alertDialogTriggerRef.current.click();
-                  }
-                };
 
-                // function will cancel the dialog
-                const closeDialog = () => {
-                  if (alertDialogCancelRef.current) {
-                    alertDialogCancelRef.current.click();
-                  }
-                };
 
 
     return (
@@ -566,13 +554,7 @@ interface OrderViewProps {
       )}
         
 
-
       </section>
-  
-  
-  
-      <section className={cn(' grid grid-cols-1 p-11 gap-4 transition-all lg:grid-cols-4')}>
-  </section>
   
     </div>
   

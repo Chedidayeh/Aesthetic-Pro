@@ -1,7 +1,6 @@
 
 "use client"
 import NextImage from "next/image"
-
 import { CircleUserRound, ShoppingBasket, UserRoundCheck, UserRoundCog, UserRoundPlus, UserRoundX } from "lucide-react"
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
@@ -18,64 +17,47 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Platform, User } from "@prisma/client"
-import Link from "next/link"
-import { createPlatform } from "@/actions/actions"
-import LoadingState from "./LoadingState"
-import { useState } from "react"
-import { useToast } from "./ui/use-toast"
+import {  User } from "@prisma/client"
 import { useRouter } from "next/navigation"
 
 
 
 
-const UserProfile = ({ user , platform } : {user : User , platform : Platform | null})=>{
+const SellerProfile = ({ user } : {user : User})=>{
 
-  const [open, setOpen] = useState<boolean>(false);
-  const { toast } = useToast()
   const router = useRouter()
 
-  // create function
-  const create = async () => {
-    setOpen(true)
-    await createPlatform(user.id)
-    toast({
-      title: 'Platform Was Successfully Created',
-      variant: 'default',
-    });
-    setOpen(false)
 
-  }
 
     return (
         <>
                 
                 <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="bg-transparent">
-          {user ? (
-          <UserRoundCheck className="text-green-600" />
-          ):(
-          <UserRoundX className="text-red-600" />
-          )}
-        </Button>
+        <div className=" w-10 h-10 rounded-full cursor-pointer overflow-hidden border-2 border-gray-500" style={{ width: 40, height: 40 }}>
+         <NextImage 
+          src={user?.image ? user.image : "/sellerImage.png"}
+            alt="userImage"
+           width={200}
+           height={200}
+         />
+       </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className=" w-56 mt-2 mr-2">
-        {user && (
       <div className="flex justify-center items-center">
         <div className="relative w-[100px] h-[100px] rounded-full bg-gray-100 border-2 border-gray-500 overflow-hidden">
           <NextImage
-            src={user?.image ? user.image : "/clientImage.png"}
+            src={user?.image ? user.image : "/sellerImage.png"}
             // src={`/api/getImage?imageUrl=${encodeURIComponent(store.logoUrl)}`}
-            alt="clientImage"
+            alt="store"
+            objectFit="cover"
             width={500}
             height={500}
-            className="rounded-full object-fill"
+            className="rounded-full"
           />
         </div>
       </div>
-              )}
-        <DropdownMenuLabel>
+        <DropdownMenuLabel className="flex justify-center items-center">
           {user ? (
           <p>My Account</p>
           ):(
@@ -92,17 +74,6 @@ const UserProfile = ({ user , platform } : {user : User , platform : Platform | 
                 <UserRoundX size={20} />
             </Button>
             </DropdownMenuItem>
-
-            {user.userType === "ADMIN" && !platform && (
-        <>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Button onClick={create} size={"sm"}  variant={"ghost"} className="flex justify-between items-center w-full">
-                <span> Create Platform</span>
-              </Button>
-            </DropdownMenuItem>
-            </> 
-          )}
           </>
         ) : (
           <>        
@@ -126,8 +97,6 @@ const UserProfile = ({ user , platform } : {user : User , platform : Platform | 
         )}
       </DropdownMenuContent>
     </DropdownMenu>
-    <LoadingState isOpen={open} />
-
         </>
 
 
@@ -139,4 +108,4 @@ const UserProfile = ({ user , platform } : {user : User , platform : Platform | 
 
 }
 
-export default UserProfile
+export default SellerProfile

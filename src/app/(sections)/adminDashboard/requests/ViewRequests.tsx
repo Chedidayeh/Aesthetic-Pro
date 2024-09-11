@@ -99,7 +99,7 @@ const ViewRequests = ({ paymentRequests }: ViewProps) => {
       const lowercasedQuery = searchQuery.toLowerCase();
       updatedPaymentRequests = updatedPaymentRequests.filter(request =>
         request.store.storeName.toLowerCase().includes(lowercasedQuery) ||
-        request.store.user.username.toLowerCase().includes(lowercasedQuery)
+        request.store.user.name!.toLowerCase().includes(lowercasedQuery)
       );
     }
 

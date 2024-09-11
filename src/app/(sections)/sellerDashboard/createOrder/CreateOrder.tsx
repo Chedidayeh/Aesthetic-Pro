@@ -558,7 +558,7 @@ const CreateOrder = ({
                                             className={cn("border w-full sm:w-48", selectedCat === index && "border-primary")}>
                                             <CardContent className="flex flex-col items-center justify-center p-2">
                                               <NextImage 
-                                                src={image} 
+                                               src={`/api/getImage?imageUrl=${encodeURIComponent(image)}`}
                                                 alt="" 
                                                 width={900}
                                                 height={900}
@@ -599,7 +599,7 @@ const CreateOrder = ({
 
 
                                   <NextImage
-                                      src={product.croppedFrontProduct?.[0] ?? product.croppedBackProduct?.[0]}   
+                                      src={`/api/getImage?imageUrl=${encodeURIComponent(product.croppedFrontProduct?.[0] ?? product.croppedBackProduct?.[0])}`}
                                       alt={product.title}
                                       width={1000}
                                       height={1000}

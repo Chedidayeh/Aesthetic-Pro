@@ -28,7 +28,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
-import { fetchBestSellingProducts, getAllCategories, getAllPodProductsCategories, getUser } from '@/actions/actions'
+import { fetchBestSellingProducts, getAllPodProductsCategories, getUser } from '@/actions/actions'
 import { HamburgerMenuIcon } from '@radix-ui/react-icons'
 import MaxWidthWrapper from '../MaxWidthWrapper'
 import UserProfile from './UserProfile'
@@ -39,8 +39,7 @@ const Navbar = async () => {
   const categories = await getAllPodProductsCategories()
   const user = await getUser()
   const bestSellingProducts = await fetchBestSellingProducts();
-
-
+  
   return (
     <nav className='sticky z-[100] h-14 inset-x-0 top-0 w-full border-b border-gray-200 backdrop-blur-lg transition-all'>
       <MaxWidthWrapper>
@@ -60,7 +59,7 @@ const Navbar = async () => {
             <SheetTrigger className="md:hidden">
               <HamburgerMenuIcon />
             </SheetTrigger>
-            <SheetContent side="left" className='w-[50%]'>
+            <SheetContent side="left" className='w-[50%]  mt-4'>
               {/* Middle Section for small devices */}
               <div className='md:hidden flex flex-col mt-16 space-y-2'>
                 <DialogClose>
@@ -85,7 +84,7 @@ const Navbar = async () => {
                 </Link>
                 </DialogClose>
 
-              {bestSellingProducts.length > 0 && (
+              {bestSellingProducts!.length > 0 && (
                 <DialogClose>
                 <Link href="/PodProducts/BestSelling" className={buttonVariants({
               size: 'sm',
@@ -108,7 +107,8 @@ const Navbar = async () => {
                 <DropdownMenuContent className="w-40 mt-3 flex flex-col">
                 {categories && categories.length > 0 ? (
                     categories.map((category) => (
-                      <Link key={category} href={`/PodProducts/category/${category}`} className={buttonVariants({
+                      <Link key={String(category)}
+                        href={`/PodProducts/category/${category}`} className={buttonVariants({
                         size: 'sm',
                         variant: 'ghost',
                         })}>{category}
@@ -181,7 +181,7 @@ const Navbar = async () => {
               All Products
             </Link>
 
-            {bestSellingProducts.length > 0 && (
+            {bestSellingProducts!.length > 0 && (
             <Link href="/PodProducts/BestSelling" className={buttonVariants({
               size: 'sm',
               variant: 'ghost',
@@ -201,7 +201,8 @@ const Navbar = async () => {
               <DropdownMenuContent className="w-40 mt-3 flex flex-col">
               {categories && categories.length > 0 ? (
                     categories.map((category) => (
-                      <Link key={category} href={`/PodProducts/category/${category}`} className={buttonVariants({
+                      <Link key={String(category)}
+                        href={`/PodProducts/category/${category}`} className={buttonVariants({
                         size: 'sm',
                         variant: 'ghost',
                         })}>{category}

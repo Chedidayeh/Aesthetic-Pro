@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unescaped-entities */
 'use client'
-
+import NextImage from "next/image"
 import * as React from "react"
 import Link from 'next/link'
 import {
@@ -35,7 +35,7 @@ import { DEFAULT_LOGIN_REDIRECT } from "@/routes"
 import { ArrowRight, Eye, EyeOff, Loader } from "lucide-react"
 import { GoogleLogin, login, resetPassword } from "./actions"
 import { useRouter } from "next/navigation"
-import { getUserByEmail } from "@/userData/user"
+import { checkGoogleLoggedInUser, getUserByEmail } from "@/userData/user"
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/store/reducers/reducers"
 import { saveRedirectUrl } from "@/store/actions/action"
@@ -96,6 +96,11 @@ const Page = () => {
         setEmailError("No account found with this email !")
         return
       }
+      const isGoogleLoggedInUser = await checkGoogleLoggedInUser(resetPassEmail)
+      if(isGoogleLoggedInUser){
+        setEmailError("This Email is used to login with Google !")
+        return
+      }
       setisLoading(true)
       const res = await resetPassword(user)
       if(res){
@@ -117,7 +122,9 @@ const Page = () => {
 
 
   const handleClick = async () => {
-   await GoogleLogin()
+  dispatch(saveRedirectUrl(null));
+   await GoogleLogin(redirectUrl)
+   
   };
 
 
@@ -173,16 +180,35 @@ const Page = () => {
               account
             </h1>
 
-            <Link
-              className={buttonVariants({
-                variant: 'link',
-                className: 'gap-1.5',
-              })}
-              href='/auth/sign-up'>
-              Don&apos;t have an account?
-              <ArrowRight className='h-4 w-4' />
-            </Link>
+
           </div>
+
+          <div className="flex flex-col items-center space-y-2 text-center">
+          <Button onClick={handleClick} variant={"outline"} style={{ display: 'flex', alignItems: 'center' }}>
+                <NextImage 
+                  src="/google.png" 
+                  alt="google" 
+                  width={24} 
+                  height={24} 
+                  style={{ marginRight: '8px' }} 
+                />
+                Sign In with Google
+              </Button>
+          </div>
+
+          <div className='relative'>
+              <div
+                aria-hidden='true'
+                className='absolute inset-0 flex items-center'>
+                <span className='w-full border-t' />
+              </div>
+              <div className='relative flex justify-center text-xs uppercase'>
+                <span className='bg-background px-2 text-muted-foreground'>
+                  or
+                </span>
+              
+              </div>
+            </div>
 
           <div className='grid gap-6'>
           <Form {...form}>
@@ -254,21 +280,22 @@ const Page = () => {
             <Button onClick={()=>setisResetPassword(true)} 
               variant="link">
                 Forgot your password ?
-                </Button>
-            <div className='relative'>
-              <div
+             </Button>
+             <div
                 aria-hidden='true'
-                className='absolute inset-0 flex items-center'>
+                className=' flex items-center'>
                 <span className='w-full border-t' />
-              </div>
-              <div className='relative flex justify-center text-xs uppercase'>
-                <span className='bg-background px-2 text-muted-foreground'>
-                  or
-                </span>
-
-                <Button onClick={handleClick}>Google</Button>
-              </div>
             </div>
+             <Link
+              className={buttonVariants({
+                variant: 'link',
+                className: 'gap-1.5',
+              })}
+              href='/auth/sign-up'>
+              Don&apos;t have an account?
+              <ArrowRight className='h-4 w-4' />
+            </Link>
+
           </div>
         </div>
       </div>

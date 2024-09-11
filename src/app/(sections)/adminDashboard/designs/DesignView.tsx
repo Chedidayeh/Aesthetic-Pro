@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unescaped-entities */
 'use client'
+import NextImage from 'next/image';
 import {
   Select,
   SelectContent,
@@ -216,7 +217,7 @@ interface ProductViewProps {
 
 
 
-     const [darkMode, setDarkMode] = useState(false);
+     const [darkMode, setDarkMode] = useState(true);
     const toggleDarkMode = () => {
       setDarkMode(!darkMode);
     }
@@ -286,9 +287,11 @@ interface ProductViewProps {
                                               {darkMode ? 'Light Mode' : 'Dark Mode'}
                                               </Badge>
                                               </div>
-                                              <img src={design} alt={`Product Image`}
+                                              <NextImage 
+                                               src={`/api/getImage?imageUrl=${encodeURIComponent(design!)}`}
+                                               alt={`design Image`}
                                                 onContextMenu={(e) => e.preventDefault()}
-                                                  className="object-cover" />
+                                                  className="object-contain" />
                                               </div>
 
                                                     <AlertDialogFooter>

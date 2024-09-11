@@ -64,7 +64,6 @@ model Account {
 
 model User {
   id              String  @id @default(cuid())
-  username        String?
   name            String?
   image           String?
   email           String @unique
@@ -112,6 +111,7 @@ model Platform {
   totalIncome     Int     @default(0)
 
   closeStoreCreation Boolean     @default(false)
+  closeCreation      Boolean      @default(false)
 
   maxProductSellerProfit     Int     @default(20)
   ExtraDesignForProductPrice Int     @default(5)

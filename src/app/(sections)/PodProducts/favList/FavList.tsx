@@ -9,7 +9,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
-import { Card, CardContent } from "@/components/ui/card"
 import {
     Select,
     SelectContent,
@@ -45,7 +44,6 @@ interface ProductReelProps {
 
 }
 const FavList = ({ products, user , categories , collections }: ProductReelProps) => {
-
 
 
   // Sorting function based on sortBy criteria

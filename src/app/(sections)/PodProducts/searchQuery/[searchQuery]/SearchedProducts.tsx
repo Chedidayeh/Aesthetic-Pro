@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable @next/next/no-img-element */
 'use client'
 import {
@@ -41,9 +42,10 @@ interface ProductReelProps {
   user : User
   categories: string[]
   collections : string[]
+  searchQuery : string
 
 }
-const SearchedProducts = ({ products, user , categories , collections }: ProductReelProps) => {
+const SearchedProducts = ({ products, user , categories , collections , searchQuery }: ProductReelProps) => {
 
   // Sorting function based on sortBy criteria
   const [sortBy, setSortBy] = useState<string>(''); // State for selected sort option
@@ -263,8 +265,9 @@ const SearchedProducts = ({ products, user , categories , collections }: Product
           <h1 className='text-4xl font-bold tracking-tight  sm:text-5xl'>
             Searched{' '}
             <span className='text-blue-600'>
-            Products
+            Products  {' '}
             </span>
+            for ' {searchQuery} '
           </h1>   
           <div className="flex flex-col">
           <div className="flex flex-col gap-2 md:flex-row">

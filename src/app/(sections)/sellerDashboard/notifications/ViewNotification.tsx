@@ -42,7 +42,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
   } from "@/components/ui/alert-dialog"
-import { deleteNotificationById, markNotificationAsViewed } from "./actions";
+import { deleteNotificationById, markAllNotificationsAsViewed, markNotificationAsViewed } from "./actions";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import LoadingState from "@/components/LoadingState";
@@ -92,6 +92,18 @@ const ViewNotification = ({ notifications }: NotiViewProps) => {
     await markNotificationAsViewed(id)
   }
 
+  // SetAllNotificationsRead function 
+  const SetAllNotificationsRead = async () =>{
+    setOpen(true)
+    await markAllNotificationsAsViewed()
+    setOpen(false)
+    toast({
+      title: "Done!",
+      variant: "default",
+    });
+    router.refresh()
+  }
+
 
 
   return (
@@ -105,6 +117,8 @@ const ViewNotification = ({ notifications }: NotiViewProps) => {
           <CardDescription>Total : {notifications.length}</CardDescription>
           <CardDescription>View your Notifications.</CardDescription>
           <CardDescription>Unread notifications is marked with <span className="text-blue-500">blue color</span></CardDescription>
+          <CardDescription><Button onClick={SetAllNotificationsRead} variant={"link"}>Mark All Notifications As Read</Button></CardDescription>
+
         </CardHeader>
         <CardContent>
           <Table>

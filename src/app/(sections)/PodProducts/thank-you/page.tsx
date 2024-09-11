@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import Image from 'next/image'
+import NextImage from 'next/image'
 import Link from 'next/link'
 import { getOrder, getPlatformForTheWebsite, getUser } from '@/actions/actions'
 
@@ -26,7 +26,7 @@ const ThankYouPage = async ({
 
 <main className='relative lg:min-h-full'>
 <div className='hidden lg:block h-80 overflow-hidden lg:absolute lg:h-full lg:w-1/2 lg:pr-4 xl:pr-12'>
-  <Image
+  <NextImage
     fill
     src='/checkout-thank-you.jpg'
     className='h-full w-full object-cover object-center'
@@ -67,7 +67,7 @@ const ThankYouPage = async ({
 
     <main className='relative lg:min-h-full'>
       <div className='hidden lg:block h-80 overflow-hidden lg:absolute lg:h-full lg:w-1/2 lg:pr-4 xl:pr-12'>
-        <Image
+        <NextImage
           fill
           src='/checkout-thank-you.jpg'
           className='h-full w-full object-cover object-center'

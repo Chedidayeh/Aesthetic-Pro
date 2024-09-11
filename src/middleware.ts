@@ -5,17 +5,14 @@ import NextAuth from "next-auth";
 import {
 DEFAULT_LOGIN_REDIRECT,
 adminAuthRoutes,
-apiAuthPrefix,
 authRoutes,
 createSstoreRoute,
 factoryAuthRoutes,
 privateRoutes,
 sellerAuthRoutes,
-sellerSignOutRoute,
-signOutRoute,
 alreadyVerifiedUser,
 alreadyResetPassword,
-googleAuthRoute
+
 }from "@/routes"
 
 import { auth as a } from '@/auth'
@@ -25,7 +22,6 @@ export default auth (async (req) => {
     const {nextUrl} = req;
     const isLoggedIn = !!req.auth;
     const session = await a()
-    const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix)
     const isPrivateRoute = privateRoutes.includes(nextUrl.pathname)
     const isAuthRoute = authRoutes.includes(nextUrl.pathname)
     const isAlreadyVerifiedUserRoute = nextUrl.pathname.startsWith(alreadyVerifiedUser)
@@ -33,19 +29,10 @@ export default auth (async (req) => {
     const isSellerRoute = nextUrl.pathname.startsWith(sellerAuthRoutes);
     const isAdminRoute = nextUrl.pathname.startsWith(adminAuthRoutes);
     const isFactoryRoute = nextUrl.pathname.startsWith(factoryAuthRoutes);
-    const isLogOutRoute = signOutRoute.includes(nextUrl.pathname)
-    const issellerLogOutRoute = sellerSignOutRoute.includes(nextUrl.pathname)
-    const isGoogleAuthRoute = googleAuthRoute.startsWith(nextUrl.pathname)
     const isCreateStoreRoute = nextUrl.pathname.startsWith(createSstoreRoute);
 
 
-    // block if the user try to access to api routes 
-    // if (isApiAuthRoute){
-    //     if(isLogOutRoute || issellerLogOutRoute || isGoogleAuthRoute  ){
-    //         return
-    //     }
-    //     return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT,nextUrl))
-    // }
+
 
     // block if a already logged in user try to access to auth routes 
     if(isAuthRoute || isAlreadyVerifiedUserRoute || isAlreadyResetPasswordRoute){

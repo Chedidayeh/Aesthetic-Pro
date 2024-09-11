@@ -129,7 +129,7 @@ export async function refuseProduct(productId: string , reasonForRejection : str
     await createNotification(productDetails.storeId, reasonForRejection, "Admin");
 
     // send an email : 
-    await sendProductRejetedEmail(productDetails.store.user.email,productDetails.store.user.username, productDetails.title , reasonForRejection )
+    await sendProductRejetedEmail(productDetails.store.user.email,productDetails.store.user.name!, productDetails.title , reasonForRejection )
 
   } catch (error) {
     console.error(`Failed to refuse product: ${error}`);
@@ -200,7 +200,7 @@ export async function refuseDesign(designId: string , reasonForRejection : strin
     await createNotification(designDetails.storeId, reasonForRejection, "Admin");
 
     // send an email : 
-    await sendDesignRejetedEmail(designDetails.store.user.email,designDetails.store.user.username, designDetails.name , reasonForRejection )
+    await sendDesignRejetedEmail(designDetails.store.user.email,designDetails.store.user.name!, designDetails.name , reasonForRejection )
 
   } catch (error) {
     console.error(`Failed to refuse design: ${error}`);
