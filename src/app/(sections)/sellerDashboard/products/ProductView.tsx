@@ -313,6 +313,20 @@ const ProductView = ({
                         </Badge>
                       </div>
 
+                      <div className="absolute top-8 left-2 px-2 py-1 z-10 rounded">
+                        <Badge variant="secondary" className="bg-gray-200">
+                          <Eye className="mr-2 h-4 w-4 text-blue-800 opacity-70" />
+                          <span className="text-xs text-gray-600">{product.totalViews} views</span>
+                        </Badge>
+                      </div>
+
+                      <div className="absolute top-14  left-2 px-2 py-1 z-10 rounded">
+                        <Badge variant="secondary" className="bg-gray-200">
+                          <CreditCard className="mr-2 h-4 w-4 text-red-800 opacity-70" />
+                          <span className="text-xs text-gray-600">{product.totalSales} sales</span>
+                         </Badge>
+                      </div>
+
                       <div className="absolute bottom-8 left-0 right-0 z-10 text-center">
                         <Badge variant="secondary" className="bg-gray-200 text-gray-700">
                           {product.title}

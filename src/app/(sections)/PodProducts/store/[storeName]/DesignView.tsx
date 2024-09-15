@@ -144,7 +144,6 @@ const filteredAndSortedDesigns = useMemo(() => {
         return a.price - b.price;
       case 'high':
         return b.price - a.price;
-
       case 'sales':
         return b.totalSales - a.totalSales;
       default:

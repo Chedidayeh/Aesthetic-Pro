@@ -36,14 +36,12 @@ interface ProductReelProps {
 
 const ProductReel = (props: ProductReelProps) => {
   const { user,title, subtitle, href , products } = props
-  const sortedProducts = products?.slice().sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-  .slice(0, 8) //only 8 products will be shown
 
 
   //slide products
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 2;
-  const totalProducts = sortedProducts?.length || 0;
+  const totalProducts = products?.length || 0;
   const totalPages = Math.ceil(totalProducts / itemsPerPage)
 
   const handlePrevPage = () => {
@@ -85,7 +83,7 @@ const ProductReel = (props: ProductReelProps) => {
 
 
             <div className='relative'>
-            {sortedProducts?.length === 0 ? (
+            {products?.length === 0 ? (
               <div className='flex h-full flex-col items-center justify-center space-y-1'>
                 <h3 className='font-semibold text-2xl'>
                   this section is empty for now !
@@ -105,7 +103,7 @@ const ProductReel = (props: ProductReelProps) => {
               md:gap-y-10
               lg:gap-x-4'>
 
-            {sortedProducts?.slice(currentPage - 1, currentPage + 3).map((product, index) => (
+            {products?.slice(currentPage - 1, currentPage + 3).map((product, index) => (
               <ProductListing
                 user={user!}
                 key={`product-${index}`}

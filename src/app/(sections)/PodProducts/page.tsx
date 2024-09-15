@@ -24,7 +24,7 @@ import { cn } from '@/lib/utils'
 import { Input } from '@/components/ui/input'
 import SearchQuery from '@/components/PodProducts/SearchQuery'
 import PerkSection from '@/components/PodProducts/PerkSection'
-import { fetchBestSellingProducts, fetchNewProducts, fetchRandomProducts, getProductsGroupedByCollection, getUser } from '@/actions/actions'
+import { fetchBestSellingProducts, fetchNewProducts, fetchTrendingProducts, getProductsGroupedByCollection, getUser } from '@/actions/actions'
 import NextImage from 'next/image'
 import Marquee from 'react-fast-marquee'
 import ProductSlider from '@/components/PodProducts/ProductSlider'
@@ -37,11 +37,11 @@ export default async function Page() {
   const productsGroupedByCollection  = await getProductsGroupedByCollection()
   const bestSellingProducts = await fetchBestSellingProducts();
   const discountProductsDeals = await fetchDiscountProductsDeals()
-  const allProducts = await fetchRandomProducts()
+  const trendingProducts = await fetchTrendingProducts()
   const user = await getUser();
 
   // Ensure products are not null or undefined
-  const filteredAllProducts = allProducts ? allProducts.slice(0, 8) : [];
+  const filteredTrendingProducts = trendingProducts ? trendingProducts.slice(0, 8) : [];
   const filteredNewProducts = newProducts ? newProducts.slice(0, 8) : [];
   const filteredBestSellingProducts = bestSellingProducts ? bestSellingProducts.slice(0, 8) : [];
   const filteredDiscountProductsDeals = discountProductsDeals ? discountProductsDeals.slice(0, 8) : [];
@@ -76,7 +76,7 @@ export default async function Page() {
           {/* trending products */}
        <ProductSlider 
             user={user!}
-            products={filteredAllProducts} />
+            products={filteredTrendingProducts} />
 
         </section>
 

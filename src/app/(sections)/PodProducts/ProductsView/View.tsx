@@ -77,7 +77,7 @@ const NewReleased = ({ products, user , categories , collections }: ProductReelP
   const priceRanges: [number, number][] = useMemo(() => calculatePriceRanges(products || []), [products]);
 
   const sortedProducts = useMemo(() => {
-    return [...(products || [])].sort((a, b) => {    switch (sortBy) {
+    return [...(products || [])].sort((a, b) => {switch (sortBy) {
       case 'low':
         return a.price - b.price;
         case 'high':
@@ -85,7 +85,7 @@ const NewReleased = ({ products, user , categories , collections }: ProductReelP
       case 'sales':
         return b.totalSales - a.totalSales; 
       default:
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        return 0
     }
   });
 }, [products, sortBy]);

@@ -12,13 +12,6 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
-import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -54,13 +47,8 @@ import {
     Users,
   } from "lucide-react"
   
-  import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
-  } from "@/components/ui/avatar"
+
   import { Badge } from "@/components/ui/badge"
-  import { Button } from "@/components/ui/button"
   import {
     Card,
     CardContent,
@@ -77,19 +65,11 @@ import {
     TableHeader,
     TableRow,
   } from "@/components/ui/table"
-  
-  import Link from "next/link";
-  
+    
   import { cn } from "@/lib/utils";
-  import { fetchProducts } from "@/actions/actions";
   import React, { ChangeEvent, useEffect, useState } from "react"
-  import OrderedDesigns from "@/components/sellerDashboard/OrderedDesigns"
-  import OrderedProducts from "@/components/sellerDashboard/OrderedProducts"
-  import { db } from "@/db"
-  import UsersTable from "@/components/adminDashboard/UsersTable"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { OrderItem, Product, SellerDesign, Store, User } from "@prisma/client"
-import { tree } from "next/dist/build/templates/app-page"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/components/ui/use-toast"
 import { Input } from "@/components/ui/input"

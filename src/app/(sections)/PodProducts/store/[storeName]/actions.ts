@@ -75,7 +75,7 @@ export async function checkUserLike(storeId : string, userId : string) {
 
 
 // Function to get store's products and designs by store Name
-export async function getStoreProductsAndDesigns(storeName: string) {
+export async function getStoreProducts(storeName: string) {
   try {
     // Find the store for the given storeId and userId
     const store = await db.store.findFirst({
@@ -87,6 +87,9 @@ export async function getStoreProductsAndDesigns(storeName: string) {
           where : { isProductAccepted : true},
           include : {
             store : true
+          },
+          orderBy : {
+            totalViews : "desc"
           }
         },
       },

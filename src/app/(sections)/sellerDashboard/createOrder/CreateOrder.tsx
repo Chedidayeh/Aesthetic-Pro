@@ -204,9 +204,7 @@ const CreateOrder = ({
                   const [address, setAddress] = useState("");
                   const [selectedSize, setSelectedSize] = useState("");
                   const [quantity, setQuantity] = useState(1);
-                  const isValid = name.trim() !== "" && phoneNumber.length===8 
-                  && address.trim() !== "" && selectedSize !== "" && quantity >=1 && quantity <= platform.maxProductQuantity && !quantity
-
+                  const isValid = name.trim() !== "" && phoneNumber.length===8 && address.trim() !== "" && selectedSize !== "" && quantity >=1 && quantity <= platform.maxProductQuantity
 
                   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
                     setName(event.target.value);
@@ -527,6 +525,13 @@ const CreateOrder = ({
                                   <div className="flex items-center">
                                         <CircleDollarSign className="mr-2 h-4 w-4 text-green-800 opacity-70" />{" "}
                                         <span className="text-xs text-gray-600">{product.price} TND</span>
+                                    </div>                                  
+                                    </Badge>
+
+                                    <Badge variant="secondary" className="absolute bg-gray-200 top-10 left-2 px-2 py-1 rounded">
+                                  <div className="flex items-center">
+                                        <CreditCard className="mr-2 h-4 w-4 text-green-800 opacity-70" />{" "}
+                                        <span className="text-xs text-gray-600">{product.totalSales} sales</span>
                                     </div>                                  
                                     </Badge>
                                     

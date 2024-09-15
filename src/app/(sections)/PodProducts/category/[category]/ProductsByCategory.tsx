@@ -83,7 +83,7 @@ const ProductsByCategory = ({ products, user , category , collections }: Product
       case 'sales':
         return b.totalSales - a.totalSales; 
       default:
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        return 0
     }
   });
 

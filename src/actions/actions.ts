@@ -641,32 +641,22 @@ export async function getProductsByIds(productIds : string[]) {
 
 
 
-interface Productswithstore extends Product {
-  store : Store
-}
-export async function fetchRandomProducts() {
+export async function fetchTrendingProducts() {
   try {
-    const newProducts = await fetchNewProducts();
-    const bestSellingProducts = await fetchBestSellingProducts();
-    const discountProductsDeals = await fetchDiscountProductsDeals();
+    const trendingProducts = await db.product.findMany({
+      where: {
+        isProductAccepted : true
+      },
+      include : {
+        store : true
+      },
+      orderBy: {
+        totalViews: 'desc',
+      },
+      take: 10,
+    });
 
-    const filteredNewProducts = newProducts ? newProducts.slice(0, 4) : [];
-    const filteredBestSellingProducts = bestSellingProducts ? bestSellingProducts.slice(0, 4) : [];
-    const filteredDiscountProductsDeals = discountProductsDeals ? discountProductsDeals.slice(0, 4) : [];
-
-    // Combine the filtered products into a single array
-    const combinedProducts = [
-      ...filteredNewProducts,
-      ...filteredBestSellingProducts,
-      ...filteredDiscountProductsDeals,
-    ];
-
-    // Shuffle the combined array to mix the products randomly
-    const shuffledProducts = combinedProducts.sort(() => Math.random() - 0.5);
-
-    // Return the shuffled products
-    return shuffledProducts;
-
+    return trendingProducts;
   } catch (error) {
     console.log(error);
     throw error;
@@ -675,19 +665,20 @@ export async function fetchRandomProducts() {
 
 
     // fetch all products
-export async function fetchProducts(): Promise<Productswithstore[] | null> {
+export async function fetchAllProducts() {
   try {
     const products = await db.product.findMany({
       where : {isProductAccepted : true},
       include : {
         store : true
-      }
+      },
+      orderBy: {
+        totalViews: 'desc',
+      },
     });
-    if(!products) return null
     return products;
   } catch (error) {
-    console.log(error)
-    throw  error
+    console.error('Error fetching products:', error);
   }
   }
 
@@ -698,7 +689,11 @@ export async function fetchProducts(): Promise<Productswithstore[] | null> {
 export async function getProductsGroupedByCollection() {
     try {
       // Fetch all products from the database
-      const products = await db.product.findMany({where : {isProductAccepted : true} ,include : {store : true}});
+      const products = await db.product.findMany({
+        where : {isProductAccepted : true} ,
+        include : {store : true} ,       
+        orderBy: {totalViews: 'desc'}
+        });
   
       // Group products by collection
       const groupedByCollection = products.reduce((acc, product) => {
@@ -720,7 +715,7 @@ export async function getProductsGroupedByCollection() {
 
 
   // for the new released products
- export async function fetchNewProducts(): Promise<Productswithstore[] | null> {
+ export async function fetchNewProducts() {
     try {
       const products = await db.product.findMany({
         where : {isProductAccepted : true , NewProduct : true},
@@ -740,49 +735,47 @@ export async function getProductsGroupedByCollection() {
       return products;
     } catch (error) {
       console.error('Error fetching products:', error);
-      return null;
     }
   }
 
 
-    // for the best selling products
-    export async function fetchBestSellingProducts() {
-      try {
-        // Fetch all products
-        const products = await db.product.findMany({
-          include: {
-            store: true,
-          },
-        });
-    
-        // Iterate through each product to check totalSales
-        for (const product of products) {
-          if (product.totalSales >= 10 && product.isProductAccepted) {
-            // Update the topSales field to true
-            await db.product.update({
-              where: { id: product.id },
-              data: { topSales: true },
-            });
-          }
-        }
-    
-        // Fetch the products again to get the updated topSales values
-        const bestSellingProducts = await db.product.findMany({
-          where: { topSales: true, isProductAccepted: true },
-          include: {
-            store: true,
-          },
-          orderBy: {
-            createdAt: 'desc'
-          },
-        });
-    
-        return bestSellingProducts;
-      } catch (error) {
-        console.error('Error fetching products:', error);
-        throw error
-      }
+// For the best selling products
+export async function fetchBestSellingProducts() {
+  try {
+    // Fetch all products with totalSales greater than 9
+    const productsToUpdate = await db.product.findMany({
+      where: {
+        isProductAccepted: true,
+        totalSales: { gt: 9 },
+      },
+    });
+
+    // Update the topSales field to true for all qualifying products in one batch
+    const productIds = productsToUpdate.map((product) => product.id);
+
+    if (productIds.length > 0) {
+      await db.product.updateMany({
+        where: { id: { in: productIds } },
+        data: { topSales: true },
+      });
     }
+
+    // Fetch the products again to get the updated topSales values
+    const bestSellingProducts = await db.product.findMany({
+      where: { topSales: true, isProductAccepted: true },
+      include: {
+        store: true,
+      },
+      orderBy: {
+        totalSales: 'desc',
+      },
+    });
+
+    return bestSellingProducts;
+  } catch (error) {
+    console.error('Error fetching products:', error);
+  }
+}
 
 
   // fetch products by category
@@ -795,12 +788,12 @@ export async function fetchProductsByCategory(category : string) {
         },
         include : {
           store : true
-        }
+        },
+        orderBy: {totalViews: 'desc'}
       });
       return products;
     } catch (error) {
       console.error(`Error fetching products by category: ${error}`);
-      throw error;
     } 
   }
 
@@ -816,12 +809,12 @@ export async function fetchProductsByCategory(category : string) {
         },
         include : {
           store : true
-        }
+        },
+        orderBy: {totalViews: 'desc'}
       });
       return products;
     } catch (error) {
       console.error(`Error fetching products by category: ${error}`);
-      throw error;
     } 
   }
 

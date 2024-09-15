@@ -406,7 +406,7 @@ export const generateOrderEmailHTML = (order: OrderWithItems) => {
           <p>We are currently processing your order and will call you to confirm the details shortly.</p>
           <div class="order-details">
             <h2>Order Details</h2>
-            <p><strong>Order Amount:</strong> ${order.amount} TND (including 7 TND for Shipping)</p>
+            <p><strong>Order Amount:</strong> ${order.amount} TND</p>
             <h3>Order Items :</h3>
             <hr style="border: 0; border-top: 1px solid #dcdcdc; margin: 20px 0;">
             ${orderItemsHTML}

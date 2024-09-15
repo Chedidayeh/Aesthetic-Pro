@@ -31,7 +31,7 @@ import {  fetchProductsByCategory, getAllPodProductsCategories, getAllPodProduct
 import ProductsByCategory from './StoreView'
 import StoreView from './StoreView'
 import PerkSection from '@/components/PodProducts/PerkSection'
-import { getAllPodProductsStores, getDesignsByStoreId, getStoreProductsAndDesigns } from './actions'
+import {  getDesignsByStoreId, getStoreProducts } from './actions'
 
 
 interface PageProps {
@@ -52,7 +52,7 @@ export default async function Page({ params }: PageProps) {
   const { storeName } = params
   const decodedCategory = decodeURIComponent(storeName)
   const user = await getUser()
-  const store = await getStoreProductsAndDesigns(decodedCategory)  
+  const store = await getStoreProducts(decodedCategory)  
   const storeDesigns = await getDesignsByStoreId(store?.id ?? "")
   const categories = await getAllPodProductsCategories()
   const collections = await getAllPodProductsCollections()

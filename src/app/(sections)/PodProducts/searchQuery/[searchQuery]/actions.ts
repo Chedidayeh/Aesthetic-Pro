@@ -52,6 +52,9 @@ export async function searchProducts(query: string) {
         include: {
           store: true, // Include related store information if needed
         },
+        orderBy:{
+          totalViews : "desc"
+        }
       });
   
       // If no products found and query is a phrase, try searching with the exact phrase in the title

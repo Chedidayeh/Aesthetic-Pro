@@ -218,7 +218,7 @@ model Product {
 
   revenue         Float         @default(0)
   totalSales      Int           @default(0)
-
+  totalViews      Int           @default(0)
   topSales        Boolean       @default(false)
   NewProduct      Boolean       @default(true)
 
@@ -238,9 +238,24 @@ model Product {
   cartProducts    CartProduct[] 
   order           OrderItem[]
 
+  productViews    ProductViews[]
+
   createdAt       DateTime       @default(now())
   updatedAt       DateTime?      @updatedAt
 }
+
+model ProductViews {
+  id         String   @id @default(cuid())
+  productId  String
+  product    Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId     String?   // Nullable, in case the user is not logged in
+  sessionId  String?   // Used if the user isn't logged in
+  ipAddress  String?   // Optional: can track by IP address for non-logged-in users
+  viewedAt   DateTime  @default(now())
+
+  @@unique([productId, userId, sessionId, ipAddress]) // Ensure that views are unique per product-user-session-IP
+}
+
 
 
 enum Collection {

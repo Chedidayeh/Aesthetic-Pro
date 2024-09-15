@@ -105,8 +105,8 @@ const ProductsView = ({ store, user , categories , collections }: ProductReelPro
         case 'sales':
           return b.totalSales - a.totalSales; 
         default:
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-      }
+          return 0
+        }
     });
   }, [products, sortBy]);
   

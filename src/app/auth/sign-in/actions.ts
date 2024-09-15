@@ -25,11 +25,9 @@ export const login = async (values: z.infer<typeof LoginSchema>) => {
         const { email, password } = validatedFields.data;
 
         try {
-
             // Fetch the user by email
             const user = await getUserByEmail(email)
             const isGoogleLoggedInUser = await checkGoogleLoggedInUser(email)
-            console.log(isGoogleLoggedInUser)
         
             if (!user) {
                 return { error: "No account found !", success: "" };

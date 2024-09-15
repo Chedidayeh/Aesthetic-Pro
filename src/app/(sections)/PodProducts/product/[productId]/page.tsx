@@ -19,19 +19,14 @@ import { OctagonAlert } from "lucide-react";
 import { fetchDesignById, fetchProductsByCategory, getPlatformForTheWebsite, getUser } from "@/actions/actions";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { getAllProductIds, getCategory, getSizes } from "./actions";
+import { getCategory, getSizes, trackProductView } from "./actions";
+import { cookies } from "next/headers";
 interface PageProps {
   params: {
     productId: string
   }
 }
 
-// export async function generateStaticParams() {
-//   const productIds = await getAllProductIds()
-//   return productIds.map((productId) => ({
-//     productId,
-//   }))
-// }
 
 const NoProductFound = () => {
   return (
@@ -61,10 +56,15 @@ const NoProductFound = () => {
 
 
 
+
 const Page = async ({ params }: PageProps) => {
+
   const { productId } = params
 
   try {
+
+    await trackProductView(productId);
+
     const user = await getUser()
 
     const product = await db.product.findFirst({
@@ -80,14 +80,13 @@ const Page = async ({ params }: PageProps) => {
         const backdesign = await fetchDesignById(product.backDesignId ? product.backDesignId : "")
 
         const categoryProducts = await fetchProductsByCategory(product.category)
-        const filteredProducts = categoryProducts.filter(item => item.id !== product.id);
+        const filteredProducts = categoryProducts!.filter(item => item.id !== product.id);
 
         const category = await getCategory(product.category)
 
         const sizes = await getSizes(product.category);
 
         const platform  = await getPlatformForTheWebsite()
-
 
 
         return (
@@ -98,8 +97,6 @@ const Page = async ({ params }: PageProps) => {
     console.log(error)
     return NoProductFound()
 
-
-    
   }
 
 

@@ -50,7 +50,6 @@ import { SingleImageDropzone } from '@/components/sellerDashboard/SingleImageDro
 import { addProductToDb, addProductToDbB, addProductToDbF } from './actions';
 import LoadingState from "@/components/LoadingState"
 import { getAllCategories, getPlatformForTheWebsite } from "@/actions/actions"
-import { Category, Color, Size, FrontBorder, BackBorder } from "@prisma/client"
 import CreateProductView from "./CreateProductView";
 import Link from "next/link";
 
