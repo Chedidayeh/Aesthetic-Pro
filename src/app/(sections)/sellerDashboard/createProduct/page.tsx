@@ -1,3 +1,5 @@
+'use server'
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -53,8 +55,10 @@ import { getAllCategories, getPlatformForTheWebsite } from "@/actions/actions"
 import CreateProductView from "./CreateProductView";
 import Link from "next/link";
 
-
+import { unstable_noStore as store } from "next/cache"
 const Page =  async () => {
+
+  store()
   
   const categories = await getAllCategories()
   const platform  = await getPlatformForTheWebsite()
