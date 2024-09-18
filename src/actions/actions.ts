@@ -823,6 +823,27 @@ export async function fetchProductsByCategory(category : string) {
 
 
 
+// Prioritizing New Products from Followed Stores
+export const getFollowedStoreProductsFirst = async (userId: string) => {
+  const followedStores = await db.storeFollow.findMany({
+    where: { userId },
+    select: { storeId: true },
+  });
+
+  const storeIds = followedStores.map((follow) => follow.storeId);
+
+  // Fetch new products from followed stores first
+  const followedStoreProducts = await db.product.findMany({
+    where: { storeId: { in: storeIds }, isProductAccepted : true, 
+    privateProduct : false },
+    include : {
+      store : true
+    },
+    orderBy: { createdAt: 'desc' },
+  });
+
+  return followedStoreProducts;
+};
 
 
 

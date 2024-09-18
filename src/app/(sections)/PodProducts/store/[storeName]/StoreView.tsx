@@ -36,7 +36,7 @@ import { Heart } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
 import { Store} from '@prisma/client'
-import { checkUserLike, updateStoreLikes } from "./actions"
+import { checkIfUserFollowsStore, checkUserLike, followStore, unfollowStore, updateStoreLikes } from "./actions"
 import { Slider } from "@/components/ui/slider"
 import { cn } from "@/lib/utils"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -45,6 +45,9 @@ import { Badge } from '@/components/ui/badge'
 import ProductsView from './ProductsView'
 import DesignView from './DesignView'
 import { FaFacebook, FaInstagram } from 'react-icons/fa'
+import { Button } from '@/components/ui/button'
+import MaxWidthWrapper from '@/components/MaxWidthWrapper'
+import LoginModal from '@/components/LoginModal'
 
 interface StoreDetails extends Store {
   products: Productswithstore[];
@@ -59,12 +62,13 @@ interface ProductReelProps {
   designs : SellerDesign[]
   categories : string[]
   collections : string[]
-
-
+  followersCount : number
+  follows:boolean
 }
-const StoreView = ({ store, user , designs , categories , collections }: ProductReelProps) => {
+const StoreView = ({ store, user , designs , categories , collections , followersCount , follows }: ProductReelProps) => {
   
-
+  const { toast } = useToast()
+  const router = useRouter()
     const [activeTab, setActiveTab] = useState('Products');
     const handleTabChange = (value : string) => {
       setActiveTab(value);
@@ -80,9 +84,56 @@ const StoreView = ({ store, user , designs , categories , collections }: Product
       window.open(url!, '_blank', 'noopener,noreferrer');
     };
 
+
+    const [isFollowing, setIsFollowing] = useState(follows);
+  const [loading, setLoading] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false)
+
+  const handleFollowToggle = async () => {
+    if(!user){
+      setIsLoginModalOpen(true)
+      toast({
+        title: 'No logged in user found !',
+        description: 'You need to log In first !',
+        variant: 'destructive',
+      });
+      return
+    }
+    setLoading(true);
+    try {
+      if (isFollowing) {
+        await unfollowStore(user.id, store.id);
+        setIsFollowing(false);
+        toast({
+          title: 'Store is unfollowed !',
+          variant: 'default',
+        });
+        router.refresh()
+      } else {
+        await followStore(user.id, store.id);
+        setIsFollowing(true);
+        toast({
+          title: 'Store is followed !',
+          variant: 'default',
+        });
+        router.refresh()
+      }
+    } catch (error) {
+      console.error("Error following/unfollowing store", error);
+      toast({
+        title: 'Error !',
+        description : 'Try again later !',
+        variant: 'destructive',
+      });
+      router.refresh()
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
 
-    
+    <>
     <section className='py-4'>
      
      <div className='py-10 bg-muted/50 rounded-xl mx-auto text-center flex flex-col items-center max-w-1xl'>
@@ -109,27 +160,19 @@ const StoreView = ({ store, user , designs , categories , collections }: Product
     {store?.storeBio}
   </p>
 
-  <div className='my-2'>
-  <p className='text-sm'>Contact the seller</p>
-  </div>
-  {store.facebookLink && store.instagramLink && (
-<>
-  <div className="flex gap-6 my-2">
-    {store.facebookLink && (
-  <FaFacebook className="text-2xl cursor-pointer hover:text-blue-600 " onClick={handleFacebookIconClick} />
-    )}
-    {store.instagramLink && (
-  <FaInstagram className="text-2xl cursor-pointer hover:text-red-600" onClick={handleInstagramIconClick} />
-    )}
-  </div>
-  <div className=''>
-  <p className='text-sm'>or</p>
-  </div>
-  </>
- )}
-  <div className='my-2'>
-  <p className='text-sm'>+216 {store.userPhoneNumber}</p>
-  </div>
+     <div className='mt-4'>
+      <p className="text-sm font-medium">{followersCount} {followersCount === 1 ? 'follower' : 'followers'}</p>
+    </div>
+
+    <div className={`mt-4 ${isFollowing ? '' : 'animate-wiggle'}`}>
+    <Button 
+    variant={"outline"} 
+    onClick={handleFollowToggle}
+    disabled={loading}
+    >
+    {loading ? "Processing..." : isFollowing ? "Unfollow this store" : "Follow this store"}
+   </Button>    </div>
+
 </div>
 
 
@@ -158,10 +201,49 @@ const StoreView = ({ store, user , designs , categories , collections }: Product
             </div>
             )}
 
-
-
-
     </section>
+
+
+
+    <div className='flex justify-center my-4'>
+  <section className='border rounded-2xl w-[30%] bg-muted/50 border-gray-200'>
+    <MaxWidthWrapper className='py-4 text-center'>
+      <div className='my-2'>
+        <p className='text-sm'>Contact the seller</p>
+      </div>
+      {store.facebookLink && store.instagramLink && (
+        <>
+          <div className="flex justify-center gap-6 my-2">
+            {store.facebookLink && (
+              <FaFacebook
+                className="text-2xl cursor-pointer hover:text-blue-600"
+                onClick={handleFacebookIconClick}
+              />
+            )}
+            {store.instagramLink && (
+              <FaInstagram
+                className="text-2xl cursor-pointer hover:text-red-600"
+                onClick={handleInstagramIconClick}
+              />
+            )}
+          </div>
+          <div className='my-2'>
+            <p className='text-sm'>or</p>
+          </div>
+        </>
+      )}
+      <div className='my-2'>
+        <p className='text-sm'>+216 {store.userPhoneNumber}</p>
+      </div>
+    </MaxWidthWrapper>
+  </section>
+</div>
+
+
+<LoginModal isOpen={isLoginModalOpen} setIsOpen={setIsLoginModalOpen} />
+
+    </>
+
   )
 
 

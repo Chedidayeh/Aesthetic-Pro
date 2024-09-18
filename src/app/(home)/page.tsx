@@ -9,17 +9,25 @@ import Link from 'next/link'
 
 import NextImage from 'next/image'
 import ProductSlider from "@/components/PodProducts/ProductSlider";
-import { fetchTrendingProducts, getUser } from "@/actions/actions";
+import { fetchTrendingProducts, getFollowedStoreProductsFirst, getUser } from "@/actions/actions";
+import ProductReel from "@/components/PodProducts/ProductReel";
 
 
 
 
 
 export default async function Page() {
+  const user = await getUser();
 
+  
   const trendingProducts = await fetchTrendingProducts()
   const filteredTrendingProducts = trendingProducts ? trendingProducts.slice(0, 8) : [];
-  const user = await getUser();
+
+
+
+  const followedStoresProducts = user ? await getFollowedStoreProductsFirst(user.id) : [];
+  const filteredFollowedStoresProducts = followedStoresProducts ? followedStoresProducts.slice(0, 8) : [];
+
   return (
     <>
 
@@ -48,7 +56,7 @@ export default async function Page() {
     </p>
     <div className='mt-2'>
       <Link href={"/PodProducts"}>
-        <Button variant='link'>
+        <Button variant='link' className="animate-wiggle">
           Browse Now &rarr;
         </Button>
       </Link>
@@ -96,9 +104,22 @@ export default async function Page() {
             user={user!}
             products={filteredTrendingProducts} />
 
+</section>
+
+ {/* Followed Stores Products section */}
+ {filteredFollowedStoresProducts.length > 0 && (
+        <section className='bg-muted/50 border-2 rounded-2xl dark:border-slate-50 border-slate-500 w-[90%] mx-auto my-8'>
+          <div className='w-[85%] mx-auto'>
+            <ProductReel
+              user={user!}
+              href='/PodProducts/FollowedStores'
+              title='Products from Stores You Follow'
+              products={filteredFollowedStoresProducts}
+              subtitle='Check out the latest products from your favorite stores!'
+            />
+          </div>
         </section>
-
-
+)}
 
 
 

@@ -95,6 +95,7 @@ model User {
 
   accounts      Account[]
 
+  followedStores StoreFollow[] // New field to track the stores the user follows
 
 
 
@@ -171,6 +172,9 @@ model Store {
 
   likes           Like[]
 
+  followers      StoreFollow[] // New field to track the users following the store
+
+
   paymentRequest  PaymentRequest[]
 
   createdAt       DateTime       @default(now())
@@ -178,6 +182,16 @@ model Store {
 }
 
 
+model StoreFollow {
+  id        String   @id @default(cuid())
+  userId    String
+  storeId   String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  store     Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, storeId])  // Ensure a user can't follow the same store more than once
+}
 
 
 

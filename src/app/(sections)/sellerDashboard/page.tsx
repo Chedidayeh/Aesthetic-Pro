@@ -11,6 +11,7 @@ import {
   Package2,
   Search,
   Shirt,
+  User,
   Users,
 } from "lucide-react"
 
@@ -46,6 +47,7 @@ import React from "react"
 import OrderedDesigns from "@/components/sellerDashboard/OrderedDesigns"
 import OrderedProducts from "@/components/sellerDashboard/OrderedProducts"
 import BanUser from '@/components/BanUser';
+import { getStoreFollowersCount } from '../PodProducts/store/[storeName]/actions';
 
 
 
@@ -61,9 +63,7 @@ const Page =  async () => {
   if(!user) return
   const store = await getStoreByUserId(user!.id!)
   const notifications = await getUnreadNotificationsForStore(store.id)
-
-
-
+  const followersCount = await getStoreFollowersCount(store!.id);
 
   return (
     <>
@@ -118,17 +118,8 @@ const Page =  async () => {
               <div className="text-2xl font-bold">{store.revenue.toFixed(2)} TND</div>
             </CardContent>
           </Card>
-          <Card x-chunk="dashboard-01-chunk-1">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Total Products
-              </CardTitle>
-              <Shirt className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{store.products.length} products</div>
-            </CardContent>
-          </Card>
+
+
           <Card x-chunk="dashboard-01-chunk-3">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
@@ -140,6 +131,20 @@ const Page =  async () => {
               <div className="text-2xl font-bold">{store.totalSales} sales</div>
             </CardContent>
           </Card>
+
+
+          <Card x-chunk="dashboard-01-chunk-1">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Total Followers
+              </CardTitle>
+              <User className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{followersCount} {followersCount === 1 ? 'follower' : 'followers'}</div>
+            </CardContent>
+          </Card>
+
           <Card x-chunk="dashboard-01-chunk-4">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">

@@ -21,7 +21,7 @@ interface ProductReelProps {
 
 const FALLBACK_LIMIT = 4
 
-const ProductReel = (props: ProductReelProps) => {
+const ProductDimenetions = (props: ProductReelProps) => {
   const { title, subtitle } = props
 
   return (
@@ -60,4 +60,4 @@ const ProductReel = (props: ProductReelProps) => {
 
 
 
-export default ProductReel
+export default ProductDimenetions

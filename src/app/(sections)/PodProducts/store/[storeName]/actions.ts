@@ -131,3 +131,42 @@ export async function getAllPodProductsStores() {
   const stores = await db.store.findMany();
   return stores.map(store => store.storeName);
 }
+
+
+
+
+export const checkIfUserFollowsStore = async (userId: string, storeId: string) => {
+  const follow = await db.storeFollow.findUnique({
+    where: {
+      userId_storeId: { userId, storeId },
+    },
+  });
+  return !!follow; // Return true if follow exists, otherwise false
+};
+
+export const followStore = async (userId: string, storeId: string) => {
+  return await db.storeFollow.create({
+    data: {
+      userId,
+      storeId,
+    },
+  });
+};
+
+export const unfollowStore = async (userId: string, storeId: string) => {
+  return await db.storeFollow.delete({
+    where: {
+      userId_storeId: { userId, storeId },
+    },
+  });
+};
+
+export const getStoreFollowersCount = async (storeId: string) => {
+  const followersCount = await db.storeFollow.count({
+    where: {
+      storeId,
+    },
+  });
+  return followersCount;
+};
+

@@ -31,7 +31,7 @@ import {  fetchProductsByCategory, getAllPodProductsCategories, getAllPodProduct
 import ProductsByCategory from './StoreView'
 import StoreView from './StoreView'
 import PerkSection from '@/components/PodProducts/PerkSection'
-import {  getDesignsByStoreId, getStoreProducts } from './actions'
+import {  checkIfUserFollowsStore, getDesignsByStoreId, getStoreFollowersCount, getStoreProducts } from './actions'
 
 
 interface PageProps {
@@ -40,12 +40,6 @@ interface PageProps {
   }
 }
 
-// export async function generateStaticParams() {
-//   const stores = await getAllPodProductsStores()
-//   return stores.map((storeName) => ({
-//     storeName,
-//   }))
-// }
 
 
 export default async function Page({ params }: PageProps) {
@@ -56,6 +50,8 @@ export default async function Page({ params }: PageProps) {
   const storeDesigns = await getDesignsByStoreId(store?.id ?? "")
   const categories = await getAllPodProductsCategories()
   const collections = await getAllPodProductsCollections()
+  const followersCount = await getStoreFollowersCount(store!.id);
+  const follows = await checkIfUserFollowsStore(user?.id ?? "", store!.id);
 
   return (
     <>
@@ -72,6 +68,8 @@ export default async function Page({ params }: PageProps) {
                      designs={storeDesigns!}
                      categories={categories}
                      collections={collections}
+                     followersCount={followersCount}
+                     follows={follows}
                 />
                 </div>
               </section>

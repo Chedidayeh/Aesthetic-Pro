@@ -2,33 +2,14 @@
 /* eslint-disable @next/next/no-img-element */
 
 import ProductReel from '@/components/PodProducts/ProductReel'
-import MaxWidthWrapper from '@/components/MaxWidthWrapper'
 import {
   Button,
-  buttonVariants,
 } from '@/components/ui/button'
-import { Product } from '@prisma/client'
-import {
-  ArrowDownToLine,
-  CheckCircle,
-  Headset,
-  Leaf,
-  Pencil,
-  Search,
-  Truck,
-} from 'lucide-react'
 import Link from 'next/link'
-import { db } from '@/db'
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
-import { cn } from '@/lib/utils'
-import { Input } from '@/components/ui/input'
-import SearchQuery from '@/components/PodProducts/SearchQuery'
+
 import PerkSection from '@/components/PodProducts/PerkSection'
-import { fetchBestSellingProducts, fetchNewProducts, fetchTrendingProducts, getProductsGroupedByCollection, getUser } from '@/actions/actions'
-import NextImage from 'next/image'
-import Marquee from 'react-fast-marquee'
+import { fetchBestSellingProducts, fetchNewProducts, fetchTrendingProducts, getFollowedStoreProductsFirst, getProductsGroupedByCollection, getUser } from '@/actions/actions'
 import ProductSlider from '@/components/PodProducts/ProductSlider'
-import HeroSection from '@/components/PodProducts/HeroSection'
 import { fetchDiscountProductsDeals } from './discountDeals/actions'
 
 export default async function Page() {
@@ -39,12 +20,14 @@ export default async function Page() {
   const discountProductsDeals = await fetchDiscountProductsDeals()
   const trendingProducts = await fetchTrendingProducts()
   const user = await getUser();
+  const followedStoresProducts = user ? await getFollowedStoreProductsFirst(user.id) : [];
 
   // Ensure products are not null or undefined
   const filteredTrendingProducts = trendingProducts ? trendingProducts.slice(0, 8) : [];
   const filteredNewProducts = newProducts ? newProducts.slice(0, 8) : [];
   const filteredBestSellingProducts = bestSellingProducts ? bestSellingProducts.slice(0, 8) : [];
   const filteredDiscountProductsDeals = discountProductsDeals ? discountProductsDeals.slice(0, 8) : [];
+  const filteredFollowedStoresProducts = followedStoresProducts ? followedStoresProducts.slice(0, 8) : [];
 
   
   return (
@@ -77,10 +60,25 @@ export default async function Page() {
        <ProductSlider 
             user={user!}
             products={filteredTrendingProducts} />
-
         </section>
 
 <PerkSection/>
+
+
+ {/* Followed Stores Products section */}
+ {filteredFollowedStoresProducts.length > 0 && (
+        <section className='bg-muted/50 border-2 rounded-2xl dark:border-slate-50 border-slate-500 w-[90%] mx-auto my-8'>
+          <div className='w-[85%] mx-auto'>
+            <ProductReel
+              user={user!}
+              href='/PodProducts/FollowedStores'
+              title='Products from Stores You Follow'
+              products={filteredFollowedStoresProducts}
+              subtitle='Check out the latest products from your favorite stores!'
+            />
+          </div>
+        </section>
+      )}
 
 
         {/* discountDeals section */}
