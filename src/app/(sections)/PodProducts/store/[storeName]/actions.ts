@@ -84,7 +84,7 @@ export async function getStoreProducts(storeName: string) {
       },
       include: {
         products: {
-          where : { isProductAccepted : true},
+          where : { isProductAccepted : true , privateProduct : false},
           include : {
             store : true
           },

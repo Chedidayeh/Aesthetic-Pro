@@ -1,9 +1,8 @@
 'use server'
 
-import { fetchDiscountProductsDeals } from "@/app/(sections)/PodProducts/discountDeals/actions";
 import { auth } from "@/auth";
 import { db } from "@/db"
-import { Collection, Order, OrderItem, Product, SellerDesign, Store, UserType } from "@prisma/client";
+import { Collection, Order, OrderItem, Product, SellerDesign, UserType } from "@prisma/client";
 
 export async function createPlatform(userId:string) {
 
@@ -158,7 +157,7 @@ export async function getAllPodProductsCategories() {
 export async function getAllPodProductsCollections() {
   try {
     const collections = await db.product.findMany({
-      where : {isProductAccepted : true},
+      where : {isProductAccepted : true , privateProduct : false},
       select: {
         collection: true,
       },
@@ -645,7 +644,8 @@ export async function fetchTrendingProducts() {
   try {
     const trendingProducts = await db.product.findMany({
       where: {
-        isProductAccepted : true
+        isProductAccepted : true,
+         privateProduct : false
       },
       include : {
         store : true
@@ -668,7 +668,7 @@ export async function fetchTrendingProducts() {
 export async function fetchAllProducts() {
   try {
     const products = await db.product.findMany({
-      where : {isProductAccepted : true},
+      where : {isProductAccepted : true , privateProduct : false},
       include : {
         store : true
       },
@@ -690,7 +690,7 @@ export async function getProductsGroupedByCollection() {
     try {
       // Fetch all products from the database
       const products = await db.product.findMany({
-        where : {isProductAccepted : true} ,
+        where : {isProductAccepted : true , privateProduct : false} ,
         include : {store : true} ,       
         orderBy: {totalViews: 'desc'}
         });
@@ -718,7 +718,7 @@ export async function getProductsGroupedByCollection() {
  export async function fetchNewProducts() {
     try {
       const products = await db.product.findMany({
-        where : {isProductAccepted : true , NewProduct : true},
+        where : {isProductAccepted : true , NewProduct : true , privateProduct : false},
         orderBy: {
           createdAt: 'desc'
         },
@@ -746,6 +746,7 @@ export async function fetchBestSellingProducts() {
     const productsToUpdate = await db.product.findMany({
       where: {
         isProductAccepted: true,
+        privateProduct : false,
         totalSales: { gt: 9 },
       },
     });
@@ -762,7 +763,7 @@ export async function fetchBestSellingProducts() {
 
     // Fetch the products again to get the updated topSales values
     const bestSellingProducts = await db.product.findMany({
-      where: { topSales: true, isProductAccepted: true },
+      where: { topSales: true, isProductAccepted: true , privateProduct : false },
       include: {
         store: true,
       },
@@ -784,7 +785,8 @@ export async function fetchProductsByCategory(category : string) {
       const products = await db.product.findMany({
         where: {
           category: category,
-          isProductAccepted : true
+          isProductAccepted : true,
+           privateProduct : false
         },
         include : {
           store : true
@@ -805,7 +807,8 @@ export async function fetchProductsByCategory(category : string) {
       const products = await db.product.findMany({
         where: {
           collection: collection,
-          isProductAccepted : true
+          isProductAccepted : true, 
+          privateProduct : false
         },
         include : {
           store : true

@@ -197,7 +197,7 @@ const ProductListing = ({
       <div className="mb-2 mt-0 flex items-center"> {/* Added flex container */}
   <div className="flex-grow"> {/* Added flex-grow to take remaining space */}
     <Badge variant="secondary">
-      <Link href={`/PodProducts/store/${product.store.storeName}`} className=" group text-xs hover:text-blue-500 cursor-pointer relative block">
+      <Link href={`/PodProducts/store/${product.store.storeName}`} className=" animate-pulse font-bold group text-xs hover:text-blue-500 cursor-pointer relative block">
         {product.store.storeName}
         <span className="absolute font-normal bottom-5 left-1/2 transform -translate-x-1/2 w-max px-2 py-1 text-xs bg-black text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
           View store
@@ -252,6 +252,8 @@ const ProductListing = ({
               'opacity-100': !fade ,
             })}
             style={{ transitionProperty: 'opacity, transform' }}
+            onContextMenu={(e) => e.preventDefault()}
+            draggable={false}
           />
         </>
       )}

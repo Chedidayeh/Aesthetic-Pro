@@ -113,6 +113,7 @@ export default async function Page() {
       </section>
     )}
                 {/* Newly released section */}
+      {filteredNewProducts.length > 0 && (
       <section className='bg-muted/50 border-2 rounded-2xl dark:border-slate-50 border-slate-500 w-[90%] mx-auto my-8'>
       <div className='w-[85%] mx-auto'>
       <ProductReel
@@ -124,6 +125,7 @@ export default async function Page() {
           />
       </div>
       </section>
+        )}
 
 
 

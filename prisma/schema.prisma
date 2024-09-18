@@ -157,6 +157,7 @@ model Store {
   revenue         Float         @default(0)
   receivedPayments  Float         @default(0)
   totalSales      Int           @default(0)
+  totalViews      Int           @default(0)
 
   products        Product[]
   designs         SellerDesign[]
@@ -215,6 +216,8 @@ model Product {
   isProductAccepted Boolean      @default(false)
 
   isProductRefused Boolean      @default(false)
+
+  privateProduct   Boolean      @default(false)
 
   revenue         Float         @default(0)
   totalSales      Int           @default(0)

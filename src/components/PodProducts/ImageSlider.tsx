@@ -98,6 +98,8 @@ const ImageSlider = ({ urls }: ImageSliderProps) => {
               className='-z-10 h-full w-full  object-cover object-center'
               src={`/api/getImage?imageUrl=${encodeURIComponent(url)}`}
               alt='Product image'
+              onContextMenu={(e) => e.preventDefault()}
+              draggable={false}
             />
           </SwiperSlide>
         ))}

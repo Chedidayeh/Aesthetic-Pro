@@ -24,6 +24,8 @@ const Page = () => {
               width={1000}
               height={1000}
               alt="logo"
+              onContextMenu={(e) => e.preventDefault()}
+              draggable={false}
           />
       </div>
         </div>

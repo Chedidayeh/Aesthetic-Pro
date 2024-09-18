@@ -68,7 +68,7 @@ const Page = async ({ params }: PageProps) => {
     const user = await getUser()
 
     const product = await db.product.findFirst({
-      where : {id : productId},
+      where : {id : productId , isProductAccepted : true , privateProduct : false },
       include : {
         store : true
       }

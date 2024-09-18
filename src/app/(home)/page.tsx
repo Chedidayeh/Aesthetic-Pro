@@ -8,6 +8,8 @@ import {
 import Link from 'next/link'
 
 import NextImage from 'next/image'
+import ProductSlider from "@/components/PodProducts/ProductSlider";
+import { fetchTrendingProducts, getUser } from "@/actions/actions";
 
 
 
@@ -15,6 +17,9 @@ import NextImage from 'next/image'
 
 export default async function Page() {
 
+  const trendingProducts = await fetchTrendingProducts()
+  const filteredTrendingProducts = trendingProducts ? trendingProducts.slice(0, 8) : [];
+  const user = await getUser();
   return (
     <>
 
@@ -73,7 +78,25 @@ export default async function Page() {
 
 
 
+<section className='bg-muted/50 border-2 rounded-2xl dark:border-slate-50 border-slate-500 w-[90%] mx-auto my-8'>
+        <div className='flex flex-col items-center justify-center mt-2'>
+            <p className='mt-4 text-sm max-w-prose text-muted-foreground'>
+              Discover our Trending Style collection!
+            </p>
+            <div className='mt-2'>
+              <Link href={"/PodProducts/ProductsView"}>
+                <Button variant='link'>
+                  Shop the Collection &rarr;
+                </Button>
+              </Link>
+            </div>
+          </div>
+          {/* trending products */}
+       <ProductSlider 
+            user={user!}
+            products={filteredTrendingProducts} />
 
+        </section>
 
 
 

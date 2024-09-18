@@ -23,6 +23,7 @@ const Footer = async () => {
 
   <div style={{ width: '100px', height: '100px' }}>
     <NextImage
+        draggable={false}
         src={"/aestheticpro.png"}
         width={1000}
         height={1000}

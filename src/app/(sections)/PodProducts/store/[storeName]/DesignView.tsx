@@ -308,6 +308,7 @@ const handleSortChange = (event: string) => {
                       src={design.imageUrl}
                       width={1000}
                       onContextMenu={(e) => e.preventDefault()}
+                      draggable={false}
                     />
                      <Badge
                     variant={'default'}>

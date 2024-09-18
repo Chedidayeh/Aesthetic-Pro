@@ -27,7 +27,8 @@ import { Collection } from '@prisma/client';
       Backwidth: number,
       Backheight: number,
       backdesignPath: string,
-      selectedCollection : Collection
+      selectedCollection : Collection,
+      privateProduct : boolean
     ): Promise<{ success: boolean; productId: string | null; error: boolean }> => {
       try {
         // Fetch user session
@@ -82,7 +83,9 @@ import { Collection } from '@prisma/client';
               sellerProfit: sellerProfit,
               frontDesignId: frontDesign.id,
               backDesignId: backDesign.id,
-              collection : selectedCollection
+              collection : selectedCollection,
+              privateProduct : privateProduct
+
             },
           });
     
@@ -115,7 +118,8 @@ import { Collection } from '@prisma/client';
       Frontwidth: number,
       Frontheight: number,
       frontdesignPath: string,
-      selectedCollection : Collection
+      selectedCollection : Collection,
+      privateProduct : boolean,
 
     ): Promise<{ success: boolean; productId: string | null; error: boolean }> => {
       try {
@@ -158,7 +162,9 @@ import { Collection } from '@prisma/client';
               basePrice: BasePrice,
               sellerProfit: sellerProfit,
               frontDesignId: frontDesign.id,
-              collection : selectedCollection
+              collection : selectedCollection,
+              privateProduct : privateProduct
+
 
             },
           });
@@ -191,7 +197,9 @@ import { Collection } from '@prisma/client';
       Backwidth: number,
       Backheight: number,
       backdesignPath: string,
-      selectedCollection : Collection
+      selectedCollection : Collection,
+      privateProduct : boolean,
+
 
     ): Promise<{ success: boolean; productId: string | null; error: boolean }> => {
       try {
@@ -234,7 +242,8 @@ import { Collection } from '@prisma/client';
               basePrice: BasePrice,
               sellerProfit: sellerProfit,
               backDesignId: backDesign.id,
-              collection : selectedCollection
+              collection : selectedCollection,
+              privateProduct : privateProduct
 
             },
           });

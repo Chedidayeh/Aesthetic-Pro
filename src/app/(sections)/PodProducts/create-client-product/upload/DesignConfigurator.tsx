@@ -882,6 +882,8 @@ const handleSortChange = (event: string) => {
                                             alt={category.label} 
                                             className="mb-2" 
                                             style={{ width: '100%', height: 'auto', objectFit: 'cover' }} 
+                                            onContextMenu={(e) => e.preventDefault()}
+                                            draggable={false}
                                           />
                                           <div className="flex flex-wrap justify-center gap-2">
                                             <Badge variant="secondary">{category.label}</Badge>
@@ -1026,6 +1028,7 @@ const handleSortChange = (event: string) => {
                                         src={design.imageUrl}
                                         width={1000}
                                         onContextMenu={(e) => e.preventDefault()}
+                                        draggable={false}
                                       />
                                     </div>
                                     <Badge variant={`${selectedFrontIndex === index ? 'default' : 'secondary' }`}>{design.name}</Badge>
@@ -1070,7 +1073,7 @@ const handleSortChange = (event: string) => {
                                         src={design.imageUrl}
                                         width={1000}
                                         onContextMenu={(e) => e.preventDefault()}
-                                      />
+                                        draggable={false}                                      />
                                     </div>
                                     <Badge variant={`${selectedBackIndex === index ? 'default' : 'secondary' }`}>{design.name}</Badge>
                                   </div>

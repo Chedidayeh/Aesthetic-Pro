@@ -176,6 +176,8 @@ const combinedUrls = interleaveArrays(product.croppedFrontProduct, product.cropp
             blurDataURL="/Loading.png"
             loading='lazy'
             className={clsx("transition-transform duration-700 hover:scale-150")}
+            onContextMenu={(e) => e.preventDefault()}
+            draggable={false}
           />
         </div>
         {/* Thumbnail images */}
@@ -198,6 +200,8 @@ const combinedUrls = interleaveArrays(product.croppedFrontProduct, product.cropp
                   width={120}
                   height={120}
                   className="object-cover w-full h-40"
+                  onContextMenu={(e) => e.preventDefault()}
+                  draggable={false}
                 />
             </div>
           ))}
@@ -248,6 +252,7 @@ const combinedUrls = interleaveArrays(product.croppedFrontProduct, product.cropp
                 <div className='text-muted-foreground border-gray-300 '>
                   Store : <span className='cursor-pointer hover:text-blue-700'>
                     <Link
+                    className='animate-pulse font-bold text-blue-500'
                     href={`/PodProducts/store/${product.store.storeName}`}>
                     {product.store.storeName}
                     </Link>
@@ -256,6 +261,7 @@ const combinedUrls = interleaveArrays(product.croppedFrontProduct, product.cropp
                 <div className='ml-4 border-l text-muted-foreground border-gray-300 pl-4'>
                   Category : <span className='cursor-pointer hover:text-blue-700'>
                     <Link
+                    className='animate-pulse text-blue-500'
                     href={`/PodProducts/category/${product.category}`}>
                     {product.category}
                     </Link>

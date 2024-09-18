@@ -140,6 +140,8 @@ const CategoryView: React.FC<CategoryViewProps> = ({ categories  }) => {
         src={category.value!}
         alt={category.label}
         className="h-full w-full rounded-xl object-cover"
+        onContextMenu={(e) => e.preventDefault()}
+        draggable={false}
       />
         <div className="absolute bottom-2 left-2">
           <Badge variant="secondary">{category.label}</Badge>

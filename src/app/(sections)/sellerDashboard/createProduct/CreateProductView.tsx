@@ -141,6 +141,7 @@ const CreateProductView = ({categories , platform}: ProductViewProps) => {
   // switch
   const [addFrontDesign, setAddFrontDesign] = useState(true);
   const [addBackDesign, setAddBackDesign] = useState(false);
+  const [privateProduct, setPrivateProduct] = useState(false);
 
   // Product Data
   const [productTitle , setTitle ] = React.useState<string>("");
@@ -369,6 +370,9 @@ const handleFileChange = (file : File) => {
       setAddBackDesign(!addBackDesign);
     };
 
+    const handlePrivateProductChange = () => {
+      setPrivateProduct(!privateProduct);
+    };
 
 
 
@@ -613,7 +617,7 @@ const handleFileChange = (file : File) => {
                     res.frontPaths,backPaths,
                     productTitle,productDescription,tags,productPrice,BasePrice,sellerProfit,
                     frontDesignName,Frontwidth,Frontheight,frontdesignPath,
-                    backDesignName,Backwidth,Backheight,backdesignPath , selectedCollection)
+                    backDesignName,Backwidth,Backheight,backdesignPath , selectedCollection , privateProduct)
   
                     if(result.success){
                       toast({
@@ -671,7 +675,7 @@ const handleFileChange = (file : File) => {
                   const result = await addProductToDbF(selectedP.label,res.colors,res.frontPaths,
                   productTitle,productDescription,tags,productPrice,BasePrice,sellerProfit,
                   frontDesignName,Frontwidth,Frontheight,
-                  frontdesignPath , selectedCollection)
+                  frontdesignPath , selectedCollection , privateProduct)
 
                   if(result.success){
                     toast({
@@ -727,7 +731,7 @@ const handleFileChange = (file : File) => {
                     const result = await addProductToDbB(selectedP.label,res.colors,res.backPaths,
                     productTitle,productDescription,tags,productPrice,BasePrice,sellerProfit,
                     backDesignName,Backwidth,Backheight,
-                    backdesignPath , selectedCollection)
+                    backdesignPath , selectedCollection , privateProduct)
   
                     if(result.success){
                       toast({
@@ -1102,6 +1106,16 @@ const handleFileChange = (file : File) => {
                               </div>
                                  )}
 
+
+                                 {/* line */}
+                                 <div className="border-t text-zinc-500 mt-8"/>
+                                <div className="flex items-center mt-4 space-x-2">
+                                <Switch disabled={isAdding} id="front" defaultChecked={privateProduct} onClick={handlePrivateProductChange } />
+                                <Label htmlFor="front">Private Product : {privateProduct ? "Yes" : "No"}</Label>
+                               </div>
+                               <p className="text-zinc-500 text-sm my-4">Private Products means 
+                                that your products won't be available in the platform marketplace. 
+                                Only you can create orders for this type of products!</p>
                               </div>
                               </>
                               )}

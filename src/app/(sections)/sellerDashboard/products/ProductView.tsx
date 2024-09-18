@@ -24,7 +24,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import React from 'react';
-import {  CircleDollarSign, CreditCard, Eye, Heart, Loader2, OctagonAlert, PenTool, SquarePen, Tags, Trash2 } from 'lucide-react';
+import {  CircleDollarSign, CreditCard, Eye, EyeIcon, Heart, Loader2, OctagonAlert, PenTool, SquarePen, Tags, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import {
     AlertDialog,
@@ -68,11 +68,13 @@ import ImageSlider from "@/components/PodProducts/ImageSlider";
 import LoadingState from "@/components/LoadingState";
 interface ProductViewProps {
   sellerProductsData: Product[];
+  totalProductViews:number
   }
 
 
 const ProductView = ({
   sellerProductsData,
+  totalProductViews,
   }: ProductViewProps) => {
         const router = useRouter();
         const { toast } = useToast()
@@ -188,13 +190,74 @@ const ProductView = ({
                 };
 
 
+                const [productImgs , setproductImgs] = useState <string[]> ([])
+                const viewProduct = (product : Product) => {
+                  let imgs = [] as string []
+                  product.croppedFrontProduct.map((img : string) => {
+                    imgs.push(img)
+                  })
+                  product.croppedBackProduct.map((img : string) => {
+                    imgs.push(img)
+                  })
+                  setproductImgs(imgs)
+                }
+            
 
+     // State variables
+     const [isDownloadOpen, setIsDownloadOpen] = useState(false);
 
+     // Function to handle download
+     const downloadMockup = async (imageUrls: string[]) => {
+       try {
+         setIsDownloadOpen(true);
+     
+         // Loop through each imageUrl and download
+         for (let i = 0; i < imageUrls.length; i++) {
+           const response = await fetch(imageUrls[i]);
+           const blob = await response.blob();
+           const url = window.URL.createObjectURL(blob);
+     
+           const a = document.createElement("a");
+           a.href = url;
+           a.download = `design_image_${i + 1}.png`; // Set dynamic filename or customize as needed
+           document.body.appendChild(a);
+           a.click();
+           a.remove();
+         }
+     
+         setIsDownloadOpen(false);
+       } catch (error) {
+         setIsDownloadOpen(false);
+         console.error("Error downloading designs:", error);
+         toast({
+           title: "Download failed",
+           variant: "destructive",
+         });
+       }
+     };
+     
 
 
   return (
 
     <>
+
+                                              {/* downloading Loader  */}
+                                              <AlertDialog open={isDownloadOpen} >
+                                       <AlertDialogTrigger asChild>
+                                        </AlertDialogTrigger>
+                                          <AlertDialogContent className=" flex flex-col items-center justify-center">
+                                              <AlertDialogHeader className="flex flex-col items-center justify-center">
+                                              <Loader2 className="animate-spin text-blue-800 h-[50%] w-[50%]" />
+                                              <AlertDialogTitle className="flex flex-col items-center justify-center">Loading</AlertDialogTitle>
+                                            </AlertDialogHeader>
+                                            <AlertDialogDescription className="flex flex-col items-center justify-center">
+                                              Please wait while downloading...
+                                            </AlertDialogDescription>
+                                                    <AlertDialogFooter>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                  </AlertDialog>
 
 
 
@@ -205,6 +268,7 @@ const ProductView = ({
   <Card className="col-span-full" x-chunk="dashboard-01-chunk-4">
   <CardHeader className="px-4 sm:px-7">
   <CardDescription>Total Products: {sellerProductsData.length}</CardDescription>
+  <CardDescription className="text-blue-500">Total Products Views : {totalProductViews}</CardDescription>
     <div className="ml-0 sm:ml-5 mt-2">
       <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
         {/* Sorting select */}
@@ -291,7 +355,7 @@ const ProductView = ({
                       <div className="absolute top-2 right-2 px-2 py-1 z-10 rounded">
                         {product.isProductAccepted && (
                           <Badge className="bg-green-700 text-white px-2 py-1 rounded">
-                            Accepted
+                            Accepted {product.privateProduct ? "| Private" : ""}
                           </Badge>
                         )}
                         {product.isProductRefused && (
@@ -305,6 +369,19 @@ const ProductView = ({
                           </Badge>
                         )}
                       </div>
+
+                      <div className="absolute top-10 right-2 px-2 py-1 z-10 rounded">
+                      <Badge 
+                       onClick={() => {
+                       setIsDownloadOpen(true);
+                       viewProduct(product);
+                       downloadMockup(productImgs);
+                      }}
+                      className="bg-purple-500 hover:bg-purple-400 cursor-pointer text-white px-2 py-1 rounded">
+                            Download Product
+                      </Badge>
+                        </div>
+
 
                       <div className="absolute top-2 left-2 px-2 py-1 z-10 rounded">
                         <Badge variant="secondary" className="bg-gray-200">

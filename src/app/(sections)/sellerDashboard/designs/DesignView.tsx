@@ -181,6 +181,35 @@ const DesignView = ({
                           }
                         };
 
+
+
+                         // State variables
+ const [isDownloadOpen, setIsDownloadOpen] = useState(false);
+
+ // Function to handle download
+ const downloadDesign = async (imageUrl: string) => {
+   try {
+     setIsDownloadOpen(true);
+     const response = await fetch(imageUrl);
+     const blob = await response.blob();
+     const url = window.URL.createObjectURL(blob);
+     const a = document.createElement("a");
+     a.href = url;
+     a.download = "design_image.png"; // You can set the filename here
+     document.body.appendChild(a);
+     a.click();
+     a.remove();
+     setIsDownloadOpen(false);
+   } catch (error) {
+     setIsDownloadOpen(false);
+     console.error("Error downloading design:", error);
+     toast({
+       title: "Download failed",
+       variant: "destructive",
+     });
+   }
+ };
+
   return (
 
     <>
@@ -288,6 +317,10 @@ const DesignView = ({
                             </Badge>
                           )}
                         </div>
+
+
+
+                        
                       </CardHeader>
                       <CardContent className="relative flex items-center justify-center">
                         <NextImage
@@ -303,6 +336,16 @@ const DesignView = ({
                         />
                       </CardContent>
                       <CardFooter className="relative">
+                      <div className="absolute bottom-2 left-0 right-0 z-10 text-center">
+                        <Badge 
+                       onClick={() => {
+                        setIsDownloadOpen(true);
+                        downloadDesign(design.imageUrl);
+                      }}
+                      className="bg-purple-500 hover:bg-purple-400 cursor-pointer px-2 py-1 text-white rounded">
+                            Download Design
+                      </Badge>
+                        </div>
                         {/* Edit design  */}
                         <AlertDialog>
                           <AlertDialogTrigger asChild>

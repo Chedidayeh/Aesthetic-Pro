@@ -57,6 +57,7 @@ const Navbar = async () => {
               width={1000}
               height={1000}
               alt="logo"
+              draggable={false}
           />
       </div>
 

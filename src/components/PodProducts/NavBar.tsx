@@ -47,6 +47,7 @@ const Navbar = async () => {
           {/* Logo */}
           <div style={{ width: '50px', height: '50px' }} className='h-full right-0'>
           <NextImage
+              draggable={false}
               src={"/aestheticpro.png"}
               width={1000}
               height={1000}
