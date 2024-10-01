@@ -427,7 +427,7 @@ const handleFileChange = (file : File) => {
                     const data = new FormData()
                     data.set('file', file)
                 
-                    const res = await fetch('/api/uploadSellerProducts', {
+                    const res = await fetch('/api/uploadSellerDesigns', {
                       method: 'POST',
                       body: data
                     })
