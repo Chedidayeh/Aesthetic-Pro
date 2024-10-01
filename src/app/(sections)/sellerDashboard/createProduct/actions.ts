@@ -163,9 +163,7 @@ import { Collection } from '@prisma/client';
               sellerProfit: sellerProfit,
               frontDesignId: frontDesign.id,
               collection : selectedCollection,
-              privateProduct : privateProduct
-
-
+              privateProduct : privateProduct,
             },
           });
     

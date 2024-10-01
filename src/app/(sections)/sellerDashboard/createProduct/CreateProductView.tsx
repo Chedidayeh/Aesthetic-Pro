@@ -445,11 +445,13 @@ const handleFileChange = (file : File) => {
                       return path;    
                     
                     } else {
+                      closeDialog()
                       // Handle error if success is false
                       console.error('File upload failed:', result.error)
                       return null;
                     }
                   } catch (e) {
+                    closeDialog()
                     // Handle network errors or other exceptions
                     console.error('Error during file upload:', e)
                   }
@@ -495,6 +497,7 @@ const handleFileChange = (file : File) => {
                     return path;    
                   
                   } else {
+                    closeDialog()
                     // Handle error if success is false
                     console.error('File upload failed:', result.error)
                     toast({
@@ -505,6 +508,7 @@ const handleFileChange = (file : File) => {
                     return null;
                   }
                 } catch (e) {
+                  closeDialog()
                   // Handle network errors or other exceptions
                   console.error('Error during seller front design upload:', e)
                   toast({
