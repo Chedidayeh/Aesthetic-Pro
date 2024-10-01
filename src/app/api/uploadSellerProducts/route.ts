@@ -3,6 +3,7 @@ import sharp from 'sharp';
 import { v4 as uuidv4 } from 'uuid';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { storage } from '@/lib/firebase';
+import { extname } from 'path';
 
 export async function POST(request: NextRequest) {
   try {
@@ -18,15 +19,10 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Optional: Check MIME type of the file for safety (e.g., image/png, image/jpeg)
-    const mimeType = file.type;
-    if (!mimeType.startsWith('image/')) {
-      return NextResponse.json({ success: false, message: 'Invalid file type.' });
-    }
-
-    // Generate a unique file name using uuid
-    const fileExtension = mimeType.split('/')[1]; // Extract file extension
-    const uniqueFileName = `${uuidv4()}.${fileExtension}`;
+    // Extract the file name without extension
+    const fileNameWithoutExtension = file.name.split('.').slice(0, -1).join('.');
+        // Generate a unique file name
+    const uniqueFileName = `${uuidv4()}_${fileNameWithoutExtension}${extname(file.name)}`;
 
     // Optimize the image using sharp
     const image = sharp(buffer);

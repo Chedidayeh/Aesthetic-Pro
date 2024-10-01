@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     const uniqueFileName = `${uuidv4()}_${fileNameWithoutExtension}${extname(file.name)}`;
 
     // Create a Firebase Storage reference for the `uploads/sellerProducts` directory
-    const storageRef = ref(storage, `uploads/sellerProducts/${uniqueFileName}`);
+    const storageRef = ref(storage, `uploads/sellerDesigns/${uniqueFileName}`);
 
     // Upload the file buffer to Firebase Storage
     const snapshot = await uploadBytes(storageRef, buffer);
