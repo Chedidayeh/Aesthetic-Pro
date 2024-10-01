@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
-import NextImage from 'next/image'
 
 'use client'
+import NextImage from 'next/image'
 import {
   Pagination,
   PaginationContent,
