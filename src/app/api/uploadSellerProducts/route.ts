@@ -24,22 +24,22 @@ export async function POST(request: NextRequest) {
         // Generate a unique file name
     const uniqueFileName = `${uuidv4()}_${fileNameWithoutExtension}${extname(file.name)}`;
 
-    // Optimize the image using sharp
-    const image = sharp(buffer);
-    const optimizedBuffer = await image
-      .resize({
-        width: 800, // Resize to 800px wide or adjust as needed
-      })
-      .toFormat('png', { // Convert to PNG (or use fileExtension)
-        quality: 80, // Adjust quality as needed (lower for compression)
-      })
-      .toBuffer();
+    // // Optimize the image using sharp
+    // const image = sharp(buffer);
+    // const optimizedBuffer = await image
+    //   .resize({
+    //     width: 800, // Resize to 800px wide or adjust as needed
+    //   })
+    //   .toFormat('png', { // Convert to PNG (or use fileExtension)
+    //     quality: 80, // Adjust quality as needed (lower for compression)
+    //   })
+    //   .toBuffer();
 
     // Create a Firebase Storage reference
     const storageRef = ref(storage, `uploads/sellerProducts/${uniqueFileName}`);
 
     // Upload the optimized image buffer to Firebase Storage
-    const snapshot = await uploadBytes(storageRef, optimizedBuffer);
+    const snapshot = await uploadBytes(storageRef, buffer);
 
     // Get the file's download URL
     const downloadURL = await getDownloadURL(snapshot.ref);
