@@ -55,7 +55,8 @@ const ViewDesign = ( {designs} : { designs: string[] } ) => {
                   <CarouselItem key={index}>
                         <div className="p-1">
                              <NextImage 
-                             src={`/api/getImage?imageUrl=${encodeURIComponent(image)}`}
+                            //  src={`/api/getImage?imageUrl=${encodeURIComponent(image)}`}
+                             src={image}
                              width={500} height={500} alt={`design Image ${index + 1}`}
                              onContextMenu={(e) => e.preventDefault()}
                               className="object-contain" />

@@ -78,16 +78,13 @@ const CategoryView: React.FC<CategoryViewProps> = ({ categories  }) => {
 
 
 
-
-
-
-
   
 
   
 
   return (
     <>
+
 
 <LoginModal isOpen={isLoginModalOpen} setIsOpen={setIsLoginModalOpen} />
 

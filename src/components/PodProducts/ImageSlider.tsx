@@ -96,7 +96,8 @@ const ImageSlider = ({ urls }: ImageSliderProps) => {
               blurDataURL="/Loading.png"
               loading='lazy'
               className='-z-10 h-full w-full  object-cover object-center'
-              src={`/api/getImage?imageUrl=${encodeURIComponent(url)}`}
+              // src={`/api/getImage?imageUrl=${encodeURIComponent(url)}`}
+              src={url}
               alt='Product image'
               onContextMenu={(e) => e.preventDefault()}
               draggable={false}

@@ -192,7 +192,8 @@ const combinedUrls = interleaveArrays(product.croppedFrontProduct, product.cropp
               onClick={() => setSelectedImage(url)}
             >
                <NextImage
-                  src={`/api/getImage?imageUrl=${encodeURIComponent(url)}`}
+                  // src={`/api/getImage?imageUrl=${encodeURIComponent(url)}`}
+                  src={url}
                   placeholder="blur"
                   blurDataURL="/Loading.png"
                   loading="eager"
