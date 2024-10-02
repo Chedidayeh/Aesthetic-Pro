@@ -444,7 +444,7 @@ const handleFileChange = (file : File) => {
                       console.log(path)
                       return path
 
-                      
+
                     } else {
                       closeDialog()
                       // Handle error if success is false
@@ -546,7 +546,7 @@ const handleFileChange = (file : File) => {
               colors.push(color.label)
             };
             return {frontPaths : paths , colors : colors}
-          };   
+          } 
           
           
            // Function to map over filteredColors and upload each cat color and return the list of paths
