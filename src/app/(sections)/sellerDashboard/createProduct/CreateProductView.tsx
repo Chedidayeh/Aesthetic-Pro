@@ -442,8 +442,9 @@ const handleFileChange = (file : File) => {
                     if (result.success) {
                       const path = result.downloadURL  
                       console.log(path)
-                      return path;    
-                    
+                      return path
+
+                      
                     } else {
                       closeDialog()
                       // Handle error if success is false
@@ -540,7 +541,7 @@ const handleFileChange = (file : File) => {
               const blob = base64ToBlob(base64Data, 'image/png')
               const file = new File([blob], `${productTitle}.png`, { type: 'image/png' });
               // upload the captured product in the uploads folder and get the path 
-              const CapturedProductPath = await uploadCapturedMockup(file)
+              const CapturedProductPath = await uploadDesign(file)
               paths.push(CapturedProductPath); // Store the path in the array
               colors.push(color.label)
             };
@@ -568,19 +569,16 @@ const handleFileChange = (file : File) => {
               const blob = base64ToBlob(base64Data, 'image/png')
               const file = new File([blob], `${productTitle}.png`, { type: 'image/png' });
               // upload the captured product in the uploads folder and get the path 
-              const CapturedProductPath = await uploadCapturedMockup(file)
+              const CapturedProductPath = await uploadDesign(file)
               paths.push(CapturedProductPath); // Store the path in the array
               colors.push(color.label)
 
-            };
+            }
             return {backPaths : paths , colors : colors}
-          };  
-            
-
+          }
           const removeExtension = (name : string) => {
             return name.replace(/\.png$/, '');
-          };
-
+          }
 
 
           
@@ -780,9 +778,9 @@ const handleFileChange = (file : File) => {
                 // function will trigger the dialog
                 const openDialog = () => {
                   if (alertDialogTriggerRef.current) {
-                    alertDialogTriggerRef.current.click();
+                    alertDialogTriggerRef.current.click()
                   }
-                };
+                }
 
                 // function will cancel the dialog
                 const closeDialog = () => {
@@ -985,11 +983,6 @@ const handleFileChange = (file : File) => {
                                   </SelectGroup>
                                 </SelectContent>
                               </Select>
-
-
-
-
-
 
                                 {/* select colors */}
                               <div className='space-y-2'>
