@@ -541,7 +541,7 @@ const handleFileChange = (file : File) => {
               const blob = base64ToBlob(base64Data, 'image/png')
               const file = new File([blob], `${productTitle}.png`, { type: 'image/png' });
               // upload the captured product in the uploads folder and get the path 
-              const CapturedProductPath = await uploadDesign(file)
+              const CapturedProductPath = await uploadCapturedMockup(file)
               paths.push(CapturedProductPath); // Store the path in the array
               colors.push(color.label)
             };
@@ -569,7 +569,7 @@ const handleFileChange = (file : File) => {
               const blob = base64ToBlob(base64Data, 'image/png')
               const file = new File([blob], `${productTitle}.png`, { type: 'image/png' });
               // upload the captured product in the uploads folder and get the path 
-              const CapturedProductPath = await uploadDesign(file)
+              const CapturedProductPath = await uploadCapturedMockup(file)
               paths.push(CapturedProductPath); // Store the path in the array
               colors.push(color.label)
 
