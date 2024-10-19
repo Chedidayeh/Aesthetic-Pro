@@ -427,7 +427,7 @@ const handleFileChange = (file : File) => {
                     const data = new FormData()
                     data.set('file', file)
                 
-                    const res = await fetch('/api/uploadSellerProducts', {
+                    const res = await fetch('/api/uploadSellerDesigns', {
                       method: 'POST',
                       body: data
                     })
@@ -440,16 +440,26 @@ const handleFileChange = (file : File) => {
                 
                     // Check if success
                     if (result.success) {
+<<<<<<< HEAD
                       const path = result.filePath  
                       console.log(path)
                       return path;    
                     
+=======
+                      const path = result.downloadURL  
+                      console.log(path)
+                      return path
+
+
+>>>>>>> 738e55b4fc5b4857b06db4c42cbc8ed16156e3b9
                     } else {
+                      closeDialog()
                       // Handle error if success is false
                       console.error('File upload failed:', result.error)
                       return null;
                     }
                   } catch (e) {
+                    closeDialog()
                     // Handle network errors or other exceptions
                     console.error('Error during file upload:', e)
                   }
@@ -491,10 +501,11 @@ const handleFileChange = (file : File) => {
 
                   // Check if success
                   if (result.success) {
-                    const path = result.filePath  
+                    const path = result.downloadURL  
                     return path;    
                   
                   } else {
+                    closeDialog()
                     // Handle error if success is false
                     console.error('File upload failed:', result.error)
                     toast({
@@ -505,6 +516,7 @@ const handleFileChange = (file : File) => {
                     return null;
                   }
                 } catch (e) {
+                  closeDialog()
                   // Handle network errors or other exceptions
                   console.error('Error during seller front design upload:', e)
                   toast({
@@ -541,7 +553,7 @@ const handleFileChange = (file : File) => {
               colors.push(color.label)
             };
             return {frontPaths : paths , colors : colors}
-          };   
+          } 
           
           
            // Function to map over filteredColors and upload each cat color and return the list of paths
@@ -568,15 +580,12 @@ const handleFileChange = (file : File) => {
               paths.push(CapturedProductPath); // Store the path in the array
               colors.push(color.label)
 
-            };
+            }
             return {backPaths : paths , colors : colors}
-          };  
-            
-
+          }
           const removeExtension = (name : string) => {
             return name.replace(/\.png$/, '');
-          };
-
+          }
 
 
           
@@ -776,9 +785,9 @@ const handleFileChange = (file : File) => {
                 // function will trigger the dialog
                 const openDialog = () => {
                   if (alertDialogTriggerRef.current) {
-                    alertDialogTriggerRef.current.click();
+                    alertDialogTriggerRef.current.click()
                   }
-                };
+                }
 
                 // function will cancel the dialog
                 const closeDialog = () => {
@@ -981,11 +990,6 @@ const handleFileChange = (file : File) => {
                                   </SelectGroup>
                                 </SelectContent>
                               </Select>
-
-
-
-
-
 
                                 {/* select colors */}
                               <div className='space-y-2'>

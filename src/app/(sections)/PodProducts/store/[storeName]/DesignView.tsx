@@ -329,11 +329,12 @@ const handleSortChange = (event: string) => {
           <div
             aria-hidden='true'
             className='relative mb-4 h-40 w-40 text-muted-foreground'>
-            <img
-              src='/hippo-empty-cart.png'
-              loading='eager'
-              alt='empty shopping cart hippo'
-            />
+                <NextImage
+                  fill
+                  src='/hippo-empty-cart.png'
+                  loading='eager'
+                  alt='empty shopping cart hippo'
+                />
           </div>
           <h3 className='font-semibold text-2xl'>
             This Designs section is empty

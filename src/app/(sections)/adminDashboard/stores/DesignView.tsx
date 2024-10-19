@@ -267,7 +267,8 @@ interface StoresViewProps {
                     <Badge variant={'default'}>{design.name}</Badge>
                     <NextImage
                      onContextMenu={(e) => e.preventDefault()}
-                     src={`/api/getImage?imageUrl=${encodeURIComponent(design.imageUrl)}`}
+                    //  src={`/api/getImage?imageUrl=${encodeURIComponent(design.imageUrl)}`}
+                     src={design.imageUrl}
                      alt={design.name}
                      loading="eager"
                      blurDataURL="/Loading.png"

@@ -607,7 +607,8 @@ const CreateOrder = ({
 
 
                                   <NextImage
-                                      src={`/api/getImage?imageUrl=${encodeURIComponent(product.croppedFrontProduct?.[0] ?? product.croppedBackProduct?.[0])}`}
+                                      // src={`/api/getImage?imageUrl=${encodeURIComponent(product.croppedFrontProduct?.[0] ?? product.croppedBackProduct?.[0])}`}
+                                      src={product.croppedFrontProduct?.[0] ?? product.croppedBackProduct?.[0]}
                                       alt={product.title}
                                       width={1000}
                                       height={1000}

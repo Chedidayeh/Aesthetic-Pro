@@ -238,7 +238,7 @@ interface fetchedCat extends Category {
                     
                         // Check if success
                         if (result.success) {
-                          const path = result.filePath  
+                          const path = result.downloadURL  
                           return path as string;    
                         
                         } else {
@@ -327,7 +327,8 @@ interface fetchedCat extends Category {
             <Card className={cn("border", selectedCard === index && "border-primary")}>
                 <CardContent className="flex  justify-center p-1 relative">
                 <NextImage
-                src={`/api/getImage?imageUrl=${encodeURIComponent(category.value!)}`}
+                // src={`/api/getImage?imageUrl=${encodeURIComponent(category.value!)}`}
+                src={category.value!}
                 alt={category.label}
                 width={1000}
                 height={1000}

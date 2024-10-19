@@ -204,8 +204,8 @@ const CreateDesignView = ({platform}: ProductViewProps) => {
     
         // Check if success
         if (result.success) {
-          const path = result.filePath
-          const id =await addDesignToDb(store ,path , designwidth , designheight , designName , designPrice ,sellerProfit, tags  );
+          const path = result.downloadURL
+          await addDesignToDb(store ,path , designwidth , designheight , designName , designPrice ,sellerProfit, tags  );
           toast({
             title: 'Design Was Successfully Added',
             description: 'Refrech the page.',

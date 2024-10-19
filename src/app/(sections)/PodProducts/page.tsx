@@ -42,7 +42,11 @@ export default async function Page() {
           </p>
         </div>
 
+<<<<<<< HEAD
         {filteredTrendingProducts.length > 0 && (
+=======
+        {filteredTrendingProducts.length>0 && (
+>>>>>>> 738e55b4fc5b4857b06db4c42cbc8ed16156e3b9
         <section className='bg-muted/50 border-2 rounded-2xl dark:border-slate-50 border-slate-500 w-[90%] mx-auto my-8'>
         <div className='flex flex-col items-center justify-center mt-2'>
             <p className='mt-4 text-sm max-w-prose text-muted-foreground'>

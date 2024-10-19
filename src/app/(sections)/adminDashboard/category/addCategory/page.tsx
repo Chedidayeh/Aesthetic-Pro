@@ -278,7 +278,7 @@ const Page = () => {
                 
                     // Check if success
                     if (result.success) {
-                      const path = result.filePath  
+                      const path = result.downloadURL  
                       return path as string;    
                     
                     } else {

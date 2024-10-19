@@ -1,5 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
+
 'use client'
+import NextImage from 'next/image'
 import {
   Pagination,
   PaginationContent,
@@ -362,7 +364,8 @@ const FollowedStores = ({ products, user , categories , collections }: ProductRe
               <div
                 aria-hidden='true'
                 className='relative mb-4 h-40 w-40 text-muted-foreground'>
-                <img
+                <NextImage
+                  fill
                   src='/hippo-empty-cart.png'
                   loading='eager'
                   alt='empty shopping cart hippo'
