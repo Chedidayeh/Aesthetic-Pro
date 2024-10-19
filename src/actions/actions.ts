@@ -103,6 +103,7 @@ export async function getUsersByType() {
 // delete user by id 
 export async function deleteUserById(userId : string) {
   try {
+    
     await db.user.delete({
       where: {
         id: userId,
@@ -119,7 +120,6 @@ export async function deleteUserById(userId : string) {
 export async function getAllCategories() {
   try {
     const categories = await db.category.findMany({
-      where : {bacProduct : false} ,
       include: {
         colors: true,
         sizes: true,
@@ -1122,6 +1122,9 @@ export async function getUnreadNotificationsForStore(storeId : string) {
         storeId: storeId,
         isViewed: false,
       },
+      orderBy : {
+        createdAt : 'desc'
+      }
     });
 
     return unreadNotifications;
@@ -1132,23 +1135,11 @@ export async function getUnreadNotificationsForStore(storeId : string) {
 }
 
 
-//get the platform model
-export async function getPlatform(userId : string) {
-
-  const platform = await db.platform.findFirst({
-    where: {userId : userId}
-  })
-
-  return platform
-
-}
 
 //get the platform model
 export async function getPlatformForTheWebsite() {
-
   const platform = await db.platform.findFirst({
   })
-
   return platform
 
 }
@@ -1194,6 +1185,7 @@ export async function getSideBarTotalCounts() {
     awaitingActionProductCount,
     awaitingActionDesignCount,
     storeRequestsCount,
+    affiliateRequestsCount,
     returnedOrders,
   ] = await Promise.all([
     db.order.count({
@@ -1216,6 +1208,10 @@ export async function getSideBarTotalCounts() {
       where : { status : "PENDING"}
     }),
 
+    db.affiliatePaymentRequest.count({
+      where : { status : "PENDING"}
+    }),
+
     db.order.count({
       where : {printed : true , type : "CONFIRMED" , status: {
         not: "DELIVERED" ,
@@ -1230,6 +1226,7 @@ export async function getSideBarTotalCounts() {
     awaitingActionProductCount,
     awaitingActionDesignCount,
     storeRequestsCount,
+    affiliateRequestsCount,
     returnedOrders,
 
   };
@@ -1316,6 +1313,164 @@ export async function searchPodProducts(query: string) {
 
 
 
+
+// affiliate program
+
+export async function getAffiliateLinksAndCommissions(userId: string) {
+  try {
+    const affiliate = await db.affiliate.findUnique({
+      where: {
+        userId: userId, // Fetch the affiliate account by userId
+      },
+      include: {
+        links: {
+          include: {
+            commission: true, // Include related commissions for each affiliate link
+          },
+        },
+        affiliatePaymentRequest : true
+      },
+    });
+
+    return affiliate
+  }
+catch (error) {
+  console.error('Error fetching affiliate links and commissions:', error);
+}}
+
+export async function getAffiliatePaymentRequest(userId: string) {
+  try {
+    const affiliate = await db.affiliate.findUnique({
+      where: {
+        userId: userId, // Fetch the affiliate account by userId
+      },
+      include: {
+        affiliatePaymentRequest : true
+      },
+    });
+
+    return affiliate
+  }
+catch (error) {
+  console.error('Error fetching affiliate links and commissions:', error);
+}}
+
+export async function getAffiliateStats(userId: string) {
+  try {
+    // Fetch the affiliate account by userId
+    const affiliate = await db.affiliate.findUnique({
+      where: {
+        userId: userId,
+      },
+      include: {
+        links: {
+          include: {
+            commission: true, // Include commissions for each link
+          },
+        },
+      },
+    });
+
+    if (!affiliate) {
+      throw new Error(`Affiliate account not found for userId: ${userId}`);
+    }
+
+    // Calculate total income, total clicks, and total sales
+    const totalIncome = affiliate.links.reduce((acc, link) => {
+      const linkIncome = link.commission.reduce((commissionAcc, commission) => {
+        return commissionAcc + commission.profit;
+      }, 0);
+      return acc + linkIncome;
+    }, 0);
+
+    const totalClicks = affiliate.links.reduce((acc, link) => acc + link.totalViews, 0);
+    const totalSales = affiliate.links.reduce((acc, link) => acc + link.totalSales, 0);
+
+    return {
+      totalIncome,
+      totalClicks,
+      totalSales,
+    };
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error calculating affiliate stats.');
+  }
+}
+
+// return all commissions :
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+export async function getAllCommissionsByAffiliateId(affiliateId: string) {
+  try {
+    const affiliateLinks = await prisma.affiliateLink.findMany({
+      where: {
+        affiliateId: affiliateId, // Filter by affiliate ID
+      },
+      include: {
+        commission: true, // Include related commissions for each affiliate link
+        product: true,    // Include the related product
+      },
+    });
+
+    // Check if the affiliate has any links
+    if (affiliateLinks.length === 0) {
+      return []
+    }
+
+    // Extract and return all commissions for each affiliate link
+    const commissions = affiliateLinks.flatMap(link =>
+      link.commission.map(commission => ({
+        commissionId: commission.id,
+        affiliateLinkId: link.id,
+        productTitle: link.product?.title || 'Unknown Product', // Access the product title
+        profit: commission.profit,
+        createdAt: commission.createdAt,
+      }))
+    );
+
+    return commissions;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error retrieving commissions.');
+  }
+}
+
+// 
+export async function getUnreadAffiliateNotifications(affiliateId : string) {
+  try {
+    const unreadNotifications = await db.affiliateNotification.findMany({
+      where: {
+        affiliateId: affiliateId,
+        isViewed: false,
+      },
+    });
+
+    return unreadNotifications;
+  } catch (error) {
+    console.error('Error fetching unread notifications:', error);
+    throw error;
+  }
+}
+
+
+// create notis : 
+export async function createAffiliateNotification(affiliateId : string, content : string, sender : string) {
+  try {
+    const notification = await db.affiliateNotification.create({
+      data: {
+        affiliateId: affiliateId,
+        content: content,
+        sender: sender,
+      },
+    });
+    return true;
+  } catch (error) {
+    console.error('Error creating notification:', error);
+    return false
+  }
+}
 
 
 

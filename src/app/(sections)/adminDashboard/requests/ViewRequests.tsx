@@ -37,7 +37,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {  PaymentRequest, Store, User } from "@prisma/client";
+import {  Affiliate, AffiliatePaymentRequest, PaymentRequest, Store, User } from "@prisma/client";
 import { ChangeEvent, useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import {
@@ -132,7 +132,7 @@ const ViewRequests = ({ paymentRequests }: ViewProps) => {
       <h1 className="text-2xl font-semibold mb-8">All Requests</h1>
       <Card>
         <CardHeader>
-          <CardTitle>Requests</CardTitle>
+          <CardTitle>Sellers Requests</CardTitle>
           <CardDescription>Total : {paymentRequests.length}</CardDescription>
         </CardHeader>
         <CardContent>

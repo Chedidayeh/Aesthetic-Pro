@@ -69,7 +69,6 @@ export async function trackProductView(productId: string) {
           sessionId: sessionId ,
       }
       });
-
   }else {
      // Check if the product has already been viewed by this session
      existingView = await db.productViews.findFirst({

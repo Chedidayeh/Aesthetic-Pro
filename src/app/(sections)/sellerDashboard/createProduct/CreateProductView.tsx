@@ -441,6 +441,7 @@ const handleFileChange = (file : File) => {
                     // Check if success
                     if (result.success) {
                       const path = result.filePath  
+                      console.log(path)
                       return path;    
                     
                     } else {

@@ -42,7 +42,7 @@ export default async function Page() {
           </p>
         </div>
 
-
+        {filteredTrendingProducts.length > 0 && (
         <section className='bg-muted/50 border-2 rounded-2xl dark:border-slate-50 border-slate-500 w-[90%] mx-auto my-8'>
         <div className='flex flex-col items-center justify-center mt-2'>
             <p className='mt-4 text-sm max-w-prose text-muted-foreground'>
@@ -61,6 +61,7 @@ export default async function Page() {
             user={user!}
             products={filteredTrendingProducts} />
         </section>
+        )}
 
 <PerkSection/>
 

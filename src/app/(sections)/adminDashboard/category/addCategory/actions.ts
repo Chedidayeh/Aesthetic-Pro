@@ -27,7 +27,7 @@ interface CategoryData {
   }>;
 }
 
-export async function saveCategoryData(categoryData: CategoryData ,uploadPaths : string[] ,  isBacProduct : boolean) {
+export async function saveCategoryData(categoryData: CategoryData ,uploadPaths : string[]) {
     try {
       // Destructure category data
       const {
@@ -45,7 +45,6 @@ export async function saveCategoryData(categoryData: CategoryData ,uploadPaths :
         // Save the category
         db.category.create({
           data: {
-            bacProduct : isBacProduct,
             quality : uploadPaths,
             label,
             value : mainImage!,

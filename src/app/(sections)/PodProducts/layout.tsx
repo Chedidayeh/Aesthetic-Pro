@@ -7,7 +7,7 @@ import TopBar from "@/components/TopBar";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "AestheticPro | Products",
+  title: "MarketPlace",
   description: "Tunisian Platfrom",
 };
 

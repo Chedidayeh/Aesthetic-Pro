@@ -15,6 +15,7 @@ export async function POST(request: NextRequest) {
   const bytes = await file.arrayBuffer()
   const buffer = Buffer.from(bytes)
 
+
   // Remove the file extension while preserving the file type
   const fileNameWithoutExtension = file.name.split('.').slice(0, -1).join('.')
 
@@ -38,9 +39,10 @@ export async function POST(request: NextRequest) {
       })
        .toBuffer()
 
+      const uint8Array = new Uint8Array(optimizedBuffer); // Convert to Uint8Array
 
     // Write the file to the specified path
-    await writeFile(filePath, optimizedBuffer)
+    await writeFile(filePath, uint8Array)
     // Respond with the file path if the file is stored successfully
     return NextResponse.json({ success: true, filePath: `/uploads/seller store imgs/${uniqueFileName}` })
   } catch (error) {

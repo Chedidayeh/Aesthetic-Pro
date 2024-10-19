@@ -1,5 +1,6 @@
 'use server'
 
+import { getUser } from "@/actions/actions"
 import { auth, signOut } from "@/auth"
 import { db } from "@/db"
 
@@ -30,11 +31,11 @@ export const fetchName = async (name: string) => {
 export const addStore = async ({ storeName, logoPath , phoneNumber } : StoreArgs) => {
 
   try {
-    const session = await auth()
-    if(!session) return
+
+    const user = await getUser()
     const store = await db.store.create({
       data:{
-        userId:session.user.id,
+        userId:user!.id,
         storeName:storeName,
         logoUrl: logoPath,
         userPhoneNumber : phoneNumber,
@@ -47,9 +48,23 @@ export const addStore = async ({ storeName, logoPath , phoneNumber } : StoreArgs
         userType:"SELLER",
       }
     })    
+
+    if(user!.isAffiliate) {
+      await db.affiliate.delete({
+        where:{
+          userId:user!.id
+          }
+          })
+          // update user isAffiliate
+          await db.user.update({
+            where:{id:user!.id},
+            data:{
+              isAffiliate:false
+              }
+          })
+    }
   } catch (error) {
     console.log(error)
-    
   }
      
 

@@ -49,7 +49,7 @@ interface ExtraStore extends Store {
     paymentRequests: ExtraPaymentRequest[];
   }
 
-const D17 = ({ paymentRequests }: ViewProps) => {
+const BankDeposit = ({ paymentRequests }: ViewProps) => {
     
     const { toast } = useToast()
     const router = useRouter();
@@ -294,4 +294,4 @@ const handleDelete = async () => {
     );
 }
 
-export default D17;
+export default BankDeposit;

@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
   }
 
   const bytes = await file.arrayBuffer()
-  const buffer = Buffer.from(bytes)
+  const buffer = new Uint8Array (Buffer.from(bytes))
 
   // Remove the file extension while preserving the file type
   const fileNameWithoutExtension = file.name.split('.').slice(0, -1).join('.')

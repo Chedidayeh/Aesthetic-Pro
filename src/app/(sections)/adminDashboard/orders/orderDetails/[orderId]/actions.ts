@@ -1,7 +1,7 @@
 'use server'
 
 
-import { getUser } from "@/actions/actions";
+import { createAffiliateNotification, getUser } from "@/actions/actions";
 import { db } from "@/db";
 import { OrderStatus, OrderType } from "@prisma/client";
 import { platform } from "os";
@@ -26,7 +26,8 @@ export const getOrderWithItemsAndProducts = async (orderId : string) => {
               backclientDesign :true,
             },
           },
-          user : true
+          user : true,
+          commission : true
         },
       });
   
@@ -160,12 +161,50 @@ export const getOrderWithItemsAndProducts = async (orderId : string) => {
               },
             },
           },
+          commission : true
         },
       });
   
       if (!order) {
         throw new Error('Order not found');
       }
+
+      if (order.commission) {
+        // Fetch the affiliate link
+        const affiliateLink = await db.affiliateLink.findUnique({
+          where: { id: order.commission.affiliateLinkId },
+          include: { affiliate: true }, // Include the affiliate relation to access totalIncome
+        });
+      
+        if (affiliateLink) {
+          // Update total sales for the affiliate link
+          await db.affiliateLink.update({
+            where: { id: affiliateLink.id },
+            data: {
+              totalSales: { increment: 1 }, // Increment total sales
+            },
+          });
+      
+          // Update total income for the affiliate
+          await db.affiliate.update({
+            where: { id: affiliateLink.affiliateId }, // Ensure this field exists in your AffiliateLink
+            data: {
+              totalIncome: { increment: order.commission.profit }, // Increment total income
+            },
+          });
+
+          const product = await db.product.findFirst({
+            where: { id: affiliateLink.productId },
+          })
+
+          const notificationContent = `Great News: Your affiliate product "${product!.title}" has been sold`;
+
+          await createAffiliateNotification(affiliateLink.affiliateId,notificationContent , "Admin")
+
+        }
+      }
+      
+
   
       // Filter out order items with null productId
       const validOrderItems = order.orderItems.filter((item) => item.productId !== null);
@@ -240,6 +279,10 @@ export const getOrderWithItemsAndProducts = async (orderId : string) => {
       throw error;
     }
   }
+
+
+
+
 
 
 

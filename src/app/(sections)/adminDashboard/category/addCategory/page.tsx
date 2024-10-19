@@ -102,12 +102,7 @@ const Page = () => {
   const router = useRouter();
   const { toast } = useToast()
 
-  const [isBacProduct, setIsBacProduct] = useState(false);
 
-
-  const handleSwitchChange = () => {
-    setIsBacProduct(!isBacProduct);
-  };
   
   const [label, setLabel] = useState("");
   const [price, setPrice] = useState("");
@@ -234,7 +229,7 @@ const Page = () => {
         backBorders,
       };
   
-      const res = await saveCategoryData(categoryData , uploadPaths , isBacProduct);
+      const res = await saveCategoryData(categoryData , uploadPaths);
       if (res) {
         toast({
           title: "Category was Saved",
@@ -328,10 +323,7 @@ const Page = () => {
                                       }}
                                     />
                   </div>
-                  <div className="flex items-center space-x-2">
-                  <Switch id="bac-product" defaultChecked={isBacProduct} onClick={handleSwitchChange} />
-                  <Label htmlFor="bac-product">Bac product? : {isBacProduct ? "yes" : "No"}</Label>
-                </div>
+
                   <div className="grid gap-3">
                     <Label htmlFor="label">Label</Label>
                     <Input

@@ -8,7 +8,7 @@ import type { Metadata } from "next";
 
 
 export const metadata: Metadata = {
-   title: "AestheticPro | SellerDashboard",
+   title: "Seller Dashboard",
    description: "Tunisian Platfrom",
  };
 

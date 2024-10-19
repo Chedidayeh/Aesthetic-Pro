@@ -14,7 +14,9 @@ export const privateRoutes = [
 // these routes don't require Auth
 // type : string
 
-export const createSstoreRoute = "/PodProducts/create-seller-profile"
+export const createStoreRoute = "/PodProducts/create-seller-profile"
+export const createAffiliateRoute = "/createAffiliateAccount"
+
 
 
 // array of routes that accessible to all not logged in users
@@ -30,6 +32,12 @@ export const authRoutes = [
 // routes that starts with this prefix are used for seller Dashboard navigation
 // type : string
 export const sellerAuthRoutes = '/sellerDashboard'
+
+
+// the prefix for affiliate users auth routes
+// routes that starts with this prefix are used for affiliate Dashboard navigation
+// type : string
+export const affiliateAuthRoutes = '/affiliateDashboard'
 
 
 // the prefix for admin auth routes

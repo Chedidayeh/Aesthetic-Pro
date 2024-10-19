@@ -139,11 +139,13 @@ const CreateOrder = ({
                 });
               
                 if (sortOption === 'sales') {
-                  filteredProduct.sort((a, b) => b.totalSales - a.totalSales);
-                } else if (sortOption === 'price') {
-                  filteredProduct.sort((a, b) => b.price - a.price);
-                } else if (sortOption === 'views') {
-                  filteredProduct.sort((a, b) => b.price - a.price);
+                  filteredProduct?.sort((a, b) => b.totalSales - a.totalSales);
+                } else if (sortOption === 'high') {
+                  filteredProduct?.sort((a, b) => b.price - a.price);
+                }else if (sortOption === 'low') {
+                  filteredProduct?.sort((a, b) => a.price - b.price);
+                }else if (sortOption === 'views') {
+                  filteredProduct?.sort((a, b) => b.totalViews - a.totalViews);
                 }
 
                 const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -449,8 +451,9 @@ const CreateOrder = ({
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Sort By</SelectLabel>
-              <SelectItem value="sales">Sales</SelectItem>
-              <SelectItem value="price">Price</SelectItem>
+              <SelectItem value="sales">Most Selled</SelectItem>
+              <SelectItem value="high">Highest Price</SelectItem>
+              <SelectItem value="low">Lowest Price</SelectItem>              
               <SelectItem value="views">Views</SelectItem>
             </SelectGroup>
           </SelectContent>

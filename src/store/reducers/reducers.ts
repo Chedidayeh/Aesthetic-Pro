@@ -1,11 +1,10 @@
-import { SAVE_REDIRECT_URL } from "../actions/action";
-
-
-
+import {  SAVE_REDIRECT_URL, SAVE_SESSION_ID } from "../actions/action";
 
 
 const initialState = {
   url: null,
+  id : null,
+  affiliateId : null
 };
 
 export type RootState = ReturnType<typeof rootReducer>;
@@ -18,6 +17,11 @@ const rootReducer = (state = initialState, action: any) => {
         ...state,
         url: action.payload,
       };
+    case SAVE_SESSION_ID : 
+    return {
+      ...state,
+      id : action.payload
+    }
     default:
       return state;
   }

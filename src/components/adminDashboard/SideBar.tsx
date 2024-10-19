@@ -54,6 +54,7 @@ interface Count {
   awaitingActionProductCount: number;
   awaitingActionDesignCount: number;
   storeRequestsCount: number;
+  affiliateRequestsCount : number
   returnedOrders : number
 }
 const SideBar = () => {
@@ -136,10 +137,10 @@ const SideBar = () => {
                 <Store className="h-3 w-3" />
               </div>
               Manage Requests
-              {(count?.storeRequestsCount ?? 0) > 0 && (
+              {(count?.storeRequestsCount ?? 0) > 0 && (count?.affiliateRequestsCount ?? 0) > 0 && (
                 <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
                   {
-                  (count?.storeRequestsCount ?? 0)
+                  (count?.storeRequestsCount ?? 0) + (count?.affiliateRequestsCount ?? 0)
                     }
                 </Badge>
                 )}

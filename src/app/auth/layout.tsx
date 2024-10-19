@@ -13,7 +13,7 @@ const recursive = Recursive({ subsets: ["latin-ext"] });
 
 
 export const metadata: Metadata = {
-  title: "AestheticPro | Auth",
+  title: "Authentication",
   description: "Tunisian Platfrom",
 };
 

@@ -88,7 +88,7 @@ import {
     import { db } from "@/db"
     import UsersTable from "@/components/adminDashboard/UsersTable"
   import { ScrollArea } from "@/components/ui/scroll-area"
-  import { ClientDesign, Order, OrderItem, OrderStatus, OrderType, Product, SellerDesign, Store, User } from "@prisma/client"
+  import { ClientDesign, Commission, Order, OrderItem, OrderStatus, OrderType, Product, SellerDesign, Store, User } from "@prisma/client"
   import { tree } from "next/dist/build/templates/app-page"
   import { useRouter } from "next/navigation"
   import { useToast } from "@/components/ui/use-toast"
@@ -116,6 +116,7 @@ interface ExtraOrderItem extends OrderItem {
 interface ExtraOrder extends Order {
     orderItems : ExtraOrderItem[]
     user : User
+    commission : Commission | null
 }
 
 interface itemProfit {
@@ -435,16 +436,29 @@ const handleUpdate = async (orderId : string , platformProfit : number) =>{
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-8 mt-2">
                 <div>
                             <p className="font-bold">Order Amount:</p>
-                            <p>{order.amount} TND</p>
+                            <p>{(order.amount).toFixed(2)} TND</p>
                         </div>
                         <div>
                             <p className="font-bold">Total Seller Profit:</p>
-                            <p>{profit.totalOrderProfit} TND</p>
+                            <p>{(profit.totalOrderProfit).toFixed(2)} TND</p>
                         </div>
+                        {order.commission && (
                         <div>
-                            <p className="font-bold">Total Platform Profit:</p>
-                            <p>{order.amount - profit.totalOrderProfit} TND</p>
+                            <p className="font-bold">Affiliate User Profit:</p>
+                            <p>{(order.commission.profit).toFixed(2)} TND</p>
                         </div>
+                          )}
+
+                          <div>
+                            <p className="font-bold">Total Platform Profit:</p>
+                            <p>
+                              {(
+                                order.amount - 
+                                profit.totalOrderProfit - 
+                                (order.commission ? order.commission.profit : 0)
+                              ).toFixed(2)} TND
+                            </p>
+                          </div>
 
                         <div>
                             <p className="font-bold">Profit Updated: </p>
@@ -457,8 +471,13 @@ const handleUpdate = async (orderId : string , platformProfit : number) =>{
 
                         {order.isPaid && order.status === 'DELIVERED' && !order.updated && (
                           <Button
-                            onClick={() => handleUpdate(order.id, order.amount - profit.totalOrderProfit)}
-                            variant="link"
+                          onClick={() => 
+                            handleUpdate(
+                              order.id, 
+                              order.amount - profit.totalOrderProfit - (order.commission ? order.commission.profit : 0)
+                            )
+                          }
+                          variant="link"
                           >
                             Update profit after Sale
                           </Button>

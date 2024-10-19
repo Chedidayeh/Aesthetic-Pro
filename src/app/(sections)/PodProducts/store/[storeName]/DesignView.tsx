@@ -305,7 +305,7 @@ const handleSortChange = (event: string) => {
                       alt={`Product image ${index + 1}`}
                       className="aspect-square w-full rounded-md object-contain"
                       height={1000}
-                      src={design.imageUrl}
+                      src={`/api/getImage?imageUrl=${encodeURIComponent(design.imageUrl)}`}
                       width={1000}
                       onContextMenu={(e) => e.preventDefault()}
                       draggable={false}

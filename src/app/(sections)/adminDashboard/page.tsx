@@ -27,7 +27,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import Link from "next/link";
-import { getPlatform, getTotalCounts, getUser } from "@/actions/actions";
+import { getPlatformForTheWebsite, getTotalCounts, getUser } from "@/actions/actions";
 import React from "react"
 import UsersTable from "@/components/adminDashboard/UsersTable"
 import { unstable_noStore as noStore } from "next/cache"
@@ -38,7 +38,7 @@ export default async function Page() {
     
     const count = await getTotalCounts()
     const user = await getUser()
-    const platform = await getPlatform(user!.id)
+    const platform = await getPlatformForTheWebsite()
 
   return (
     <>

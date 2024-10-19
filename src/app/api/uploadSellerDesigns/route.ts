@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest) {
+  try {
   const data = await request.formData()
   const file: File | null = data.get('file') as unknown as File
 
@@ -12,7 +13,8 @@ export async function POST(request: NextRequest) {
   }
 
   const bytes = await file.arrayBuffer()
-  const buffer = Buffer.from(bytes)
+  const buffer = new Uint8Array (Buffer.from(bytes))
+
 
   // Remove the file extension while preserving the file type
   const fileNameWithoutExtension = file.name.split('.').slice(0, -1).join('.')
@@ -24,7 +26,7 @@ export async function POST(request: NextRequest) {
   const uploadsDir = join(process.cwd(), 'public', 'uploads' , 'sellers designs')
   const filePath = join(uploadsDir, uniqueFileName)
 
-  try {
+
     // Write the file to the specified path
     await writeFile(filePath, buffer)
     // Respond with the file path if the file is stored successfully

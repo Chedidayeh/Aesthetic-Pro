@@ -2,10 +2,8 @@
 import NextImage from 'next/image'
 import Link from 'next/link'
 import MaxWidthWrapper from './MaxWidthWrapper'
-import { FaFacebook, FaInstagram, FaLinkedin, FaTwitter, FaYoutube } from 'react-icons/fa'
+import { FaFacebook, FaInstagram } from 'react-icons/fa'
 import { getPlatformForTheWebsite, getUser } from '@/actions/actions'
-import { useEffect, useState } from 'react'
-import { Platform, User } from '@prisma/client'
 
 const Footer = async () => {
 
@@ -45,18 +43,37 @@ const Footer = async () => {
         <div className="p-5">
           <ul>
             <p className="font-bold text-xl pb-4">Services</p>
-            <Link href={"/PodProducts/ProductsView"}>
+
+            {!user && (
+            <Link href={"/createAffiliateAccount"}>
                         <li className="text-muted-foreground text-sm pb-2 font-semibold hover:text-blue-600 cursor-pointer">
-                        Browse Products
+                       Make Money through Affiliate  Marketing <span className='text-green-500'>$</span>
                </li>
-          </Link>
+            </Link>
+             )}
+
+            {user?.isAffiliate === false && (
+            <Link href={"/createAffiliateAccount"}>
+                        <li className="text-muted-foreground text-sm pb-2 font-semibold hover:text-blue-600 cursor-pointer">
+                       Make Money through Affiliate  Marketing <span className='text-green-500'>$</span>
+               </li>
+            </Link>
+             )}
+
+              {user?.isAffiliate === true && (
+            <Link href={"/createAffiliateAccount"}>
+                        <li className="text-muted-foreground text-sm pb-2 font-semibold hover:text-blue-600 cursor-pointer">
+                        Affiliate Dashboard
+               </li>
+            </Link>
+             )}
 
                 {!user && (
-                        <Link href={"/auth/sign-in"}>
-                        <li className="text-muted-foreground text-sm pb-2 font-semibold hover:text-blue-600 cursor-pointer">
-                        Sign In
-                        </li>
-                      </Link>
+                       <Link href={"/PodProducts/create-seller-profile"}>
+                       <li className="text-muted-foreground text-sm pb-2 font-semibold hover:text-blue-600 cursor-pointer">
+                       Become a Seller  <span className='text-green-500'>$</span>
+                       </li>
+                     </Link>
                  )} 
 
             {platform?.closeStoreCreation && user && user.userType === "USER" && (
@@ -68,7 +85,7 @@ const Footer = async () => {
           {!platform?.closeStoreCreation && user && user.userType === "USER" && (
                         <Link href={"/PodProducts/create-seller-profile"}>
                         <li className="text-muted-foreground text-sm pb-2 font-semibold hover:text-blue-600 cursor-pointer">
-                        Become a Seller
+                        Become a Seller  <span className='text-green-500'>$</span>
                         </li>
                       </Link>
             )} 

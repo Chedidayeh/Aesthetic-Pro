@@ -9,7 +9,7 @@ const TopBar = async () => {
     <nav className='sticky z-[100] h-8 inset-x-0 top-0 w-full border-b border-gray-200 backdrop-blur-lg transition-all flex items-center justify-between px-4'>
       <Marquee>
         <div className='flex items-center text-blue-700 dark:text-blue-500 text-sm'>
-          {platform!.topBarContent.map((content, index) => (
+          {platform?.topBarContent.map((content, index) => (
             <div key={index} className='flex items-center'>
               <span>{content}</span>
               {index < platform!.topBarContent.length - 1 && (

@@ -9,10 +9,11 @@ import HomeNavBar from "@/components/HomeNavBar";
 import { ThemeProvider } from "@/components/theme-provider";
 import TopBar from "@/components/TopBar";
 import { ReactNode } from "react";
+import SearchBar from "@/components/PodProducts/SearchBar";
 const recursive = Recursive({ subsets: ["latin-ext"] });
 
 export const metadata: Metadata = {
-  title: "AestheticPro | Home Page",
+  title: "AestheticPro Platfrom",
   description: "Tunisian Platfrom",
 };
 
@@ -41,6 +42,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
            <Providers>
     <TopBar/>
     <HomeNavBar/>
+    <SearchBar/>
     {children}
             <Footer/>
             <Toaster/>

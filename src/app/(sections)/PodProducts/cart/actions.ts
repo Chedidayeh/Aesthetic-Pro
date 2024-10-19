@@ -1,8 +1,10 @@
 'use server'
 
+import { getPlatformForTheWebsite } from "@/actions/actions";
 import { db } from "@/db";
 import { sendOrderEmail } from "@/lib/mailer";
 import { Order } from "@prisma/client";
+import { log } from "console";
 
 // Define the interface for cart products
 interface FormattedCartProduct {
@@ -29,21 +31,23 @@ interface FormattedCartProduct {
     phoneNumber: string,
     orderAmount: number,
     cartProducts: FormattedCartProduct[],
-    fee : number
+    fee: number,
+    sessionId: any,
   ) {
     try {
-      let order
+      let order; // Declare order variable outside for later use
+      
       // Start a transaction for atomicity
       await db.$transaction(async (tx) => {
-        // Create the order
-       order = await tx.order.create({
+        // Step 1: Create the order
+        order = await tx.order.create({
           data: {
             amount: orderAmount,
             shippingAddress,
             phoneNumber,
             clientName,
             userId,
-            shippingFee : fee ,
+            shippingFee: fee,
             orderItems: {
               create: cartProducts.map((product) => ({
                 productId: product.productId,
@@ -59,26 +63,62 @@ interface FormattedCartProduct {
               })),
             },
           },
-          include : {
-            user : true,
-            orderItems : true
-          }
+          include: {
+            user: true,
+            orderItems: true,
+          },
         });
-
-            // Send order email with all order items
-            await sendOrderEmail(order);
-          }, 
-          
-          {
-            timeout: 20000 // Set the timeout for the transaction here (20 seconds)
+  
+        // Step 2: Only after order is created, proceed to check for affiliate session and create commission
+        if (sessionId) {
+          const affiliateClick = await tx.affiliateClick.findFirst({
+            where: { sessionId },
           });
-    
-      return {orderId : order!.id as string  , success : true }; 
+  
+          if (affiliateClick?.affiliateLinkId) {
+            const affiliateLink = await tx.affiliateLink.findUnique({
+              where: { id: affiliateClick?.affiliateLinkId },
+              select: { product: true },
+            });
+  
+            const product = cartProducts.find(
+              (product) => product.productId === affiliateLink?.product?.id
+            );
+  
+            if (product) {
+              const platform = await getPlatformForTheWebsite();
+              const commissionAmount = product.price! * product.quantity! * (platform!.affiliateUserProfit / 100);
+              const integerPart = Math.floor(commissionAmount);
+  
+              // Create commission after ensuring order is fully created
+              await tx.commission.create({
+                data: {
+                  affiliateLinkId: affiliateClick.affiliateLinkId!,
+                  orderId: order.id,
+                  profit: integerPart,
+                },
+              });
+            }
+          }
+        }
+  
+        // Step 3: Send order email after order creation and commission handling
+        await sendOrderEmail(order);
+  
+      }, {
+        timeout: 20000, // Set the timeout for the transaction (20 seconds)
+      });
+  
+      // Return success only after transaction completes
+      return { orderId: order!.id as string, success: true };
+      
     } catch (error) {
       console.error('Error creating order:', error);
-      return {orderId : null , success : false }; 
+      return { orderId: null, success: false };
     }
   }
+  
+  
 
 
 

@@ -24,6 +24,8 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { createOrderInDb, emptyUserCart, removeProductFromCart } from './actions'
 import ImageSlider from '@/components/PodProducts/ImageSlider'
+import { RootState } from '@/store/reducers/reducers'
+import { useSelector } from 'react-redux'
 interface FormattedCartProduct {
   cartProductId: string;
   productId: string;
@@ -47,9 +49,22 @@ interface CartProps {
 }
 
 const Cart: React.FC<CartProps> = ({ products , user  , platform}) => {
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      router.refresh(); // Refresh the current page
+    }, 1000); // Refresh every 5 seconds
+
+    // Cleanup the interval on component unmount
+    return () => clearInterval(interval);
+  }, [router]);
+
+  const sessionId = useSelector((state: RootState) => state.id);
+
   const [cartProducts, setCartProducts] = useState(products? products : [])
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
-  const router = useRouter()
   const [fee, setFee] = useState(platform.shippingFee)
 
   const { toast } = useToast()
@@ -88,7 +103,7 @@ const Cart: React.FC<CartProps> = ({ products , user  , platform}) => {
                   const createOrder = async () => {
                     try {
                       openDialog()
-                      const result = await createOrderInDb(user.id,address,name,phoneNumber,orderTotal,cartProducts , fee)
+                      const result = await createOrderInDb(user.id,address,name,phoneNumber,orderTotal,cartProducts,fee , sessionId )
 
 
                       if(result.orderId && result.success){

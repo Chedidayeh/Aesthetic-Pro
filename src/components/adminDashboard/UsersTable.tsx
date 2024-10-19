@@ -191,6 +191,7 @@ const UsersTable = () => {
                 <TableHead>User Email</TableHead>
                 <TableHead>Is Email verified</TableHead>
                 <TableHead>Is User banned</TableHead>
+                <TableHead>Is User Affiliate</TableHead>
                 <TableHead>User Type</TableHead>
                 <TableHead>Action</TableHead>
               </TableRow>
@@ -203,6 +204,7 @@ const UsersTable = () => {
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.emailVerified ? "Yes" : "No"}</TableCell>
                   <TableCell>{user.isUserBanned ? "Yes" : "No"}</TableCell>
+                  <TableCell>{user.isAffiliate ? "Yes" : "No"}</TableCell>
                   <TableCell>
                       <Select
                         defaultValue={user.userType.toLowerCase()}

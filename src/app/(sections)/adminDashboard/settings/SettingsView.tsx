@@ -78,6 +78,7 @@ const SettingsView = ({ platform }: ViewProps ) => {
         clientDesignPrice:platform.clientDesignPrice,
         shippingFee: platform.shippingFee,
         maxProductQuantity: platform.maxProductQuantity,
+        affiliateUserProfit : platform.affiliateUserProfit
       });
 
     const handleAddContent = async () => {
@@ -447,6 +448,19 @@ const SettingsView = ({ platform }: ViewProps ) => {
                             setUpdatedPlatformData({
                               ...updatedPlatformData,
                               maxProductQuantity: parseInt(e.target.value),
+                            })
+                          }
+                        />
+                      </div>
+                      <div>
+                        <Label>affiliate User Profit</Label>
+                        <Input
+                          type="number"
+                          value={updatedPlatformData.affiliateUserProfit}
+                          onChange={(e) =>
+                            setUpdatedPlatformData({
+                              ...updatedPlatformData,
+                              affiliateUserProfit: parseInt(e.target.value),
                             })
                           }
                         />

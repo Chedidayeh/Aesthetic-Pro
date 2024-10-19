@@ -297,6 +297,7 @@ const CategoryView: React.FC<CatProps> = ({ categories }) => {
 <h1 className="text-2xl font-semibold">Manage Categories</h1>
 
 <Link href="/adminDashboard/category/addCategory" className="mt-4"><Button variant={"link"}>Add Category</Button></Link>
+<Link href="/adminDashboard/category/tryCategory" className="mt-4"><Button variant={"link"}>Try Category</Button></Link>
 
 
     <Card className="mt-4">

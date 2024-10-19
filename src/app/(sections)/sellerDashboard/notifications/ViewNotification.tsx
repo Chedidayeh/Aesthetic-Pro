@@ -115,10 +115,13 @@ const ViewNotification = ({ notifications }: NotiViewProps) => {
         <CardHeader>
           <CardTitle>Notifications</CardTitle>
           <CardDescription>Total : {notifications.length}</CardDescription>
+          {notifications.length > 0 && (
+          <>
           <CardDescription>View your Notifications.</CardDescription>
           <CardDescription>Unread notifications is marked with <span className="text-blue-500">blue color</span></CardDescription>
           <CardDescription><Button onClick={SetAllNotificationsRead} variant={"link"}>Mark All Notifications As Read</Button></CardDescription>
-
+          </>
+        )}
         </CardHeader>
         <CardContent>
           <Table>

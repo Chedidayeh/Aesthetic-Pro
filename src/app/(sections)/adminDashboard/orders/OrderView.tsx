@@ -86,7 +86,7 @@ import {
   import { db } from "@/db"
   import UsersTable from "@/components/adminDashboard/UsersTable"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { ClientDesign, Order, OrderItem, Product, SellerDesign, Store, User } from "@prisma/client"
+import { ClientDesign, Commission, Order, OrderItem, Product, SellerDesign, Store, User } from "@prisma/client"
 import { tree } from "next/dist/build/templates/app-page"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/components/ui/use-toast"
@@ -101,6 +101,7 @@ import { deleteOrderById } from "./actions"
 interface ExtraOrders extends Order {
     orderItems : OrderItem[]
     user : User
+    commission : Commission | null
 }
   
   
@@ -380,6 +381,8 @@ interface OrderViewProps {
       {/* Total Items column */}
       <TableHead className="hidden xl:table-cell">Total Items</TableHead>
 
+      <TableHead className="hidden xl:table-cell">Commission?</TableHead>
+
       {/* Order Amount column */}
       <TableHead className="hidden xl:table-cell">Order Amount</TableHead>
 
@@ -444,6 +447,9 @@ interface OrderViewProps {
 
         {/* Total Items cell */}
         <TableCell className="hidden xl:table-cell">{order.orderItems?.length || 0} items</TableCell>
+
+        <TableCell className="hidden xl:table-cell">  {order.commission ? `Yes (${(order.commission.profit).toFixed(2)} TND)` : "No"}
+        </TableCell>
 
         {/* Order Amount cell */}
         <TableCell className="hidden xl:table-cell">{order.amount.toFixed(2)} TND</TableCell>

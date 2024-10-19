@@ -28,7 +28,7 @@ import { db } from '@/db'
 import { Category, Platform, Product, SellerDesign, Store, User } from '@prisma/client'
 import { ArrowDown, Check, Shield } from 'lucide-react'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { notFound, useRouter, useSearchParams } from 'next/navigation'
 import {
   Select,
   SelectContent,
@@ -51,7 +51,6 @@ import LoadingState from "@/components/LoadingState"
 import { getSizes } from "./actions"
 import ViewCategoryQuality from "@/components/PodProducts/ViewCategoryQuality"
 import clsx from 'clsx'
-import { Skeleton } from '@/components/ui/skeleton'
 
   
 
@@ -100,13 +99,9 @@ const ViewProduct: React.FC<ViewProductProps> = ({ product , frontdesign , backd
 
 const combinedUrls = interleaveArrays(product.croppedFrontProduct, product.croppedBackProduct);
 
-
-
   const [selectedColor, setSelectedColor] = useState(product.colors[0]);
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
-
-    console.log(quantity)
 
 
   const handleQuantityChange = (event: ChangeEvent<HTMLInputElement>) => {

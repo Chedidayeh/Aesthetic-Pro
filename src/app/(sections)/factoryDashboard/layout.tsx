@@ -5,6 +5,12 @@ import SideBar from "@/components/factoryDashboard/SideBar";
 import NavBar from "@/components/factoryDashboard/NavBar";
 import "@/app/globals.css";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+   title: "Factory Dashboard",
+   description: "Tunisian Platfrom",
+ };
 
 const Layout = ({ children }: { children: ReactNode }) => {
     return (

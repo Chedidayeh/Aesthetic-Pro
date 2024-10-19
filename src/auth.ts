@@ -12,6 +12,7 @@ declare module "next-auth" {
       id: string;
       role: UserType
       isBanned : Boolean
+      isAffiliate : Boolean
     } & DefaultSession["user"];
   }
 }
@@ -21,6 +22,7 @@ declare module "next-auth/jwt" {
   interface JWT {
     role?: UserType
     isBanned : Boolean
+    isAffiliate : Boolean
   }
 }
 
@@ -38,6 +40,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         session.user.role = token.role
         session.user.isBanned = token.isBanned
+        session.user.isAffiliate = token.isAffiliate
       }
 
 
@@ -49,6 +52,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if(!existingUser) return token
       token.role = existingUser.userType
       token.isBanned = existingUser.isUserBanned
+      token.isAffiliate = existingUser.isAffiliate
+
 
       return token
     },

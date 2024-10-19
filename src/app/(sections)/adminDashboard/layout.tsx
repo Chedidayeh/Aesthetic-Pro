@@ -8,7 +8,7 @@ import NavBar from "@/components/adminDashboard/NavBar";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "AestheticPro | AdminDashboard",
+  title: "Admin Dashboard",
   description: "Tunisian Platfrom",
 };
 

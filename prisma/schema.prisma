@@ -93,14 +93,17 @@ model User {
   cart            Cart?
 
 
-  accounts      Account[]
+  accounts        Account[]
 
-  followedStores StoreFollow[] // New field to track the stores the user follows
+  followedStores  StoreFollow[] // New field to track the stores the user follows
 
+  isAffiliate            Boolean @default(false) // New field to track affiliate status
+  affiliate              Affiliate?
 
 
   createdAt       DateTime @default(now())
   updatedAt       DateTime? @updatedAt
+
 }
 
 model Platform {
@@ -121,6 +124,7 @@ model Platform {
   clientDesignPrice           Int    @default(5)
   shippingFee                Int     @default(7)
   maxProductQuantity          Int     @default(5)
+  affiliateUserProfit         Int   @default(10)
   
 }
 
@@ -259,6 +263,8 @@ model Product {
 
   createdAt       DateTime       @default(now())
   updatedAt       DateTime?      @updatedAt
+
+  AffiliateLink AffiliateLink[]
 }
 
 model ProductViews {
@@ -412,6 +418,8 @@ model Order {
 
   createdAt       DateTime @default(now())
   updatedAt       DateTime? @updatedAt
+
+  commission      Commission?
 }
 
 model OrderItem {
@@ -476,10 +484,127 @@ model PreOrderPreview {
 }
 
 
+
+
+
+
+
+
+// affilate program : 
+
+model Affiliate {
+  id            String      @id @default(cuid())
+  userId        String      @unique // A user can have one affiliate account
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  totalIncome    Int         @default(0)
+  receivedPayments  Float         @default(0)
+
+
+  links         AffiliateLink[] // Relation to created links
+  affiliatePaymentRequest AffiliatePaymentRequest[]
+  AffiliateNotification AffiliateNotification[]
+
+
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime?   @updatedAt
+
+
+}
+
+
+
+model AffiliateLink {
+  id            String        @id @default(cuid())
+
+  affiliateId   String
+  affiliate     Affiliate      @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+
+  commission    Commission[]   
+
+  totalSales    Int         @default(0)
+
+  probableProfit Int         @default(0)
+
+  productId     String
+  product       Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  originalLink  String
+  code          String         @unique
+  link          String    
+  totalViews    Int            @default(0)
+  createdAt     DateTime       @default(now())
+
+  AffiliateClick AffiliateClick[]
+}
+
+model AffiliateClick {
+  id              String      @id @default(cuid())
+  affiliateLinkId String      // The ID of the affiliate link
+  affiliateLink   AffiliateLink @relation(fields: [affiliateLinkId], references: [id], onDelete: Cascade)
+  
+  sessionId       String?     // If the user is not logged in, track by session or cookie
+  clickedAt       DateTime    @default(now())
+}
+
+
+model Commission {
+  id              String         @id @default(cuid())
+  
+  affiliateLinkId String         
+  affiliateLink   AffiliateLink   @relation(fields: [affiliateLinkId], references: [id], onDelete: Cascade)
+
+  orderId         String?        @unique
+  order           Order?         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  profit          Float           @default(0)
+
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime?       @updatedAt
+}
+
+model AffiliatePaymentRequest {
+  id             String      @id @default(cuid())
+
+  affiliateId   String
+  affiliate     Affiliate      @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+
+  method         PaymentMethod
+  cardHolder     String?
+  cardPhoneNumber String?
+  bankAccount    String?
+  bankName       String?
+  accountHolder  String?
+  requestedAmount Float      @default(0)
+  status         PaymentStatus @default(PENDING)
+
+
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime?   @updatedAt
+}
+
+
+model AffiliateNotification {
+    id              String  @id @default(cuid())
+
+    affiliateId     String
+    affiliate     Affiliate      @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+
+    sender          String
+    content         String
+
+    isViewed        Boolean @default(false)
+
+    createdAt       DateTime @default(now())
+    updatedAt       DateTime? @updatedAt
+}
+
+
+
+
+
 // category section : 
 model Category {
   id              String          @id @default(cuid())
-  bacProduct      Boolean         @default(false)
   label           String
   quality         String[]
   value           String
@@ -525,47 +650,6 @@ model BackBorder {
   categoryId      String
   category        Category      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

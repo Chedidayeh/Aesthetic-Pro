@@ -6,7 +6,6 @@ import { db } from "@/db"
 export async function getAllCategories() {
     try {
       const categories = await db.category.findMany({
-        where : {bacProduct : false} ,
         include: {
           colors: true,
           sizes: true,

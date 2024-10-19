@@ -24,7 +24,8 @@ import { Label } from "@/components/ui/label"
 import { useDispatch } from "react-redux"
 import { saveRedirectUrl } from "@/store/actions/action"
 import React from "react"
-import { getPlatformForTheWebsite } from "@/actions/actions"
+import { getPlatformForTheWebsite, getUser } from "@/actions/actions"
+import { User } from "@prisma/client"
 
 const arabicInfos = [
   "جودة التصاميم: لضمان أفضل جودة للمنتجات، يجب أن تكون التصاميم المقدمة عالية الدقة. يساهم هذا في الحفاظ على وضوح التفاصيل وضمان طباعة مثالية على المنتجات",
@@ -41,6 +42,7 @@ const Page = () => {
   const router = useRouter()
   router.forward()
 
+  const [isClicked, setIsClicked] = useState(false);
 
   const { toast } = useToast()
   const MAX_FILE_SIZE = 4 * 1024 * 1024;
@@ -49,12 +51,15 @@ const Page = () => {
   const [storeName, setStoreName] = useState<string>('')
   const [termsAccepted, setTermsAccepted] = useState(false);
   const dispatch = useDispatch();
+  // const setuser state
+  const [user, setUser] = useState<User>();
 
   useEffect(() => {
     const checkPlatformStoreCreation = async () => {
       try {
         const platform = await getPlatformForTheWebsite();
-
+        const user =await getUser()
+        setUser(user!)
         if (platform?.closeStoreCreation) {
           router.push("/")
         }
@@ -91,13 +96,16 @@ const Page = () => {
         description: 'There was an error on our end. Please try again.',
         variant: 'destructive',
       });
+      setIsClicked(false)
       return
       
     }
   })
 
+  // iscliked state
  
   const createStore=async ()=>{
+    setIsClicked(true)
       const isValid = await fetchName(storeName)
       if(!isValid) {
         toast({
@@ -105,6 +113,7 @@ const Page = () => {
           description: 'Please choose another store name.',
           variant: 'destructive',
         });
+        setIsClicked(false)
         return 
       }
 
@@ -292,6 +301,16 @@ const Page = () => {
          We take care of storage, printing, shipping and customer service for you !
           </h4>
           </div>
+
+          {user?.isAffiliate && (
+          <div className="items-center text-red-500 justify-center flex mt-8">
+          <h4 className="font-medium">
+            Warning ! You have already created an affiliate account. 
+            If you proceed with creating a store, your existing affiliate account will be deleted.
+          </h4>
+          </div>
+           )}
+           
         </div>
 
         <div className='mt-10 border-t col-span-2 flex flex-col border-zinc-200'>
@@ -395,7 +414,7 @@ const Page = () => {
             <div>
             <p className="mr-3 mb-2 text-sm text-gray-500">Done ? What are waiting for !</p>
             </div>
-            <Button disabled={isPending || !logoFile || storeName==="" || !termsAccepted || phoneNumber.length != 8}
+            <Button disabled={isClicked || isPending || !logoFile || storeName==="" || !termsAccepted || phoneNumber.length != 8}
               onClick={createStore} className="w-full sm:w-[40%]">Create Store Now
               <MousePointerClick className="ml-2"/>
             </Button>

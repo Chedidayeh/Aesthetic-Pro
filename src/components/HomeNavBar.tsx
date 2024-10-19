@@ -129,17 +129,6 @@ const Navbar = async () => {
                   </Link>
                 )}
 
-                {isUser && !platform?.closeStoreCreation && (
-                  <Link
-                    href='/PodProducts/create-seller-profile'
-                    className={buttonVariants({
-                      size: 'sm',
-                      variant: 'outline',
-                    })}>
-                    Become a Seller ✨
-                  </Link>
-                )}
-
 
                 {isSeller && (
                   <Link
@@ -149,6 +138,17 @@ const Navbar = async () => {
                       variant: 'outline',
                     })}>
                     Seller Dashboard ✨
+                  </Link>
+                )}
+
+                {isUser && user.isAffiliate == true && (
+                  <Link
+                  href='/affiliateDashboard'
+                   className={buttonVariants({  
+                   size: 'sm',
+                   variant: 'outline',
+              })}>
+                   Affiliate Dashboard ✨
                   </Link>
                 )}
                 
@@ -221,18 +221,6 @@ const Navbar = async () => {
                 )}
 
 
-              {isUser && !platform?.closeStoreCreation && (
-                  <Link
-                    href='/PodProducts/create-seller-profile'
-                    className={buttonVariants({
-                      size: 'sm',
-                      variant: 'outline',
-                    })}>
-                    Become a Seller ✨
-                  </Link>
-                )}
-
-
                 {isSeller && (
                   <Link
                     href='/sellerDashboard'
@@ -244,6 +232,16 @@ const Navbar = async () => {
                   </Link>
                 )}
 
+              {isUser && user.isAffiliate == true && (
+                  <Link
+                  href='/affiliateDashboard'
+                   className={buttonVariants({  
+                   size: 'sm',
+                   variant: 'outline',
+              })}>
+                   Affiliate Dashboard ✨
+                  </Link>
+                )}
             </>
             )}       
 

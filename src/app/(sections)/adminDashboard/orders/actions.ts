@@ -8,7 +8,8 @@ export async function getAllOrders() {
       const orders = await db.order.findMany({
         include: {
           orderItems : true,
-          user : true
+          user : true,
+          commission : true
         }
       });
   

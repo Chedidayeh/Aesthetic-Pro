@@ -6,12 +6,14 @@ import {
 DEFAULT_LOGIN_REDIRECT,
 adminAuthRoutes,
 authRoutes,
-createSstoreRoute,
+createStoreRoute,
 factoryAuthRoutes,
 privateRoutes,
 sellerAuthRoutes,
 alreadyVerifiedUser,
 alreadyResetPassword,
+affiliateAuthRoutes,
+createAffiliateRoute
 
 }from "@/routes"
 
@@ -27,12 +29,11 @@ export default auth (async (req) => {
     const isAlreadyVerifiedUserRoute = nextUrl.pathname.startsWith(alreadyVerifiedUser)
     const isAlreadyResetPasswordRoute = nextUrl.pathname.startsWith(alreadyResetPassword)
     const isSellerRoute = nextUrl.pathname.startsWith(sellerAuthRoutes);
+    const isAffiliateRoute = nextUrl.pathname.startsWith(affiliateAuthRoutes);
     const isAdminRoute = nextUrl.pathname.startsWith(adminAuthRoutes);
     const isFactoryRoute = nextUrl.pathname.startsWith(factoryAuthRoutes);
-    const isCreateStoreRoute = nextUrl.pathname.startsWith(createSstoreRoute);
-
-
-
+    const isCreateStoreRoute = nextUrl.pathname.startsWith(createStoreRoute);
+    const isCreateAffiliateRoute = nextUrl.pathname.startsWith(createAffiliateRoute);
 
     // block if a already logged in user try to access to auth routes 
     if(isAuthRoute || isAlreadyVerifiedUserRoute || isAlreadyResetPasswordRoute){
@@ -55,13 +56,29 @@ export default auth (async (req) => {
     // only simple user can get to this route:
     if(isCreateStoreRoute){
         if(isLoggedIn){
-            if(session?.user.role !== "USER"){
-                return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+            if(session?.user.role === "SELLER"){
+                return Response.redirect(new URL("/sellerDashboard", nextUrl));
+            }
+            else if (session?.user.role === "ADMIN" || session?.user.role === "FACTORY" ) {
+                return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT,nextUrl))
             }
             return
         }
         return Response.redirect(new URL("/auth/sign-in", nextUrl));
     }
+
+     // only simple user can get to this route:
+    if(isCreateAffiliateRoute){
+            if(isLoggedIn){
+                if(session?.user.isAffiliate === true){
+                    return Response.redirect(new URL("/affiliateDashboard", nextUrl));
+                }  else if (session?.user.role === "ADMIN" || session?.user.role === "FACTORY" ) {
+                    return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT,nextUrl))
+                }
+                return
+            }
+            return Response.redirect(new URL("/auth/sign-in", nextUrl));
+     }
 
     // Detect seller 
     if (isSellerRoute) {
@@ -74,6 +91,19 @@ export default auth (async (req) => {
         }
         return
     }
+
+
+        // Detect affiliate user 
+        if (isAffiliateRoute) {
+            if (!isLoggedIn) {
+                // Redirect to login if the user is not logged in
+                return Response.redirect(new URL("/auth/sign-in", nextUrl));
+            }
+            if (session?.user.isAffiliate === false) {
+                return Response.redirect(new URL("/createAffiliateAccount", nextUrl));
+            }
+            return
+        }
 
 
 
