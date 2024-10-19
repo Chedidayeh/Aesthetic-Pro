@@ -240,8 +240,7 @@ const ProductListing = ({
     {combinedUrls.length > 0 && (
         <>
           <NextImage
-            // src={`/api/getImage?imageUrl=${encodeURIComponent(combinedUrls[currentIndex])}`}
-            src={combinedUrls[currentIndex]}
+            src={`/api/getImage?imageUrl=${encodeURIComponent(combinedUrls[currentIndex])}`}
             alt="Product Image"
             loading="lazy"
             width={1000}

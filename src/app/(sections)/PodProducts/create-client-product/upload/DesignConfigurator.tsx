@@ -541,7 +541,7 @@ const handleSortChange = (event: string) => {
 
                   // Check if success
                   if (result.success) {
-                    const path = result.downloadURL  
+                    const path = result.filePath  
                     return path;    
                   
                   } else {

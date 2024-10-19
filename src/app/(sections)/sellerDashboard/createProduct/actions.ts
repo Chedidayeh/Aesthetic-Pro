@@ -154,7 +154,7 @@ import { Collection } from '@prisma/client';
               storeId: store.id,
               category: productCat,
               colors: checkedColors,
-              croppedFrontProduct: Paths.filter(item => item !== undefined),
+              croppedFrontProduct: Paths,
               title: productTitle,
               description: productDescription,
               tags: tags,
@@ -163,7 +163,9 @@ import { Collection } from '@prisma/client';
               sellerProfit: sellerProfit,
               frontDesignId: frontDesign.id,
               collection : selectedCollection,
-              privateProduct : privateProduct,
+              privateProduct : privateProduct
+
+
             },
           });
     

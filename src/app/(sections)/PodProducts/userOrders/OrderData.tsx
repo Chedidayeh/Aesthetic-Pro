@@ -1,7 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable @next/next/no-img-element */
 'use client'
-import NextImage from 'next/image'
 import {
   Carousel,
   CarouselContent,
@@ -257,12 +256,11 @@ const OrderData = ({ordersData}: DesignViewProps) => {
                               <div
                                 aria-hidden="true"
                                 className="relative mb-4 h-40 w-40 text-muted-foreground">
-                              <NextImage
-                            fill
-                            src='/hippo-empty-cart.png'
-                            loading='eager'
-                            alt='empty shopping cart hippo'
-                          />
+                                <img
+                                  src="/hippo-empty-cart.png"
+                                  loading="eager"
+                                  alt="empty shopping cart hippo"
+                                />
                               </div>
                               <h3 className="font-semibold text-2xl">
                                 No Orders found!

@@ -5,7 +5,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { cn } from '@/lib/utils'
 import { CartProduct, Platform, User } from '@prisma/client'
 import { Check, Loader2, TriangleAlert, X } from 'lucide-react'
-import NextImage from 'next/image'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
@@ -321,12 +321,8 @@ useEffect(() => {
     {cartProducts.length === 0 ? (
       <div className='flex h-full flex-col items-center justify-center space-y-1'>
         <div aria-hidden='true' className='relative mb-4 h-40 w-40 text-muted-foreground'>
-        <NextImage
-                  fill
-                  src='/hippo-empty-cart.png'
-                  loading='eager'
-                  alt='empty shopping cart hippo'
-                />        </div>
+          <Image src='/hippo-empty-cart.png' fill loading='eager' alt='empty shopping cart hippo' />
+        </div>
         <h3 className='font-semibold text-2xl'>Your cart is empty</h3>
         <p className='text-muted-foreground text-center'>Whoops! Nothing to show here yet.</p>
         <Link href='/PodProducts/ProductsView' className='text-blue-600 text-sm'>

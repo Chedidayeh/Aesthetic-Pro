@@ -325,8 +325,7 @@ const DesignView = ({
                       <CardContent className="relative flex items-center justify-center">
                         <NextImage
                           onContextMenu={(e) => e.preventDefault()}
-                          src={design.imageUrl}
-                          // src={`/api/getImage?imageUrl=${encodeURIComponent(design.imageUrl)}`}
+                          src={`/api/getImage?imageUrl=${encodeURIComponent(design.imageUrl)}`}
                           alt={design.name}
                           loading="eager"
                           blurDataURL="/Loading.png"

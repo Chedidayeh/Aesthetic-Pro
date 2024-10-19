@@ -259,7 +259,7 @@ const Navbar = async () => {
                 size: 'sm',
                 className: 'hidden sm:flex items-center gap-1',
               })}>
-              Customize your product
+              Create your product
               <ArrowRight className='ml-1.5 h-5 w-5' />
             </Link>
 
