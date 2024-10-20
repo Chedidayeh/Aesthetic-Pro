@@ -6,6 +6,7 @@ import SideBar from "@/components/adminDashboard/SideBar";
 import NavBar from "@/components/adminDashboard/NavBar";
 
 import type { Metadata } from "next";
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: "Admin Dashboard",
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
 const Layout = ({ children }: { children: ReactNode }) => {
     return (
 
-    <div className="grid min-h-screen w-full md:grid-cols-[240px_1fr]"> {/* Updated grid columns */}
+    <div className="grid min-h-screen w-full md:grid-cols-[240px_1fr]">
     <SideBar />
       <div className="flex flex-col">
         <NavBar />

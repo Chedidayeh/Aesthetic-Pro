@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import SideBar from "@/components/affiliateDashboard/SideBar";
 import NavBar from "@/components/affiliateDashboard/NavBar";
 
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
    title: "Affiliate Dashboard",

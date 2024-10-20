@@ -4,8 +4,10 @@ import Link from 'next/link'
 import MaxWidthWrapper from './MaxWidthWrapper'
 import { FaFacebook, FaInstagram } from 'react-icons/fa'
 import { getPlatformForTheWebsite, getUser } from '@/actions/actions'
+import { User } from '@prisma/client'
 
 const Footer = async () => {
+
 
   const user = await getUser()
   const platform = await getPlatformForTheWebsite()

@@ -12,6 +12,7 @@ import { fetchBestSellingProducts, fetchNewProducts, fetchTrendingProducts, getF
 import ProductSlider from '@/components/PodProducts/ProductSlider'
 import { fetchDiscountProductsDeals } from './discountDeals/actions'
 
+
 export default async function Page() {
 
   const newProducts = await fetchNewProducts();

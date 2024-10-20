@@ -22,7 +22,6 @@ import PerkSection from '@/components/PodProducts/PerkSection'
 
 
 
-
 interface PageProps {
   params: {
     category: string

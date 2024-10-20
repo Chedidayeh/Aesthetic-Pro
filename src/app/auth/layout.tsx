@@ -11,6 +11,7 @@ import HomeNavBar from "@/components/HomeNavBar";
 import TopBar from "@/components/TopBar";
 const recursive = Recursive({ subsets: ["latin-ext"] });
 
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: "Authentication",

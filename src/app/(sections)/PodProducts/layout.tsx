@@ -11,6 +11,9 @@ export const metadata: Metadata = {
   description: "Tunisian Platfrom",
 };
 
+export const dynamic = 'force-dynamic';
+
+
 const Layout = ({ children }: { children: ReactNode }) => {
 
 

@@ -23,7 +23,6 @@ import { fetchDiscountProductsDeals } from './actions'
 
 
 
-
 export default async function Page() {
   const products = await fetchDiscountProductsDeals();
   const user = await getUser()

@@ -6,6 +6,7 @@ import NavBar from "@/components/factoryDashboard/NavBar";
 import "@/app/globals.css";
 
 import type { Metadata } from "next";
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
    title: "Factory Dashboard",

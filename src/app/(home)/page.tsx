@@ -169,6 +169,10 @@ export default async function Page() {
 </section>
 
 
+{/* {!user || (user.userType === "USER" && !user.isAffiliate) && ( */}
+
+<>
+
 
 {/* selling section */}
 <div className='py-10 mt-2 mx-auto  flex flex-col w-[80%] rounded-2xl  bg-center 
@@ -326,6 +330,10 @@ export default async function Page() {
   </div>
 </section>
 
+
+</>
+
+{/* )} */}
 <PerkSection/>
 
 

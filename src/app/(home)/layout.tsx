@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { GetServerSideProps, GetServerSidePropsContext, Metadata } from "next";
 import { Recursive } from "next/font/google";
 import "../globals.css";
 import Footer from "@/components/Footer";
@@ -10,7 +10,10 @@ import { ThemeProvider } from "@/components/theme-provider";
 import TopBar from "@/components/TopBar";
 import { ReactNode } from "react";
 import SearchBar from "@/components/PodProducts/SearchBar";
+import { Platform, User } from "@prisma/client";
 const recursive = Recursive({ subsets: ["latin-ext"] });
+export const dynamic = 'force-dynamic';
+
 
 export const metadata: Metadata = {
   title: "AestheticPro Platfrom",
@@ -44,8 +47,8 @@ const Layout = ({ children }: { children: ReactNode }) => {
     <HomeNavBar/>
     <SearchBar/>
     {children}
-            <Footer/>
-            <Toaster/>
+         <Footer />
+           <Toaster/>
             </Providers>
           </div>
         </main> 
