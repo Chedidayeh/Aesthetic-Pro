@@ -106,7 +106,8 @@ export const updatePlatformData = async (
         maxProductQuantity: updatedData.maxProductQuantity,
         clientDesignPrice:updatedData.clientDesignPrice,
         ExtraDesignForProductPrice : updatedData.ExtraDesignForProductPrice,
-        affiliateUserProfit : updatedData.affiliateUserProfit
+        affiliateUserProfit : updatedData.affiliateUserProfit,
+        freeShippingFeeLimit : updatedData.freeShippingFeeLimit
       },
     });
 

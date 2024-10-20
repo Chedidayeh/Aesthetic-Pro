@@ -169,11 +169,6 @@ export default async function Page() {
 </section>
 
 
-{/* {!user || (user.userType === "USER" && !user.isAffiliate) && ( */}
-
-<>
-
-
 {/* selling section */}
 <div className='py-10 mt-2 mx-auto  flex flex-col w-[80%] rounded-2xl  bg-center 
     bg-[url("/bgBanner.png")]'>
@@ -267,7 +262,7 @@ export default async function Page() {
     <h1 className="text-3xl font-bold tracking-tight text-white">
       Not a designer ?{' '}
       <span className="inline-flex items-center gap-1 text-purple-600">
-        Join our Affiliate Program <CircleDollarSign className="mt-[6px]" />
+        Join our Affiliate Program
       </span>
     </h1>
 
@@ -331,9 +326,6 @@ export default async function Page() {
 </section>
 
 
-</>
-
-{/* )} */}
 <PerkSection/>
 
 

@@ -176,7 +176,7 @@ const combinedUrls = interleaveArrays(product.croppedFrontProduct, product.cropp
           />
         </div>
         {/* Thumbnail images */}
-        <div className="my-4 grid grid-cols-4 gap-2">          
+        <div className="my-4 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-2">          
           {combinedUrls.map((url, index) => (
             <div
               key={index}
@@ -186,21 +186,22 @@ const combinedUrls = interleaveArrays(product.croppedFrontProduct, product.cropp
               )}
               onClick={() => setSelectedImage(url)}
             >
-               <NextImage
-                  src={`/api/getImage?imageUrl=${encodeURIComponent(url)}`}
-                  placeholder="blur"
-                  blurDataURL="/Loading.png"
-                  loading="eager"
-                  alt={`Thumbnail ${index + 1}`}
-                  width={120}
-                  height={120}
-                  className="object-cover w-full h-40"
-                  onContextMenu={(e) => e.preventDefault()}
-                  draggable={false}
-                />
+              <NextImage
+                src={`/api/getImage?imageUrl=${encodeURIComponent(url)}`}
+                placeholder="blur"
+                blurDataURL="/Loading.png"
+                loading="eager"
+                alt={`Thumbnail ${index + 1}`}
+                width={420}
+                height={420}
+                className="object-cover w-full h-40"
+                onContextMenu={(e) => e.preventDefault()}
+                draggable={false}
+              />
             </div>
           ))}
         </div>
+
       </div>
           
 

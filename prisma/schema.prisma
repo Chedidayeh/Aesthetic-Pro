@@ -125,6 +125,7 @@ model Platform {
   shippingFee                Int     @default(7)
   maxProductQuantity          Int     @default(5)
   affiliateUserProfit         Int   @default(10)
+  freeShippingFeeLimit        Int     @default(150)
   
 }
 

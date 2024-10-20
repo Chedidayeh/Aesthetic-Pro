@@ -93,14 +93,14 @@ const Navbar = async () => {
                 </DialogClose>
 
                 <DialogClose>
-                <Link href="/Bac" className={buttonVariants({
-              size: 'sm',
-              variant: 'ghost',
-              className: "hover:text-yellow-500"
-            })}>
-              <Box size={15} className='mr-1' />
-              Bac Products✨
-            </Link>
+                <Link href="/about" className={buttonVariants({
+                  size: 'sm',
+                  variant: 'ghost',
+                  className: "hover:text-yellow-500"
+                })}>
+                  <BookOpenText size={15} className='mr-1' />
+                  About Us ✨
+                </Link>
                 </DialogClose>
                 {
                   isAdmin && (

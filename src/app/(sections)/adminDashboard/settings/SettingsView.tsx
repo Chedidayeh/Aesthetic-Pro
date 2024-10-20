@@ -78,7 +78,8 @@ const SettingsView = ({ platform }: ViewProps ) => {
         clientDesignPrice:platform.clientDesignPrice,
         shippingFee: platform.shippingFee,
         maxProductQuantity: platform.maxProductQuantity,
-        affiliateUserProfit : platform.affiliateUserProfit
+        affiliateUserProfit : platform.affiliateUserProfit,
+        freeShippingFeeLimit : platform.freeShippingFeeLimit
       });
 
     const handleAddContent = async () => {
@@ -465,6 +466,21 @@ const SettingsView = ({ platform }: ViewProps ) => {
                           }
                         />
                       </div>
+
+                      <div>
+                        <Label>Free Shipping Fee Limit</Label>
+                        <Input
+                          type="number"
+                          value={updatedPlatformData.freeShippingFeeLimit}
+                          onChange={(e) =>
+                            setUpdatedPlatformData({
+                              ...updatedPlatformData,
+                              freeShippingFeeLimit: parseInt(e.target.value),
+                            })
+                          }
+                        />
+                      </div>
+
                     </div>
                   </CardContent>
                   <CardFooter className="border-t px-6 py-4">

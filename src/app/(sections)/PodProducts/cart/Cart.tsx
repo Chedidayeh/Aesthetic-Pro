@@ -201,12 +201,12 @@ const orderTotal = subtotal + fee
 
 useEffect(() => {
   // Set fee to 0 if cart products are more than 2
-  if (subtotal >= 150) {
+  if (subtotal >= platform.freeShippingFeeLimit) {
     setFee(0);
   } else {
     setFee(platform.shippingFee); // Otherwise, set it back to the default value
   }
-}, [subtotal , platform.shippingFee]);
+}, [subtotal , platform.shippingFee , platform.freeShippingFeeLimit]);
 
 
 
@@ -430,7 +430,7 @@ useEffect(() => {
         <div className='flex text-sm text-muted-foreground'>
           <p className='flex space-x-2 text-sm '>
             <Check className='h-5 w-5 flex-shrink-0 text-green-500' />
-            <span>Free shipping for more than 150 TND!</span>
+            <span>Free shipping for more than {platform.freeShippingFeeLimit} TND!</span>
           </p>
         </div>
       </div>
