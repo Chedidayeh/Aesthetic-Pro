@@ -48,8 +48,7 @@ const Page = async ({ params }: PageProps) => {
 
 
   } catch (error) {
-    
-
+    console.error(error)
   }
 };
 

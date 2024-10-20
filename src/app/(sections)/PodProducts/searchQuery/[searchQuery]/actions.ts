@@ -41,11 +41,6 @@ export async function searchProducts(query: string) {
                 mode: 'insensitive', // Case insensitive search for category
               },
             },
-            {
-              collection: {
-                equals: decodedQuery.toUpperCase() as Collection, // Exact match for collection name
-              },
-            },
           ],
           isProductAccepted : true
         },

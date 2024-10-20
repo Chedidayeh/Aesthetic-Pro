@@ -1277,7 +1277,6 @@ export async function searchPodProducts(query: string) {
               category: true,
               title: true,
               tags: true,
-              collection: true,
           },
       });
 
@@ -1294,9 +1293,6 @@ export async function searchPodProducts(query: string) {
           if (product.tags.some(tag => tag.toLowerCase().startsWith(decodedQuery)) || product.tags.some(tag => tag.toLowerCase().includes(decodedQuery))) {
               results.push(...product.tags.filter(tag => tag.toLowerCase().startsWith(decodedQuery)));
           }
-          if (product.collection.toLowerCase().startsWith(decodedQuery) || product.collection.toLowerCase().includes(decodedQuery)) {
-            results.push(product.collection);
-           }
       });
 
       // Deduplicate and return results
