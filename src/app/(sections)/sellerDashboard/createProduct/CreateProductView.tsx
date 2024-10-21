@@ -527,25 +527,47 @@ const handleFileChange = (file : File) => {
               setIsBorderHidden(true);
               const paths: string[] = [];
               const colors: string[] = [];
+              
               const uploadPromises = filteredColors.map(async (color) => {
-                const img = document.querySelector(".front-product") as HTMLImageElement;
-                if (img) img.src = color.frontImageUrl;
+                try {
+                  // Select the image element and update its source to the current color's front image URL
+                  const img = document.querySelector(".front-product") as HTMLImageElement;
+                  if (img) img.src = color.frontImageUrl;
             
-                const pixelRatio = 10;
-                const dataUrl = await toPng(FrontcontainerRef.current!, { cacheBust: false, pixelRatio });
-                const base64Data = dataUrl.split(',')[1];
-                const blob = base64ToBlob(base64Data, 'image/png');
-                const file = new File([blob], `${productTitle}.png`, { type: 'image/png' });
+                  // Capture the image as a PNG
+                  const pixelRatio = 10;
+                  const dataUrl = await toPng(FrontcontainerRef.current!, { cacheBust: false, pixelRatio });
+                  
+                  // Convert the captured image data to a Blob and then to a File object
+                  const base64Data = dataUrl.split(',')[1];
+                  const blob = base64ToBlob(base64Data, 'image/png');
+                  const file = new File([blob], `${productTitle}.png`, { type: 'image/png' });
             
-                const CapturedProductPath = await uploadCapturedMockup(file);
-                if (CapturedProductPath) {
-                  paths.push(CapturedProductPath);
-                  colors.push(color.label);
+                  // Upload the captured product image and get the path
+                  const CapturedProductPath = await uploadCapturedMockup(file);
+                  
+                  // If upload was successful, store the path and corresponding color label
+                  if (CapturedProductPath) {
+                    paths.push(CapturedProductPath);
+                    colors.push(color.label);
+                  }
+                } catch (error) {
+                  console.error(`Error uploading image for color ${color.label}:`, error);
+                  // Optionally, you could add additional handling here, such as displaying a toast message
+                  toast({
+                    title: 'Upload Error',
+                    description: `Error uploading the image for color ${color.label}!`,
+                    variant: 'destructive',
+                  });
                 }
               });
+            
               await Promise.all(uploadPromises);
+            
+              // Return the successfully uploaded image paths and corresponding color labels
               return { frontPaths: paths, colors: colors };
             };
+            
             
               
             // Function to map over filteredColors and upload each cat color and return the list of paths
@@ -725,9 +747,10 @@ const handleFileChange = (file : File) => {
                     setisAdding(false)
                     toast({
                       title: 'Error',
-                      description: 'Failed to add product. Please try again later.',
+                      description: 'Failed to add your product. Please try again later.',
                       variant: 'destructive',
                     });
+                    console.log(result.error)
                     return
                   }
                   
