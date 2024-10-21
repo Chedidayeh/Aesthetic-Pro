@@ -93,7 +93,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { Input } from "@/components/ui/input"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { deleteOrderById } from "./actions"
-import ImageSlider from "@/components/PodProducts/ImageSlider"
+import ImageSlider from "@/components/MarketPlace/ImageSlider"
   
   
 interface ExtraOrderItem extends OrderItem {

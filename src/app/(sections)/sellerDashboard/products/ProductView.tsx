@@ -64,7 +64,7 @@ import { useRouter } from 'next/navigation';
 import { Collection, Product } from '@prisma/client';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from "@/components/ui/use-toast";
-import ImageSlider from "@/components/PodProducts/ImageSlider";
+import ImageSlider from "@/components/MarketPlace/ImageSlider";
 import LoadingState from "@/components/LoadingState";
 interface ProductViewProps {
   sellerProductsData: Product[];

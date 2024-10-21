@@ -40,7 +40,7 @@ export default function Page() {
     const [facebookLink, setFacebookLink] = useState("");
     const [instagramLink, setInstagramLink] = useState("");
     const [file, setFile] = useState<File>();
-
+    const [storeName, setStoreName] = useState("");
     const [open, setOpen] = useState<boolean>(false);
 
     const handleChangeStoreName = async () => {
@@ -58,6 +58,7 @@ export default function Page() {
             }
             const user = await getUser()
             const store = await getStoreByUserId(user!.id)
+            setStoreName(store.storeName)
             const res = await updateStoreName(store.id , newStoreName)
             if(res){
                 setOpen(false);
@@ -195,52 +196,54 @@ export default function Page() {
 
 
                   // function to upload the seller logo in uploads folder and get the path
-                  const uploadLogo = async (file : File) =>{
-                    if (!file) {
-                      console.log('No file selected.');
-                      return;
-                    }
-    
-                    try {
-                      const data = new FormData()
-                      data.set('file', file)
-    
-                      const res = await fetch('/api/uploadSellerStoreImg', {
-                        method: 'POST',
-                        body: data
-                      })
-    
-                      // handle the error
-                      if (!res.ok) throw new Error(await res.text())
-    
-                      // Parse response JSON
-                      const result = await res.json()
-    
-                      // Check if success
-                      if (result.success) {
-                        const path = result.filePath
-                        return path;    
-                      
-                      } else {
-                        // Handle error if success is false
-                        console.error('File upload failed:', result.error)
-                        toast({
-                          title: 'Something went wrong',
-                          description: 'Error during seller front design upload. Please try again.',
-                          variant: 'destructive',
-                      });
-                        return null;
+                  const uploadLogo = (file: File): Promise<string > => {
+                    return new Promise((resolve, reject) => {
+                      if (!file) {
+                        console.log('No file selected.');
+                        resolve("");
+                        return;
                       }
-                    } catch (e) {
-                      // Handle network errors or other exceptions
-                      console.error('Error during seller front design upload:', e)
-                      toast({
-                        title: 'Something went wrong',
-                        description: 'Error during seller front design upload. Please try again.',
-                        variant: 'destructive',
+                  
+                      // Read the file as a base64 string
+                      const reader = new FileReader();
+                      reader.readAsDataURL(file);
+                      reader.onloadend = async () => {
+                        const base64data = reader.result?.toString().split(',')[1]; // Get the base64 string only
+                  
+                        try {
+                          const response = await fetch('/api/uploadSellerStoreImg', {
+                            method: 'POST',
+                            headers: {
+                              'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ file: base64data, storeName: storeName }),
+                          });
+                  
+                          if (!response.ok) {
+                            throw new Error('Failed to upload image');
+                          }
+                  
+                          const data = await response.json();
+                          const path = data.url; // Get the uploaded URL
+                  
+                          toast({
+                            title: 'Design Upload Success',
+                            description: 'Design image uploaded successfully!',
+                          });
+                  
+                          resolve(path); // Resolve the promise with the URL
+                        } catch (error) {
+                          toast({
+                            title: 'Upload Error',
+                            description: 'Error uploading the image!',
+                            variant: 'destructive',
+                          });
+                          console.error(error);
+                          reject(error); // Reject the promise on error
+                        }
+                      };
                     });
-                    }
-                  } 
+                  };
 
     return (
         <>

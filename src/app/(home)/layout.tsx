@@ -9,7 +9,7 @@ import HomeNavBar from "@/components/HomeNavBar";
 import { ThemeProvider } from "@/components/theme-provider";
 import TopBar from "@/components/TopBar";
 import { ReactNode } from "react";
-import SearchBar from "@/components/PodProducts/SearchBar";
+import SearchBar from "@/components/MarketPlace/SearchBar";
 import { Platform, User } from "@prisma/client";
 const recursive = Recursive({ subsets: ["latin-ext"] });
 export const dynamic = 'force-dynamic';

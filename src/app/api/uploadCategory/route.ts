@@ -1,51 +1,38 @@
-import { writeFile } from 'fs/promises'
-import { join, extname } from 'path'
-import { v4 as uuidv4 } from 'uuid'
-import { NextRequest, NextResponse } from 'next/server'
-import sharp from 'sharp'
+// src/app/api/upload-image/route.ts
+import { NextResponse } from 'next/server';
+import sharp from 'sharp';
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from '@/firebase/firebaseConfig';
 
-export async function POST(request: NextRequest) {
-  const data = await request.formData()
-  const file: File | null = data.get('file') as unknown as File
+// Define the POST method as a named export
+export async function POST(req: Request) {
+  const body = await req.json();
+  const { file , category } = body;
 
   if (!file) {
-    return NextResponse.json({ success: false })
+    return NextResponse.json({ message: 'No file uploaded' }, { status: 400 });
   }
 
-  const bytes = await file.arrayBuffer()
-  const buffer = new Uint8Array (Buffer.from(bytes))
-
-  // Remove the file extension while preserving the file type
-  const fileNameWithoutExtension = file.name.split('.').slice(0, -1).join('.')
-
-  // Generate a unique identifier for the file name
-  const uniqueFileName = `${uuidv4()}_${fileNameWithoutExtension}${extname(file.name)}`
-
-  // Define the path where you want to store the file
-  const uploadsDir = join(process.cwd(), 'public', 'uploads', 'Categories')
-  const filePath = join(uploadsDir, uniqueFileName)
+  // Decode base64 file
+  const buffer = Buffer.from(file, 'base64');
 
   try {
     // Optimize the image using sharp
-    const image = sharp(buffer)
-    const optimizedBuffer = await image
-      .resize({ // optional: resize the image
-        width: 800 // or any other width you prefer
-      })
-      .toFormat('png', { // convert to PNG and apply compression
-        quality: 100 // adjust quality as needed
-      })
-      .toBuffer()
+    const optimizedBuffer = await sharp(buffer)
+      .resize({ width: 1000 })
+      .toFormat('png', { quality: 100 })
+      .toBuffer();
 
-      const uint8Array = new Uint8Array(optimizedBuffer); // Convert to Uint8Array
+    // Upload the optimized image to Firebase Storage
+    const storageRef = ref(storage, `categories/${category}/${Date.now()}.png`);
+    const snapshot = await uploadBytes(storageRef, optimizedBuffer);
 
-    // Write the optimized file to the specified path
-    await writeFile(filePath, uint8Array)
-    
-    // Respond with the file path if the file is stored successfully
-    return NextResponse.json({ success: true, filePath: `/uploads/Categories/${uniqueFileName}` })
+    // Get the download URL for the uploaded file
+    const downloadURL = await getDownloadURL(snapshot.ref);
+
+    return NextResponse.json({ url: downloadURL }, { status: 200 });
   } catch (error) {
-    // If there's an error during file writing, respond with error message
-    return NextResponse.json({ success: false, error: error })
+    console.error(error);
+    return NextResponse.json({ message: 'Error processing the image' }, { status: 500 });
   }
 }

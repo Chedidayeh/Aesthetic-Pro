@@ -203,7 +203,7 @@ const SideBar = () => {
             <Button
               className={cn("justify-start gap-2 rounded-lg px-3 py-2 text-zinc-900 transition-all hover:text-blue-600 dark:text-zinc-400 dark:hover:text-gray-50", {
               })}              
-              onClick={()=>router.push("/PodProducts")}            variant="ghost"
+              onClick={()=>router.push("/MarketPlace")}            variant="ghost"
 
 
             >

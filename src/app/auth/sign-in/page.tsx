@@ -196,7 +196,7 @@ const Page = () => {
               </Button>
           </div>
 
-          <div className='relative'>
+          {/* <div className='relative'>
               <div
                 aria-hidden='true'
                 className='absolute inset-0 flex items-center'>
@@ -296,7 +296,7 @@ const Page = () => {
               <ArrowRight className='h-4 w-4' />
             </Link>
 
-          </div>
+          </div> */}
         </div>
       </div>
     </>

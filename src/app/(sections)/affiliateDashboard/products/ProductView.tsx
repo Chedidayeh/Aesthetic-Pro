@@ -73,7 +73,7 @@ import { useRouter } from 'next/navigation';
 import { Collection, Platform, Product, Store, User } from '@prisma/client';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from "@/components/ui/use-toast";
-import ImageSlider from "@/components/PodProducts/ImageSlider";
+import ImageSlider from "@/components/MarketPlace/ImageSlider";
 import LoadingState from "@/components/LoadingState";
 import { Separator } from "@/components/ui/separator"
 import axios from 'axios';
@@ -137,7 +137,7 @@ const ProductView = ({ products, user , affiliateId, categories , collections , 
 
 
         const generateAffiliateLink = (productId: string ): string => {
-          return `${window.location.origin}/PodProducts/product/${productId}`;
+          return `${window.location.origin}/MarketPlace/product/${productId}`;
         };
 
 

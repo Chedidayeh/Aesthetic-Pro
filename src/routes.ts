@@ -3,8 +3,8 @@
 // type : string
 
 export const privateRoutes = [
-    "/PodProducts/create-client-product/upload",
-    "/PodProducts/create-client-product/preview",
+    "/MarketPlace/create-client-product/upload",
+    "/MarketPlace/create-client-product/preview",
 ]
 
 
@@ -14,7 +14,7 @@ export const privateRoutes = [
 // these routes don't require Auth
 // type : string
 
-export const createStoreRoute = "/PodProducts/create-seller-profile"
+export const createStoreRoute = "/MarketPlace/create-seller-profile"
 export const createAffiliateRoute = "/createAffiliateAccount"
 
 

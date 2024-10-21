@@ -48,7 +48,6 @@ const SellerProfile = ({ user } : {user : User})=>{
         <div className="relative w-[100px] h-[100px] rounded-full bg-gray-100 border-2 border-gray-500 overflow-hidden">
           <NextImage
             src={user?.image ? user.image : "/sellerImage.png"}
-            // src={`/api/getImage?imageUrl=${encodeURIComponent(store.logoUrl)}`}
             alt="store"
             objectFit="cover"
             width={500}

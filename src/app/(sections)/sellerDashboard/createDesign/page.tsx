@@ -1,7 +1,7 @@
 
   import React from 'react';
 
-  import { getAllCategories, getPlatformForTheWebsite } from "@/actions/actions"
+  import { getAllCategories, getPlatformForTheWebsite, getStore, getUser } from "@/actions/actions"
 
   import CreateDesignView from "./CreateDesignView";
   
@@ -27,6 +27,8 @@ import Link from 'next/link';
     
 
     const platform  = await getPlatformForTheWebsite()
+    const user = await getUser()
+    const store = await getStore(user?.id!)
   
     if(platform?.closeCreation) {
       return (
@@ -57,7 +59,7 @@ import Link from 'next/link';
     return (
   
       <>
-      <CreateDesignView  platform={platform!} />
+      <CreateDesignView  platform={platform!} store={store} />
                             
     </>
     

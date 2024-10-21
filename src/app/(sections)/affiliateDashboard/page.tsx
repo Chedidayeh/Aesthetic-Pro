@@ -47,7 +47,7 @@ import React from "react"
 import OrderedDesigns from "@/components/sellerDashboard/OrderedDesigns"
 import OrderedProducts from "@/components/sellerDashboard/OrderedProducts"
 import BanUser from '@/components/BanUser';
-import { getStoreFollowersCount } from '../PodProducts/store/[storeName]/actions';
+import { getStoreFollowersCount } from '../MarketPlace/store/[storeName]/actions';
 import { getAffiliateIdByUserId } from './products/actions';
 import CommissionsTable from '@/components/affiliateDashboard/CommissionsTable';
 import { getAffiliateNotification } from './notifications/actions';

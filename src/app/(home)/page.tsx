@@ -8,9 +8,9 @@ import {
 import Link from 'next/link'
 
 import NextImage from 'next/image'
-import ProductSlider from "@/components/PodProducts/ProductSlider";
+import ProductSlider from "@/components/MarketPlace/ProductSlider";
 import { fetchTrendingProducts, getFollowedStoreProductsFirst, getUser } from "@/actions/actions";
-import ProductReel from "@/components/PodProducts/ProductReel";
+import ProductReel from "@/components/MarketPlace/ProductReel";
 import PerkSection from "@/components/PerkSection";
 import { CircleDollarSign, DollarSign, Heart } from "lucide-react";
 import { Label } from "@/components/ui/label";
@@ -56,7 +56,7 @@ export default async function Page() {
               Discover our Trending Style collection!
             </p>
             <div className='mt-2'>
-              <Link href={"/PodProducts"}>
+              <Link href={"/MarketPlace"}>
                 <Button variant='link'>
                   Shop the Collection &rarr;
                 </Button>
@@ -77,7 +77,7 @@ export default async function Page() {
           <div className='w-[85%] mx-auto'>
             <ProductReel
               user={user!}
-              href='/PodProducts/FollowedStores'
+              href='/MarketPlace/FollowedStores'
               title='Products from Stores You Follow'
               products={filteredFollowedStoresProducts}
               subtitle='Check out the latest products from your favorite stores!'
@@ -105,7 +105,7 @@ export default async function Page() {
     </p>
 
     <div className="mt-6">
-      <Link href="/PodProducts">
+      <Link href="/MarketPlace">
         <Button className="px-4 py-3 text-sm font-semibold bg-red-600 text-white rounded-md shadow-md hover:bg-red-700 transition">
           Start Shopping &rarr;
         </Button>
@@ -159,7 +159,7 @@ export default async function Page() {
       Ready to explore the latest collections?
     </p>
     <div className=''>
-      <Link href="/PodProducts">
+      <Link href="/MarketPlace">
         <Button className="text-red-500" variant='link'>
           Start Shopping Now &rarr;
         </Button>
@@ -186,7 +186,7 @@ export default async function Page() {
   </p>
 
   <div className="mt-6">
-      <Link href="/PodProducts/create-seller-profile">
+      <Link href="/MarketPlace/create-seller-profile">
         <Button className="px-4 py-3 text-sm font-semibold bg-green-600 text-white rounded-md shadow-md hover:bg-green-700 transition">
         Get Started &rarr;
         </Button>

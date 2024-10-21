@@ -213,7 +213,24 @@ export async function getStoreByUserId(userId : string) {
   }
 }
 
+export async function getStore(userId : string) {
+  try {
+    const store = await db.store.findUnique({
+      where: {
+        userId: userId
+      },
+    });
 
+    if (!store) {
+      throw new Error('Store not found for the given userId');
+    }
+
+    return store;
+  } catch (error) {
+    console.error('Error fetching store:', error);
+    throw error;
+  }
+}
 
 
 export async function fetchOrdersByStoreId(storeId: string) {

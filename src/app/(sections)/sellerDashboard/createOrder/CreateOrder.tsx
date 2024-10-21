@@ -93,7 +93,7 @@ import { Platform, Product } from '@prisma/client';
 import { Badge } from '@/components/ui/badge';
 import  { createOrderDb } from "./actions"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { getSizes } from "../../PodProducts/product/[productId]/actions"
+import { getSizes } from "../../MarketPlace/product/[productId]/actions"
 import { getStoreByUserId, getUser } from "@/actions/actions"
 interface DesignViewProps {
   sellerProductsData: Product[];
@@ -566,7 +566,7 @@ const CreateOrder = ({
                                             className={cn("border w-full sm:w-48", selectedCat === index && "border-primary")}>
                                             <CardContent className="flex flex-col items-center justify-center p-2">
                                               <NextImage 
-                                               src={`/api/getImage?imageUrl=${encodeURIComponent(image)}`}
+                                               src={image}
                                                 alt="" 
                                                 width={900}
                                                 height={900}
@@ -607,7 +607,7 @@ const CreateOrder = ({
 
 
                                   <NextImage
-                                      src={`/api/getImage?imageUrl=${encodeURIComponent(product.croppedFrontProduct?.[0] ?? product.croppedBackProduct?.[0])}`}
+                                      src={product.croppedFrontProduct?.[0] ?? product.croppedBackProduct?.[0]}
                                       alt={product.title}
                                       width={1000}
                                       height={1000}

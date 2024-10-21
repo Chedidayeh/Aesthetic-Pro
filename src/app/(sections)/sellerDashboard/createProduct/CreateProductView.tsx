@@ -63,8 +63,8 @@ import { toPng } from 'html-to-image';
 import { SingleImageDropzone } from '@/components/sellerDashboard/SingleImageDropzone';
 import { addProductToDb, addProductToDbB, addProductToDbF } from './actions';
 import LoadingState from "@/components/LoadingState"
-import { getAllCategories } from "@/actions/actions"
-import { Category, Color, Size, FrontBorder, BackBorder, Collection, Platform } from "@prisma/client"
+import { getAllCategories, getStoreByUserId, getUser } from "@/actions/actions"
+import { Category, Color, Size, FrontBorder, BackBorder, Collection, Platform, Store } from "@prisma/client"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 
@@ -86,9 +86,10 @@ interface fetchedCat extends Category {
 interface ProductViewProps {
     categories : fetchedCat[]
     platform : Platform
+    store :Store
 }
 
-const CreateProductView = ({categories , platform}: ProductViewProps) => {  
+const CreateProductView = ({categories , platform , store}: ProductViewProps) => {  
 
   const { toast } = useToast()
   const router = useRouter();
@@ -411,49 +412,54 @@ const handleFileChange = (file : File) => {
 
 
   
-
-
-
-
-
                 // function to upload the Captured Product
-                const uploadCapturedMockup = async (file : File) =>{
-                  if (!file) {
-                    console.log('No file selected.');
-                    return;
-                  }
-                
-                  try {
-                    const data = new FormData()
-                    data.set('file', file)
-                
-                    const res = await fetch('/api/uploadSellerProducts', {
-                      method: 'POST',
-                      body: data
-                    })
-                
-                    // handle the error
-                    if (!res.ok) throw new Error(await res.text())
-                
-                    // Parse response JSON
-                    const result = await res.json()
-                
-                    // Check if success
-                    if (result.success) {
-                      const path = result.filePath  
-                      console.log(path)
-                      return path;    
-                    
-                    } else {
-                      // Handle error if success is false
-                      console.error('File upload failed:', result.error)
-                      return null;
+                const uploadCapturedMockup = (file: File): Promise<string | null> => {
+                  return new Promise((resolve, reject) => {
+                    if (!file) {
+                      console.log('No file selected.');
+                      resolve(null);
+                      return;
                     }
-                  } catch (e) {
-                    // Handle network errors or other exceptions
-                    console.error('Error during file upload:', e)
-                  }
-              }
+                
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onloadend = async () => {
+                      const base64data = reader.result?.toString().split(',')[1]; // Get the base64 string only
+                
+                      try {
+                        const response = await fetch('/api/uploadSellerProducts', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify({ file: base64data, productTitle: productTitle, storeName: store.storeName }),
+                        });
+                
+                        if (!response.ok) {
+                          throw new Error('Failed to upload image');
+                        }
+                
+                        const data = await response.json();
+                        const path = data.url; // Extract the URL from the response
+                
+                        toast({
+                          title: 'Product Image Upload Success',
+                          description: 'Product image uploaded successfully!',
+                        });
+                
+                        resolve(path); // Resolve the Promise with the URL
+                      } catch (error) {
+                        toast({
+                          title: 'Upload Error',
+                          description: 'Error uploading the image!',
+                          variant: 'destructive',
+                        });
+                        reject(error); // Reject the Promise in case of error
+                      }
+                    };
+                  });
+                };
+                
 
 
             // function to transform base64 To Blob to get the file from blob
@@ -467,53 +473,56 @@ const handleFileChange = (file : File) => {
               return new Blob([byteArray], { type: mimeType })
             }
 
-              // function to upload the seller design in uploads folder
-              const uploadDesign = async (file : File) =>{
+
+            const uploadDesign = (file: File): Promise<string | null> => {
+              return new Promise((resolve, reject) => {
                 if (!file) {
                   console.log('No file selected.');
+                  resolve(null);
                   return;
                 }
-
-                try {
-                  const data = new FormData()
-                  data.set('file', file)
-
-                  const res = await fetch('/api/uploadSellerDesigns', {
-                    method: 'POST',
-                    body: data
-                  })
-
-                  // handle the error
-                  if (!res.ok) throw new Error(await res.text())
-
-                  // Parse response JSON
-                  const result = await res.json()
-
-                  // Check if success
-                  if (result.success) {
-                    const path = result.filePath  
-                    return path;    
-                  
-                  } else {
-                    // Handle error if success is false
-                    console.error('File upload failed:', result.error)
+            
+                // Read the file as a base64 string
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onloadend = async () => {
+                  const base64data = reader.result?.toString().split(',')[1]; // Get the base64 string only
+            
+                  try {
+                    const response = await fetch('/api/uploadSellerDesigns', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({ file: base64data, designName: file.name, storeName: store.storeName }),
+                    });
+            
+                    if (!response.ok) {
+                      throw new Error('Failed to upload image');
+                    }
+            
+                    const data = await response.json();
+                    const path = data.url; // Get the uploaded URL
+            
                     toast({
-                      title: 'Something went wrong',
-                      description: 'Error during seller front design upload. Please try again.',
+                      title: 'Design Upload Success',
+                      description: 'Design image uploaded successfully!',
+                    });
+            
+                    resolve(path); // Resolve the promise with the URL
+                  } catch (error) {
+                    toast({
+                      title: 'Upload Error',
+                      description: 'Error uploading the image!',
                       variant: 'destructive',
-                  });
-                    return null;
+                    });
+                    console.error(error);
+                    reject(error); // Reject the promise on error
                   }
-                } catch (e) {
-                  // Handle network errors or other exceptions
-                  console.error('Error during seller front design upload:', e)
-                  toast({
-                    title: 'Something went wrong',
-                    description: 'Error during seller front design upload. Please try again.',
-                    variant: 'destructive',
-                });
-                }
-              } 
+                };
+              });
+            };
+            
               
               
             // Function to map over filteredColors and upload each cat color and return the list of paths
@@ -537,10 +546,10 @@ const handleFileChange = (file : File) => {
               const file = new File([blob], `${productTitle}.png`, { type: 'image/png' });
               // upload the captured product in the uploads folder and get the path 
               const CapturedProductPath = await uploadCapturedMockup(file)
-              paths.push(CapturedProductPath); // Store the path in the array
+              paths.push(CapturedProductPath ?? ""); // Store the path in the array
               colors.push(color.label)
             };
-            return {frontPaths : paths , colors : colors}
+            return { frontPaths: paths.filter(path => path !== ""), colors: colors };
           };   
           
           
@@ -565,11 +574,11 @@ const handleFileChange = (file : File) => {
               const file = new File([blob], `${productTitle}.png`, { type: 'image/png' });
               // upload the captured product in the uploads folder and get the path 
               const CapturedProductPath = await uploadCapturedMockup(file)
-              paths.push(CapturedProductPath); // Store the path in the array
+              paths.push(CapturedProductPath ?? ""); // Store the path in the array
               colors.push(color.label)
 
             };
-            return {backPaths : paths , colors : colors}
+            return {backPaths : paths.filter(path => path !== "") , colors : colors}
           };  
             
 
@@ -617,8 +626,8 @@ const handleFileChange = (file : File) => {
                     const result = await addProductToDb(selectedP.label,res.colors,
                     res.frontPaths,backPaths,
                     productTitle,productDescription,tags,productPrice,BasePrice,sellerProfit,
-                    frontDesignName,Frontwidth,Frontheight,frontdesignPath,
-                    backDesignName,Backwidth,Backheight,backdesignPath , selectedCollection , privateProduct)
+                    frontDesignName,Frontwidth,Frontheight,frontdesignPath!,
+                    backDesignName,Backwidth,Backheight,backdesignPath! , selectedCollection , privateProduct)
   
                     if(result.success){
                       toast({
@@ -676,7 +685,7 @@ const handleFileChange = (file : File) => {
                   const result = await addProductToDbF(selectedP.label,res.colors,res.frontPaths,
                   productTitle,productDescription,tags,productPrice,BasePrice,sellerProfit,
                   frontDesignName,Frontwidth,Frontheight,
-                  frontdesignPath , selectedCollection , privateProduct)
+                  frontdesignPath! , selectedCollection , privateProduct)
 
                   if(result.success){
                     toast({
@@ -732,7 +741,7 @@ const handleFileChange = (file : File) => {
                     const result = await addProductToDbB(selectedP.label,res.colors,res.backPaths,
                     productTitle,productDescription,tags,productPrice,BasePrice,sellerProfit,
                     backDesignName,Backwidth,Backheight,
-                    backdesignPath , selectedCollection , privateProduct)
+                    backdesignPath! , selectedCollection , privateProduct)
   
                     if(result.success){
                       toast({

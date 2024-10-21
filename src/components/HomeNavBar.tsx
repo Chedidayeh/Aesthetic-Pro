@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import MaxWidthWrapper from './MaxWidthWrapper'
 import { buttonVariants } from './ui/button'
-import { ArrowRight, BookOpenText, Box, CircleDollarSign, GraduationCap, Heart, Home, LayoutPanelTop, Palette, School, Shirt, ShoppingCart, UserRoundCog } from 'lucide-react'
+import { ArrowRight, BookOpenText, Box, CircleDollarSign, GraduationCap, Heart, Home, LayoutPanelTop, Palette, School, Shirt, ShoppingCart, Store, UserRoundCog } from 'lucide-react'
 import {
   Avatar,
   AvatarFallback,
@@ -82,13 +82,13 @@ const Navbar = async () => {
                 </DialogClose>
 
                 <DialogClose>
-                <Link href="/PodProducts" className={buttonVariants({
+                <Link href="/MarketPlace" className={buttonVariants({
               size: 'sm',
               variant: 'ghost',
               className: "hover:text-red-500"
             })}>
-              <Palette size={15} className='mr-1' />
-              Pod Products ✨
+              <Store size={15} className='mr-1' />
+              MarketPlace ✨
             </Link>
                 </DialogClose>
 
@@ -172,13 +172,13 @@ const Navbar = async () => {
             <div className='h-8 w-px bg-zinc-200 hidden sm:block' />
 
 
-            <Link href="/PodProducts" className={buttonVariants({
+            <Link href="/MarketPlace" className={buttonVariants({
               size: 'sm',
               variant: 'ghost',
               className: "hover:text-red-500"
             })}>
-              <Palette size={15} className='mr-1' />
-              Pod Products ✨
+              <Store size={15} className='mr-1' />
+              MarketPlace ✨
             </Link>
 
             <div className='h-8 w-px bg-zinc-200 hidden sm:block' />
@@ -254,7 +254,7 @@ const Navbar = async () => {
             <div className='h-8 w-px bg-zinc-200 hidden sm:block' />
             <Link
               
-              href='/PodProducts/create-client-product/select-category'
+              href='/MarketPlace/create-client-product/select-category'
               className={buttonVariants({
                 size: 'sm',
                 className: 'hidden sm:flex items-center gap-1',

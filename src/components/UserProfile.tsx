@@ -66,7 +66,6 @@ const UserProfile = ({ user , platform } : {user : User , platform : Platform | 
         <div className="relative w-[100px] h-[100px] rounded-full bg-gray-100 border-2 border-gray-500 overflow-hidden">
           <NextImage
             src={user?.image ? user.image : "/clientImage.png"}
-            // src={`/api/getImage?imageUrl=${encodeURIComponent(store.logoUrl)}`}
             alt="clientImage"
             width={500}
             height={500}

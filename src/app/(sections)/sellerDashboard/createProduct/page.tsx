@@ -51,15 +51,17 @@ import { toPng } from 'html-to-image';
 import { SingleImageDropzone } from '@/components/sellerDashboard/SingleImageDropzone';
 import { addProductToDb, addProductToDbB, addProductToDbF } from './actions';
 import LoadingState from "@/components/LoadingState"
-import { getAllCategories, getPlatformForTheWebsite } from "@/actions/actions"
+import { getAllCategories, getPlatformForTheWebsite, getStore, getUser } from "@/actions/actions"
 import CreateProductView from "./CreateProductView";
 import Link from "next/link";
 
-import { unstable_noStore as store } from "next/cache"
+import { unstable_noStore as noStore } from "next/cache"
 const Page =  async () => {
 
-  store()
-  
+  noStore()
+  const user = await getUser()
+  const store = await getStore(user!.id)
+
   const categories = await getAllCategories()
   const platform  = await getPlatformForTheWebsite()
 
@@ -93,7 +95,7 @@ const Page =  async () => {
   return (
 
     <>
-    <CreateProductView categories={categories} platform={platform!} />
+    <CreateProductView categories={categories} platform={platform!} store={store} />
                           
   </>
   

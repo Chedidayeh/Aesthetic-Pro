@@ -1,6 +1,5 @@
 'use server';
 
-import { getAllPodProductsOrdersIds } from "@/app/(sections)/adminDashboard/orders/orderDetails/[orderId]/actions";
 import DesignOrderView from "./DesignOrderView";
 import ProductOrderView from "./ProductOrderView";
 import { getOrderWithItemsAndProducts } from "./actions";
@@ -12,12 +11,7 @@ interface PageProps {
 }
 
 
-// export async function generateStaticParams() {
-//   const OrdersIds = await getAllPodProductsOrdersIds()
-//   return OrdersIds.map((orderId) => ({
-//     orderId,
-//   }))
-// }
+
 
 import { unstable_noStore as noStore } from "next/cache"
 
