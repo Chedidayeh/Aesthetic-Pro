@@ -732,7 +732,7 @@ const handleFileChange = (file : File) => {
                   frontDesignName,Frontwidth,Frontheight,
                   frontdesignPath! , selectedCollection , privateProduct)
 
-                  if(result.success){
+                  if(result.success && (res.frontPaths.length > 0 || res.colors.length > 0)) {
                     toast({
                       title: 'Great!',
                       description: 'Product added successfully.',
@@ -742,7 +742,7 @@ const handleFileChange = (file : File) => {
                     router.push("/sellerDashboard/products")
                     return                 
                   }
-                  if(result.error){
+                  if(result.error || (res.frontPaths.length === 0 || res.colors.length === 0) ){
                     closeDialog()
                     setisAdding(false)
                     toast({
