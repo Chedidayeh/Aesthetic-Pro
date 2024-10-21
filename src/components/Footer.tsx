@@ -71,7 +71,7 @@ const Footer = async () => {
              )}
 
                 {!user && (
-                       <Link href={"/PodProducts/create-seller-profile"}>
+                       <Link href={"/MarketPlace/create-seller-profile"}>
                        <li className="text-muted-foreground text-sm pb-2 font-semibold hover:text-blue-600 cursor-pointer">
                        Become a Seller  <span className='text-green-500'>$</span>
                        </li>
@@ -85,7 +85,7 @@ const Footer = async () => {
             )} 
 
           {!platform?.closeStoreCreation && user && user.userType === "USER" && (
-                        <Link href={"/PodProducts/create-seller-profile"}>
+                        <Link href={"/MarketPlace/create-seller-profile"}>
                         <li className="text-muted-foreground text-sm pb-2 font-semibold hover:text-blue-600 cursor-pointer">
                         Become a Seller  <span className='text-green-500'>$</span>
                         </li>

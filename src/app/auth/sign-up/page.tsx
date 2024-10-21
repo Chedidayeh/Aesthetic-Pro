@@ -96,7 +96,7 @@ const Page = () => {
               </Button>
           </div>
 
-          <div className='relative'>
+          {/* <div className='relative'>
               <div
                 aria-hidden='true'
                 className='absolute inset-0 flex items-center'>
@@ -211,7 +211,7 @@ const Page = () => {
 
 
 
-          </div>
+          </div> */}
         </div>
       </div>
     </>

@@ -99,7 +99,7 @@ import { Separator } from "@/components/ui/separator"
 import { Item } from "@radix-ui/react-dropdown-menu"
 import { changeStatus, changeType, updateRevenueAndSalesForProducts } from "./actions"
 import LoadingState from "@/components/LoadingState"
-import ImageSlider from "@/components/PodProducts/ImageSlider"
+import ImageSlider from "@/components/MarketPlace/ImageSlider"
 
 interface ExtraProduct extends Product{
   store : Store

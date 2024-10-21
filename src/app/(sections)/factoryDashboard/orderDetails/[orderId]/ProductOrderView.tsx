@@ -98,7 +98,7 @@ import { Separator } from "@/components/ui/separator"
 import { Item } from "@radix-ui/react-dropdown-menu"
 import { togglePrinted } from "./actions"
 import LoadingState from "@/components/LoadingState"
-import ImageSlider from "@/components/PodProducts/ImageSlider"
+import ImageSlider from "@/components/MarketPlace/ImageSlider"
 
 interface ExtraOrderItem extends OrderItem {
     product: Product | null 

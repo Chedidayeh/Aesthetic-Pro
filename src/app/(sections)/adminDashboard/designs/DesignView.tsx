@@ -268,7 +268,7 @@ interface ProductViewProps {
                                               </Badge>
                                               </div>
                                               <NextImage 
-                                               src={`/api/getImage?imageUrl=${encodeURIComponent(design!)}`}
+                                               src={design!}
                                                alt={`design Image`}
                                                 onContextMenu={(e) => e.preventDefault()}
                                                   className="object-contain" />

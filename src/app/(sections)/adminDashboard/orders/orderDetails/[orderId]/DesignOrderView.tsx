@@ -97,7 +97,7 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { Item } from "@radix-ui/react-dropdown-menu"
 import { changeStatus, changeType, updateRevenueAndSalesForDesigns, updateRevenueAndSalesForProducts } from "./actions"
-import ImageSlider from "@/components/PodProducts/ImageSlider"
+import ImageSlider from "@/components/MarketPlace/ImageSlider"
 import LoadingState from "@/components/LoadingState"
 
 interface ExtraOrderItem extends OrderItem {

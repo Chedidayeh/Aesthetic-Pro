@@ -47,7 +47,7 @@ import React from "react"
 import OrderedDesigns from "@/components/sellerDashboard/OrderedDesigns"
 import OrderedProducts from "@/components/sellerDashboard/OrderedProducts"
 import BanUser from '@/components/BanUser';
-import { getStoreFollowersCount } from '../PodProducts/store/[storeName]/actions';
+import { getStoreFollowersCount } from '../MarketPlace/store/[storeName]/actions';
 
 
 
@@ -82,7 +82,7 @@ const Page =  async () => {
       <div className="flex justify-center items-center">
         <div className="relative w-[200px] h-[200px] rounded-full bg-gray-100 border-2 shadow-xl shadow-blue-200 border-gray-500 overflow-hidden">
           <NextImage
-            src={`/api/getImage?imageUrl=${encodeURIComponent(store.logoUrl)}`}
+            src={store.logoUrl}
             alt="store"
             layout="fill"
             objectFit="cover"

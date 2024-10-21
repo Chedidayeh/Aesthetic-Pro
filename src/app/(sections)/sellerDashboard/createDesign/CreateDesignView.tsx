@@ -53,17 +53,18 @@ import { tree } from 'next/dist/build/templates/app-page';
 import { SingleImageDropzone } from '@/components/sellerDashboard/SingleImageDropzone';
 import { Separator } from '@radix-ui/react-dropdown-menu';
 import Link from 'next/link';
-import { addDesignToDb, getUser } from './actions';
-import { Platform } from "@prisma/client"
+import { addDesignToDb } from './actions';
+import { Platform, Store } from "@prisma/client"
 
 
 
 interface ProductViewProps {
   platform : Platform
+  store : Store
 }
 
 
-const CreateDesignView = ({platform}: ProductViewProps) => {  
+const CreateDesignView = ({platform , store}: ProductViewProps) => {  
 
 
     // to trigger the alert dialog
@@ -75,7 +76,7 @@ const CreateDesignView = ({platform}: ProductViewProps) => {
 
 
   const [isDesignUploaded , setisDesignUploaded] = useState(false)
-  const [file, setFile] = useState<File>();
+  const [file, setFile] = useState<File | null>();
   const [isAdding , setisAdding] =useState(false)
   const [designwidth, setdesignwidth] = React.useState<number>(0);
   const [designheight, setdesignheight] = React.useState<number>(0);
@@ -107,6 +108,7 @@ const CreateDesignView = ({platform}: ProductViewProps) => {
               description: 'Please choose a file equal or smaller than 15MB.',
               variant: 'destructive',
             });
+            setFile(null)
           } else {
             setisDesignUploaded(true)            
             const reader = new FileReader();
@@ -166,7 +168,54 @@ const CreateDesignView = ({platform}: ProductViewProps) => {
           };
 
 
-
+          const uploadDesign = (file: File): Promise<string | null> => {
+            return new Promise((resolve, reject) => {
+              if (!file) {
+                console.log('No file selected.');
+                resolve(null);
+                return;
+              }
+          
+              // Read the file as a base64 string
+              const reader = new FileReader();
+              reader.readAsDataURL(file);
+              reader.onloadend = async () => {
+                const base64data = reader.result?.toString().split(',')[1]; // Get the base64 string only
+          
+                try {
+                  const response = await fetch('/api/uploadSellerDesigns', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ file: base64data, designName: file.name, storeName: store.storeName }),
+                  });
+          
+                  if (!response.ok) {
+                    throw new Error('Failed to upload image');
+                  }
+          
+                  const data = await response.json();
+                  const path = data.url; // Get the uploaded URL
+          
+                  toast({
+                    title: 'Design Upload Success',
+                    description: 'Design image uploaded successfully!',
+                  });
+          
+                  resolve(path); // Resolve the promise with the URL
+                } catch (error) {
+                  toast({
+                    title: 'Upload Error',
+                    description: 'Error uploading the image!',
+                    variant: 'destructive',
+                  });
+                  console.error(error);
+                  reject(error); // Reject the promise on error
+                }
+              };
+            });
+          };
 
 
 
@@ -184,28 +233,14 @@ const CreateDesignView = ({platform}: ProductViewProps) => {
       }
     
       try {
-        const store = await getUser()
-        if(store){
-          openDialog()
+        openDialog()
         setisAdding(true)
-        const data = new FormData()
-        data.set('file', file)
-    
-        const res = await fetch('/api/uploadSellerDesigns', {
-          method: 'POST',
-          body: data
-        })
-    
-        // handle the error
-        if (!res.ok) throw new Error(await res.text())
-    
-        // Parse response JSON
-        const result = await res.json()
-    
+
+        const designPath = await uploadDesign(file)
+
         // Check if success
-        if (result.success) {
-          const path = result.filePath
-          const id =await addDesignToDb(store ,path , designwidth , designheight , designName , designPrice ,sellerProfit, tags  );
+        if (designPath) {
+          await addDesignToDb(store ,designPath , designwidth , designheight , designName , designPrice ,sellerProfit, tags  );
           toast({
             title: 'Design Was Successfully Added',
             description: 'Refrech the page.',
@@ -215,8 +250,6 @@ const CreateDesignView = ({platform}: ProductViewProps) => {
         } else {
           setisAdding(false)
           closeDialog()
-          // Handle error if success is false
-          console.error('File upload failed:', result.error)
           toast({
             title: 'Something went wrong',
             description: 'There was an error on our end. Please try again.',
@@ -224,17 +257,8 @@ const CreateDesignView = ({platform}: ProductViewProps) => {
         });
         }
 
-        }
-        else{
-          setisAdding(false)
-          closeDialog()
-        toast({
-          title: 'No seller Found',
-          description: 'You need to login !',
-          variant: 'destructive',
-      });
+      
 
-        }
         
       } catch (e) {
         setisAdding(false)
@@ -298,7 +322,7 @@ const CreateDesignView = ({platform}: ProductViewProps) => {
                             className="border border-blue-800"
                             width={200}  
                             height={200}  
-                            value={file}  
+                            value={file!}  
                             onChange={(file) => {  
                               setFile(file);  
                               if (file) { 

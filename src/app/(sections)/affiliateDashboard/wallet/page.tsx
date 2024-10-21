@@ -48,7 +48,6 @@ import OrderedDesigns from "@/components/sellerDashboard/OrderedDesigns"
 import OrderedProducts from "@/components/sellerDashboard/OrderedProducts"
 import Payment from "./Payment"
 import { getAffiliateLinksAndCommissions, getAffiliatePaymentRequest, getUser } from "@/actions/actions"
-import { getStoreByUserId } from "./actions"
 import { Store } from "@prisma/client"
 
 

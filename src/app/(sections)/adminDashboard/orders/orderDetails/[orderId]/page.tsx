@@ -2,7 +2,7 @@
 
 import DesignOrderView from "./DesignOrderView";
 import ProductOrderView from "./ProductOrderView";
-import { calculateTotalSellerProfiForProducts, calculateTotalSellerProfitForDesigns, getAllPodProductsOrdersIds, getOrderWithItemsAndProducts } from "./actions";
+import { calculateTotalSellerProfiForProducts, calculateTotalSellerProfitForDesigns, getOrderWithItemsAndProducts } from "./actions";
 
 interface PageProps {
   params: {
@@ -10,13 +10,6 @@ interface PageProps {
   };
 }
 
-
-// export async function generateStaticParams() {
-//   const OrdersIds = await getAllPodProductsOrdersIds()
-//   return OrdersIds.map((orderId) => ({
-//     orderId,
-//   }))
-// }
 
 const Page = async ({ params }: PageProps) => {
   const { orderId } = params;

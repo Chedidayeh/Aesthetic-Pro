@@ -35,13 +35,6 @@ export const addDesignToDb = async (store : Store ,path : string , width:number
     }
   };
 
-  // to get the auth seller store
-  export const getUser = async() => {
-    const session = await auth();
-    if(!session) return null
-    const store = await db.store.findUnique({ where: { userId: session.user.id } });
-    return store;
-  }
 
 
 

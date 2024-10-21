@@ -1,5 +1,4 @@
 import React from 'react'
-import ImageSlider from '../PodProducts/ImageSlider'
 import NextImage from 'next/image'
 
 const HeroSection = () => {

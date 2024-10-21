@@ -82,7 +82,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { acceptDesign, acceptProduct, deleteStoreById, refuseDesign, refuseProduct } from "./actions"
 import { Input } from '@/components/ui/input'
 import LoadingState from '@/components/LoadingState'
-import ImageSlider from '@/components/PodProducts/ImageSlider'
+import ImageSlider from '@/components/MarketPlace/ImageSlider'
   
 
 interface ExtraProduct extends Product {

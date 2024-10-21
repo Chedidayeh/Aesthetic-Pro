@@ -8,27 +8,27 @@ interface ExtraStore extends Store {
 }
 
 // get seller Store by userId
-export async function getStoreByUserId(userId : string) {
-  try {
-    const store = await db.store.findUnique({
-      where: {
-        userId: userId
-      },
-      include: {
-        paymentRequest : true
-      },
-    });
+// export async function getStoreByUserId(userId : string) {
+//   try {
+//     const store = await db.store.findUnique({
+//       where: {
+//         userId: userId
+//       },
+//       include: {
+//         paymentRequest : true
+//       },
+//     });
 
-    if (!store) {
-      throw new Error('Store not found for the given userId');
-    }
+//     if (!store) {
+//       throw new Error('Store not found for the given userId');
+//     }
 
-    return store as ExtraStore;
-  } catch (error) {
-    console.error('Error fetching store:', error);
-    throw error;
-  }
-}
+//     return store as ExtraStore;
+//   } catch (error) {
+//     console.error('Error fetching store:', error);
+//     throw error;
+//   }
+// }
 
 export async function proceedD17Request(affiliateId : string ,carteHolder: string, cartePhoneNumber: string, requestedAmount: number) {
     try {

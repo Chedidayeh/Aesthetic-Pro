@@ -91,7 +91,7 @@ import {   DeleteOrder } from './actions';
 import { useRouter } from 'next/navigation';
 import { Order } from '@prisma/client';
 import { Badge } from '@/components/ui/badge';
-import ImageSlider from "@/components/PodProducts/ImageSlider";
+import ImageSlider from "@/components/MarketPlace/ImageSlider";
 
 interface ProductsViewProps {
   ordersData: Order[];

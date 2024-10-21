@@ -215,42 +215,54 @@ interface fetchedCat extends Category {
 
 
                     // function to upload a file image and get its path
-                    const uploadImage = async (file : File) =>{
-                      if (!file) {
-                        console.log('No file selected.');
-                        return;
-                      }
-                    
-                      try {
-                        const data = new FormData()
-                        data.set('file', file)
-                    
-                        const res = await fetch('/api/uploadCategory', {
-                          method: 'POST',
-                          body: data
-                        })
-                    
-                        // handle the error
-                        if (!res.ok) throw new Error(await res.text())
-                    
-                        // Parse response JSON
-                        const result = await res.json()
-                    
-                        // Check if success
-                        if (result.success) {
-                          const path = result.filePath  
-                          return path as string;    
-                        
-                        } else {
-                          // Handle error if success is false
-                          console.error('File upload failed:', result.error)
-                          return null;
+                    const uploadImage = (file: File): Promise<string | null> => {
+                      return new Promise((resolve, reject) => {
+                        if (!file) {
+                          console.log('No file selected.');
+                          resolve(null);
+                          return;
                         }
-                      } catch (e) {
-                        // Handle network errors or other exceptions
-                        console.error('Error during file upload:', e)
-                      }
-                  }
+                    
+                        // Read the file as a base64 string
+                        const reader = new FileReader();
+                        reader.readAsDataURL(file);
+                        reader.onloadend = async () => {
+                          const base64data = reader.result?.toString().split(',')[1]; // Get the base64 string only
+                    
+                          try {
+                            const response = await fetch('/api/uploadCategory', {
+                              method: 'POST',
+                              headers: {
+                                'Content-Type': 'application/json',
+                              },
+                              body: JSON.stringify({ file: base64data , category : selectedCat?.label }),
+                            });
+                    
+                            if (!response.ok) {
+                              throw new Error('Failed to upload category image');
+                            }
+                    
+                            const data = await response.json();
+                            const path = data.url; // Get the uploaded URL
+                    
+                            toast({
+                              title: 'category Upload Success',
+                              description: 'category image uploaded successfully!',
+                            });
+                    
+                            resolve(path); // Resolve the promise with the URL
+                          } catch (error) {
+                            toast({
+                              title: 'Upload Error',
+                              description: 'Error uploading the category image!',
+                              variant: 'destructive',
+                            });
+                            console.error(error);
+                            reject(error); // Reject the promise on error
+                          }
+                        };
+                      });
+                    };
   return (
     <>
 
@@ -327,7 +339,7 @@ interface fetchedCat extends Category {
             <Card className={cn("border", selectedCard === index && "border-primary")}>
                 <CardContent className="flex  justify-center p-1 relative">
                 <NextImage
-                src={`/api/getImage?imageUrl=${encodeURIComponent(category.value!)}`}
+                src={category.value}
                 alt={category.label}
                 width={1000}
                 height={1000}
