@@ -70,7 +70,6 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 import { storage } from "@/firebase/firebaseConfig"
 import path from "path"
-import sharp from "sharp"
 
 
 
@@ -416,75 +415,92 @@ const handleFileChange = (file : File) => {
   const uploadCapturedMockup = async (file: File) => {
     const pica = new Pica(); // Correct instantiation
   
-    // Create an image element
-    const img = new Image();
-    img.src = URL.createObjectURL(file);
-    
-    // Wait for the image to load
-    await new Promise<void>((resolve) => {
-      img.onload = () => resolve();
-    });
+    try {
+      // Create an image element
+      const img = new Image();
+      img.src = URL.createObjectURL(file);
+      
+      // Wait for the image to load
+      await new Promise<void>((resolve) => {
+        img.onload = () => resolve();
+      });
   
-    // Create a canvas for resizing
-    const canvas = document.createElement('canvas');
-    const targetWidth = 800; // Set your desired width
-    const targetHeight = (img.height / img.width) * targetWidth; // Maintain aspect ratio
+      // Create a canvas for resizing
+      const canvas = document.createElement('canvas');
+      const targetWidth = 800; // Set your desired width
+      const targetHeight = (img.height / img.width) * targetWidth; // Maintain aspect ratio
   
-    canvas.width = targetWidth;
-    canvas.height = targetHeight;
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
   
-    // Use Pica to resize the image
-    await pica.resize(img, canvas);
+      // Use Pica to resize the image
+      await pica.resize(img, canvas);
   
-    // Convert the canvas to a Blob
-    const optimizedBlob = await new Promise<Blob>((resolve, reject) => {
-      canvas.toBlob((blob) => {
-        if (blob) {
-          resolve(blob); // Resolve with the Blob
-        } else {
-          reject(new Error('Failed to convert canvas to Blob')); // Reject if null
-        }
-      }, 'image/png', 0.9); // Adjust quality (0.9 = 90%)
-    });
+      // Convert the canvas to a Blob
+      const optimizedBlob = await new Promise<Blob>((resolve, reject) => {
+        canvas.toBlob((blob) => {
+          if (blob) {
+            resolve(blob); // Resolve with the Blob
+          } else {
+            reject(new Error('Failed to convert canvas to Blob')); // Reject if null
+          }
+        }, 'image/png', 0.9); // Adjust quality (0.9 = 90%)
+      });
   
-    // Upload the optimized image
-    const storageRef = ref(storage, `sellers/stores/${store.storeName}/products/${productTitle}-${Date.now()}.png`);
-    const snapshot = await uploadBytes(storageRef, optimizedBlob);
-    const downloadURL = await getDownloadURL(snapshot.ref);
-    return downloadURL;
-  }
+      // Upload the optimized image
+      const storageRef = ref(storage, `sellers/stores/${store.storeName}/products/${productTitle}-${Date.now()}.png`);
+      const snapshot = await uploadBytes(storageRef, optimizedBlob);
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      
+      if (downloadURL) {
+        toast({
+          title: 'Product Image Upload Success',
+          description: 'Product image uploaded successfully!',
+        });
+        return downloadURL;
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast({
+        title: 'Upload Failed',
+        description: 'There was an error uploading the product image. Please try again.',
+      });
+      throw error; // Optionally re-throw the error if needed
+    }
+  };
+  
 
-            const uploadCapturedMockupp = async (file: File) => {
-              const storageRef = ref(storage, `sellers/stores/${store.storeName}/products/${productTitle}-${Date.now()}.png`);
+            // const uploadCapturedMockupp = async (file: File) => {
+            //   const storageRef = ref(storage, `sellers/stores/${store.storeName}/products/${productTitle}-${Date.now()}.png`);
             
-              const formData = new FormData();
-              formData.append('file', file);
+            //   const formData = new FormData();
+            //   formData.append('file', file);
              
               
-              try {
-                const response = await fetch('/api/getOptimizedFile', { // Ensure this matches your API route
-                  method: 'POST',
-                  body: formData, // Send the FormData directly without setting Content-Type
-                });
+            //   try {
+            //     const response = await fetch('/api/getOptimizedFile', { // Ensure this matches your API route
+            //       method: 'POST',
+            //       body: formData, // Send the FormData directly without setting Content-Type
+            //     });
           
-                if (!response.ok) {
-                  throw new Error(`Error: ${response.status} - ${response.statusText}`);
-                }
+            //     if (!response.ok) {
+            //       throw new Error(`Error: ${response.status} - ${response.statusText}`);
+            //     }
           
-                const data = await response.json();
-                const optimizedImage = base64ToBlob(data.optimizedBuffer, 'image/png')
-                const fileImage = new File([optimizedImage], `${productTitle}.png`, { type: 'image/png' });
+            //     const data = await response.json();
+            //     const optimizedImage = base64ToBlob(data.optimizedBuffer, 'image/png')
+            //     const fileImage = new File([optimizedImage], `${productTitle}.png`, { type: 'image/png' });
 
-                // Upload the optimized image
-                const snapshot = await uploadBytes(storageRef, optimizedImage);
-                const downloadURL = await getDownloadURL(snapshot.ref);
-                return downloadURL;
-                return ''
-              } catch (error) {
-                console.error("Error uploading product:", error);
-                throw new Error("Failed to upload product. Please try again later.");
-              }
-            }
+            //     // Upload the optimized image
+            //     const snapshot = await uploadBytes(storageRef, optimizedImage);
+            //     const downloadURL = await getDownloadURL(snapshot.ref);
+            //     return downloadURL;
+            //     return ''
+            //   } catch (error) {
+            //     console.error("Error uploading product:", error);
+            //     throw new Error("Failed to upload product. Please try again later.");
+            //   }
+            // }
   
   
                 // // function to upload the Captured Product
@@ -535,6 +551,11 @@ const handleFileChange = (file : File) => {
                 // };
               
 
+
+
+
+
+
             // function to transform base64 To Blob to get the file from blob
             function base64ToBlob(base64: string, mimeType: string) {
               const byteCharacters = atob(base64)
@@ -553,10 +574,20 @@ const handleFileChange = (file : File) => {
               try {
                 const snapshot = await uploadBytes(storageRef, file);
                 const downloadURL = await getDownloadURL(snapshot.ref);
-                return downloadURL;
+                if(downloadURL) {
+                  toast({
+                   title: 'Design Upload Success',
+                    description: 'Design image uploaded successfully!',
+                    });
+                    return downloadURL
+                }
               } catch (error) {
                 console.error("Error uploading design:", error);
-                throw new Error("Failed to upload design. Please try again later.");
+                toast({
+                title: 'Upload Error',
+                description: 'Error uploading the image!',
+                variant: 'destructive',
+                });              
               }
             }
             
@@ -711,7 +742,21 @@ const handleFileChange = (file : File) => {
                     const res = await uploadAllCapForFront();
                     const {backPaths} = await uploadAllCapForBack();
 
-
+                    // Check if frontPaths and colors are non-empty arrays and contain non-empty strings
+                    const hasValidFrontPaths = Array.isArray(res.frontPaths) && res.frontPaths.every(path => path.trim() !== '');
+                    const hasValidbackPaths = Array.isArray(backPaths) && backPaths.every(path => path.trim() !== '');
+                    const hasValidColors = Array.isArray(res.colors) && res.colors.every(color => color.trim() !== '');
+                   
+                    if (!hasValidbackPaths || !hasValidFrontPaths || !hasValidColors || !frontdesignPath || !backdesignPath) {
+                    closeDialog()
+                    setisAdding(false)
+                    toast({
+                    title: 'Error',
+                    description: 'Failed to add your product. Please try again later.',
+                    variant: 'destructive',
+                    });
+                    return
+                    }
 
                     const result = await addProductToDb(selectedP.label,res.colors,
                     res.frontPaths,backPaths,
@@ -772,6 +817,21 @@ const handleFileChange = (file : File) => {
                   // and get the path for each color variant 
                   const res = await uploadAllCapForFront();
 
+                    // Check if frontPaths and colors are non-empty arrays and contain non-empty strings
+                    const hasValidFrontPaths = Array.isArray(res.frontPaths) && res.frontPaths.every(path => path.trim() !== '');
+                    const hasValidColors = Array.isArray(res.colors) && res.colors.every(color => color.trim() !== '');
+
+                    if (!hasValidFrontPaths || !hasValidColors || !frontdesignPath) {
+                    closeDialog()
+                    setisAdding(false)
+                    toast({
+                      title: 'Error',
+                      description: 'Failed to add your product. Please try again later.',
+                      variant: 'destructive',
+                    });
+                    return
+                    }
+
                   const result = await addProductToDbF(selectedP.label,res.colors,res.frontPaths,
                   productTitle,productDescription,tags,productPrice,BasePrice,sellerProfit,
                   frontDesignName,Frontwidth,Frontheight,
@@ -828,6 +888,22 @@ const handleFileChange = (file : File) => {
                     // upload the captured product with its colors variant in the uploads folder 
                     // and get the path for each color variant 
                     const res = await uploadAllCapForBack();
+
+
+                    // Check if frontPaths and colors are non-empty arrays and contain non-empty strings
+                    const hasValidbackPaths = Array.isArray(res.backPaths) && res.backPaths.every(path => path.trim() !== '');
+                    const hasValidColors = Array.isArray(res.colors) && res.colors.every(color => color.trim() !== '');
+                   
+                    if (!hasValidbackPaths || !hasValidColors || !backdesignPath) {
+                    closeDialog()
+                    setisAdding(false)
+                    toast({
+                    title: 'Error',
+                    description: 'Failed to add your product. Please try again later.',
+                    variant: 'destructive',
+                    });
+                    return
+                    }
 
                     const result = await addProductToDbB(selectedP.label,res.colors,res.backPaths,
                     productTitle,productDescription,tags,productPrice,BasePrice,sellerProfit,

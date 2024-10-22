@@ -29,7 +29,8 @@ import { getStoreByUserId, getUser } from "@/actions/actions"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/components/ui/use-toast"
 import { SingleImageDropzone } from "@/components/sellerDashboard/SingleImageDropzone"
-
+import { storage } from "@/firebase/firebaseConfig"
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 export default function Page() {
 
     const router = useRouter();
@@ -196,55 +197,78 @@ export default function Page() {
 
 
                   // function to upload the seller logo in uploads folder and get the path
-                  const uploadLogo = (file: File): Promise<string > => {
-                    return new Promise((resolve, reject) => {
-                      if (!file) {
-                        console.log('No file selected.');
-                        resolve("");
-                        return;
-                      }
+                //   const uploadLogo = (file: File): Promise<string > => {
+                //     return new Promise((resolve, reject) => {
+                //       if (!file) {
+                //         console.log('No file selected.');
+                //         resolve("");
+                //         return;
+                //       }
                   
-                      // Read the file as a base64 string
-                      const reader = new FileReader();
-                      reader.readAsDataURL(file);
-                      reader.onloadend = async () => {
-                        const base64data = reader.result?.toString().split(',')[1]; // Get the base64 string only
+                //       // Read the file as a base64 string
+                //       const reader = new FileReader();
+                //       reader.readAsDataURL(file);
+                //       reader.onloadend = async () => {
+                //         const base64data = reader.result?.toString().split(',')[1]; // Get the base64 string only
                   
-                        try {
-                          const response = await fetch('/api/uploadSellerStoreImg', {
-                            method: 'POST',
-                            headers: {
-                              'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({ file: base64data, storeName: storeName }),
-                          });
+                //         try {
+                //           const response = await fetch('/api/uploadSellerStoreImg', {
+                //             method: 'POST',
+                //             headers: {
+                //               'Content-Type': 'application/json',
+                //             },
+                //             body: JSON.stringify({ file: base64data, storeName: storeName }),
+                //           });
                   
-                          if (!response.ok) {
-                            throw new Error('Failed to upload image');
-                          }
+                //           if (!response.ok) {
+                //             throw new Error('Failed to upload image');
+                //           }
                   
-                          const data = await response.json();
-                          const path = data.url; // Get the uploaded URL
+                //           const data = await response.json();
+                //           const path = data.url; // Get the uploaded URL
                   
-                          toast({
-                            title: 'Design Upload Success',
-                            description: 'Design image uploaded successfully!',
-                          });
+                //           toast({
+                //             title: 'Design Upload Success',
+                //             description: 'Design image uploaded successfully!',
+                //           });
                   
-                          resolve(path); // Resolve the promise with the URL
-                        } catch (error) {
-                          toast({
-                            title: 'Upload Error',
-                            description: 'Error uploading the image!',
-                            variant: 'destructive',
-                          });
-                          console.error(error);
-                          reject(error); // Reject the promise on error
-                        }
-                      };
-                    });
-                  };
+                //           resolve(path); // Resolve the promise with the URL
+                //         } catch (error) {
+                //           toast({
+                //             title: 'Upload Error',
+                //             description: 'Error uploading the image!',
+                //             variant: 'destructive',
+                //           });
+                //           console.error(error);
+                //           reject(error); // Reject the promise on error
+                //         }
+                //       };
+                //     });
+                //   };
 
+
+                const uploadLogo = async (file: File) => {
+                    const storageRef = ref(storage, `sellers/stores/${storeName}/store image/$${Date.now()}.png`);
+                  
+                    try {
+                      const snapshot = await uploadBytes(storageRef, file);
+                      const downloadURL = await getDownloadURL(snapshot.ref);
+                      if(downloadURL) {
+                        toast({
+                         title: 'Design Upload Success',
+                          description: 'Design image uploaded successfully!',
+                          });
+                          return downloadURL
+                      }
+                    } catch (error) {
+                      console.error("Error uploading design:", error);
+                      toast({
+                      title: 'Upload Error',
+                      description: 'Error uploading the image!',
+                      variant: 'destructive',
+                      });              
+                    }
+                  }
     return (
         <>
             <div className="flex min-h-screen w-full flex-col">

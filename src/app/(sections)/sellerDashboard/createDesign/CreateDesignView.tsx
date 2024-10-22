@@ -55,6 +55,9 @@ import { Separator } from '@radix-ui/react-dropdown-menu';
 import Link from 'next/link';
 import { addDesignToDb } from './actions';
 import { Platform, Store } from "@prisma/client"
+import path from "path"
+import { storage } from "@/firebase/firebaseConfig"
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 
 
 
@@ -168,60 +171,94 @@ const CreateDesignView = ({platform , store}: ProductViewProps) => {
           };
 
 
-          const uploadDesign = (file: File): Promise<string | null> => {
-            return new Promise((resolve, reject) => {
-              if (!file) {
-                console.log('No file selected.');
-                resolve(null);
-                return;
+          const uploadDesign = async (file: File) => {
+            const designNameWithoutExt = path.parse(file.name).name;
+            const storageRef = ref(storage, `sellers/stores/${store.storeName}/designs/${designNameWithoutExt}-${Date.now()}.png`);
+          
+            try {
+              const snapshot = await uploadBytes(storageRef, file);
+              const downloadURL = await getDownloadURL(snapshot.ref);
+              if(downloadURL) {
+                toast({
+                 title: 'Design Upload Success',
+                  description: 'Design image uploaded successfully!',
+                  });
+                  return downloadURL
               }
+            } catch (error) {
+              console.error("Error uploading design:", error);
+              toast({
+              title: 'Upload Error',
+              description: 'Error uploading the image!',
+              variant: 'destructive',
+              });              
+            }
+          }
+
+
+          // const uploadDesign = (file: File): Promise<string | null> => {
+          //   return new Promise((resolve, reject) => {
+          //     if (!file) {
+          //       console.log('No file selected.');
+          //       resolve(null);
+          //       return;
+          //     }
           
-              // Read the file as a base64 string
-              const reader = new FileReader();
-              reader.readAsDataURL(file);
-              reader.onloadend = async () => {
-                const base64data = reader.result?.toString().split(',')[1]; // Get the base64 string only
+          //     // Read the file as a base64 string
+          //     const reader = new FileReader();
+          //     reader.readAsDataURL(file);
+          //     reader.onloadend = async () => {
+          //       const base64data = reader.result?.toString().split(',')[1]; // Get the base64 string only
           
-                try {
-                  const response = await fetch('/api/uploadSellerDesigns', {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ file: base64data, designName: file.name, storeName: store.storeName }),
-                  });
+          //       try {
+          //         const response = await fetch('/api/uploadSellerDesigns', {
+          //           method: 'POST',
+          //           headers: {
+          //             'Content-Type': 'application/json',
+          //           },
+          //           body: JSON.stringify({ file: base64data, designName: file.name, storeName: store.storeName }),
+          //         });
           
-                  if (!response.ok) {
-                    throw new Error('Failed to upload image');
-                  }
+          //         if (!response.ok) {
+          //           throw new Error('Failed to upload image');
+          //         }
           
-                  const data = await response.json();
-                  const path = data.url; // Get the uploaded URL
+          //         const data = await response.json();
+          //         const path = data.url; // Get the uploaded URL
           
-                  toast({
-                    title: 'Design Upload Success',
-                    description: 'Design image uploaded successfully!',
-                  });
+          //         toast({
+          //           title: 'Design Upload Success',
+          //           description: 'Design image uploaded successfully!',
+          //         });
           
-                  resolve(path); // Resolve the promise with the URL
-                } catch (error) {
-                  toast({
-                    title: 'Upload Error',
-                    description: 'Error uploading the image!',
-                    variant: 'destructive',
-                  });
-                  console.error(error);
-                  reject(error); // Reject the promise on error
-                }
-              };
-            });
-          };
+          //         resolve(path); // Resolve the promise with the URL
+          //       } catch (error) {
+          //         toast({
+          //           title: 'Upload Error',
+          //           description: 'Error uploading the image!',
+          //           variant: 'destructive',
+          //         });
+          //         console.error(error);
+          //         reject(error); // Reject the promise on error
+          //       }
+          //     };
+          //   });
+          // };
 
 
 
 
           // final adding design function
-    const handleAddClick = async () => {
+    
+    
+    
+    
+    
+    
+    
+    
+    
+          const handleAddClick = async () => {
       if (!file) {
         console.log('No file selected.');
         toast({

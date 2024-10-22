@@ -1,7 +1,7 @@
 'use client'
+import Pica from 'pica';
 
 import React, { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import {
   ChevronLeft,
@@ -70,6 +70,8 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { SingleImageDropzone } from "@/components/sellerDashboard/SingleImageDropzone";
 import { Switch } from "@/components/ui/switch";
+import { storage } from '@/firebase/firebaseConfig';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
 
 interface CategoryData {
@@ -253,56 +255,112 @@ const Page = () => {
     }
   };
   
-            const uploadImage = (file: File): Promise<string | null> => {
-              return new Promise((resolve, reject) => {
-                if (!file) {
-                  console.log('No file selected.');
-                  resolve(null);
-                  return;
-                }
+            // const uploadImage = (file: File): Promise<string | null> => {
+            //   return new Promise((resolve, reject) => {
+            //     if (!file) {
+            //       console.log('No file selected.');
+            //       resolve(null);
+            //       return;
+            //     }
             
-                // Read the file as a base64 string
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onloadend = async () => {
-                  const base64data = reader.result?.toString().split(',')[1]; // Get the base64 string only
+            //     // Read the file as a base64 string
+            //     const reader = new FileReader();
+            //     reader.readAsDataURL(file);
+            //     reader.onloadend = async () => {
+            //       const base64data = reader.result?.toString().split(',')[1]; // Get the base64 string only
             
-                  try {
-                    const response = await fetch('/api/uploadCategory', {
-                      method: 'POST',
-                      headers: {
-                        'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify({ file: base64data, category: label }),
-                    });
+            //       try {
+            //         const response = await fetch('/api/uploadCategory', {
+            //           method: 'POST',
+            //           headers: {
+            //             'Content-Type': 'application/json',
+            //           },
+            //           body: JSON.stringify({ file: base64data, category: label }),
+            //         });
             
-                    if (!response.ok) {
-                      throw new Error('Failed to upload category image');
+            //         if (!response.ok) {
+            //           throw new Error('Failed to upload category image');
+            //         }
+            
+            //         const data = await response.json();
+            //         const path = data.url; // Get the uploaded URL
+            
+            //         toast({
+            //           title: 'category Upload Success',
+            //           description: 'category image uploaded successfully!',
+            //         });
+            
+            //         resolve(path); // Resolve the promise with the URL
+            //       } catch (error) {
+            //         toast({
+            //           title: 'Upload Error',
+            //           description: 'Error uploading the category image!',
+            //           variant: 'destructive',
+            //         });
+            //         console.error(error);
+            //         reject(error); // Reject the promise on error
+            //       }
+            //     };
+            //   });
+            // };
+
+
+            const uploadImage = async (file: File) => {
+              const pica = new Pica(); // Correct instantiation
+            
+              try {
+                // Create an image element
+                const img = new Image();
+                img.src = URL.createObjectURL(file);
+                
+                // Wait for the image to load
+                await new Promise<void>((resolve) => {
+                  img.onload = () => resolve();
+                });
+            
+                // Create a canvas for resizing
+                const canvas = document.createElement('canvas');
+                const targetWidth = 800; // Set your desired width
+                const targetHeight = (img.height / img.width) * targetWidth; // Maintain aspect ratio
+            
+                canvas.width = targetWidth;
+                canvas.height = targetHeight;
+            
+                // Use Pica to resize the image
+                await pica.resize(img, canvas);
+            
+                // Convert the canvas to a Blob
+                const optimizedBlob = await new Promise<Blob>((resolve, reject) => {
+                  canvas.toBlob((blob) => {
+                    if (blob) {
+                      resolve(blob); // Resolve with the Blob
+                    } else {
+                      reject(new Error('Failed to convert canvas to Blob')); // Reject if null
                     }
+                  }, 'image/png', 0.9); // Adjust quality (0.9 = 90%)
+                });
             
-                    const data = await response.json();
-                    const path = data.url; // Get the uploaded URL
-            
-                    toast({
-                      title: 'category Upload Success',
-                      description: 'category image uploaded successfully!',
-                    });
-            
-                    resolve(path); // Resolve the promise with the URL
-                  } catch (error) {
-                    toast({
-                      title: 'Upload Error',
-                      description: 'Error uploading the category image!',
-                      variant: 'destructive',
-                    });
-                    console.error(error);
-                    reject(error); // Reject the promise on error
-                  }
-                };
-              });
+                // Upload the optimized image
+                const storageRef = ref(storage, `categories/${label}/${Date.now()}.png`);
+                const snapshot = await uploadBytes(storageRef, optimizedBlob);
+                const downloadURL = await getDownloadURL(snapshot.ref);
+                
+                if (downloadURL) {
+                  toast({
+                    title: 'Product Image Upload Success',
+                    description: 'Category image uploaded successfully!',
+                  });
+                  return downloadURL;
+                }
+              } catch (error) {
+                console.error('Error uploading image:', error);
+                toast({
+                  title: 'Upload Failed',
+                  description: 'There was an error uploading the Category image. Please try again.',
+                });
+                throw error; // Optionally re-throw the error if needed
+              }
             };
-
-
 
               const [open, setOpen] = useState<boolean>(false);
 
