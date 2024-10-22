@@ -316,6 +316,18 @@ const DesignView = ({
                               Awaiting Action
                             </Badge>
                           )}
+
+                <div className="absolute top-8 right-0 z-10 text-center">
+                      <Badge 
+                       onClick={() => {
+                        setIsDownloadOpen(true);
+                        downloadDesign(design.imageUrl);
+                      }}
+                      className="bg-purple-500 hover:bg-purple-400  cursor-pointer px-2 py-1 text-white rounded">
+                            Download Design
+                      </Badge>
+                        </div>
+
                         </div>
 
 
@@ -336,16 +348,7 @@ const DesignView = ({
                         />
                       </CardContent>
                       <CardFooter className="relative">
-                      <div className="absolute bottom-2 left-0 right-0 z-10 text-center">
-                        <Badge 
-                       onClick={() => {
-                        setIsDownloadOpen(true);
-                        downloadDesign(design.imageUrl);
-                      }}
-                      className="bg-purple-500 hover:bg-purple-400 cursor-pointer px-2 py-1 text-white rounded">
-                            Download Design
-                      </Badge>
-                        </div>
+
                         {/* Edit design  */}
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
@@ -451,6 +454,7 @@ const DesignView = ({
                             </AlertDialogFooter>
                           </AlertDialogContent>
                         </AlertDialog>
+                        
                       </CardFooter>
                     </Card>
                   </HoverCardTrigger>
