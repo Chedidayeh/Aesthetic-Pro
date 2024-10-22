@@ -1,16 +1,8 @@
 [
-    {
-<<<<<<< HEAD
-      "origin": ["*"],
-      "responseHeader": ["Content-Type"],
-      "method": ["GET", "HEAD"],
-      "maxAgeSeconds": 3600
-=======
-      "origin": ["https://aesthetic-pro.vercel.app"],
-      "method": ["GET", "POST", "PUT"],
-      "maxAgeSeconds": 3600,
-      "responseHeader": ["Content-Type"]
->>>>>>> 181521bea4467b38237d022ae6991bb5e07c73b1
-    }
-  ]
-  
+      {
+        "origin": ["*"],
+        "responseHeader": ["Content-Type"],
+        "method": ["GET", "HEAD"],
+        "maxAgeSeconds": 3600
+      }
+    ]  

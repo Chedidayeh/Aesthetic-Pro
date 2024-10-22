@@ -432,10 +432,6 @@ const handleFileChange = (file : File) => {
                           headers: {
                             'Content-Type': 'application/json',
                           },
-<<<<<<< HEAD
-                          mode: 'no-cors',
-=======
->>>>>>> 181521bea4467b38237d022ae6991bb5e07c73b1
                           body: JSON.stringify({ file: base64data, productTitle: productTitle, storeName: store.storeName }),
                         });
                 
@@ -463,11 +459,7 @@ const handleFileChange = (file : File) => {
                     };
                   });
                 };
-                
-<<<<<<< HEAD
-=======
-
->>>>>>> 181521bea4467b38237d022ae6991bb5e07c73b1
+              
 
             // function to transform base64 To Blob to get the file from blob
             function base64ToBlob(base64: string, mimeType: string) {
@@ -530,72 +522,21 @@ const handleFileChange = (file : File) => {
               });
             };
             
-<<<<<<< HEAD
-=======
-            const uploadAllCapForFront = async () => {
-              setIsBorderHidden(true);
-              const paths: string[] = [];
-              const colors: string[] = [];
->>>>>>> 181521bea4467b38237d022ae6991bb5e07c73b1
-              
-              const uploadPromises = filteredColors.map(async (color) => {
-                try {
-                  // Select the image element and update its source to the current color's front image URL
-                  const img = document.querySelector(".front-product") as HTMLImageElement;
-                  if (img) img.src = color.frontImageUrl;
-            
-                  // Capture the image as a PNG
-                  const pixelRatio = 10;
-                  const dataUrl = await toPng(FrontcontainerRef.current!, { cacheBust: false, pixelRatio });
-                  
-                  // Convert the captured image data to a Blob and then to a File object
-                  const base64Data = dataUrl.split(',')[1];
-                  const blob = base64ToBlob(base64Data, 'image/png');
-                  const file = new File([blob], `${productTitle}.png`, { type: 'image/png' });
-            
-                  // Upload the captured product image and get the path
-                  const CapturedProductPath = await uploadCapturedMockup(file);
-                  
-                  // If upload was successful, store the path and corresponding color label
-                  if (CapturedProductPath) {
-                    paths.push(CapturedProductPath);
-                    colors.push(color.label);
-                  }
-                } catch (error) {
-                  console.error(`Error uploading image for color ${color.label}:`, error);
-                  // Optionally, you could add additional handling here, such as displaying a toast message
-                  toast({
-                    title: 'Upload Error',
-                    description: `Error uploading the image for color ${color.label}!`,
-                    variant: 'destructive',
-                  });
+           // Function to map over filteredColors and upload each cat color and return the list of paths
+           const uploadAllCapForFront = async () => {
+            setIsBorderHidden(true);
+            const paths = [] as string[]; // Array to store all the captured product paths
+            const colors = [] as string[]
+            for (const color of filteredColors) {
+              // Set the image source to the current color's front image URL
+              const img = document.querySelector(".front-product") as HTMLImageElement;
+                if (img) {
+                  img.src = color.frontImageUrl;
                 }
-              });
-            
-              await Promise.all(uploadPromises);
-            
-              // Return the successfully uploaded image paths and corresponding color labels
-              return { frontPaths: paths, colors: colors };
-            };
-            
-            
-              
-            // Function to map over filteredColors and upload each cat color and return the list of paths
-          //  const uploadAllCapForFront = async () => {
-          //   setIsBorderHidden(true);
-          //   const paths = [] as string[]; // Array to store all the captured product paths
-          //   const colors = [] as string[]
-          //   for (const color of filteredColors) {
-          //     // Set the image source to the current color's front image URL
-          //     const img = document.querySelector(".front-product") as HTMLImageElement;
-          //       if (img) {
-          //         img.src = color.frontImageUrl;
-          //       }
-          //     // get the url of the captured product with front design
-          //     const pixelRatio = 10; 
-          //     const dataUrl = await toPng(FrontcontainerRef.current!, { cacheBust: false, pixelRatio });
+              // get the url of the captured product with front design
+              const pixelRatio = 10; 
+              const dataUrl = await toPng(FrontcontainerRef.current!, { cacheBust: false, pixelRatio });
 
-<<<<<<< HEAD
               // get the file type from the url
               const base64Data = dataUrl.split(',')[1]
               const blob = base64ToBlob(base64Data, 'image/png')
@@ -607,20 +548,8 @@ const handleFileChange = (file : File) => {
             };
             return { frontPaths: paths.filter(path => path !== ""), colors: colors };
           };   
-=======
-          //     // get the file type from the url
-          //     const base64Data = dataUrl.split(',')[1]
-          //     const blob = base64ToBlob(base64Data, 'image/png')
-          //     const file = new File([blob], `${productTitle}.png`, { type: 'image/png' });
-          //     // upload the captured product in the uploads folder and get the path 
-          //     const CapturedProductPath = await uploadCapturedMockup(file)
-          //     paths.push(CapturedProductPath ?? ""); // Store the path in the array
-          //     colors.push(color.label)
-          //   };
-          //   return { frontPaths: paths.filter(path => path !== ""), colors: colors };
-          // };   
->>>>>>> 181521bea4467b38237d022ae6991bb5e07c73b1
-          
+            
+             
           
            // Function to map over filteredColors and upload each cat color and return the list of paths
            const uploadAllCapForBack = async () => {
