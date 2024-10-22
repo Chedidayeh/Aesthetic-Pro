@@ -432,6 +432,7 @@ const handleFileChange = (file : File) => {
                           headers: {
                             'Content-Type': 'application/json',
                           },
+                          mode: 'no-cors',
                           body: JSON.stringify({ file: base64data, productTitle: productTitle, storeName: store.storeName }),
                         });
                 
@@ -460,7 +461,6 @@ const handleFileChange = (file : File) => {
                   });
                 };
                 
-
 
             // function to transform base64 To Blob to get the file from blob
             function base64ToBlob(base64: string, mimeType: string) {
