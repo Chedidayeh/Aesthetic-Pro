@@ -256,9 +256,6 @@ const CreateDesignView = ({platform , store}: ProductViewProps) => {
             variant: 'destructive',
         });
         }
-
-      
-
         
       } catch (e) {
         setisAdding(false)
@@ -271,7 +268,7 @@ const CreateDesignView = ({platform , store}: ProductViewProps) => {
           variant: 'destructive',
       });
       }
-    };
+    }
 
              // function will trigger the dialog
              const openDialog = () => {

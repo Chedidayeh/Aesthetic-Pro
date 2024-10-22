@@ -1,4 +1,3 @@
-// src/app/api/upload-image/route.ts
 import { NextResponse } from 'next/server';
 import sharp from 'sharp';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -15,8 +14,8 @@ export async function POST(req: Request) {
   }
 
   // Decode base64 file
-  const buffer = Buffer.from(file, 'base64');
-
+  const base64Data = file.replace(/^data:image\/\w+;base64,/, "");
+  const buffer = Buffer.from(base64Data, 'base64');
   try {  
     const designNameWithoutExt = path.parse(designName).name;
 
