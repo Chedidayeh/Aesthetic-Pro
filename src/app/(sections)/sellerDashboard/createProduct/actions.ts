@@ -3,7 +3,10 @@
 
 import { auth } from '@/auth';
 import { db } from '@/db';
+import { storage } from '@/firebase/firebaseConfig';
 import { Collection } from '@prisma/client';
+import { ref } from 'firebase/storage';
+import sharp from 'sharp';
 
 
 
@@ -259,6 +262,8 @@ import { Collection } from '@prisma/client';
         return { success: false, productId: null, error: true };
       }
     };
+
+
     
 
 
