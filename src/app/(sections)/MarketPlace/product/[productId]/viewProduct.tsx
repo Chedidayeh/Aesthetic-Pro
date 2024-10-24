@@ -68,7 +68,7 @@ interface ViewProductProps {
   user? : User
   categoryProducts:Productswithstore[]
   category : Category
-  sizes : string[] | null
+  sizes : string[]
   platform: Platform
 }
 const ViewProduct: React.FC<ViewProductProps> = ({ product , frontdesign , backdesign , user ,categoryProducts , category , sizes , platform }) => {
@@ -109,10 +109,12 @@ const combinedUrls = interleaveArrays(product.croppedFrontProduct, product.cropp
     };
 
 
-  const handleColorChange = (color : string, index : number) => {
-    setSelectedColor(color);
-    setSelectedColorIndex(index);
-  };
+    const handleColorChange = (color: string, index: number) => {
+      setSelectedColor(color);
+      setSelectedColorIndex(index);
+      setSelectedImage(product.croppedFrontProduct ? product.croppedFrontProduct[index] : product.croppedBackProduct[index] ); // Update the main image based on the selected color
+    };
+    
 
   const [selectedSize, setSelectedSize] = useState<string>("");
 
@@ -361,28 +363,30 @@ const combinedUrls = interleaveArrays(product.croppedFrontProduct, product.cropp
              </div>
              </div>
 
-
              <div className='mt-6 flex items-center'>
-              <Label htmlFor="username" className="text-left">
-                Select Color :
-             </Label>
-             <div className='ml-3'>
-             <RadioGroup value={selectedColor} onValueChange={(value) => {
-                const index = product.colors.indexOf(value);
-                handleColorChange(value, index);
-              }}>
-                {product.colors.map((color, index) => (
-                  <div key={index} className="flex items-center space-x-2">
-                    <RadioGroupItem 
-                      value={color} 
-                      id={`r${index}`} 
-                    />
-                    <Label htmlFor={`r${index}`}>{color}</Label>
-                  </div>
-                ))}
-              </RadioGroup>  
-              </div>
-             </div>
+          <Label htmlFor="username" className="text-left">
+            Select Color :
+          </Label>
+          <div className='ml-3'>
+            <RadioGroup value={selectedColor} onValueChange={(value) => {
+              const index = product.colors.indexOf(value);
+              handleColorChange(value, index);
+            }}>
+              {product.colors.map((color, index) => (
+                <div key={index} className="flex items-center space-x-2">
+                  <RadioGroupItem 
+                    value={color} 
+                    id={`r${index}`} 
+                  />
+                  <Label htmlFor={`r${index}`}>{color}</Label>
+                </div>
+              ))}
+            </RadioGroup>  
+          </div>
+        </div>
+
+
+             
             </section>
                       {/* add to cart part */}
           <div className='mt-10 lg:col-start-1 lg:row-end-2 lg:max-w-lg lg:self-start'>

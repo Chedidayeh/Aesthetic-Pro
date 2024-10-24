@@ -38,6 +38,40 @@ const Page = () => {
 
         <Separator className="my-8"/>
 
+        <div className='mt-10 flex space-y-3 flex-col text-right'>
+  <h4 className='font-semibold'>
+  : بالعربية 
+  </h4>
+  <p className="dark:text-gray-400 inline-flex items-end flex-col space-y-4 text-right">
+  <span>: المعلومات التي نجمعها</span>
+  <span>المعلومات الشخصية: الاسم، البريد الإلكتروني، العنوان</span>
+  <span>معلومات التصميم: ملفات التصميم والبيانات المتعلقة بها</span>
+
+  <span>: كيفية استخدام معلوماتك</span>
+  <span>معالجة الطلبات: لتلبية الطلبات والتواصل معك</span>
+  <span>تحسين الخدمة: لتحسين وتطوير منصتنا</span>
+  <span>التواصل: لإرسال التحديثات والمواد الترويجية</span>
+  
+  <span>: مشاركة البيانات</span>
+  <span>مزودو الخدمة: نشارك المعلومات مع أطراف ثالثة تساعدنا في التشغيل</span>
+  <span>المتطلبات القانونية: قد نكشف عن المعلومات حسب الحاجة بموجب القانون</span>
+  
+  <span>: أمان البيانات</span>
+  <span>نستخدم تدابير لحماية معلوماتك </span>
+  
+  <span>: حقوقك</span>
+  <span>الوصول والتصحيح: يمكنك الوصول إلى معلوماتك وتحديثها</span>
+  <span>الحذف: طلب حذف معلوماتك حيثما أمكن</span>
+  
+  <span>: الاتصال</span>
+  <span>للاستفسارات، اتصل بنا على </span>
+</p>
+
+</div>
+
+<Separator className="my-8"/>
+
+
         <div className='mt-10 flex space-y-3 flex-col'>
             <h4 className='font-semibold '>
               In English : 
@@ -71,36 +105,7 @@ const Page = () => {
 
           </div>
 
-          <div className='mt-10 flex space-y-3 flex-col text-right'>
-  <h4 className='font-semibold'>
-  : بالعربية 
-  </h4>
-  <p className="dark:text-gray-400 inline-flex items-end flex-col space-y-4 text-right">
-  <span>: المعلومات التي نجمعها</span>
-  <span>المعلومات الشخصية: الاسم، البريد الإلكتروني، العنوان</span>
-  <span>معلومات التصميم: ملفات التصميم والبيانات المتعلقة بها</span>
 
-  <span>: كيفية استخدام معلوماتك</span>
-  <span>معالجة الطلبات: لتلبية الطلبات والتواصل معك</span>
-  <span>تحسين الخدمة: لتحسين وتطوير منصتنا</span>
-  <span>التواصل: لإرسال التحديثات والمواد الترويجية</span>
-  
-  <span>: مشاركة البيانات</span>
-  <span>مزودو الخدمة: نشارك المعلومات مع أطراف ثالثة تساعدنا في التشغيل</span>
-  <span>المتطلبات القانونية: قد نكشف عن المعلومات حسب الحاجة بموجب القانون</span>
-  
-  <span>: أمان البيانات</span>
-  <span>نستخدم تدابير لحماية معلوماتك </span>
-  
-  <span>: حقوقك</span>
-  <span>الوصول والتصحيح: يمكنك الوصول إلى معلوماتك وتحديثها</span>
-  <span>الحذف: طلب حذف معلوماتك حيثما أمكن</span>
-  
-  <span>: الاتصال</span>
-  <span>للاستفسارات، اتصل بنا على </span>
-</p>
-
-</div>
 
 
 

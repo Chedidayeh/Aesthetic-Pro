@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
+import NextImage from 'next/image'
 import {
   Pagination,
   PaginationContent,
@@ -53,7 +54,7 @@ const BestSelling = ({ products, user , categories , collections }: ProductReelP
   const [filterByCollection, setFilterByCollection] = useState<string>("");
    
   // Calculate the price range intervals
-   function calculatePriceRanges(products: Product[]): [number, number][] {
+  function calculatePriceRanges(products: Product[]): [number, number][] {
     if (products.length === 0) return [];
   
     const prices = products.map(product => product.price);
@@ -61,17 +62,22 @@ const BestSelling = ({ products, user , categories , collections }: ProductReelP
     const maxPrice = Math.max(...prices);
     const range = maxPrice - minPrice;
   
+    // If minPrice and maxPrice are the same, there's no range, return a single range
+    if (range === 0) return [[minPrice, maxPrice]];
+  
     // Calculate three price ranges, dividing the range into three equal parts
     const step = range / 3;
   
     const priceRanges: [number, number][] = [
       [minPrice, minPrice + step],
-      [minPrice + step + 1, minPrice + 2 * step],
-      [minPrice + 2 * step + 1, maxPrice]
+      [minPrice + step, minPrice + 2 * step],
+      [minPrice + 2 * step, maxPrice]
     ];
   
-    return priceRanges;
+    // Round the price ranges to remove decimals
+    return priceRanges.map(([min, max]) => [Math.floor(min), Math.floor(max)]);
   }
+  
 
   const priceRanges: [number, number][] = useMemo(() => calculatePriceRanges(products || []), [products]);
 
@@ -362,10 +368,11 @@ const BestSelling = ({ products, user , categories , collections }: ProductReelP
               <div
                 aria-hidden='true'
                 className='relative mb-4 h-40 w-40 text-muted-foreground'>
-                <img
+                <NextImage
                   src='/hippo-empty-cart.png'
                   loading='eager'
                   alt='empty shopping cart hippo'
+                  fill
                 />
               </div>
               <h3 className='font-semibold text-2xl'>

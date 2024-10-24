@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unescaped-entities */
 'use client'
+import NextImage from 'next/image'
 import {
   Pagination,
   PaginationContent,
@@ -62,17 +63,22 @@ const ProductsByCollection = ({ products, user , collection , categories}: Produ
     const maxPrice = Math.max(...prices);
     const range = maxPrice - minPrice;
   
+    // If minPrice and maxPrice are the same, there's no range, return a single range
+    if (range === 0) return [[minPrice, maxPrice]];
+  
     // Calculate three price ranges, dividing the range into three equal parts
     const step = range / 3;
   
     const priceRanges: [number, number][] = [
       [minPrice, minPrice + step],
-      [minPrice + step + 1, minPrice + 2 * step],
-      [minPrice + 2 * step + 1, maxPrice]
+      [minPrice + step, minPrice + 2 * step],
+      [minPrice + 2 * step, maxPrice]
     ];
   
-    return priceRanges;
+    // Round the price ranges to remove decimals
+    return priceRanges.map(([min, max]) => [Math.floor(min), Math.floor(max)]);
   }
+  
 
   const priceRanges: [number, number][] = useMemo(() => calculatePriceRanges(products || []), [products]);
 
@@ -327,7 +333,8 @@ const ProductsByCollection = ({ products, user , collection , categories}: Produ
               <div
                 aria-hidden='true'
                 className='relative mb-4 h-40 w-40 text-muted-foreground'>
-                <img
+              <NextImage
+                  fill
                   src='/hippo-empty-cart.png'
                   loading='eager'
                   alt='empty shopping cart hippo'

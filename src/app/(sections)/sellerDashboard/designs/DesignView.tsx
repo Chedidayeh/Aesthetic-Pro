@@ -339,7 +339,7 @@ const DesignView = ({
                           onContextMenu={(e) => e.preventDefault()}
                           src={design.imageUrl}
                           alt={design.name}
-                          loading="lazy"
+                          loading="eager"
                           blurDataURL="/Loading.png"
                           placeholder="blur"
                           width={3000}

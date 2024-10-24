@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
 'use client'
+import NextImage from 'next/image'
 
 import * as React from "react"
 import Link from 'next/link'
@@ -15,9 +16,8 @@ const EmailVerifiedView = ({status} : {status : string}) => {
       <div className='container relative flex py-40 flex-col items-center justify-center lg:px-0'>
         <div className='mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]'>
           <div className='flex flex-col items-center space-y-2 text-center'>
-            <img src="/email-verification-icon.png" className='h-20 w-20' />
+            <NextImage alt='email-verification-icon' src="/email-verification-icon.png" className='h-20 w-20' />
             {status === "success" && (
-
               <>
             <h1 className='text-2xl font-semibold tracking-tight'>
                 Email successfully verified !

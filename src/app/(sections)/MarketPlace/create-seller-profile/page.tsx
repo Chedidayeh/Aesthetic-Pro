@@ -86,6 +86,7 @@ const Page = () => {
         title: 'Your Store is successfully created!',
         description: 'Try to SignIn again',
         variant: 'default',
+        duration: 5000,
       });
       const pathname = "/sellerDashboard"
       dispatch(saveRedirectUrl(pathname));

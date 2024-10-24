@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
+import NextImage from 'next/image'
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 import { storage } from "@/firebase/firebaseConfig"
 import path from "path"
@@ -16,7 +17,6 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
   } from "@/components/ui/alert-dialog"
-import NextImage from 'next/image'
 import {
     TableBody,
     TableCell,
@@ -630,7 +630,8 @@ interface fetchedCat extends Category {
           <NextImage
             src='/hippo-empty-cart.png'
             loading='eager'
-            alt='empty shopping cart hippo'
+            alt='empty shopping cart hippo' 
+            fill
           />
         </div>
         <h3 className='font-semibold text-2xl'>

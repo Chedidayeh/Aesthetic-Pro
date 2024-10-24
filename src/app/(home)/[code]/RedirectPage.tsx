@@ -78,8 +78,11 @@ const RedirectPage = ({  affiliateLink }: PageProps) => {
 
   return (
     <>
+    <div className='mb-96'>
+
+    </div>
       {/* Your AlertDialog and countdown UI */}
-      <AlertDialog open={showAlert}>
+      <AlertDialog open={true}>
         <AlertDialogContent>
           <AlertDialogHeader className="flex flex-col items-center">
             <div className="text-blue-500 mb-2">

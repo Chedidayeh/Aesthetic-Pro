@@ -47,7 +47,7 @@ const Navbar = async () => {
   const platform = await db.platform.findFirst()
 
   return (
-    <nav className='sticky z-[100] h-14 inset-x-0 top-0 w-full border-b border-gray-200  backdrop-blur-lg transition-all'>
+    <nav className='sticky z-[100] h-14 inset-x-0 top-0 w-full  backdrop-blur-lg transition-all'>
       <MaxWidthWrapper>
         <div className='flex h-14 items-center justify-between'>
           {/* Logo */}
@@ -102,6 +102,19 @@ const Navbar = async () => {
                   About Us ✨
                 </Link>
                 </DialogClose>
+
+                <DialogClose>
+                <Link href="/MarketPlace/cart" className={buttonVariants({
+              size: 'sm',
+              variant: 'ghost',
+              className: "hover:text-blue-500"
+            })}>
+              <ShoppingCart size={15} className='mr-1' />
+              Cart
+            </Link>
+                </DialogClose>
+
+
                 {
                   isAdmin && (
             <DialogClose>
@@ -191,6 +204,16 @@ const Navbar = async () => {
               <BookOpenText size={15} className='mr-1' />
               About Us ✨
             </Link>
+            <div className='h-8 w-px bg-zinc-200 hidden sm:block' />
+
+            <Link href="/MarketPlace/cart" className={buttonVariants({
+              size: 'sm',
+              variant: 'ghost',
+              className: "hover:text-blue-500"
+            })}>
+              <ShoppingCart size={15} className='mr-1' />
+              Cart
+            </Link>
           </div>
 
                     {/* Right Section */}
@@ -252,16 +275,7 @@ const Navbar = async () => {
             <ModeToggle/>
 
             <div className='h-8 w-px bg-zinc-200 hidden sm:block' />
-            <Link
-              
-              href='/MarketPlace/create-client-product/select-category'
-              className={buttonVariants({
-                size: 'sm',
-                className: 'hidden sm:flex items-center gap-1',
-              })}>
-              Create your product
-              <ArrowRight className='ml-1.5 h-5 w-5' />
-            </Link>
+
 
           </div>
 

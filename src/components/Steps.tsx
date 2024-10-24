@@ -2,7 +2,7 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 
-import Image from 'next/image'
+import NextImage from 'next/image'
 import { cn } from '@/lib/utils'
 import { usePathname } from 'next/navigation'
 
@@ -56,7 +56,7 @@ const Steps = () => {
                   'flex items-center px-6 py-4 text-sm font-medium'
                 )}>
                 <span className='flex-shrink-0'>
-                  <Image
+                  <NextImage
                     src={imgPath}
                     alt={`Step ${i + 1}`}
                     width={80}

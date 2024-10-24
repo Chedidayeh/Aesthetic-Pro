@@ -1,11 +1,19 @@
 'use client'
-
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { cn } from '@/lib/utils'
 import { CartProduct, Platform, User } from '@prisma/client'
 import { Check, Loader2, TriangleAlert, X } from 'lucide-react'
-import Image from 'next/image'
+import NextImage from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
@@ -26,6 +34,7 @@ import { createOrderInDb, emptyUserCart, removeProductFromCart } from './actions
 import ImageSlider from '@/components/MarketPlace/ImageSlider'
 import { RootState } from '@/store/reducers/reducers'
 import { useSelector } from 'react-redux'
+import { Badge } from "@/components/ui/badge"
 interface FormattedCartProduct {
   cartProductId: string;
   productId: string;
@@ -51,15 +60,6 @@ interface CartProps {
 const Cart: React.FC<CartProps> = ({ products , user  , platform}) => {
 
   const router = useRouter();
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      router.refresh(); // Refresh the current page
-    }, 1000); // Refresh every 5 seconds
-
-    // Cleanup the interval on component unmount
-    return () => clearInterval(interval);
-  }, [router]);
 
   const sessionId = useSelector((state: RootState) => state.id);
 
@@ -321,17 +321,93 @@ useEffect(() => {
     {cartProducts.length === 0 ? (
       <div className='flex h-full flex-col items-center justify-center space-y-1'>
         <div aria-hidden='true' className='relative mb-4 h-40 w-40 text-muted-foreground'>
-          <Image src='/hippo-empty-cart.png' fill loading='eager' alt='empty shopping cart hippo' />
+          <NextImage src='/hippo-empty-cart.png' fill loading='eager' alt='empty shopping cart hippo' />
         </div>
         <h3 className='font-semibold text-2xl'>Your cart is empty</h3>
         <p className='text-muted-foreground text-center'>Whoops! Nothing to show here yet.</p>
         <Link href='/MarketPlace/ProductsView' className='text-blue-600 text-sm'>
-          Add items to your cart
-        </Link>
+                <Button variant='link'>
+                Add items to your cart
+                &rarr;
+                </Button>
+                </Link>
       </div>
-    ) : null}
+    ) : (
+      <div className="border-2 rounded-lg p-4">
+      <Table >
+              <TableCaption>        
+                <Link href='/MarketPlace/ProductsView' className='text-blue-600 text-sm'>
+                <Button variant='link'>
+                Add other items to your cart &rarr;
+                </Button>
+                </Link>
+                </TableCaption>
+              <TableHeader>
+                  <TableRow>
+                  <TableHead>Product Image</TableHead>
+                  <TableHead>Product Title</TableHead>
+                  <TableHead>Product Price</TableHead>
+                  <TableHead>Product Qunatity</TableHead>
+                  <TableHead>Product Size</TableHead>
+                  <TableHead>Product Color</TableHead>
+                  <TableHead >Action</TableHead>
+                  </TableRow>
+              </TableHeader>
+              <TableBody>
+              {cartProducts.map((product) => (
+                <TableRow key={product.cartProductId}>
+                  <TableCell>
+                  <Link href={`/MarketPlace/product/${product.productId}`}>
+                    <NextImage
+                      src={product.productImgs![0]}
+                      alt={product.title!}
+                      width={400} // Adjust width as needed
+                      height={400} // Adjust height as needed
+                      className="object-cover" // Optional for styling
+                      placeholder="blur"
+                      blurDataURL="/Loading.png"
+                      loading='lazy'
+                    />
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Link href={`/MarketPlace/product/${product.productId}`} className="font-medium hover:text-gray-500">
+                      {product.title}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    <Badge>                          
+                      {(product.price || 0).toFixed(2)} TND
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    {product.quantity}
+                  </TableCell>
+                  <TableCell>
+                    {product.size}
+                  </TableCell>
+                  <TableCell>
+                    {product.color}
+                  </TableCell>
+                  <TableCell >
+                    <Button
+                    className="hover:bg-red-500 hover:text-white text-red-500"
+                      variant="secondary"
+                      onClick={() => removeItem(product.cartProductId)} // Call removeItem function when clicked
+                    >
+                      <X className="h-5 w-5" aria-hidden="true" />
+                      Remove
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+              </TableBody>
+              </Table>
+    </div>
+    )}
 
-    <ul className={cn({ 'divide-y divide-gray-200 border-b border-t border-gray-200': cartProducts.length > 0 })}>
+
+    {/* <ul className={cn({ 'divide-y divide-gray-200 border-b border-t border-gray-200': cartProducts.length > 0 })}>
       {cartProducts.map((product) => {
         return (
           <li key={product.cartProductId} className='flex flex-col sm:flex-row py-6 sm:py-10'>
@@ -400,7 +476,8 @@ useEffect(() => {
           </li>
         );
       })}
-    </ul>
+    </ul> */}
+
   </div>
 
   <section className='mt-16 rounded-lg border-2 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8'>

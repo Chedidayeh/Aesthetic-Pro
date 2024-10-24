@@ -723,10 +723,15 @@ const handleFileChange = (file : File) => {
                   }
 
                   try {
+                    
                     openDialog()
                     setisAdding(true)
                     setIsBorderHidden(true)
                     setisBackBorderHidden(true)
+
+                    if(inputTag != "") {
+                      tags.push(inputTag)
+                    }
 
                     // upload the front design in the uploads folder and get the path
                     const frontdesignPath = await uploadDesign(FrontDesignFile)
@@ -808,6 +813,10 @@ const handleFileChange = (file : File) => {
                   setIsBorderHidden(true)
                   setisAdding(true)
 
+                  if(inputTag != "") {
+                    tags.push(inputTag)
+                  }
+
                   // upload the front design in the uploads folder and get the path
                   const frontdesignPath = await uploadDesign(FrontDesignFile)
                   const frontDesignName = removeExtension(FrontDesignFile.name)
@@ -880,6 +889,10 @@ const handleFileChange = (file : File) => {
                     openDialog()
                     setisBackBorderHidden(true)
                     setisAdding(true)
+
+                    if(inputTag != "") {
+                      tags.push(inputTag)
+                    }
 
                     // upload the front design in the uploads folder and get the path
                     const backdesignPath = await uploadDesign(BackDesignFile)
@@ -1164,30 +1177,33 @@ const handleFileChange = (file : File) => {
 
 
                                 {/* select colors */}
-                              <div className='space-y-2'>
-                              <h3>4-Select Your Product Colors:</h3>
+                                <div className="space-y-2">
+  <h3>4-Select Your Product Colors:</h3>
 
-                                {/* Render checkboxes for each color */}
-                                {selectedP.colors.map((color:Color) => (
-                                  <div key={color.label} className="flex items-center space-x-2">
-                                    <input
-                                      type="checkbox"
-                                      id={color.label}
-                                      className="ml-2"
-                                      // Check if the color label exists in selectedColors state and is true
-                                      checked={!!selectedColors[color.label]}
-                                      onChange={() => handleColorCheckboxChange(color.label)}
-                                    />
-                                    <label
-                                      htmlFor={color.label}
-                                      className="text-sm font-medium leading-none cursor-pointer"
-                                    >
-                                      {color.label}
-                                    </label>
-                                  </div>
-                                ))}
+  {/* Render checkboxes for each color */}
+  <div className="grid grid-cols-6 gap-4">
+    {selectedP.colors.map((color: Color) => (
+      <>
+      <div key={color.label} className="flex items-center space-x-2">
+        <input
+          type="checkbox"
+          id={color.label}
+          className="ml-2"
+          checked={!!selectedColors[color.label]}
+          onChange={() => handleColorCheckboxChange(color.label)}
+        />
+        <label
+          htmlFor={color.label}
+          className="text-sm font-medium leading-none cursor-pointer"
+        >
+          {color.label}
+        </label>
+      </div>
+     </>
+    ))}
+  </div>
+</div>
 
-                              </div>
 
                                 {/* Product details */}
                               <h3>5-Fill Product Details:</h3>
@@ -1224,8 +1240,8 @@ const handleFileChange = (file : File) => {
                             <div>
                             <div className='flex items-center'>
                               <Tags className='h-4 w-4' />
-                              <Label className='ml-2'>Tags*:</Label>
-                              <p className='text-xs text-zinc-500 ml-5'>Click On the added tag to remove it!</p>
+                              <Label className='ml-2'>Tags: <p className='text-xs text-zinc-500'>(optional)</p></Label>
+                              <p className='text-xs text-zinc-500 ml-5'>Click enter to Add tags !</p>
                               </div>
                             <div className='mt-4 mb-4'>
                               <Input
@@ -1240,8 +1256,10 @@ const handleFileChange = (file : File) => {
                                 onKeyDown={handleInputKeyDown}
                               />
                             </div>
-                            
                             <div>
+                              {tags.length > 0 && (
+                            <p className='text-xs text-zinc-500 ml-5'>Click On the tag to remove it!</p>
+                              )}
                               {tags.map((tag, index) => (
                                 <div
                                   key={index}
@@ -1318,7 +1336,6 @@ const handleFileChange = (file : File) => {
                                     size='default'
                                     isLoading={isAdding}
                                     disabled={
-                                      tags.length === 0 || 
                                       productTitle.length === 0 || 
                                       productDescription.length === 0 || 
                                       !isAnyColorSelected || FrontDesignFile===undefined 
@@ -1350,7 +1367,6 @@ const handleFileChange = (file : File) => {
                             <Button
                               size='default'
                               disabled={
-                                tags.length === 0 || 
                                 productTitle.length === 0 || 
                                 productDescription.length === 0 || 
                                 !isAnyColorSelected || FrontDesignFile===undefined || 
@@ -1381,7 +1397,6 @@ const handleFileChange = (file : File) => {
                               size='default'
                               isLoading={isAdding}
                               disabled={
-                                tags.length === 0 || 
                                 productTitle.length === 0 || 
                                 productDescription.length === 0 || 
                                 !isAnyColorSelected || BackDesignFile===undefined || 

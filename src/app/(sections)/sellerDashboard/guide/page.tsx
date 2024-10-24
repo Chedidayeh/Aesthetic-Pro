@@ -2,7 +2,7 @@
 'use client'
 import React, { useState } from "react";
 import MaxWidthWrapper from '@/components/MaxWidthWrapper'
-import Image from 'next/image'
+import NextImage from 'next/image'
 import {
   CircleArrowLeft,
   CircleArrowRight,
@@ -67,7 +67,7 @@ const Page = () => {
           <div className='mx-auto max-w-6xl px-6 lg:px-8'>
               <div className='mt-2 flow-root sm:mt-10'>
                 <div className='-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4'>
-                  <Image
+                  <NextImage
                     src={"/user guide.png"}
                     alt='guide preview'
                     width={1620}
@@ -164,7 +164,7 @@ const Page = () => {
             <div className='mx-auto max-w-6xl px-6 lg:px-8'>
               <div className='mt-2 flow-root sm:mt-10'>
                 <div className='-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4'>
-                  <Image
+                  <NextImage
                     src={guideImages[currentImageIndex]}
                     alt='guide preview'
                     width={1920}

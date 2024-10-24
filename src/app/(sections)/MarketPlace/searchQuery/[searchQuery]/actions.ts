@@ -41,6 +41,14 @@ export async function searchProducts(query: string) {
                 mode: 'insensitive', // Case insensitive search for category
               },
             },
+            {
+              store : {
+                storeName : {
+                  contains : decodedQuery,
+                  mode : 'insensitive',
+                }
+              }
+            },
           ],
           isProductAccepted : true
         },

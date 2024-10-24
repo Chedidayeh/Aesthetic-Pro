@@ -39,7 +39,6 @@ export async function getSizes(categoryLabel: string) {
       return sizeLabels;
     } catch (error) {
       console.error(error);
-      return null
     }
   }
 

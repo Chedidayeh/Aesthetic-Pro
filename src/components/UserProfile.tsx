@@ -2,7 +2,7 @@
 "use client"
 import NextImage from "next/image"
 
-import { CircleUserRound, ShoppingBasket, UserRoundCheck, UserRoundCog, UserRoundPlus, UserRoundX } from "lucide-react"
+import { CircleUserRound, ShoppingBasket, UserRound, UserRoundCheck, UserRoundCog, UserRoundPlus, UserRoundX } from "lucide-react"
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -56,7 +56,7 @@ const UserProfile = ({ user , platform } : {user : User , platform : Platform | 
           {user ? (
           <UserRoundCheck className="text-green-600" />
           ):(
-          <UserRoundX className="text-red-600" />
+          <UserRound />
           )}
         </Button>
       </DropdownMenuTrigger>

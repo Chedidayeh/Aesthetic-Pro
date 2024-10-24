@@ -94,6 +94,7 @@ const [isOpen, setIsOpen] = useState < boolean > (false);
         toast({
           title: 'Affiliate account created successfully!',
           description: 'You are now part of the affiliate program. Try to SignIn again to continue !',
+          duration : 5000
         });
   
         // Redirect to the dashboard if account creation is successful
@@ -175,6 +176,40 @@ const [isOpen, setIsOpen] = useState < boolean > (false);
 
         </div>
 
+        <div className='mt-10 border-t col-span-2 flex flex-col border-zinc-200 text-right'>
+  {/* قسم كيفية العمل */}
+  <div className='mt-10 flex space-y-3 flex-col'>
+    <h4 className='font-semibold'>
+       كيف تعمل:
+    </h4>
+    <p className='text-sm text-zinc-500'>
+      كمسوق تابع، ستختار منتجًا من منصتنا وتقوم بإنشاء رابط إحالة فريد لهذا المنتج. بعد ذلك يمكنك مشاركة هذا الرابط مع جمهورك عبر وسائل التواصل الاجتماعي
+    </p>
+    <p className='text-sm text-zinc-500'>
+      عندما يستخدم شخص ما رابط الإحالة الخاص بك لإجراء طلب شراء، سيقوم النظام بتتبع الطلب، وإذا تم الدفع سيتم تخصيص عملية البيع لحسابك تلقائيًا. ستحصل على عمولة عن كل عملية بيع تتم من خلال رابط الإحالة الخاص بك
+    </p>
+    <p className='text-sm text-zinc-500'>
+      يمكنك متابعة جميع مبيعاتك والإحالات والعمولات الخاصة بك من خلال لوحة التحكم الخاصة بالتسويق التابع في الوقت الفعلي، مما يسمح لك بتتبع أرباحك أثناء نموها
+    </p>
+  </div>
+
+  {/* قسم كيفية الحصول على الأموال */}
+  <div className='mt-10 flex space-y-3 flex-col'>
+    <h4 className='font-semibold'>
+       كيف تحصل على الأموال:
+    </h4>
+    <p className='text-sm text-zinc-500'>
+      ستحصل على عمولة عن كل عملية بيع تتم من خلال رابط الإحالة الخاص بك. العمولة هي نسبة مئوية من إجمالي قيمة البيع، ويمكن أن تختلف هذه النسبة حسب المنتج
+    </p>
+    <p className='text-sm text-zinc-500'>
+      تتم معالجة المدفوعات كل أسبوع، بشرط أن تكون قد وصلت إلى الحد الأدنى للدفع. يمكنك اختيار استلام أرباحك عبر التحويل البنكي أو من خلال تطبيق فلوسي 
+    </p>
+    <p className='text-sm text-zinc-500'>
+      يمكنك تتبع العمولات المعلقة وسجل المدفوعات مباشرة من خلال لوحة التحكم الخاصة بالتسويق التابع. منصتنا تضمن لك الحصول على مستحقاتك عن كل إحالة ناجحة
+    </p>
+  </div>
+      </div>
+
         <div className='mt-10 border-t col-span-2 flex flex-col border-zinc-200'>
         {/* How it works section */}
         <div className='mt-10 flex space-y-3 flex-col'>
@@ -210,39 +245,7 @@ const [isOpen, setIsOpen] = useState < boolean > (false);
         </div>
 
 
-        <div className='mt-10 border-t col-span-2 flex flex-col border-zinc-200 text-right'>
-  {/* قسم كيفية العمل */}
-  <div className='mt-10 flex space-y-3 flex-col'>
-    <h4 className='font-semibold'>
-       كيف تعمل:
-    </h4>
-    <p className='text-sm text-zinc-500'>
-      كمسوق تابع، ستختار منتجًا من منصتنا وتقوم بإنشاء رابط إحالة فريد لهذا المنتج. بعد ذلك يمكنك مشاركة هذا الرابط مع جمهورك عبر وسائل التواصل الاجتماعي
-    </p>
-    <p className='text-sm text-zinc-500'>
-      عندما يستخدم شخص ما رابط الإحالة الخاص بك لإجراء طلب شراء، سيقوم النظام بتتبع الطلب، وإذا تم الدفع سيتم تخصيص عملية البيع لحسابك تلقائيًا. ستحصل على عمولة عن كل عملية بيع تتم من خلال رابط الإحالة الخاص بك
-    </p>
-    <p className='text-sm text-zinc-500'>
-      يمكنك متابعة جميع مبيعاتك والإحالات والعمولات الخاصة بك من خلال لوحة التحكم الخاصة بالتسويق التابع في الوقت الفعلي، مما يسمح لك بتتبع أرباحك أثناء نموها
-    </p>
-  </div>
 
-  {/* قسم كيفية الحصول على الأموال */}
-  <div className='mt-10 flex space-y-3 flex-col'>
-    <h4 className='font-semibold'>
-       كيف تحصل على الأموال:
-    </h4>
-    <p className='text-sm text-zinc-500'>
-      ستحصل على عمولة عن كل عملية بيع تتم من خلال رابط الإحالة الخاص بك. العمولة هي نسبة مئوية من إجمالي قيمة البيع، ويمكن أن تختلف هذه النسبة حسب المنتج
-    </p>
-    <p className='text-sm text-zinc-500'>
-      تتم معالجة المدفوعات كل أسبوع، بشرط أن تكون قد وصلت إلى الحد الأدنى للدفع. يمكنك اختيار استلام أرباحك عبر التحويل البنكي أو من خلال تطبيق فلوسي 
-    </p>
-    <p className='text-sm text-zinc-500'>
-      يمكنك تتبع العمولات المعلقة وسجل المدفوعات مباشرة من خلال لوحة التحكم الخاصة بالتسويق التابع. منصتنا تضمن لك الحصول على مستحقاتك عن كل إحالة ناجحة
-    </p>
-  </div>
-</div>
 
 
 

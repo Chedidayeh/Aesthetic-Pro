@@ -4,6 +4,7 @@
 import ProductReel from '@/components/MarketPlace/ProductReel'
 import {
   Button,
+  buttonVariants,
 } from '@/components/ui/button'
 import Link from 'next/link'
 
@@ -11,6 +12,7 @@ import PerkSection from '@/components/MarketPlace/PerkSection'
 import { fetchBestSellingProducts, fetchNewProducts, fetchTrendingProducts, getFollowedStoreProductsFirst, getProductsGroupedByCollection, getUser } from '@/actions/actions'
 import ProductSlider from '@/components/MarketPlace/ProductSlider'
 import { fetchDiscountProductsDeals } from './discountDeals/actions'
+import { ArrowRight } from 'lucide-react'
 
 
 export default async function Page() {
@@ -157,7 +159,35 @@ export default async function Page() {
 
 
 
+<div className='py-10 mt-2 mx-auto flex flex-col w-[80%] rounded-2xl bg-center 
+    bg-[url("/bgBanner.png")]'>
 
+  <div className="text-center flex flex-col items-center">
+    <h1 className="text-3xl font-bold tracking-tight text-white">
+      Try to customize{' '}
+      <span className="inline-flex items-center gap-1 text-blue-600">
+        your own product
+      </span>
+    </h1>
+
+    <p className='mt-4 text-md max-w-prose text-gray-400'>
+    Create and customize your own products!   
+     </p>
+
+    <div className="mt-6">
+    <Link      
+              href='/MarketPlace/create-client-product/select-category'
+              className={buttonVariants({
+                size: 'sm',
+                className: 'hidden sm:flex items-center gap-1',
+              })}>
+              Create your product
+              <ArrowRight className='ml-1.5 h-5 w-5' />
+            </Link>
+    </div>
+  </div>
+
+</div>
 
 
       

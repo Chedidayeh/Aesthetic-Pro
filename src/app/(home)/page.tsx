@@ -14,6 +14,9 @@ import ProductReel from "@/components/MarketPlace/ProductReel";
 import PerkSection from "@/components/PerkSection";
 import { CircleDollarSign, DollarSign, Heart } from "lucide-react";
 import { Label } from "@/components/ui/label";
+import RedirectToCreateSellerProfile from "@/components/RedirectToCreateSellerProfile";
+import RedirectToCreateAffiliateAccount from "@/components/RedirectToCreateAffiliateAccount";
+import ProductListing from "@/components/MarketPlace/ProductListing";
 
 
 
@@ -30,6 +33,7 @@ export default async function Page() {
 
   const followedStoresProducts = user ? await getFollowedStoreProductsFirst(user.id) : [];
   const filteredFollowedStoresProducts = followedStoresProducts ? followedStoresProducts.slice(0, 8) : [];
+
 
   return (
     <>
@@ -145,12 +149,14 @@ export default async function Page() {
     </div>
 
     {/* Right Side - Image */}
-    <div className="flex justify-center">
-      <img
-        src="/shopping-illustration.png"
-        alt="Illustration of a happy customer shopping"
-        className="rounded-md shadow-md"
-      />
+    <div className="flex justify-center ">
+      <div className="w-[75%] xl:w-[55%]">
+      <ProductListing
+        user={user!}
+        product={trendingProducts[0]}
+        index={0}
+    />
+      </div>
     </div>
   </div>
 
@@ -186,12 +192,8 @@ export default async function Page() {
   </p>
 
   <div className="mt-6">
-      <Link href="/MarketPlace/create-seller-profile">
-        <Button className="px-4 py-3 text-sm font-semibold bg-green-600 text-white rounded-md shadow-md hover:bg-green-700 transition">
-        Get Started &rarr;
-        </Button>
-      </Link>
-    </div>
+      <RedirectToCreateSellerProfile />
+  </div>
 
   </div>
 
@@ -230,12 +232,21 @@ export default async function Page() {
     </div>
 
     {/* Right Side - Image */}
-    <div className="flex justify-center">
-      <img
-        src="/seller-illustration.png"
-        alt="Illustration of a designer selling products"
-        className="rounded-md shadow-md"
-      />
+    <div className="flex justify-center mt-10">
+    <div className='px-6 lg:px-8'>
+              <div className='mt-2 flow-root sm:mt-10'>
+                <div className='-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4'>
+                  <NextImage
+                    src={"/Seller Dashboard.png"}
+                    alt='seller store preview'
+                    width={1013}
+                    height={1013}
+                    quality={100}
+                    className='rounded-md bg-white object-fill shadow-2xl ring-1 ring-gray-900/10'
+                  />
+                </div>
+              </div>
+            </div>
     </div>
   </div>
 
@@ -271,11 +282,7 @@ export default async function Page() {
     </p>
 
     <div className="mt-6">
-      <Link href="/createAffiliateAccount">
-        <Button className="px-4 py-3 text-sm font-semibold bg-purple-600 text-white rounded-md shadow-md hover:bg-purple-700 transition">
-          Join Now &rarr;
-        </Button>
-      </Link>
+    <RedirectToCreateAffiliateAccount />
     </div>
   </div>
 
@@ -302,13 +309,23 @@ export default async function Page() {
     </div>
 
     {/* Right Side - Image */}
-    <div className="flex justify-center">
-      <img
-        src="/affiliate-illustration.png"
-        alt="Illustration of an affiliate earning money"
-        className="rounded-md shadow-md"
-      />
+    <div className="flex justify-center mt-10">
+  <div className='px-4 sm:px-6 lg:px-8'>
+    <div className='mt-4 sm:mt-8'>
+      <div className='-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 sm:-m-4 sm:rounded-2xl sm:p-4'>
+        <NextImage
+          src={"/Affiliate Dashboard.png"}
+          alt='seller store preview'
+          width={1013}
+          height={1013}
+          quality={100}
+          className='rounded-md bg-white object-contain sm:object-cover shadow-2xl ring-1 ring-gray-900/10 w-full h-auto'
+        />
+      </div>
     </div>
+  </div>
+</div>
+
   </div>
 
   <div className='flex flex-col items-center justify-center mt-2'>

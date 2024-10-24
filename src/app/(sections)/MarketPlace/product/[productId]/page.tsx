@@ -90,7 +90,7 @@ const Page = async ({ params }: PageProps) => {
 
 
         return (
-          <ViewProduct product={product} frontdesign={frontdesign!} backdesign={backdesign!} user={user!} categoryProducts={filteredProducts} category={category!} sizes={sizes} platform={platform!}  />
+          <ViewProduct product={product} frontdesign={frontdesign!} backdesign={backdesign!} user={user!} categoryProducts={filteredProducts} category={category!} sizes={sizes!} platform={platform!}  />
         )
 
   } catch (error) {

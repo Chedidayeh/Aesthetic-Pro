@@ -1119,7 +1119,7 @@ const uploadCapturedMockup = async (file: File) => {
                                       <NextImage
                                         alt={`front design image ${index + 1}`}
                                         className="aspect-square w-full rounded-md object-contain"
-                                        loading="lazy"
+                                        loading="eager"
                                         blurDataURL="/Loading.png"
                                         placeholder="blur"
                                         height={1000}
@@ -1165,6 +1165,9 @@ const uploadCapturedMockup = async (file: File) => {
                                         {design.price}TND
                                       </Badge>
                                       <NextImage
+                                        loading="eager"
+                                        blurDataURL="/Loading.png"
+                                        placeholder="blur"
                                         alt={`back design image ${index + 1}`}
                                         className="aspect-square w-full rounded-md object-contain"
                                         height={1000}

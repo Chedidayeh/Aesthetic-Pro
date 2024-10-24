@@ -88,6 +88,8 @@ const CreateDesignView = ({platform , store}: ProductViewProps) => {
   const  sellerProfit =  designPrice - platform.platformDesignProfit
   const [tags, setTags] = useState<string[]>([]);
   const [inputTag, setInputTag] = useState('');
+
+
   const router = useRouter();
 
                     // check seller profit 
@@ -195,62 +197,6 @@ const CreateDesignView = ({platform , store}: ProductViewProps) => {
             }
           }
 
-
-          // const uploadDesign = (file: File): Promise<string | null> => {
-          //   return new Promise((resolve, reject) => {
-          //     if (!file) {
-          //       console.log('No file selected.');
-          //       resolve(null);
-          //       return;
-          //     }
-          
-          //     // Read the file as a base64 string
-          //     const reader = new FileReader();
-          //     reader.readAsDataURL(file);
-          //     reader.onloadend = async () => {
-          //       const base64data = reader.result?.toString().split(',')[1]; // Get the base64 string only
-          
-          //       try {
-          //         const response = await fetch('/api/uploadSellerDesigns', {
-          //           method: 'POST',
-          //           headers: {
-          //             'Content-Type': 'application/json',
-          //           },
-          //           body: JSON.stringify({ file: base64data, designName: file.name, storeName: store.storeName }),
-          //         });
-          
-          //         if (!response.ok) {
-          //           throw new Error('Failed to upload image');
-          //         }
-          
-          //         const data = await response.json();
-          //         const path = data.url; // Get the uploaded URL
-          
-          //         toast({
-          //           title: 'Design Upload Success',
-          //           description: 'Design image uploaded successfully!',
-          //         });
-          
-          //         resolve(path); // Resolve the promise with the URL
-          //       } catch (error) {
-          //         toast({
-          //           title: 'Upload Error',
-          //           description: 'Error uploading the image!',
-          //           variant: 'destructive',
-          //         });
-          //         console.error(error);
-          //         reject(error); // Reject the promise on error
-          //       }
-          //     };
-          //   });
-          // };
-
-
-
-
-          // final adding design function
-    
-    
     
     
     
@@ -272,6 +218,10 @@ const CreateDesignView = ({platform , store}: ProductViewProps) => {
       try {
         openDialog()
         setisAdding(true)
+
+        if(inputTag != "") {
+          tags.push(inputTag)
+        }
 
         const designPath = await uploadDesign(file)
 
@@ -390,9 +340,8 @@ const CreateDesignView = ({platform , store}: ProductViewProps) => {
                             <div>
                             <div className='flex items-center'>
                               <Tags className='h-4 w-4' />
-                              <Label className='ml-2'>Tags*:</Label>
-                              <p className='text-xs text-zinc-500 ml-5'>Click On the tag to remove it!</p>
-
+                              <Label className='ml-2'>Tags: <p className='text-xs text-zinc-500'>(optional)</p></Label>
+                              <p className='text-xs text-zinc-500 ml-5'>Click enter to Add tags !</p>
                             </div>
                             <div className='mt-4 mb-4'>
                               <Input
@@ -407,6 +356,9 @@ const CreateDesignView = ({platform , store}: ProductViewProps) => {
                               />
                             </div>
                             <div>
+                              {tags.length > 0 && (
+                            <p className='text-xs text-zinc-500 ml-5'>Click On the tag to remove it!</p>
+                              )}
                               {tags.map((tag, index) => (
                                 <div
                                   key={index}
@@ -478,7 +430,7 @@ const CreateDesignView = ({platform , store}: ProductViewProps) => {
                           size='default'
                           isLoading={isAdding}
                           disabled={isAdding || !isDesignUploaded || 
-                            designName==="" || tags.length ===0 || designPrice > platform.maxDesignSellerProfit || designPrice < platform.platformDesignProfit + 1 || !designPrice}
+                            designName==="" || designPrice > platform.maxDesignSellerProfit || designPrice < platform.platformDesignProfit + 1 || !designPrice}
                           onClick={handleAddClick}>
                           Add To Store
                           <span className="ml-1"><CircleCheckBig/></span>

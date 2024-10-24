@@ -57,16 +57,28 @@ const AddToCartButton = ({
 
   const saveToCartProducts = async () =>{
 
+    if(size === "") {
+      toast({
+        title: "Select a size !",
+        description: "Please select a size to continue",
+        variant : "destructive",
+        duration: 2000,
+      })
+      return
+    }
+
+    if (!user) {
+      setIsLoginModalOpen(true)
+      toast({
+        title: 'No logged in user found !',
+        description: 'Try to login first!',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     try {
-      if (!user) {
-        setIsLoginModalOpen(true)
-        toast({
-          title: 'No logged in user found !',
-          description: 'Try to login first!',
-          variant: 'destructive',
-        });
-        return;
-      }
+
   
       openDialog()
       const result = await addProductToCart(product.id,user.id,price,category,size,color,quantity,productImgs)
@@ -77,6 +89,8 @@ const AddToCartButton = ({
         title: 'Product added to cart !',
         description: '',
         variant: 'default',
+        duration: 5000,
+
       });
       return
       }
@@ -86,6 +100,7 @@ const AddToCartButton = ({
           title: 'You already added this product to your cart !',
           description: 'try to change the color or the size or other detail to continue',
           variant: 'destructive',
+          duration: 5000,
         });
         return
 
@@ -167,7 +182,7 @@ const AddToCartButton = ({
                         </AlertDialog>  
 
     <Button
-      disabled={size==="" || quantity > platform.maxProductQuantity || quantity < 1 || !quantity}
+      disabled={quantity > platform.maxProductQuantity || quantity < 1 || !quantity}
       onClick={saveToCartProducts}
       size='lg'
       variant={'default'}

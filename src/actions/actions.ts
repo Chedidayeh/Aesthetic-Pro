@@ -1294,6 +1294,8 @@ export async function searchPodProducts(query: string) {
               category: true,
               title: true,
               tags: true,
+              store : true,
+              collection : true
           },
       });
 
@@ -1310,6 +1312,9 @@ export async function searchPodProducts(query: string) {
           if (product.tags.some(tag => tag.toLowerCase().startsWith(decodedQuery)) || product.tags.some(tag => tag.toLowerCase().includes(decodedQuery))) {
               results.push(...product.tags.filter(tag => tag.toLowerCase().startsWith(decodedQuery)));
           }
+          if (product.store.storeName.toLowerCase().startsWith(decodedQuery) || product.store.storeName.toLowerCase().includes(decodedQuery) ) {
+            results.push(product.store.storeName);
+        }
       });
 
       // Deduplicate and return results

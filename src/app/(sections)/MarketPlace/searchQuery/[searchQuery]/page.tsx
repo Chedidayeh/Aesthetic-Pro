@@ -22,7 +22,11 @@ const Page = async ({ params }: PageProps) => {
     const categories = await getAllPodProductsCategories()
     const collections = await getAllPodProductsCollections()
 
-    
+        // Decode the URL-encoded string
+    let decodedQuery = decodeURIComponent(searchQuery);
+
+    // Use regex to remove 'dff gf' and any other unwanted characters
+    decodedQuery = decodedQuery.replace(/dff\s*gf/g, '');
 
     return (
       <>
@@ -35,7 +39,7 @@ const Page = async ({ params }: PageProps) => {
                      products={products!}
                      categories={categories!}
                      collections={collections}
-                     searchQuery={searchQuery}
+                     searchQuery={decodedQuery}
                 />
                 </div>
               </section>

@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
+import NextImage from 'next/image'
 
 import { UploadCloudIcon, X } from 'lucide-react';
 import * as React from 'react';
@@ -136,7 +137,7 @@ const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
 
           {imageUrl ? (
             // Image Preview
-            <img
+            <NextImage
               className="h-full w-full rounded-md object-contain"
               src={imageUrl}
               alt={acceptedFiles[0]?.name}

@@ -418,8 +418,77 @@ const ProductView = ({ products, user , affiliateId, categories , collections , 
   <p className="text-sm text-gray-700 mb-2">AffiliateDashboard/All Products</p>
   <h1 className="text-2xl font-semibold mb-8">All Products</h1>
 
+  {selectedProduct && (
+        <>
 
-  <Card className="col-span-full" x-chunk="dashboard-01-chunk-4">
+<Card className="col-span-full mt-4" x-chunk="dashboard-01-chunk-4">
+  <CardHeader className="flex flex-col md:flex-row items-center">
+    <div className="grid gap-2">
+      <CardTitle className="font-bold">Product Infos :</CardTitle>
+      <CardDescription>
+        <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 mt-2">
+          <div>
+            <p className="font-bold">Product Title :</p>
+            <p >{selectedProduct.title}</p>
+          </div>
+          <div>
+            <p className="font-bold">Product Price :</p>
+            <p>
+              <Badge className="text-bold text-white" >
+                {selectedProduct.price} TND
+              </Badge>
+            </p>
+          </div>
+
+          <div>
+            <p className="font-bold">Product total sales :</p>
+            <p>{selectedProduct.totalSales} sales</p>
+          </div>
+
+          <div>
+            <p className="font-bold">Product total views :</p>
+            <p>{selectedProduct.totalViews} views</p>
+          </div>
+
+          <div className="col-span-2 md:col-span-1">
+          <Button 
+           onClick={() => handleGenerateAffiliateLink(selectedProduct)}
+            variant="link" className="text-green-500 flex items-center">
+          Generate Affiliate Link
+            <CircleDollarSign size={16} className="ml-1 mt-[2px]" />
+          </Button>
+          </div>
+
+
+
+        </div>
+      </CardDescription>
+    </div>
+  </CardHeader>
+  <Separator className="w-full" />
+  <CardContent className="p-4 md:p-6 lg:p-8 max-w-full">
+  <p className=" flex items-center justify-center font-bold my-4">View Product :</p>
+  <div className="flex items-center justify-center w-full p-4">
+    <div className="w-full max-w-lg"> {/* You can adjust max-w-lg as per your desired size */}
+      <ImageSlider
+        urls={[
+          ...(selectedProduct.croppedFrontProduct ?? []),
+          ...(selectedProduct.croppedBackProduct ?? []),
+        ]}
+      />
+    </div>
+  </div>
+</CardContent>
+
+</Card>
+        
+        </>
+     
+        )}
+
+
+
+  <Card className="col-span-full my-4" x-chunk="dashboard-01-chunk-4">
   <CardHeader className="px-4 sm:px-7">
   <CardDescription>Total Products: {products?.length}</CardDescription>
     <div className="ml-0 sm:ml-5 mt-2">
@@ -620,73 +689,6 @@ const ProductView = ({ products, user , affiliateId, categories , collections , 
 
 
 
-      {selectedProduct && (
-        <>
-
-<Card className="col-span-full mt-4" x-chunk="dashboard-01-chunk-4">
-  <CardHeader className="flex flex-col md:flex-row items-center">
-    <div className="grid gap-2">
-      <CardTitle className="font-bold">Product Infos :</CardTitle>
-      <CardDescription>
-        <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 mt-2">
-          <div>
-            <p className="font-bold">Product Title :</p>
-            <p >{selectedProduct.title}</p>
-          </div>
-          <div>
-            <p className="font-bold">Product Price :</p>
-            <p>
-              <Badge className="text-bold text-white" >
-                {selectedProduct.price} TND
-              </Badge>
-            </p>
-          </div>
-
-          <div>
-            <p className="font-bold">Product total sales :</p>
-            <p>{selectedProduct.totalSales} sales</p>
-          </div>
-
-          <div>
-            <p className="font-bold">Product total views :</p>
-            <p>{selectedProduct.totalViews} views</p>
-          </div>
-
-          <div className="col-span-2 md:col-span-1">
-          <Button 
-           onClick={() => handleGenerateAffiliateLink(selectedProduct)}
-            variant="link" className="text-green-500 flex items-center">
-          Generate Affiliate Link
-            <CircleDollarSign size={16} className="ml-1 mt-[2px]" />
-          </Button>
-          </div>
-
-
-
-        </div>
-      </CardDescription>
-    </div>
-  </CardHeader>
-  <Separator className="w-full" />
-  <CardContent className="p-4 md:p-6 lg:p-8 max-w-full">
-  <p className=" flex items-center justify-center font-bold my-4">View Product :</p>
-  <div className="flex items-center justify-center w-full p-4">
-    <div className="w-full max-w-lg"> {/* You can adjust max-w-lg as per your desired size */}
-      <ImageSlider
-        urls={[
-          ...(selectedProduct.croppedFrontProduct ?? []),
-          ...(selectedProduct.croppedBackProduct ?? []),
-        ]}
-      />
-    </div>
-  </div>
-</CardContent>
-
-</Card>
-        
-        </>
-     
-        )}
 
 
 

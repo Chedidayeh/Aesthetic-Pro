@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
 'use client'
+import NextImage from 'next/image'
 
 import * as React from "react"
 import Link from 'next/link'
@@ -80,7 +81,7 @@ const ResetPassView = ({status , user} : {status : string , user? : User}) => {
       <div className='container relative flex py-10 flex-col items-center justify-center lg:px-0'>
         <div className='mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]'>
           <div className='flex flex-col items-center space-y-2 text-center'>
-            <img src="/resetPasswordIcon.png" className='h-20 w-20' />
+            <NextImage src="/resetPasswordIcon.png" alt='resetPasswordIcon' className='h-20 w-20' />
             {status === "success" && (
 
               <>

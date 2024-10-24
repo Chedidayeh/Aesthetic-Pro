@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 
+import NextImage from 'next/image'
 
 
 import {
@@ -43,6 +44,7 @@ const ViewCategoryQuality = ( {category} : { category: Category } ) => {
           {category.label}
           </Badge>
           </div>
+          {category.quality.length > 0 ? (
         <Carousel className="w-full max-w-xs">
     
            <CarouselContent>
@@ -50,7 +52,7 @@ const ViewCategoryQuality = ( {category} : { category: Category } ) => {
                {category.quality.map((image, index) => (
                   <CarouselItem key={index}>
                         <div className="p-1">
-                             <img src={image} alt={`Product Image ${index + 1}`}
+                             <NextImage src={image} alt={`Product Image ${index + 1}`}
                              onContextMenu={(e) => e.preventDefault()}
                               className="object-cover transition-transform duration-500 transform hover:scale-150"
                                />
@@ -61,7 +63,14 @@ const ViewCategoryQuality = ( {category} : { category: Category } ) => {
               <CarouselPrevious />
                 <CarouselNext />
          </Carousel>               
-          
+               ) : (
+                <div className="flex items-center justify-center cursor-pointer">
+                <Badge variant="secondary">
+                No images available for now
+
+                </Badge>
+                </div>
+               )}
         <AlertDialogFooter>
         <AlertDialogCancel onClick={()=>setisOpen(false)}>Close</AlertDialogCancel>
           </AlertDialogFooter>
