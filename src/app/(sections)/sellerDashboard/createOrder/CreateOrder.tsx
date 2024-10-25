@@ -173,7 +173,7 @@ const CreateOrder = ({
                 
                   if (newSelectedCat !== null) {
                     const sizes = await getSizes(product.category);
-                    setselectedSizes(sizes);
+                    setselectedSizes(sizes!);
                     setselectedProduct(product);
                 
                     const frontCap = product.croppedFrontProduct?.[index] ?? "";
