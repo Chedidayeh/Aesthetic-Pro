@@ -37,7 +37,9 @@ import {
 import {
     Activity,
     ArrowUpRight,
+    CircleCheck,
     CircleUser,
+    CircleX,
     CloudDownload,
     CreditCard,
     DollarSign,
@@ -82,8 +84,6 @@ import {
   
   import { cn } from "@/lib/utils";
   import React, { ChangeEvent, useEffect, useState } from "react"
-  import OrderedDesigns from "@/components/sellerDashboard/OrderedDesigns"
-  import OrderedProducts from "@/components/sellerDashboard/OrderedProducts"
   import { db } from "@/db"
   import UsersTable from "@/components/adminDashboard/UsersTable"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -94,10 +94,16 @@ import { useToast } from "@/components/ui/use-toast"
 import { Input } from "@/components/ui/input"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { deleteProduct } from "../../sellerDashboard/products/actions"
+import { Separator } from '@/components/ui/separator'
+import ImageSlider from '@/components/MarketPlace/ImageSlider'
+import { acceptProduct, refuseProduct } from '../stores/actions'
+import { Switch } from '@/components/ui/switch'
+import { Label } from '@/components/ui/label'
+import LoadingState from '@/components/LoadingState'
   
   
 
-interface ExtraProducts extends Product {
+interface ExtraProduct extends Product {
   store : Store
   frontDesign: SellerDesign | null;
   backDesign: SellerDesign | null;
@@ -107,7 +113,7 @@ interface ExtraProducts extends Product {
   
   
 interface ProductViewProps {
-    products: ExtraProducts[];
+    products: ExtraProduct[];
   }
   
   const ProductView = ({ products }: ProductViewProps ) => { 
@@ -116,45 +122,33 @@ interface ProductViewProps {
     const [isDeleteOpen, setisDeleteOpen] = useState(false);
     const [ productId , setProductId] = useState("")
 
-    const [searchQuery, setSearchQuery] = useState('');
-    const [selectedFilter, setSelectedFilter] = useState('');
-    const handleFilterChange = (value: string) => {
-      setSelectedFilter(value);
-    };
-    useEffect(() => {
-      const lowercasedQuery = searchQuery.toLowerCase();
-      const filtered = products.filter(product => {
-        const matchesSearch = product.id.startsWith(lowercasedQuery) || product.title.toLowerCase().startsWith(lowercasedQuery);
-        const matchesFilter = selectedFilter === '' || 
-                              (selectedFilter === 'accepted' && product.isProductAccepted) ||
-                              (selectedFilter === 'refused' && product.isProductRefused) ||
-                              (selectedFilter === 'action' && !product.isProductAccepted && !product.isProductRefused) ||
-                              (selectedFilter === 'noItems' && product.order.length === 0)
-        return matchesSearch && matchesFilter;
-      });
-      setFilteredOrders(filtered);
-    }, [searchQuery, products, selectedFilter]);
-        
 
+    const [searchTerm, setSearchTerm] = useState("");
+    const [filter, setFilter] = useState<string | null>(null);
+    const [filteredProducts, setFilteredProducts] = useState(products);
 
-     // serach
-     const [filteredOrders, setFilteredOrders] = useState(products);
-     useEffect(() => {
-       const lowercasedQuery = searchQuery.toLowerCase();
-       const filtered = products.filter(product =>
-        product.id.startsWith(lowercasedQuery) ||
-        product.store.storeName!.toLowerCase().startsWith(lowercasedQuery) ||
-        product.title.toLowerCase().startsWith(lowercasedQuery)
+     // Filter products whenever the search term or filter changes
+  useEffect(() => {
+    const filtered = products.filter((product) => {
+      const matchesSearch = searchTerm
+        ? product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          product.store.storeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          product.id.includes(searchTerm)
+        : true;
 
-       );
-       setFilteredOrders(filtered);
-     }, [searchQuery, products]);
+      const matchesFilter = filter
+        ? (filter === "accepted" && product.isProductAccepted) ||
+          (filter === "refused" && product.isProductRefused) ||
+          (filter === "action" && !product.isProductAccepted && !product.isProductRefused)  ||
+          (filter === "all" && product)  ||
+          (filter === "noItmes") && product.order.length === 0
+        : true;
 
-     const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-      setSearchQuery(e.target.value);
-    };
+      return matchesSearch && matchesFilter;
+    });
 
-
+    setFilteredProducts(filtered);
+  }, [searchTerm, filter, products]);
 
     const handleDelete = async () =>{
         try {
@@ -185,27 +179,7 @@ interface ProductViewProps {
         }
     }
 
-    const [isViewOpen, setisViewOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [productImgs , setproductImgs] = useState <string[]> ([])
-    const viewProduct = (product : ExtraProducts) => {
-      let imgs = [] as string []
-      product.croppedFrontProduct.map((img : string) => {
-        imgs.push(img)
-      })
-      product.croppedBackProduct.map((img : string) => {
-        imgs.push(img)
-      })
-      setproductImgs(imgs)
-    }
 
-
-    // Function to change the state after a delay
-    const changeStateAfterDelay = () => {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 5000); // Change to 1000 milliseconds for 1 second
-    };
 
 
 
@@ -213,13 +187,19 @@ interface ProductViewProps {
  const [isDownloadOpen, setIsDownloadOpen] = useState(false);
 
 // Function to handle download
-const downloadMockup = async (imageUrls: string[]) => {
+const downloadMockup = async (product: ExtraProduct) => {
   try {
-    setIsDownloadOpen(true);
+    // Combine all image sources into a single array
+    const imageUrls = [
+      ...product.croppedFrontProduct,
+      ...product.croppedBackProduct,
+      product.frontDesign?.imageUrl,
+      product.backDesign?.imageUrl,
+    ].filter(Boolean); // Filter out any undefined or null values
 
     // Loop through each imageUrl and download
     for (let i = 0; i < imageUrls.length; i++) {
-      const response = await fetch(imageUrls[i]);
+      const response = await fetch(imageUrls[i]!);
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
 
@@ -232,9 +212,9 @@ const downloadMockup = async (imageUrls: string[]) => {
     }
 
     setIsDownloadOpen(false);
+
   } catch (error) {
-    setIsDownloadOpen(false);
-    console.error("Error downloading designs:", error);
+    console.error("Error downloading mockup:", error);
     toast({
       title: "Download failed",
       variant: "destructive",
@@ -242,113 +222,93 @@ const downloadMockup = async (imageUrls: string[]) => {
   }
 };
 
+const [selectedProduct, setSelectedProduct] = useState<ExtraProduct | null>(null);
+const [open, setOpen] = useState<boolean>(false);
+const [reasonForRejection, setReasonForRejection] = useState('');
+const [isDialogOpen, setisDialogOpen] = useState<boolean>(false);
+
+const handleAccept = async (productId : string) =>{
+
+  try {
+    setOpen(true)
+    await acceptProduct(productId)
+    toast({
+      title: 'Product Was Successfully Accepted',
+      variant: 'default',
+    });
+    setOpen(false)
+    setSelectedProduct(null)
+    router.refresh()
+  } catch (error) {
+    setOpen(false)
+    toast({
+      title: 'Error : Product Was not Accepted',
+      variant: 'destructive',
+    });
+  }
+
+}
+
+const handleRefuse = async (productId : string) =>{
+
+  try {
+    setOpen(true)
+    await refuseProduct(productId, reasonForRejection)
+    router.refresh()
+    toast({
+      title: 'Product Was Successfully Refused',
+      variant: 'default',
+    });
+    setOpen(false)
+    router.refresh()
+  } catch (error) {
+    console.log(error)
+    setOpen(false)
+    toast({
+      title: 'Error : Product Was not Refused',
+      variant: 'destructive',
+    });
+  }
+
+}
+
+
+// setchangeView state use state
+const [changeView, setChangeView] = useState(false);
+// handleSwitchChange functino : 
+const handleSwitchChange = () => {
+  setChangeView(!changeView)
+}
+
+
+
+    
+
 
 
     return (
       <>
 
 
-                                              {/* downloading Loader  */}
-                                              <AlertDialog open={isDownloadOpen} >
-                                       <AlertDialogTrigger asChild>
-                                        </AlertDialogTrigger>
-                                          <AlertDialogContent className=" flex flex-col items-center justify-center">
-                                              <AlertDialogHeader className="flex flex-col items-center justify-center">
-                                              <Loader2 className="animate-spin text-blue-800 h-[50%] w-[50%]" />
-                                              <AlertDialogTitle className="flex flex-col items-center justify-center">Loading</AlertDialogTitle>
-                                            </AlertDialogHeader>
-                                            <AlertDialogDescription className="flex flex-col items-center justify-center">
-                                              Please wait while downloading...
-                                            </AlertDialogDescription>
-                                                    <AlertDialogFooter>
-                                                    </AlertDialogFooter>
-                                                </AlertDialogContent>
-                                  </AlertDialog>
 
-
-
-                                          {/* View product  */}
-                                          <AlertDialog open={isViewOpen} >
-                                       <AlertDialogTrigger asChild>
-                                        </AlertDialogTrigger>
-                                          <AlertDialogContent className=" flex flex-col items-center justify-center">
-
-                                            {isLoading===true && (
-                                              <>
-                                              <AlertDialogHeader className="flex flex-col items-center justify-center">
-                                              <Loader2 className="animate-spin text-blue-800 h-[50%] w-[50%]" />
-                                              <AlertDialogTitle className="flex flex-col items-center justify-center">Loading</AlertDialogTitle>
-                                            </AlertDialogHeader>
-                                            <AlertDialogDescription className="flex flex-col items-center justify-center">
-                                              Please wait while the content is loading...
-                                            </AlertDialogDescription>
-                                            </>
-                                            )}
-                                            
-                                              <div className={cn(`${isLoading===true ? 'hidden' : ''} `)}>
-                                              <Carousel className="w-full max-w-xs">
-                                            <CarouselContent>
-                                              {productImgs.map((image, index) => (
-                                                <CarouselItem key={index}>
-                                                  <div className="p-1">
-                                                        <NextImage width={900} height={900}
-                                                         src={image}
-                                                         alt={`Product Image ${index + 1}`} className="object-cover" />
-                                                  </div>
-                                                </CarouselItem>
-                                              ))}
-                                            </CarouselContent>
-                                            <CarouselPrevious />
-                                            <CarouselNext />
-                                              </Carousel>
-                                              </div>
-
-                                                    <AlertDialogFooter>
-                                                    <AlertDialogCancel onClick={()=>{setisViewOpen(false)}}>Close</AlertDialogCancel>
-                                                    </AlertDialogFooter>
-                                                </AlertDialogContent>
-                                  </AlertDialog>
-
-
-                          {/* The AlertDialog delete product component  */}
-                          <AlertDialog open={isDeleteOpen}>
-               <AlertDialogTrigger asChild>
-                         </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                   <AlertDialogHeader className="flex flex-col items-center">
-                                       <div className="text-red-500 mb-2">
-                                           <OctagonAlert className=''/>
-                                               </div>
-                                              <AlertDialogTitle className="text-xl font-bold text-center">
-                                                 Are you absolutely sure you want to delete this product ?
-                                               </AlertDialogTitle>
-                                                <AlertDialogDescription>
-                                                   This action cannot be undone. 
-                                                   It will permanently remove the product from our MarketPlace.<br/><br/>
-                                                    </AlertDialogDescription>
-                                                   </AlertDialogHeader>
-                                                  <AlertDialogFooter>
-                                              <AlertDialogCancel onClick={()=>setisDeleteOpen(false)}>Cancel</AlertDialogCancel>
-                                      <AlertDialogAction onClick={() => handleDelete()} 
-                                     className='bg-red-500 hover:bg-red-500' >Delete</AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                     </AlertDialog> 
   
   
   <p className="text-sm text-gray-700 mb-2">AdminDashboard/Products</p>
            <h1 className="text-2xl font-semibold">Manage Products</h1>
   
   
-  
+           <div className="flex items-center mt-4 space-x-2">
+              <Switch id="allProductsView" defaultChecked={changeView} onClick={handleSwitchChange } />
+              <Label htmlFor="front">Change View</Label>
+            </div>
      
   
-  
+  {!changeView ? (
+
+      // default view table with selectedProduct
         <div className="flex mt-4 flex-col gap-5 w-full">
   
-      <section className="grid w-full grid-cols-1 gap-4 gap-x-8 transition-all sm:grid-cols-2 xl:grid-cols-4">
-  
-  
+      <section className="grid w-full grid-cols-1 gap-4 gap-x-8 transition-all sm:grid-cols-2 xl:grid-cols-4"> 
   
       <Card className="col-span-full" x-chunk="dashboard-01-chunk-4">
         <CardHeader className="flex flex-row items-center bg-muted/50">
@@ -359,22 +319,22 @@ const downloadMockup = async (imageUrls: string[]) => {
         </CardHeader>
         <CardContent>
 
-
         <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mt-2">
         <Input
           type="search"
           className="w-full sm:w-[50%] "
           placeholder="Enter the product Id, title, store Name to make a search..."
-          value={searchQuery}
-          onChange={handleSearchChange}
+          onChange={(e) => setSearchTerm(e.target.value)}
+
         />
-        <Select onValueChange={handleFilterChange}>
-          <SelectTrigger className="w-full sm:w-[180px] ">
+                <Select onValueChange={(value) => setFilter(value)}>
+                <SelectTrigger className="w-full sm:w-[180px] ">
             <SelectValue placeholder="Filter By" />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Select</SelectLabel>
+              <SelectItem value="all">All</SelectItem>
               <SelectItem value="accepted">Accepted</SelectItem>
               <SelectItem value="refused">Refused</SelectItem>
               <SelectItem value="action">Awaiting action</SelectItem>
@@ -417,7 +377,7 @@ const downloadMockup = async (imageUrls: string[]) => {
     </TableRow>
   </TableHeader>
   <TableBody>
-    {filteredOrders.map((product) => (
+    {filteredProducts.map((product) => (
       <TableRow key={product.id}>
         {/* Product Id cell */}
         <TableCell className="hidden sm:table-cell">{product.id}</TableCell>
@@ -452,10 +412,7 @@ const downloadMockup = async (imageUrls: string[]) => {
                 <TooltipTrigger asChild>
                   <Eye
                     onClick={() => {
-                      viewProduct(product);
-                      setisViewOpen(true);
-                      setIsLoading(true);
-                      changeStateAfterDelay();
+                      setSelectedProduct(product)
                     }}
                     className="cursor-pointer hover:text-blue-500"
                   />
@@ -480,23 +437,6 @@ const downloadMockup = async (imageUrls: string[]) => {
                   <p>Delete</p>
                 </TooltipContent>
               </Tooltip>
-
-              {/* Upload Icon */}
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <CloudDownload
-                    onClick={() => {
-                      setIsDownloadOpen(true);
-                      viewProduct(product);
-                      downloadMockup(productImgs);
-                    }}
-                    className="cursor-pointer hover:text-purple-500 ml-2"
-                  />
-                </TooltipTrigger>
-                <TooltipContent className="bg-purple-500">
-                  <p>Download</p>
-                </TooltipContent>
-              </Tooltip>
             </div>
           </TooltipProvider>
         </TableCell>
@@ -509,16 +449,298 @@ const downloadMockup = async (imageUrls: string[]) => {
         </CardContent>
       </Card>  
         
-
-
       </section>
   
-  
-  
-      <section className={cn(' grid grid-cols-1 p-11 gap-4 transition-all lg:grid-cols-4')}>
-  </section>
+
+      {selectedProduct && (
+        <>
+
+<Card className="col-span-full mt-4" x-chunk="dashboard-01-chunk-4">
+  <CardHeader className="flex flex-col md:flex-row items-center">
+    <div className="grid gap-2">
+      <CardTitle className="font-bold">Product Infos :</CardTitle>
+      <CardDescription>
+        <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 mt-2">
+          <div>
+            <p className="font-bold">Product Title :</p>
+            <p >{selectedProduct.title}</p>
+          </div>
+
+          {!selectedProduct.isProductAccepted && !selectedProduct.isProductRefused && (
+
+            <>
+          <div className="col-span-2 md:col-span-1">
+          <Button 
+           onClick={() => handleAccept(selectedProduct.id)}
+            variant="link" className="text-green-500 flex items-center">
+          Accept  Product
+          </Button>
+          </div>
+
+          <div className="col-span-2 md:col-span-1">
+          <Button 
+           onClick={() => setisDialogOpen(true)}
+            variant="link" className="text-red-500 flex items-center">
+          Refuse  Product
+          </Button>
+          </div>
+          </>
+          )}
+
+           {selectedProduct.isProductAccepted &&(
+              <Badge className='bg-green-500 text-white text-md' variant={`default`}>
+              Accepted
+              </Badge>
+              )}
+              {selectedProduct.isProductRefused &&(
+              <Badge className='bg-red-500 text-white text-md' variant={`default`}>
+              Refused
+            </Badge>
+        )}
+
+        <div className="col-span-2 md:col-span-1">
+          <Button 
+           onClick={() => {
+            setIsDownloadOpen(true);
+            downloadMockup(selectedProduct);
+          }}
+            variant="link" className="text-purple-500 flex items-center">
+          Download  Product
+          </Button>
+          </div>
+
+
+        </div>
+      </CardDescription>
+    </div>
+  </CardHeader>
+  <Separator className="w-full" />
+  <CardContent className="p-4 md:p-6 lg:p-8 max-w-full">
+  <p className=" flex items-center justify-center font-bold my-4">View Product :</p>
+  <div className="flex items-center justify-center w-full p-4">
+    <div className="w-full max-w-lg"> {/* You can adjust max-w-lg as per your desired size */}
+      <ImageSlider
+        urls={[
+          ...(selectedProduct.croppedFrontProduct ?? []),
+          ...(selectedProduct.croppedBackProduct ?? []),
+        ]}
+      />
+    </div>
+  </div>
+</CardContent>
+
+</Card>
+        
+        </>
+     
+        )}
   
     </div>
+ ) : (
+  // seconde view  : all products
+  <div className='mt-4'>
+      {/* store products view */}
+      {filteredProducts && (
+        <Card className="col-span-full" x-chunk="dashboard-01-chunk-4">
+          <CardHeader className="">
+            <div className="grid gap-2">
+              <CardTitle className="font-bold">All Products :</CardTitle>
+              <CardDescription>
+              <div className='mt-2 flex flex-col sm:flex-row items-center justify-center'>
+              <Input
+                type="search"
+                className="w-full sm:w-[50%] "
+                placeholder="Enter the product Id, title, store Name to make a search..."
+                onChange={(e) => setSearchTerm(e.target.value)}
+
+              />            
+              <div className='w-full sm:w-auto sm:ml-2'>
+              <Select onValueChange={(value) => setFilter(value)}>
+              <SelectTrigger className="w-full sm:w-[180px]">
+                    <SelectValue placeholder="Filter By" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Select</SelectLabel>
+                      <SelectItem value="all">All</SelectItem>
+                      <SelectItem value="accepted">Accepted</SelectItem>
+                      <SelectItem value="refused">Refused</SelectItem>
+                      <SelectItem value="action">Awaiting action</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+
+              </CardDescription>
+              <CardContent>
+
+              <div className='mt-4 w-full grid 
+              xl:grid-cols-3 
+              lg:grid-cols-2 
+              md:grid-cols-1 
+              sm:grid-cols-1
+              gap-y-10
+              sm:gap-x-8  
+              md:gap-y-10
+              lg:gap-x-4'>
+
+  {filteredProducts.map((product, index) => {
+    // Combine front and back product URLs
+    const combinedUrls = [
+      ...product.croppedFrontProduct,
+      ...product.croppedBackProduct
+    ];
+
+    return (
+      <>
+        {/* ImageSlider with combinedUrls */}
+
+
+  {/* Product Cards */}
+    <div key={index} className='flex flex-col items-center mb-4'>
+    <div className='relative h-52 w-52 sm:h-52 sm:w-52 lg:h-80 lg:w-80'>
+
+
+       <ImageSlider urls={combinedUrls} />
+
+
+       <div className="absolute top-2 left-2 px-2 py-1 z-10 rounded">
+          <Badge variant="default">
+          <span className="text-xs text-white">{product.store.storeName}</span>
+          </Badge>
+      </div>
+
+      
+      <div className="absolute top-2 right-2 px-2 py-1 z-10 rounded">
+          <Badge variant="default">
+          <span className="text-xs text-white">{product.title}</span>
+          </Badge>
+      </div>
+
+      <div className="absolute top-8 right-2 px-2 py-1 z-10 rounded">
+      <Badge
+        onClick={() => { setIsDownloadOpen(true) 
+          downloadMockup(product) }} 
+        className='bg-purple-500 hover:bg-purple-300 text-white cursor-pointer'>
+          Download Product
+        </Badge>
+      </div>
+
+
+    </div>
+
+        <div className="mt-20">
+         {!product.isProductAccepted && !product.isProductRefused && (
+            <>
+               <Badge onClick={()=>setisDialogOpen(true)} className='hover:text-red-500 cursor-pointer' variant={`outline`}>
+                <CircleX/>
+               </Badge>
+                 <Badge onClick={()=>handleAccept(product.id)} className='ml-2 hover:text-green-500 cursor-pointer' variant={`outline`}>
+              <CircleCheck/>
+            </Badge>
+               </>
+            )}
+             {product.isProductAccepted &&(
+            <Badge className='bg-green-500 text-white' variant={`default`}>
+             Accepted
+             </Badge>
+             )}
+            {product.isProductRefused &&(
+            <Badge className='bg-red-500 text-white' variant={`default`}>
+             Refused
+          </Badge>
+       )}
+      </div>
+    </div>
+
+
+
+      </>
+    );
+  })}
+
+
+  </div>
+              </CardContent>
+            </div>
+          </CardHeader>
+        </Card>
+      )}
+  </div>
+ )}
+
+                                              {/* downloading Loader  */}
+                                              <AlertDialog open={isDownloadOpen} >
+                                       <AlertDialogTrigger asChild>
+                                        </AlertDialogTrigger>
+                                          <AlertDialogContent className=" flex flex-col items-center justify-center">
+                                              <AlertDialogHeader className="flex flex-col items-center justify-center">
+                                              <Loader2 className="animate-spin text-blue-800 h-[50%] w-[50%]" />
+                                              <AlertDialogTitle className="flex flex-col items-center justify-center">Loading</AlertDialogTitle>
+                                            </AlertDialogHeader>
+                                            <AlertDialogDescription className="flex flex-col items-center justify-center">
+                                              Please wait while downloading...
+                                            </AlertDialogDescription>
+                                                    <AlertDialogFooter>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                  </AlertDialog>
+
+
+
+                          {/* The AlertDialog delete product component  */}
+                          <AlertDialog open={isDeleteOpen}>
+               <AlertDialogTrigger asChild>
+                         </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                   <AlertDialogHeader className="flex flex-col items-center">
+                                       <div className="text-red-500 mb-2">
+                                           <OctagonAlert className=''/>
+                                               </div>
+                                              <AlertDialogTitle className="text-xl font-bold text-center">
+                                                 Are you absolutely sure you want to delete this product ?
+                                               </AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                   This action cannot be undone. 
+                                                   It will permanently remove the product from our MarketPlace.<br/><br/>
+                                                    </AlertDialogDescription>
+                                                   </AlertDialogHeader>
+                                                  <AlertDialogFooter>
+                                              <AlertDialogCancel onClick={()=>setisDeleteOpen(false)}>Cancel</AlertDialogCancel>
+                                      <AlertDialogAction onClick={() => handleDelete()} 
+                                     className='bg-red-500 hover:bg-red-500' >Delete</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                     </AlertDialog> 
+
+    <AlertDialog open={isDialogOpen}>
+                                    <AlertDialogTrigger asChild>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                      <AlertDialogHeader>
+                                        <AlertDialogTitle>Reason for rejecting</AlertDialogTitle>
+                                      </AlertDialogHeader>
+                                      <div className="grid gap-4 py-4">
+                                          <Input value={reasonForRejection}
+                                          onChange={(e) => setReasonForRejection(e.target.value)} 
+                                          type="text" 
+                                          placeholder='Type the reason' 
+                                          className="w-full bg-gray-100" />
+                                      </div>
+                                      <AlertDialogFooter>
+                                        <AlertDialogCancel onClick={()=>setisDialogOpen(false)}>Cancel</AlertDialogCancel>
+                                        <AlertDialogAction disabled={reasonForRejection === ""} className='bg-red-500 hover:bg-red-400' onClick={()=>{
+                                          setisDialogOpen(false)
+                                          handleRefuse(selectedProduct!.id)
+                                          }}>Delete Product</AlertDialogAction>
+                                      </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                  </AlertDialog>
+
+                                  <LoadingState isOpen={open} />
+
   
     </>
     );

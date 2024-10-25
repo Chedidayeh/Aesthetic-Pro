@@ -13,6 +13,9 @@ export async function getAllDesignsWithProducts() {
           frontOrders : true ,
           backOrders : true
         },
+        orderBy : {
+          createdAt : 'desc'
+        }
       });
       return designs;
     } catch (error) {

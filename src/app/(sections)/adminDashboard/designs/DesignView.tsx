@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unescaped-entities */
 'use client'
-import NextImage from 'next/image';
+import NextImage from 'next/image'
 import {
   Select,
   SelectContent,
@@ -11,6 +11,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
 import {
   Tooltip,
   TooltipContent,
@@ -30,7 +37,9 @@ import {
 import {
     Activity,
     ArrowUpRight,
+    CircleCheck,
     CircleUser,
+    CircleX,
     CloudDownload,
     CreditCard,
     DollarSign,
@@ -47,8 +56,13 @@ import {
     Users,
   } from "lucide-react"
   
-
+  import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage,
+  } from "@/components/ui/avatar"
   import { Badge } from "@/components/ui/badge"
+  import { Button } from "@/components/ui/button"
   import {
     Card,
     CardContent,
@@ -65,20 +79,32 @@ import {
     TableHeader,
     TableRow,
   } from "@/components/ui/table"
-    
+  
+  import Link from "next/link";
+  
   import { cn } from "@/lib/utils";
   import React, { ChangeEvent, useEffect, useState } from "react"
+  import OrderedDesigns from "@/components/sellerDashboard/OrderedDesigns"
+  import { db } from "@/db"
+  import UsersTable from "@/components/adminDashboard/UsersTable"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { OrderItem, Product, SellerDesign, Store, User } from "@prisma/client"
+import { OrderItem, Product, SellerDesign, Store } from "@prisma/client"
+import { tree } from "next/dist/build/templates/app-page"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/components/ui/use-toast"
 import { Input } from "@/components/ui/input"
 import { TooltipProvider } from "@/components/ui/tooltip"
-import { deleteDesign } from "../../sellerDashboard/designs/actions"
+import { Separator } from '@/components/ui/separator'
+import ImageSlider from '@/components/MarketPlace/ImageSlider'
+import { acceptDesign, refuseDesign,  } from '../stores/actions'
+import { Switch } from '@/components/ui/switch'
+import { Label } from '@/components/ui/label'
+import { deleteDesign } from '../../sellerDashboard/designs/actions'
+import LoadingState from '@/components/LoadingState'
   
   
 
-interface ExtraDesigns extends SellerDesign {
+interface ExtraDesign extends SellerDesign {
   frontProducts: Product[] | null;
   backProducts: Product[] | null;
   store : Store;
@@ -88,238 +114,207 @@ interface ExtraDesigns extends SellerDesign {
   
   
   
-interface ProductViewProps {
-    designs: ExtraDesigns[];
+interface DesignViewProps {
+    designs: ExtraDesign[];
   }
   
-  const DesignView = ({ designs }: ProductViewProps ) => { 
+  const DesignView = ({ designs }: DesignViewProps ) => { 
+   
+   
     const router = useRouter();
     const { toast } = useToast()
-
-
-     // serach
-     const [searchQuery, setSearchQuery] = useState('');
-     const [filteredOrders, setFilteredOrders] = useState(designs);
-     useEffect(() => {
-       const lowercasedQuery = searchQuery.toLowerCase();
-       const filtered = designs.filter(design =>
-        design.id.startsWith(lowercasedQuery) ||
-        design.name.toLowerCase().startsWith(lowercasedQuery)
-
-       );
-       setFilteredOrders(filtered);
-     }, [searchQuery, designs]);
-
-     const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-      setSearchQuery(e.target.value);
-    };
-
-
-
-
     const [isDeleteOpen, setisDeleteOpen] = useState(false);
-    const [ designId , setdesignId] = useState("")
-    const handleDelete = async () =>{
-        try {
-          const res = await deleteDesign(designId)
-          if(res){
-            setisDeleteOpen(false)
-            toast({
-              title: 'Design Was Successfully Deleted',
-              variant: 'default',
-            });
-            router.refresh()
-          }
-          else{
-            setisDeleteOpen(false)
-            toast({
-              title: 'Design has associated order items and can not be deleted',
-              variant: 'destructive',
-            });
-            router.refresh()
-          }
-        } catch (error) {
-            setisDeleteOpen(false)
-            console.log(error)
-            toast({
-                title: 'design Was Not Deleted',
-                variant: 'destructive',
-              });
-        }
+    const [ designId , setDesignId] = useState("")
+
+
+    const [searchTerm, setSearchTerm] = useState("");
+    const [filter, setFilter] = useState<string | null>(null);
+    const [filteredDesigns, setFilteredDesign] = useState(designs);
+
+  useEffect(() => {
+    const filtered = designs.filter((design) => {
+      const matchesSearch = searchTerm
+        ? design.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          design.store.storeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          design.id.includes(searchTerm)
+        : true;
+
+      const matchesFilter = filter
+        ? (filter === "accepted" && design.isDesignAccepted) ||
+          (filter === "refused" && design.isDesignRefused) ||
+          (filter === "action" && !design.isDesignAccepted && !design.isDesignRefused)  ||
+          (filter === "all" && design)  ||
+          (filter === "noItmes") && design.frontOrders.length === 0 && design.backOrders.length
+        : true;
+
+      return matchesSearch && matchesFilter;
+    });
+
+    setFilteredDesign(filtered);
+  }, [searchTerm, filter, designs]);
+
+  const handleDelete = async () =>{
+    try {
+      const res = await deleteDesign(designId)
+      if(res){
+        setisDeleteOpen(false)
+        toast({
+          title: 'Design Was Successfully Deleted',
+          variant: 'default',
+        });
+        router.refresh()
+      }
+      else{
+        setisDeleteOpen(false)
+        toast({
+          title: 'Design has associated order items and can not be deleted',
+          variant: 'destructive',
+        });
+        router.refresh()
+      }
+    } catch (error) {
+        setisDeleteOpen(false)
+        console.log(error)
+        toast({
+            title: 'design Was Not Deleted',
+            variant: 'destructive',
+          });
     }
+}
 
 
-
-    const [isViewOpen, setisViewOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [design , setDesign] = useState <string> ()
-
-    const viewDesign = (design : ExtraDesigns) => {
-      setDesign(design.imageUrl)
-    }
+const [darkMode, setDarkMode] = useState(true);
+const toggleDarkMode = () => {
+  setDarkMode(!darkMode);
+}
 
 
-    // Function to change the state after a delay
-    const changeStateAfterDelay = () => {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 5000); // Change to 1000 milliseconds for 1 second
-    };
-
-
-
- // State variables
+     // State variables
  const [isDownloadOpen, setIsDownloadOpen] = useState(false);
 
- // Function to handle download
- const downloadDesign = async (imageUrl: string) => {
-   try {
-     setIsDownloadOpen(true);
-     const response = await fetch(imageUrl);
-     const blob = await response.blob();
-     const url = window.URL.createObjectURL(blob);
-     const a = document.createElement("a");
-     a.href = url;
-     a.download = "design_image.png"; // You can set the filename here
-     document.body.appendChild(a);
-     a.click();
-     a.remove();
-     setIsDownloadOpen(false);
-   } catch (error) {
-     setIsDownloadOpen(false);
-     console.error("Error downloading design:", error);
-     toast({
-       title: "Download failed",
-       variant: "destructive",
-     });
-   }
- };
+// Function to handle download
+const downloadDesign = async (imageUrl: string) => {
+
+  if(imageUrl === '') {
+    toast({
+      title: "No design found !",
+      variant: "destructive",
+    });
+    return;
+  }
+  setIsDownloadOpen(true)
+  try {
+    const response = await fetch(imageUrl);
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "design_image.png"; // You can set the filename here
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setIsDownloadOpen(false)
+
+  } catch (error) {
+    console.error("Error downloading design:", error);
+    toast({
+      title: "Download failed",
+      variant: "destructive",
+    });
+    setIsDownloadOpen(false)
+
+  }
+};
+
+const [selectedDesign, setSelectedDesign] = useState<ExtraDesign | null>(null);
+const [open, setOpen] = useState<boolean>(false);
+const [reasonForRejection, setReasonForRejection] = useState('');
+const [isDialogOpen, setisDialogOpen] = useState<boolean>(false);
+
+const handleAccept = async (designId : string) =>{
+
+  try {
+    setOpen(true)
+    await acceptDesign(designId)
+    toast({
+      title: 'Design Was Successfully Accepted',
+      variant: 'default',
+    });
+    setOpen(false)
+    setSelectedDesign(null)
+    router.refresh()
+  } catch (error) {
+    setOpen(false)
+    toast({
+      title: 'Error : Design Was not Accepted',
+      variant: 'destructive',
+    });
+  }
+
+}
+
+const handleRefuse = async (designId : string) =>{
+
+  try {
+    setOpen(true)
+    await refuseDesign(designId , reasonForRejection)
+    toast({
+      title: 'Design Was Successfully Refused',
+      variant: 'default',
+    });
+    setOpen(false)
+    router.refresh()
+  } catch (error) {
+    setOpen(false)
+    toast({
+      title: 'Error : Design Was not Refused',
+      variant: 'destructive',
+    });
+  }
+
+}
 
 
+// setchangeView state use state
+const [changeView, setChangeView] = useState(false);
+// handleSwitchChange functino : 
+const handleSwitchChange = () => {
+  setChangeView(!changeView)
+}
 
-     const [darkMode, setDarkMode] = useState(true);
-    const toggleDarkMode = () => {
-      setDarkMode(!darkMode);
-    }
 
-
-    const [selectedFilter, setSelectedFilter] = useState('');
-    const handleFilterChange = (value: string) => {
-      setSelectedFilter(value);
+    // toggle Mode
+    const [isDarkMode, setIsDarkMode] = useState(true);
+    const handleToggleMode = () => {
+      setIsDarkMode((prevMode) => !prevMode);
     };
-    useEffect(() => {
-      const lowercasedQuery = searchQuery.toLowerCase();
-      const filtered = designs.filter(design => {
-        const matchesSearch = design.id.startsWith(lowercasedQuery) || design.name.toLowerCase().startsWith(lowercasedQuery);
-        const matchesFilter = selectedFilter === '' || 
-                              (selectedFilter === 'accepted' && design.isDesignAccepted) ||
-                              (selectedFilter === 'refused' && design.isDesignRefused) ||
-                              (selectedFilter === 'action' && !design.isDesignAccepted && !design.isDesignRefused) ||
-                              (selectedFilter === 'noItems' && design.frontOrders.length + design.backOrders.length === 0);
-        return matchesSearch && matchesFilter;
-      });
-      setFilteredOrders(filtered);
-    }, [searchQuery, designs, selectedFilter]);
-        
+    
+
+
 
     return (
       <>
 
-                                                {/* downloading Loader  */}
-                                                <AlertDialog open={isDownloadOpen} >
-                                       <AlertDialogTrigger asChild>
-                                        </AlertDialogTrigger>
-                                          <AlertDialogContent className=" flex flex-col items-center justify-center">
-                                              <AlertDialogHeader className="flex flex-col items-center justify-center">
-                                              <Loader2 className="animate-spin text-blue-800 h-[50%] w-[50%]" />
-                                              <AlertDialogTitle className="flex flex-col items-center justify-center">Loading</AlertDialogTitle>
-                                            </AlertDialogHeader>
-                                            <AlertDialogDescription className="flex flex-col items-center justify-center">
-                                              Please wait while downloading...
-                                            </AlertDialogDescription>
-                                                    <AlertDialogFooter>
-                                                    </AlertDialogFooter>
-                                                </AlertDialogContent>
-                                  </AlertDialog>
 
 
-                                          {/* View design  */}
-                                          <AlertDialog open={isViewOpen} >
-                                       <AlertDialogTrigger asChild>
-                                        </AlertDialogTrigger>
-                                        <AlertDialogContent className={`flex flex-col items-center justify-center ${darkMode ? 'bg-gray-900' : 'bg-slate-200'}`}>
-
-                                            {isLoading===true && (
-                                              <>
-                                              <AlertDialogHeader className="flex flex-col items-center justify-center">
-                                              <Loader2 className="animate-spin text-blue-800 h-[50%] w-[50%]" />
-                                              <AlertDialogTitle className="flex flex-col items-center justify-center">Loading</AlertDialogTitle>
-                                            </AlertDialogHeader>
-                                            <AlertDialogDescription className="flex flex-col items-center justify-center">
-                                              Please wait while the content is loading...
-                                            </AlertDialogDescription>
-                                            </>
-                                            )}
-                                            
-                                              <div className={cn(`${isLoading===true ? 'hidden' : ''} `)}>
-                                              <div className="flex items-center justify-center cursor-pointer">
-                                              <Badge onClick={toggleDarkMode} variant="secondary">
-                                              {darkMode ? 'Light Mode' : 'Dark Mode'}
-                                              </Badge>
-                                              </div>
-                                              <NextImage 
-                                               src={design!}
-                                               alt={`design Image`}
-                                                onContextMenu={(e) => e.preventDefault()}
-                                                  className="object-contain" />
-                                              </div>
-
-                                                    <AlertDialogFooter>
-                                                    <AlertDialogCancel onClick={()=>{setisViewOpen(false)}}>Close</AlertDialogCancel>
-                                                    </AlertDialogFooter>
-                                                </AlertDialogContent>
-                                  </AlertDialog>
-
-
-                          {/* The AlertDialog delete design component  */}
-                          <AlertDialog open={isDeleteOpen}>
-               <AlertDialogTrigger asChild>
-                         </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                   <AlertDialogHeader className="flex flex-col items-center">
-                                       <div className="text-red-500 mb-2">
-                                           <OctagonAlert className=''/>
-                                               </div>
-                                              <AlertDialogTitle className="text-xl font-bold text-center">
-                                                 Are you absolutely sure you want to delete this design ?
-                                               </AlertDialogTitle>
-                                                <AlertDialogDescription>
-                                                   This action cannot be undone. 
-                                                   It will permanently remove the design from our MarketPlace.<br/><br/>
-                                                    </AlertDialogDescription>
-                                                   </AlertDialogHeader>
-                                                  <AlertDialogFooter>
-                                              <AlertDialogCancel onClick={()=>setisDeleteOpen(false)}>Cancel</AlertDialogCancel>
-                                      <AlertDialogAction onClick={() => handleDelete()} 
-                                     className='bg-red-500 hover:bg-red-500' >Delete</AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                     </AlertDialog> 
   
   
   <p className="text-sm text-gray-700 mb-2">AdminDashboard/Designs</p>
            <h1 className="text-2xl font-semibold">Manage Designs</h1>
   
   
-  
+           <div className="flex items-center mt-4 space-x-2">
+              <Switch id="allDesignView" defaultChecked={changeView} onClick={handleSwitchChange } />
+              <Label htmlFor="front">Change View</Label>
+            </div>
      
   
-  
+  {!changeView ? (
+
+      // default view table with selected design
         <div className="flex mt-4 flex-col gap-5 w-full">
   
-      <section className="grid w-full grid-cols-1 gap-4 gap-x-8 transition-all sm:grid-cols-2 xl:grid-cols-4">
-  
-  
+      <section className="grid w-full grid-cols-1 gap-4 gap-x-8 transition-all sm:grid-cols-2 xl:grid-cols-4"> 
   
       <Card className="col-span-full" x-chunk="dashboard-01-chunk-4">
         <CardHeader className="flex flex-row items-center bg-muted/50">
@@ -330,33 +325,33 @@ interface ProductViewProps {
         </CardHeader>
         <CardContent>
 
-
         <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mt-2">
-          <Input
-            type="search"
-            className="w-full sm:w-[50%] "
-            placeholder="Enter the design Id, name to make a search..."
-            value={searchQuery}
-            onChange={handleSearchChange}
-          />
-          <Select onValueChange={handleFilterChange}>
-            <SelectTrigger className="w-full sm:w-[180px] ">
-              <SelectValue placeholder="Filter By" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Select</SelectLabel>
-                <SelectItem value="accepted">Accepted</SelectItem>
-                <SelectItem value="refused">Refused</SelectItem>
-                <SelectItem value="action">Awaiting action</SelectItem>
-                <SelectItem value="noItems">No Items</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
+        <Input
+          type="search"
+          className="w-full sm:w-[50%] "
+          placeholder="Enter the design Id, name, store Name to make a search..."
+          onChange={(e) => setSearchTerm(e.target.value)}
 
-        <ScrollArea className="mt-4 w-full h-72">
-        <Table>
+        />
+                <Select onValueChange={(value) => setFilter(value)}>
+                <SelectTrigger className="w-full sm:w-[180px] ">
+            <SelectValue placeholder="Filter By" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Select</SelectLabel>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="accepted">Accepted</SelectItem>
+              <SelectItem value="refused">Refused</SelectItem>
+              <SelectItem value="action">Awaiting action</SelectItem>
+              <SelectItem value="noItems">No Items</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
+
+        <ScrollArea className="mt-4 w-full h-full">
+<Table>
   <TableHeader>
     <TableRow>
       {/* Design Id column */}
@@ -385,7 +380,7 @@ interface ProductViewProps {
     </TableRow>
   </TableHeader>
   <TableBody>
-    {filteredOrders.map((design) => (
+    {filteredDesigns.map((design) => (
       <TableRow key={design.id}>
         {/* Design Id cell */}
         <TableCell className="hidden sm:table-cell">{design.id}</TableCell>
@@ -417,10 +412,7 @@ interface ProductViewProps {
                 <TooltipTrigger asChild>
                   <Eye
                     onClick={() => {
-                      viewDesign(design);
-                      setisViewOpen(true);
-                      setIsLoading(true);
-                      changeStateAfterDelay();
+                     setSelectedDesign(design)
                     }}
                     className="cursor-pointer hover:text-blue-500"
                   />
@@ -436,29 +428,13 @@ interface ProductViewProps {
                   <Trash2
                     onClick={() => {
                       setisDeleteOpen(true);
-                      setdesignId(design.id);
+                      setDesignId(design.id);
                     }}
                     className="cursor-pointer hover:text-red-500 ml-2"
                   />
                 </TooltipTrigger>
                 <TooltipContent className="bg-red-500">
                   <p>Delete</p>
-                </TooltipContent>
-              </Tooltip>
-              
-              {/* Upload Icon */}
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <CloudDownload
-                    onClick={() => {
-                      setIsDownloadOpen(true);
-                      downloadDesign(design.imageUrl);
-                    }}
-                    className="cursor-pointer hover:text-purple-500 ml-2"
-                  />
-                </TooltipTrigger>
-                <TooltipContent className="bg-purple-500">
-                  <p>Download</p>
                 </TooltipContent>
               </Tooltip>
             </div>
@@ -468,21 +444,324 @@ interface ProductViewProps {
     ))}
   </TableBody>
 </Table>
-
           </ScrollArea>
         </CardContent>
       </Card>  
         
-
-
       </section>
   
-  
-  
-      <section className={cn(' grid grid-cols-1 p-11 gap-4 transition-all lg:grid-cols-4')}>
-  </section>
+
+      {selectedDesign && (
+        <>
+
+<Card className="col-span-full mt-4" x-chunk="dashboard-01-chunk-4">
+  <CardHeader className="flex flex-col md:flex-row items-center">
+    <div className="grid gap-2">
+      <CardTitle className="font-bold">Design Infos :</CardTitle>
+      <CardDescription>
+        <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 mt-2">
+          <div>
+            <p className="font-bold">Design Title :</p>
+            <p >{selectedDesign.name}</p>
+          </div>
+
+          {!selectedDesign.isDesignAccepted && !selectedDesign.isDesignRefused && (
+
+            <>
+          <div className="col-span-2 md:col-span-1">
+          <Button 
+           onClick={() => handleAccept(selectedDesign.id)}
+            variant="link" className="text-green-500 flex items-center">
+          Accept Design
+          </Button>
+          </div>
+
+          <div className="col-span-2 md:col-span-1">
+          <Button 
+           onClick={() => setisDialogOpen(true)}
+            variant="link" className="text-red-500 flex items-center">
+          Refuse Design
+          </Button>
+          </div>
+          </>
+          )}
+
+           {selectedDesign.isDesignAccepted &&(
+              <Badge className='bg-green-500 text-white text-md' variant={`default`}>
+              Accepted
+              </Badge>
+              )}
+              {selectedDesign.isDesignRefused &&(
+              <Badge className='bg-red-500 text-white text-md' variant={`default`}>
+              Refused
+            </Badge>
+        )}
+
+        <div className="col-span-2 md:col-span-1">
+          <Button 
+           onClick={() => {
+            downloadDesign(selectedDesign.imageUrl);
+          }}
+            variant="link" className="text-purple-500 flex items-center">
+          Download Design
+          </Button>
+          </div>
+
+
+        </div>
+      </CardDescription>
+    </div>
+  </CardHeader>
+  <Separator className="w-full" />
+  <CardContent className="p-4 md:p-6 lg:p-8 max-w-full">
+  <p className=" flex items-center justify-center font-bold my-4">View Design :</p>
+  <div className='flex items-center justify-center mt-4'>
+            <Button variant="default" size="sm" className="w-full sm:w-[30%]" onClick={handleToggleMode}>
+              Toggle Mode
+            </Button>
+    </div>
+  <div className="flex items-center justify-center w-full p-4">
+    <div
+       className={cn(
+        'w-full max-w-lg border-2 rounded-lg',
+        isDarkMode ? 'bg-gray-900' : 'bg-gray-100'
+        )}> 
+    <NextImage
+        onContextMenu={(e) => e.preventDefault()}
+        src={selectedDesign.imageUrl}
+        alt={selectedDesign.name}
+        loading="eager"
+        blurDataURL="/Loading.png"
+        placeholder="blur"
+        className="aspect-square w-full rounded-md object-contain"
+        height={1000}
+        width={1000}
+        />
+    </div>
+  </div>
+</CardContent>
+
+</Card>
+        
+        </>
+     
+        )}
   
     </div>
+ ) : (
+  // seconde view  : all designs
+  <div className='mt-4'>
+      {filteredDesigns && (
+        <Card className="col-span-full" x-chunk="dashboard-01-chunk-4">
+          <CardHeader className="">
+            <div className="grid gap-2">
+              <CardTitle className="font-bold">All Designs :</CardTitle>
+              <CardDescription>
+              <div className='mt-2 flex flex-col sm:flex-row items-center justify-center'>
+              <Input
+                type="search"
+                className="w-full sm:w-[50%] "
+                placeholder="Enter the design Id, name, store Name to make a search..."
+                onChange={(e) => setSearchTerm(e.target.value)}
+
+              />            
+              <div className='w-full sm:w-auto sm:ml-2'>
+              <Select onValueChange={(value) => setFilter(value)}>
+              <SelectTrigger className="w-full sm:w-[180px]">
+                    <SelectValue placeholder="Filter By" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Select</SelectLabel>
+                      <SelectItem value="all">All</SelectItem>
+                      <SelectItem value="accepted">Accepted</SelectItem>
+                      <SelectItem value="refused">Refused</SelectItem>
+                      <SelectItem value="action">Awaiting action</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className='flex items-center justify-center mt-4'>
+            <Button variant="default" size="sm" className="w-full sm:w-[30%]" onClick={handleToggleMode}>
+              Toggle Mode
+            </Button>
+              </div>
+
+              </CardDescription>
+              <CardContent>
+
+              <div className='mt-4 w-full grid 
+              xl:grid-cols-3 
+              lg:grid-cols-2 
+              md:grid-cols-1 
+              sm:grid-cols-1
+              gap-y-10
+              sm:gap-x-8  
+              md:gap-y-10
+              lg:gap-x-4'>
+
+  {filteredDesigns.map((design, index) => {
+    return (
+      <>
+
+    <div key={index} className='flex flex-col items-center mb-4'>
+    <div
+    className={cn(
+    'relative h-52 border-2 rounded-lg w-52 sm:h-52 sm:w-52 lg:h-80 lg:w-80 lg:rounded-2xl flex justify-center flex-col items-center',
+    isDarkMode ? 'bg-gray-900' : 'bg-gray-100'
+    )}>
+
+        <div className='p-8'>
+
+                  <NextImage
+                     onContextMenu={(e) => e.preventDefault()}
+                     src={design.imageUrl}
+                     alt={design.name}
+                     loading="eager"
+                     blurDataURL="/Loading.png"
+                     placeholder="blur"
+                     className="aspect-square w-full rounded-md object-contain"
+                     height={1000}
+                     width={1000}
+                    />
+
+        </div>
+
+       <div className="absolute top-2 left-2 px-2 py-1 z-10 rounded">
+          <Badge variant="default">
+          <span className="text-xs text-white">{design.store.storeName}</span>
+          </Badge>
+      </div>
+
+      
+      <div className="absolute top-2 right-2 px-2 py-1 z-10 rounded">
+          <Badge variant="default">
+          <span className="text-xs text-white">{design.name}</span>
+          </Badge>
+      </div>
+
+      <div className="absolute bottom-2 right-2 px-2 py-1 z-10 rounded">
+      <Badge
+        onClick={() => { 
+          downloadDesign(design.imageUrl) }} 
+        className='bg-purple-500 hover:bg-purple-300 text-white cursor-pointer'>
+          Download Design
+        </Badge>
+      </div>
+
+
+    </div>
+
+        <div className="mt-4">
+         {!design.isDesignAccepted && !design.isDesignRefused && (
+            <>
+               <Badge onClick={()=>setisDialogOpen(true)} className='hover:text-red-500 cursor-pointer' variant={`outline`}>
+                <CircleX/>
+               </Badge>
+                 <Badge onClick={()=>handleAccept(design.id)} className='ml-2 hover:text-green-500 cursor-pointer' variant={`outline`}>
+              <CircleCheck/>
+            </Badge>
+               </>
+            )}
+             {design.isDesignAccepted &&(
+            <Badge className='bg-green-500 text-white' variant={`default`}>
+             Accepted
+             </Badge>
+             )}
+            {design.isDesignRefused &&(
+            <Badge className='bg-red-500 text-white' variant={`default`}>
+             Refused
+          </Badge>
+       )}
+      </div>
+    </div>
+
+
+
+      </>
+    );
+  })}
+
+
+  </div>
+              </CardContent>
+            </div>
+          </CardHeader>
+        </Card>
+      )}
+  </div>
+ )}
+
+                                              {/* downloading Loader  */}
+                                              <AlertDialog open={isDownloadOpen} >
+                                       <AlertDialogTrigger asChild>
+                                        </AlertDialogTrigger>
+                                          <AlertDialogContent className=" flex flex-col items-center justify-center">
+                                              <AlertDialogHeader className="flex flex-col items-center justify-center">
+                                              <Loader2 className="animate-spin text-blue-800 h-[50%] w-[50%]" />
+                                              <AlertDialogTitle className="flex flex-col items-center justify-center">Loading</AlertDialogTitle>
+                                            </AlertDialogHeader>
+                                            <AlertDialogDescription className="flex flex-col items-center justify-center">
+                                              Please wait while downloading...
+                                            </AlertDialogDescription>
+                                                    <AlertDialogFooter>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                  </AlertDialog>
+
+
+
+                          <AlertDialog open={isDeleteOpen}>
+               <AlertDialogTrigger asChild>
+                         </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                   <AlertDialogHeader className="flex flex-col items-center">
+                                       <div className="text-red-500 mb-2">
+                                           <OctagonAlert className=''/>
+                                               </div>
+                                              <AlertDialogTitle className="text-xl font-bold text-center">
+                                                 Are you absolutely sure you want to delete this design ?
+                                               </AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                   This action cannot be undone. 
+                                                   It will permanently remove the design from our MarketPlace.<br/><br/>
+                                                    </AlertDialogDescription>
+                                                   </AlertDialogHeader>
+                                                  <AlertDialogFooter>
+                                              <AlertDialogCancel onClick={()=>setisDeleteOpen(false)}>Cancel</AlertDialogCancel>
+                                      <AlertDialogAction onClick={() => handleDelete()} 
+                                     className='bg-red-500 hover:bg-red-500' >Delete</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                     </AlertDialog> 
+
+    <AlertDialog open={isDialogOpen}>
+                                    <AlertDialogTrigger asChild>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                      <AlertDialogHeader>
+                                        <AlertDialogTitle>Reason for rejecting</AlertDialogTitle>
+                                      </AlertDialogHeader>
+                                      <div className="grid gap-4 py-4">
+                                          <Input value={reasonForRejection}
+                                          onChange={(e) => setReasonForRejection(e.target.value)} 
+                                          type="text" 
+                                          placeholder='Type the reason' 
+                                          className="w-full bg-gray-100" />
+                                      </div>
+                                      <AlertDialogFooter>
+                                        <AlertDialogCancel onClick={()=>setisDialogOpen(false)}>Cancel</AlertDialogCancel>
+                                        <AlertDialogAction disabled={reasonForRejection === ""} className='bg-red-500 hover:bg-red-400' onClick={()=>{
+                                          setisDialogOpen(false)
+                                          handleRefuse(selectedDesign!.id)
+                                          }}>Delete Design</AlertDialogAction>
+                                      </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                  </AlertDialog>
+
+                                  <LoadingState isOpen={open} />
+
   
     </>
     );

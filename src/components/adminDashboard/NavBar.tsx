@@ -155,6 +155,13 @@ const NavBar = () => {
                 <Shirt className="h-3 w-3" />
               </div>
               Manage Products
+              {(count?.awaitingActionProductCount ?? 0) > 0 && (
+              <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
+                {
+                (count?.awaitingActionProductCount ?? 0)
+                  }
+              </Badge>
+               )}
             </Button>
 
             <Button
@@ -168,6 +175,13 @@ const NavBar = () => {
                 <Palette className="h-3 w-3" />
               </div>
               Manage Designs
+              {(count?.awaitingActionDesignCount ?? 0) > 0 && (
+              <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
+                {
+                (count?.awaitingActionDesignCount ?? 0)
+                  }
+              </Badge>
+               )}
             </Button>
             
             <Button

@@ -168,11 +168,11 @@ const ProductView = ({
                 
                 // search and sort filter
                 
-                const filteredProduct = sellerProductsData.filter((design) => {
+                const filteredProduct = sellerProductsData.filter((product) => {
                   const lowerCaseQuery = searchQuery.toLowerCase();
-                  const lowerCaseName = design.title.toLowerCase();
-                  const tagsMatch = design.tags && design.tags.some(tag => tag.toLowerCase().includes(lowerCaseQuery));
-                  return lowerCaseName.includes(lowerCaseQuery) || (design.tags && tagsMatch);
+                  const lowerCaseName = product.title.toLowerCase();
+                  const tagsMatch = product.tags && product.tags.some(tag => tag.toLowerCase().includes(lowerCaseQuery));
+                  return lowerCaseName.includes(lowerCaseQuery) || (product.tags && tagsMatch);
                 });
               
                 if (sortOption === 'sales') {

@@ -1205,7 +1205,7 @@ const uploadCapturedMockup = async (file: File) => {
                             <div className="flex-1 text-center"> 
                                 <Popover>
                                 <PopoverTrigger asChild>
-                                  <Button variant="secondary">Order Details</Button>
+                                  <Button variant="default">Order Details</Button>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-full max-w-md sm:max-w-lg lg:max-w-xl">
                                 <div className='flex flex-col gap-6 px-4 py-6'>

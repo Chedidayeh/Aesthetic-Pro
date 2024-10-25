@@ -67,6 +67,16 @@ const AddToCartButton = ({
       return
     }
 
+    if(color === "") {
+      toast({
+        title: "Select a color !",
+        description: "Please select a color to continue",
+        variant : "destructive",
+        duration: 2000,
+      })
+      return
+    }
+
     if (!user) {
       setIsLoginModalOpen(true)
       toast({
@@ -186,7 +196,7 @@ const AddToCartButton = ({
       onClick={saveToCartProducts}
       size='lg'
       variant={'default'}
-      className='w-[60%] animate-wiggle'>
+      className='w-[60%] animate-wiggle text-white'>
       {isSuccess ? 'Added !' : 'Add to cart'}
     </Button>
     

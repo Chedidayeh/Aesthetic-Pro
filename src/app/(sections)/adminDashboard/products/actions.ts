@@ -12,6 +12,9 @@ export async function getAllProductsWithDesigns() {
           backDesign: true,
           order : true
         },
+        orderBy : {
+          createdAt : 'desc'
+        }
       });
       return products;
     } catch (error) {

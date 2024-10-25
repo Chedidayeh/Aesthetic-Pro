@@ -50,6 +50,7 @@ import LoadingState from "@/components/LoadingState"
 import { getSizes } from "./actions"
 import ViewCategoryQuality from "@/components/MarketPlace/ViewCategoryQuality"
 import clsx from 'clsx'
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 
   
 
@@ -101,7 +102,6 @@ const combinedUrls = interleaveArrays(product.croppedFrontProduct, product.cropp
   const [selectedColor, setSelectedColor] = useState(product.colors[0]);
   const [selectedColorIndex, setSelectedColorIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
-
 
   const handleQuantityChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newQuantity = parseInt(event.target.value);
@@ -164,7 +164,7 @@ const combinedUrls = interleaveArrays(product.croppedFrontProduct, product.cropp
       <div className='mt-8 lg:col-end-2 lg:row-span-2 lg:self-center'>
         <div className="border-2 overflow-hidden rounded-2xl">
             <NextImage
-            src={selectedImage}
+            src={selectedImage ? selectedImage : combinedUrls[0]}
             alt="Product Image"
             width={1000}
             height={1000}
@@ -367,22 +367,26 @@ const combinedUrls = interleaveArrays(product.croppedFrontProduct, product.cropp
           <Label htmlFor="username" className="text-left">
             Select Color :
           </Label>
-          <div className='ml-3'>
-            <RadioGroup value={selectedColor} onValueChange={(value) => {
+          <div className="ml-3">
+          <ToggleGroup
+            type="single"
+            value={selectedColor}
+            onValueChange={(value) => {
               const index = product.colors.indexOf(value);
               handleColorChange(value, index);
-            }}>
-              {product.colors.map((color, index) => (
-                <div key={index} className="flex items-center space-x-2">
-                  <RadioGroupItem 
-                    value={color} 
-                    id={`r${index}`} 
-                  />
-                  <Label htmlFor={`r${index}`}>{color}</Label>
-                </div>
-              ))}
-            </RadioGroup>  
-          </div>
+            }}
+          >
+            {product.colors.map((color, index) => (
+              <ToggleGroupItem
+                key={index}
+                value={color}
+                className="px-4 py-2 rounded text-white"
+              >
+                {color}
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
+        </div>
         </div>
 
 

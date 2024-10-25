@@ -170,7 +170,7 @@ const Navbar = async () => {
           </Dialog>
 
           {/* Middle Section */}
-          <div className='hidden md:flex h-full left-0 items-center space-x-4'>
+          <div className='hidden md:flex h-full left-0 items-center space-x-8'>
 
 
           <Link href="/" className={buttonVariants({
@@ -182,8 +182,6 @@ const Navbar = async () => {
               Home
             </Link>
 
-            <div className='h-8 w-px bg-zinc-200 hidden sm:block' />
-
 
             <Link href="/MarketPlace" className={buttonVariants({
               size: 'sm',
@@ -194,7 +192,6 @@ const Navbar = async () => {
               MarketPlace ✨
             </Link>
 
-            <div className='h-8 w-px bg-zinc-200 hidden sm:block' />
 
             <Link href="/about" className={buttonVariants({
               size: 'sm',
@@ -204,7 +201,6 @@ const Navbar = async () => {
               <BookOpenText size={15} className='mr-1' />
               About Us ✨
             </Link>
-            <div className='h-8 w-px bg-zinc-200 hidden sm:block' />
 
             <Link href="/MarketPlace/cart" className={buttonVariants({
               size: 'sm',
@@ -274,7 +270,6 @@ const Navbar = async () => {
             <UserProfile user={user!} platform={platform!} />
             <ModeToggle/>
 
-            <div className='h-8 w-px bg-zinc-200 hidden sm:block' />
 
 
           </div>

@@ -70,7 +70,13 @@ export async function acceptProduct(productId: string): Promise<void> {
     // Fetch the product details to get the product name
     const productDetails = await db.product.findUnique({
       where: { id: productId },
-      select: { title: true, storeId: true }
+      include: { 
+        store : {
+          include : {
+            user : true
+          }
+        }
+      }
     });
 
     if (!productDetails) {
@@ -79,6 +85,8 @@ export async function acceptProduct(productId: string): Promise<void> {
 
     // Create notification with the product title
     await createNotification(productDetails.storeId, `Your product: ${productDetails.title} was Accepted`, "Admin");
+
+    // send an email : 
 
   } catch (error) {
     console.error(`Failed to accept product: ${error}`);

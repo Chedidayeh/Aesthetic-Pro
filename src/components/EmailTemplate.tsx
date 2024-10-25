@@ -5,8 +5,7 @@ import { Order, OrderItem, User } from "@prisma/client";
 
 
 export const generateVerificationEmailHTML = (username: string, token: string) => {
-    // const domain = process.env.APP_DOMAIN || 'http://localhost:3000';
-    const domain = 'http://localhost:3000';
+    const domain = process.env.NEXT_PUBLIC_BASE_URL 
 
     const emailHTML = `
       <html>
@@ -87,8 +86,7 @@ export const generateVerificationEmailHTML = (username: string, token: string) =
 
   
 export const generateResetPassEmailHTML = (username: string, token: string) => {
-    // const domain = process.env.APP_DOMAIN || 'http://localhost:3000';
-    const domain = 'http://localhost:3000';
+    const domain = process.env.NEXT_PUBLIC_BASE_URL 
     const emailHTML = `
       <html>
         <head>
@@ -313,15 +311,19 @@ export const generateOrderEmailHTML = (order: OrderWithItems) => {
   const orderItemsHTML = order.orderItems.map(item => `
     <div class="order-item">
       <div class="order-item-details">
+        <div style="display: flex; justify-content: center; align-items: center;">
+          ${item.capturedMockup.map(mockup => `<img src="${mockup}" alt="Product Mockup" style="max-width: 300px; margin-right: 10px;">`).join('')}
+        </div>
         <p><strong>Product Title:</strong> ${item.productTitle}</p>
-        <p><strong>Order Category:</strong> ${item.productCategory}</p>
+        <p><strong>Category:</strong> ${item.productCategory}</p>
         <p><strong>Size:</strong> ${item.productSize}</p>
-        <p><strong>Order Quantity:</strong> ${item.quantity}</p>
-
+        <p><strong>Quantity:</strong> ${item.quantity}</p>
       </div>
     </div>
     <hr style="border: 0; border-top: 1px solid #dcdcdc; margin: 20px 0;">
   `).join('');
+  
+  
 
   const emailHTML = `
     <html>
@@ -334,7 +336,7 @@ export const generateOrderEmailHTML = (order: OrderWithItems) => {
           margin: 0;
         }
         .container {
-          max-width: 600px;
+          max-width: 800px;
           margin: 0 auto;
           background-color: #fff;
           border: 1px solid #dcdcdc;

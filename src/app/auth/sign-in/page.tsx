@@ -173,7 +173,7 @@ const Page = () => {
       <div className='container relative flex pt-10 pb-10 flex-col items-center justify-center lg:px-0 mb-32'>
         <div className='mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]'>
           <div className='flex flex-col items-center space-y-2 text-center'>
-            <img src="/signIn.png" className="w-[30%] h-[30%] " alt="" />
+            <NextImage src="/signIn.png" width={300} height={300} className="w-[30%] h-[30%] " alt="" />
             <h1 className='text-2xl font-semibold tracking-tight'>
               Sign in to your {' '}
               account
