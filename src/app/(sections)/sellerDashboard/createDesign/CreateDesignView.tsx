@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-'use client'  // Indicates this file is a client-side component in Next.js
+'use client'  
+import Pica from 'pica';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -174,11 +175,46 @@ const CreateDesignView = ({platform , store}: ProductViewProps) => {
 
 
           const uploadDesign = async (file: File) => {
+            const pica = new Pica();
+
             const designNameWithoutExt = path.parse(file.name).name;
             const storageRef = ref(storage, `sellers/stores/${store.storeName}/designs/${designNameWithoutExt}-${Date.now()}.png`);
           
             try {
-              const snapshot = await uploadBytes(storageRef, file);
+               // Create an image element
+               const img = new Image();
+               img.src = URL.createObjectURL(file);
+               
+               // Wait for the image to load
+               await new Promise<void>((resolve) => {
+                 img.onload = () => resolve();
+               });
+           
+               // Create a canvas for resizing
+               const canvas = document.createElement('canvas');
+               const targetWidth = 2000; // Set your desired width
+              //  const targetHeight = (img.height / img.width) * targetWidth; // Maintain aspect ratio
+               const targetHeight = 2000
+               canvas.width = targetWidth;
+               canvas.height = targetHeight;
+           
+               // Use Pica to resize the image
+               await pica.resize(img, canvas);
+           
+               // Convert the canvas to a Blob
+               const optimizedBlob = await new Promise<Blob>((resolve, reject) => {
+                 canvas.toBlob((blob) => {
+                   if (blob) {
+                     resolve(blob); // Resolve with the Blob
+                   } else {
+                     reject(new Error('Failed to convert canvas to Blob')); // Reject if null
+                   }
+                 }, 'image/png', 1); // Adjust quality (0.9 = 90%)
+               })
+
+
+
+              const snapshot = await uploadBytes(storageRef, optimizedBlob);
               const downloadURL = await getDownloadURL(snapshot.ref);
               if(downloadURL) {
                   return downloadURL
