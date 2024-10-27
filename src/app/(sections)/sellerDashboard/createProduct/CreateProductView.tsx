@@ -62,7 +62,7 @@ import { CircleCheckBig, CircleDollarSign, FileText, FolderPen, Loader, Loader2,
 import { Switch } from '@/components/ui/switch';
 import { toPng } from 'html-to-image';
 import { SingleImageDropzone } from '@/components/sellerDashboard/SingleImageDropzone';
-import { addProductToDb, addProductToDbB, addProductToDbF, uploadDesignDataUrlToFirebase, uploadProductToFirebase } from './actions';
+import { addProductToDb, addProductToDbB, addProductToDbF } from './actions';
 import LoadingState from "@/components/LoadingState"
 import { getAllCategories, getStoreByUserId, getUser } from "@/actions/actions"
 import { Category, Color, Size, FrontBorder, BackBorder, Collection, Platform, Store } from "@prisma/client"
@@ -415,63 +415,135 @@ const handleFileChange = (file : File) => {
 
 
 
-            const getDesignDataUrl = async (file: File): Promise<string | undefined> => {
-              try {
-                return await new Promise((resolve, reject) => {
-                  const reader = new FileReader();
-                  reader.onload = () => {
-                    if (typeof reader.result === 'string') {
-                      resolve(reader.result); // Successfully returns the data URL
-                    } else {
-                      reject(new Error("Failed to read file as data URL"));
-                    }
-                  };
-                  reader.onerror = () => reject(new Error("Error reading file"));
-                  reader.readAsDataURL(file);
-                });
-              } catch (error) {
-                console.error("Error uploading design:", error);
-                return undefined;
-              }
-            }
-            
-            const getFrontProductDataUrlsWithColors = async () => {
-              setIsBorderHidden(true);
-              const colors = [] as string[]
-              const dataUrls = [] as string[]
-              for (const color of filteredColors) {
-                // Set the image source to the current color's front image URL
-                const img = document.querySelector(".front-product") as HTMLImageElement;
-                  if (img) {
-                    img.src = color.frontImageUrl;
+              const uploadCapturedMockup = async (file: File) => {
+                const pica = new Pica(); // Correct instantiation
+              
+                try {
+                  // Create an image element
+                  const img = new Image();
+                  img.src = URL.createObjectURL(file);
+                  
+                  // Wait for the image to load
+                  await new Promise<void>((resolve) => {
+                    img.onload = () => resolve();
+                  });
+              
+                  // Create a canvas for resizing
+                  const canvas = document.createElement('canvas');
+                  const targetWidth = 800; // Set your desired width
+                  const targetHeight = (img.height / img.width) * targetWidth; // Maintain aspect ratio
+              
+                  canvas.width = targetWidth;
+                  canvas.height = targetHeight;
+              
+                  // Use Pica to resize the image
+                  await pica.resize(img, canvas);
+              
+                  // Convert the canvas to a Blob
+                  const optimizedBlob = await new Promise<Blob>((resolve, reject) => {
+                    canvas.toBlob((blob) => {
+                      if (blob) {
+                        resolve(blob); // Resolve with the Blob
+                      } else {
+                        reject(new Error('Failed to convert canvas to Blob')); // Reject if null
+                      }
+                    }, 'image/png', 1); // Adjust quality (0.9 = 90%)
+                  })
+              
+                  // Upload the optimized image
+                  const storageRef = ref(storage, `sellers/stores/${store.storeName}/products/${productTitle}-${Date.now()}.png`);
+                  const snapshot = await uploadBytes(storageRef, optimizedBlob);
+                  const downloadURL = await getDownloadURL(snapshot.ref);
+                  
+                  if (downloadURL) {
+                    return downloadURL;
                   }
-                // get the url of the captured product with front design
-                const pixelRatio = 10; 
-                const dataUrl = await toPng(FrontcontainerRef.current!, { cacheBust: false, pixelRatio });
-                dataUrls.push(dataUrl) 
-                colors.push(color.label)
-              }
-              return { colors: colors , dataUrls };
-            }
+                } catch (error) {
+                  console.error('Error uploading image:', error);
+                  toast({
+                    title: 'Upload Failed',
+                    description: 'There was an error uploading the product image. Please try again.',
+                  });
+                  throw error; // Optionally re-throw the error if needed
+                }
+              };
 
-            const getBackProductDataUrlsWithColors = async () => {
-              setisBackBorderHidden(true);
-              const colors = [] as string[]
-              const dataUrls = [] as string[]
-              for (const color of filteredColors) {
-                // Set the image source to the current color's front image URL
-                const img = document.querySelector(".back-product") as HTMLImageElement;
-                if (img) {
-                    img.src = color.backImageUrl;
+  
+              const uploadDesign = async (file: File) => {
+                const designNameWithoutExt = path.parse(file.name).name;
+                const storageRef = ref(storage, `sellers/stores/${store.storeName}/designs/${designNameWithoutExt}-${Date.now()}.png`);
+              
+                try {
+                  const snapshot = await uploadBytes(storageRef, file);
+                  const downloadURL = await getDownloadURL(snapshot.ref);
+                  if(downloadURL) {
+                      return downloadURL
                   }
-                // get the url of the captured product with front design
-                const pixelRatio = 10; 
-                const dataUrl = await toPng(BackcontainerRef.current!, { cacheBust: false, pixelRatio });
-                dataUrls.push(dataUrl) 
-                colors.push(color.label)
+                } catch (error) {
+                  console.error("Error uploading design:", error);
+                  toast({
+                  title: 'Upload Error',
+                  description: 'Error uploading the image!',
+                  variant: 'destructive',
+                  });              
+                }
               }
-              return { colors: colors , dataUrls };
-            }
+
+              const uploadAllCapForFront = async () => {
+                setIsBorderHidden(true);
+                const paths = [] as string[]; // Array to store all the captured product paths
+                const colors = [] as string[]
+                for (const color of filteredColors) {
+                  // Set the image source to the current color's front image URL
+                  const img = document.querySelector(".front-product") as HTMLImageElement;
+                    if (img) {
+                      img.src = color.frontImageUrl;
+                    }
+                  // get the url of the captured product with front design
+                  const pixelRatio = 10; 
+                  const dataUrl = await toPng(FrontcontainerRef.current!, { cacheBust: false, pixelRatio });
+    
+                  // get the file type from the url
+                  const base64Data = dataUrl.split(',')[1]
+                  const blob = base64ToBlob(base64Data, 'image/png')
+                  const file = new File([blob], `${productTitle}.png`, { type: 'image/png' });
+                  // upload the captured product in the uploads folder and get the path 
+                  const CapturedProductPath = await uploadCapturedMockup(file)
+                  paths.push(CapturedProductPath ?? ""); // Store the path in the array
+                  colors.push(color.label)
+                };
+                return { frontPaths: paths.filter(path => path !== ""), colors: colors };
+              };   
+                
+                 
+              
+               // Function to map over filteredColors and upload each cat color and return the list of paths
+               const uploadAllCapForBack = async () => {
+                setIsBorderHidden(true);
+                const paths = [] as string[]; // Array to store all the captured product paths
+                const colors = [] as string[]
+                for (const color of filteredColors) {
+                  // Set the image source to the current color's front image URL
+                  const img = document.querySelector(".back-product") as HTMLImageElement;
+                    if (img) {
+                      img.src = color.backImageUrl;
+                    }
+                  // get the url of the captured product with front design
+                  const pixelRatio = 10; 
+                  const dataUrl = await toPng(BackcontainerRef.current!, { cacheBust: false, pixelRatio });
+    
+                  // get the file type from the url
+                  const base64Data = dataUrl.split(',')[1]
+                  const blob = base64ToBlob(base64Data, 'image/png')
+                  const file = new File([blob], `${productTitle}.png`, { type: 'image/png' });
+                  // upload the captured product in the uploads folder and get the path 
+                  const CapturedProductPath = await uploadCapturedMockup(file)
+                  paths.push(CapturedProductPath ?? ""); // Store the path in the array
+                  colors.push(color.label)
+    
+                };
+                return {backPaths : paths.filter(path => path !== "") , colors : colors}
+              };  
         
 
                 //save Product with Both Design:
@@ -496,46 +568,38 @@ const handleFileChange = (file : File) => {
                       tags.push(inputTag)
                     }
 
-                    // get design dataUrl :
-                  const frontDesignDataUrl = await getDesignDataUrl(FrontDesignFile);
-                  const backDesignDataUrl = await getDesignDataUrl(BackDesignFile);
+                    // upload the front design in the uploads folder and get the path
+                    const frontdesignPath = await uploadDesign(FrontDesignFile)
+                    const frontDesignName = removeExtension(FrontDesignFile.name)
 
-                  // get product data urls with colors 
-                  const frontProductDataUrls = await getFrontProductDataUrlsWithColors()
-                  const backProductDataUrls = await getBackProductDataUrlsWithColors()
+                    // upload the back design in the uploads folder and get the path
+                    const backdesignPath = await uploadDesign(BackDesignFile)
+                    const backDesignName = removeExtension(BackDesignFile.name)
 
-                  // upload design data url to firebase and get the path
-                  const frontdesignPath = await uploadDesignDataUrlToFirebase(frontDesignDataUrl! , store.storeName)
-                  const backdesignPath = await uploadDesignDataUrlToFirebase(backDesignDataUrl! , store.storeName)
+                    
+                    // upload the captured product with its colors variant in the uploads folder 
+                    // and get the path for each color variant 
+                    const res = await uploadAllCapForFront();
+                    const {backPaths} = await uploadAllCapForBack();
 
-                  // get the name of front design 
-                  const frontDesignName = removeExtension(FrontDesignFile.name)
-                  const backDesignName = removeExtension(BackDesignFile.name)
-
-
-                  // upload product data urls to firebase and get the paths
-                  const frontProductPaths = await uploadProductToFirebase(frontProductDataUrls.dataUrls , store.storeName , productTitle)
-                  const backProductPaths = await uploadProductToFirebase(backProductDataUrls.dataUrls , store.storeName , productTitle)
- 
-
-
-                  const hasValidFrontPaths = Array.isArray(frontProductPaths) && frontProductPaths.every(path => path.trim() !== '');
-                  const hasValidBackPaths = Array.isArray(backProductPaths) && backProductPaths.every(path => path.trim() !== '');
-                  const hasValidColors = Array.isArray(frontProductDataUrls.colors) && frontProductDataUrls.colors.every(color => color.trim() !== '');
-
-                  if (!hasValidFrontPaths || !hasValidBackPaths || !hasValidColors || !frontdesignPath || !backdesignPath ) {
+                    // Check if frontPaths and colors are non-empty arrays and contain non-empty strings
+                    const hasValidFrontPaths = Array.isArray(res.frontPaths) && res.frontPaths.every(path => path.trim() !== '');
+                    const hasValidbackPaths = Array.isArray(backPaths) && backPaths.every(path => path.trim() !== '');
+                    const hasValidColors = Array.isArray(res.colors) && res.colors.every(color => color.trim() !== '');
+                   
+                    if (!hasValidbackPaths || !hasValidFrontPaths || !hasValidColors || !frontdesignPath || !backdesignPath) {
                     closeDialog()
                     setisAdding(false)
                     toast({
-                      title: 'Error',
-                      description: 'Failed to add your product. Please try again later.',
-                      variant: 'destructive',
+                    title: 'Error',
+                    description: 'Failed to add your product. Please try again later.',
+                    variant: 'destructive',
                     });
                     return
-                  }
+                    }
 
-                    const result = await addProductToDb(selectedP.label,frontProductDataUrls.colors,
-                    frontProductPaths,backProductPaths,
+                    const result = await addProductToDb(selectedP.label,res.colors,
+                    res.frontPaths,backPaths,
                     productTitle,productDescription,tags,productPrice,BasePrice,sellerProfit,
                     frontDesignName,Frontwidth,Frontheight,frontdesignPath!,
                     backDesignName,Backwidth,Backheight,backdesignPath! , selectedCollection , privateProduct)
@@ -588,27 +652,20 @@ const handleFileChange = (file : File) => {
                     tags.push(inputTag)
                   }
 
-                  // get design dataUrl :
-                  const designDataUrl = await getDesignDataUrl(FrontDesignFile);
-
-                  // get product data urls with colors 
-                  const productDataUrls = await getFrontProductDataUrlsWithColors()
-
-                  // upload design data url to firebase and get the path
-                  const frontdesignPath = await uploadDesignDataUrlToFirebase(designDataUrl! , store.storeName)
-
-                  // get the name of front design 
+                  // upload the front design in the uploads folder and get the path
+                  const frontdesignPath = await uploadDesign(FrontDesignFile)
                   const frontDesignName = removeExtension(FrontDesignFile.name)
 
+                  
+                  // upload the captured product with its colors variant in the uploads folder 
+                  // and get the path for each color variant 
+                  const res = await uploadAllCapForFront();
 
-                  // upload product data urls to firebase and get the paths
-                  const frontProductPaths = await uploadProductToFirebase(productDataUrls.dataUrls , store.storeName , productTitle)
+                    // Check if frontPaths and colors are non-empty arrays and contain non-empty strings
+                    const hasValidFrontPaths = Array.isArray(res.frontPaths) && res.frontPaths.every(path => path.trim() !== '');
+                    const hasValidColors = Array.isArray(res.colors) && res.colors.every(color => color.trim() !== '');
 
-
-                  const hasValidFrontPaths = Array.isArray(frontProductPaths) && frontProductPaths.every(path => path.trim() !== '');
-                  const hasValidColors = Array.isArray(productDataUrls.colors) && productDataUrls.colors.every(color => color.trim() !== '');
-
-                  if (!hasValidFrontPaths || !hasValidColors || !frontdesignPath ) {
+                    if (!hasValidFrontPaths || !hasValidColors || !frontdesignPath) {
                     closeDialog()
                     setisAdding(false)
                     toast({
@@ -617,14 +674,12 @@ const handleFileChange = (file : File) => {
                       variant: 'destructive',
                     });
                     return
-                  }
+                    }
 
-                  // create the product with only the first capture of the product
-                  const result = await addProductToDbF(selectedP.label,productDataUrls.colors,frontProductPaths,
+                  const result = await addProductToDbF(selectedP.label,res.colors,res.frontPaths,
                   productTitle,productDescription,tags,productPrice,BasePrice,sellerProfit,
                   frontDesignName,Frontwidth,Frontheight,
                   frontdesignPath! , selectedCollection , privateProduct)
-
 
                   if(result.success) {
                     toast({
@@ -640,7 +695,7 @@ const handleFileChange = (file : File) => {
                     closeDialog()
                     setisAdding(false)
                     toast({
-                      title: 'Product Creation Caused an Error',
+                      title: 'Error',
                       description: 'Failed to add your product. Please try again later.',
                       variant: 'destructive',
                     });
@@ -674,38 +729,31 @@ const handleFileChange = (file : File) => {
                       tags.push(inputTag)
                     }
 
-                   // get design dataUrl :
-                  const designDataUrl = await getDesignDataUrl(BackDesignFile);
+                    // upload the front design in the uploads folder and get the path
+                    const backdesignPath = await uploadDesign(BackDesignFile)
+                    const backDesignName = removeExtension(BackDesignFile.name)
 
-                  // get product data urls with colors 
-                  const productDataUrls = await getBackProductDataUrlsWithColors()
-
-                  // upload design data url to firebase and get the path
-                  const backdesignPath = await uploadDesignDataUrlToFirebase(designDataUrl! , store.storeName)
-
-                  // get the name of front design 
-                  const backDesignName = removeExtension(BackDesignFile.name)
+                    // upload the captured product with its colors variant in the uploads folder 
+                    // and get the path for each color variant 
+                    const res = await uploadAllCapForBack();
 
 
-                  // upload product data urls to firebase and get the paths
-                  const backProductPaths = await uploadProductToFirebase(productDataUrls.dataUrls , store.storeName , productTitle)
-
-
-                  const hasValidBackPaths = Array.isArray(backProductPaths) && backProductPaths.every(path => path.trim() !== '');
-                  const hasValidColors = Array.isArray(productDataUrls.colors) && productDataUrls.colors.every(color => color.trim() !== '');
-
-                  if (!hasValidBackPaths || !hasValidColors || !backdesignPath ) {
+                    // Check if frontPaths and colors are non-empty arrays and contain non-empty strings
+                    const hasValidbackPaths = Array.isArray(res.backPaths) && res.backPaths.every(path => path.trim() !== '');
+                    const hasValidColors = Array.isArray(res.colors) && res.colors.every(color => color.trim() !== '');
+                   
+                    if (!hasValidbackPaths || !hasValidColors || !backdesignPath) {
                     closeDialog()
                     setisAdding(false)
                     toast({
-                      title: 'Error',
-                      description: 'Failed to add your product. Please try again later.',
-                      variant: 'destructive',
+                    title: 'Error',
+                    description: 'Failed to add your product. Please try again later.',
+                    variant: 'destructive',
                     });
                     return
-                  }
+                    }
 
-                    const result = await addProductToDbB(selectedP.label,productDataUrls.colors,backProductPaths,
+                    const result = await addProductToDbB(selectedP.label,res.colors,res.backPaths,
                     productTitle,productDescription,tags,productPrice,BasePrice,sellerProfit,
                     backDesignName,Backwidth,Backheight,
                     backdesignPath! , selectedCollection , privateProduct)
@@ -746,7 +794,16 @@ const handleFileChange = (file : File) => {
                 }
 
 
-
+              // function to transform base64 To Blob to get the file from blob
+              function base64ToBlob(base64: string, mimeType: string) {
+                const byteCharacters = atob(base64)
+                const byteNumbers = new Array(byteCharacters.length)
+                for (let i = 0; i < byteCharacters.length; i++) {
+                  byteNumbers[i] = byteCharacters.charCodeAt(i)
+                }
+                const byteArray = new Uint8Array(byteNumbers)
+                return new Blob([byteArray], { type: mimeType })
+              }
 
 
                 // function will trigger the dialog
@@ -965,31 +1022,31 @@ const handleFileChange = (file : File) => {
 
                                 {/* select colors */}
                                 <div className="space-y-2">
-  <h3>4-Select Your Product Colors:</h3>
+                        <h3>4-Select Your Product Colors:</h3>
 
-  {/* Render checkboxes for each color */}
-  <div className="grid grid-cols-6 gap-4">
-    {selectedP.colors.map((color: Color) => (
-      <>
-      <div key={color.label} className="flex items-center space-x-2">
-        <input
-          type="checkbox"
-          id={color.label}
-          className="ml-2"
-          checked={!!selectedColors[color.label]}
-          onChange={() => handleColorCheckboxChange(color.label)}
-        />
-        <label
-          htmlFor={color.label}
-          className="text-sm font-medium leading-none cursor-pointer"
-        >
-          {color.label}
-        </label>
-      </div>
-     </>
-    ))}
-  </div>
-</div>
+                        {/* Render checkboxes for each color */}
+                        <div className="grid grid-cols-2 xl:grid-cols-6 gap-4">
+                          {selectedP.colors.map((color: Color) => (
+                            <>
+                            <div key={color.label} className="flex items-center space-x-2">
+                              <input
+                                type="checkbox"
+                                id={color.label}
+                                className="ml-2"
+                                checked={!!selectedColors[color.label]}
+                                onChange={() => handleColorCheckboxChange(color.label)}
+                              />
+                              <label
+                                htmlFor={color.label}
+                                className="text-sm font-medium leading-none cursor-pointer"
+                              >
+                                {color.label}
+                              </label>
+                            </div>
+                          </>
+                          ))}
+                        </div>
+                      </div>
 
 
                                 {/* Product details */}

@@ -503,28 +503,88 @@ const handleSortChange = (event: string) => {
                   }
                 };
      
-
-
-
-                const getDesignDataUrl = async (file: File): Promise<string | undefined> => {
+                const uploadDesign = async (file: File) => {
+                  const designNameWithoutExt = path.parse(file.name).name;
+                  const storageRef = ref(storage, `orders/clients orders/${user.name}/clients designs/${designNameWithoutExt}-${Date.now()}.png`);
+                
                   try {
-                    return await new Promise((resolve, reject) => {
-                      const reader = new FileReader();
-                      reader.onload = () => {
-                        if (typeof reader.result === 'string') {
-                          resolve(reader.result); // Successfully returns the data URL
-                        } else {
-                          reject(new Error("Failed to read file as data URL"));
-                        }
-                      };
-                      reader.onerror = () => reject(new Error("Error reading file"));
-                      reader.readAsDataURL(file);
-                    });
+                    const snapshot = await uploadBytes(storageRef, file);
+                    const downloadURL = await getDownloadURL(snapshot.ref);
+                    if(downloadURL) {
+                      toast({
+                       title: 'Design Upload Success',
+                        description: 'Design image uploaded successfully!',
+                        });
+                        return downloadURL
+                    }
                   } catch (error) {
                     console.error("Error uploading design:", error);
-                    return undefined;
+                    toast({
+                    title: 'Upload Error',
+                    description: 'Error uploading the image!',
+                    variant: 'destructive',
+                    });              
                   }
                 }
+
+                const uploadCapturedMockup = async (file: File) => {
+                  const pica = new Pica(); // Correct instantiation
+                
+                  try {
+                    // Create an image element
+                    const img = new Image();
+                    img.src = URL.createObjectURL(file);
+                    
+                    // Wait for the image to load
+                    await new Promise<void>((resolve) => {
+                      img.onload = () => resolve();
+                    });
+                
+                    // Create a canvas for resizing
+                    const canvas = document.createElement('canvas');
+                    const targetWidth = 800; // Set your desired width
+                    const targetHeight = (img.height / img.width) * targetWidth; // Maintain aspect ratio
+                
+                    canvas.width = targetWidth;
+                    canvas.height = targetHeight;
+                
+                    // Use Pica to resize the image
+                    await pica.resize(img, canvas);
+                
+                    // Convert the canvas to a Blob
+                    const optimizedBlob = await new Promise<Blob>((resolve, reject) => {
+                      canvas.toBlob((blob) => {
+                        if (blob) {
+                          resolve(blob); // Resolve with the Blob
+                        } else {
+                          reject(new Error('Failed to convert canvas to Blob')); // Reject if null
+                        }
+                      }, 'image/png', 0.9); // Adjust quality (0.9 = 90%)
+                    });
+                
+                    // Upload the optimized image
+                    const storageRef = ref(storage, `orders/clients orders/${user.name}/clients products/${Date.now()}.png`);
+                    const snapshot = await uploadBytes(storageRef, optimizedBlob);
+                    const downloadURL = await getDownloadURL(snapshot.ref);
+                    
+                    if (downloadURL) {
+                      toast({
+                        title: 'Product Image Upload Success',
+                        description: 'Product image uploaded successfully!',
+                      });
+                      return downloadURL;
+                    }
+                  } catch (error) {
+                    console.error('Error uploading image:', error);
+                    toast({
+                      title: 'Upload Failed',
+                      description: 'There was an error uploading the product image. Please try again.',
+                    });
+                    throw error; // Optionally re-throw the error if needed
+                  }
+                };
+
+ 
                 
 
                 const savePreOrder = async () => {
@@ -569,8 +629,7 @@ const handleSortChange = (event: string) => {
                   img.src = selectedCatColor.frontImageUrl;
                 
                   if (frontDesignPrice === 0) {
-                    const frontDesignUrl = await getDesignDataUrl(FrontDesignFile!)
-                    const frontDesignPath = await uploadDesignDataUrlToFirebase(frontDesignUrl! , user.name!)
+                    const frontDesignPath = await uploadDesign(FrontDesignFile!);
                     await saveCapturedFrontDesign(user, frontDesignPath!, 'front', false);
                   } else {
                     const design = document.querySelector(".front-design") as HTMLImageElement;
@@ -579,15 +638,14 @@ const handleSortChange = (event: string) => {
                     }        
                     await saveCapturedFrontDesign(user, selectedFrontDesignId, 'front', true);
                   }
-                }
+                };
                 
                 const handleBackDesign = async (user : User) => {
                   const img = document.querySelector(".back-product") as HTMLImageElement;
                   img.src = selectedCatColor.backImageUrl;
                 
                   if (backDesignPrice === 0) {
-                    const backDesignUrl = await getDesignDataUrl(BackDesignFile!)
-                    const backDesignPath = await uploadDesignDataUrlToFirebase(backDesignUrl! , user.name!)
+                    const backDesignPath = await uploadDesign(BackDesignFile!);
                     await saveCapturedBackDesign(user, backDesignPath!, 'back', false);
                   } else {
                     const design = document.querySelector(".back-design") as HTMLImageElement;
@@ -605,8 +663,7 @@ const handleSortChange = (event: string) => {
                   backImg.src = selectedCatColor.backImageUrl;
             
                   if (frontDesignPrice === 0 && backDesignPrice !== 0) {
-                    const frontDesignUrl = await getDesignDataUrl(FrontDesignFile!)
-                    const frontDesignPath = await uploadDesignDataUrlToFirebase(frontDesignUrl! , user.name!)                    
+                    const frontDesignPath = await uploadDesign(FrontDesignFile!);
                     const design = document.querySelector(".back-design") as HTMLImageElement;
                     if (design) {
                       design.src = selectedBackDesign;
@@ -616,8 +673,7 @@ const handleSortChange = (event: string) => {
                     handleSaveResult(result);
                   }
                   else if (frontDesignPrice !== 0 && backDesignPrice === 0) {
-                    const backDesignUrl = await getDesignDataUrl(BackDesignFile!)
-                    const backDesignPath = await uploadDesignDataUrlToFirebase(backDesignUrl! , user.name!)                    
+                    const backDesignPath = await uploadDesign(BackDesignFile!);
                     const design = document.querySelector(".front-design") as HTMLImageElement;
                     if (design) {
                       design.src = selectedFrontDesign;
@@ -640,10 +696,8 @@ const handleSortChange = (event: string) => {
                     handleSaveResult(result);
                   }
                   else if (frontDesignPrice === 0 && backDesignPrice === 0) {
-                    const frontDesignUrl = await getDesignDataUrl(FrontDesignFile!)
-                    const frontDesignPath = await uploadDesignDataUrlToFirebase(frontDesignUrl! , user.name!)   
-                    const backDesignUrl = await getDesignDataUrl(BackDesignFile!)
-                    const backDesignPath = await uploadDesignDataUrlToFirebase(backDesignUrl! , user.name!)                        
+                    const frontDesignPath = await uploadDesign(FrontDesignFile!);
+                    const backDesignPath = await uploadDesign(BackDesignFile!);
                     const paths = await saveCapturedBothDesigns();
                     const result = await savePreOrderFBClient(user?.id!,frontDesignPath!,backDesignPath!,totalPrice,productPrice,quantity,selectedColor,selectedSize,selectedP.label,paths)
                     handleSaveResult(result);
@@ -656,20 +710,24 @@ const handleSortChange = (event: string) => {
                   const containerRef = designType === 'front' ? FrontcontainerRef : BackcontainerRef;
                   const dataUrl = await toPng(containerRef.current!, { cacheBust: false, pixelRatio: 10 });
                 
-                  const frontProductPath = await uploadProductToFirebase(dataUrl , user.name!)
-                  const paths = [frontProductPath];
+                  const file = getFile(dataUrl);
+                  const capturedProductPath = await uploadCapturedMockup(file);
+                  const paths = [capturedProductPath!];
+                
                   const result = await savePreOrderF(user?.id!, designPath, totalPrice,productPrice, quantity, selectedColor, selectedSize, selectedP.label, paths, isSellerDesign);
                 
                   handleSaveResult(result);
-                }
-                
+                };
+            
             
                 const saveCapturedBackDesign = async (user : User, designPath : string, designType : string, isSellerDesign : boolean) => {
                   const containerRef = designType === 'front' ? FrontcontainerRef : BackcontainerRef;
                   const dataUrl = await toPng(containerRef.current!, { cacheBust: false, pixelRatio: 10 });
                 
-                  const backProductPath = await uploadProductToFirebase(dataUrl , user.name!)
-                  const paths = [backProductPath];
+                  const file = getFile(dataUrl);
+                  const capturedProductPath = await uploadCapturedMockup(file);
+                  const paths = [capturedProductPath!];
+                
                   const result = await savePreOrderB(user?.id!, designPath, totalPrice,productPrice, quantity, selectedColor, selectedSize, selectedP.label, paths, isSellerDesign);
                 
                   handleSaveResult(result);
@@ -677,15 +735,16 @@ const handleSortChange = (event: string) => {
                 
             
                 const saveCapturedBothDesigns = async () => {
-
                   const frontDataUrl = await toPng(FrontcontainerRef.current!, { cacheBust: false, pixelRatio: 10 });
                   const backDataUrl = await toPng(BackcontainerRef.current!, { cacheBust: false, pixelRatio: 10 });
                 
+                  const frontFile = getFile(frontDataUrl);
+                  const backFile = getFile(backDataUrl);
                 
-                  const frontProductPath = await uploadProductToFirebase(frontDataUrl , user.name!)
-                  const backProductPath = await uploadProductToFirebase(backDataUrl , user.name!)
+                  const frontCapturedPath = await uploadCapturedMockup(frontFile);
+                  const backCapturedPath = await uploadCapturedMockup(backFile);
                 
-                  return [frontProductPath, backProductPath];
+                  return [frontCapturedPath!, backCapturedPath!];
                 };
                 
                 const handleSaveResult = (result : {
@@ -708,6 +767,12 @@ const handleSortChange = (event: string) => {
                   toast({ title, description, variant });
                 };
                 
+            
+                const getFile = (dataUrl : string) => {
+                  const base64Data = dataUrl.split(',')[1];
+                  const blob = base64ToBlob(base64Data, 'image/png');
+                  return new File([blob], `order.png`, { type: 'image/png' });
+                };
 
 
 

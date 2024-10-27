@@ -58,7 +58,6 @@ import { Platform, Store } from "@prisma/client"
 import path from "path"
 import { storage } from "@/firebase/firebaseConfig"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
-import { uploadDesignDataUrlToFirebase } from "../createProduct/actions"
 
 
 
@@ -182,10 +181,6 @@ const CreateDesignView = ({platform , store}: ProductViewProps) => {
               const snapshot = await uploadBytes(storageRef, file);
               const downloadURL = await getDownloadURL(snapshot.ref);
               if(downloadURL) {
-                toast({
-                 title: 'Design Upload Success',
-                  description: 'Design image uploaded successfully!',
-                  });
                   return downloadURL
               }
             } catch (error) {
@@ -201,82 +196,61 @@ const CreateDesignView = ({platform , store}: ProductViewProps) => {
     
     
     
-          const getDesignDataUrl = async (file: File): Promise<string | undefined> => {
-            try {
-              return await new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => {
-                  if (typeof reader.result === 'string') {
-                    resolve(reader.result); // Successfully returns the data URL
-                  } else {
-                    reject(new Error("Failed to read file as data URL"));
-                  }
-                };
-                reader.onerror = () => reject(new Error("Error reading file"));
-                reader.readAsDataURL(file);
-              });
-            } catch (error) {
-              console.error("Error uploading design:", error);
-              return undefined;
-            }
-          };
     
     
     
           const handleAddClick = async () => {
-      if (!file) {
-        console.log('No file selected.');
-        toast({
-          title: 'No Uploaded Design Found',
-          description: 'Please try again.',
-          variant: 'destructive',
-      });
-        return;
-      }
-    
-      try {
-        openDialog()
-        setisAdding(true)
-
-        if(inputTag != "") {
-          tags.push(inputTag)
-        }
-
-        const designDataUrl = await getDesignDataUrl(file);
-        const designPath = await uploadDesignDataUrlToFirebase(designDataUrl! , store.storeName)
-
-
-        // Check if success
-        if (designPath) {
-          await addDesignToDb(store ,designPath , designwidth , designheight , designName , designPrice ,sellerProfit, tags  );
-          toast({
-            title: 'Design Was Successfully Added',
-            description: 'Refrech the page.',
-            variant: 'default',
-          });
-          router.push("/sellerDashboard/designs")
-        } else {
-          setisAdding(false)
-          closeDialog()
-          toast({
-            title: 'Something went wrong',
-            description: 'There was an error on our end. Please try again.',
-            variant: 'destructive',
-        });
-        }
-        
-      } catch (e) {
-        setisAdding(false)
-        closeDialog()
-        // Handle network errors or other exceptions
-        console.error('Error during file upload:', e)
-        toast({
-          title: 'Something went wrong',
-          description: 'There was an error on our end. Please try again.',
-          variant: 'destructive',
-      });
-      }
-    }
+            if (!file) {
+              console.log('No file selected.');
+              toast({
+                title: 'No Uploaded Design Found',
+                description: 'Please try again.',
+                variant: 'destructive',
+            });
+              return;
+            }
+          
+            try {
+              openDialog()
+              setisAdding(true)
+      
+              if(inputTag != "") {
+                tags.push(inputTag)
+              }
+      
+              const designPath = await uploadDesign(file)
+      
+              // Check if success
+              if (designPath) {
+                await addDesignToDb(store ,designPath , designwidth , designheight , designName , designPrice ,sellerProfit, tags  );
+                toast({
+                  title: 'Design Was Successfully Added',
+                  description: 'Refrech the page.',
+                  variant: 'default',
+                });
+                router.push("/sellerDashboard/designs")
+              } else {
+                setisAdding(false)
+                closeDialog()
+                toast({
+                  title: 'Something went wrong',
+                  description: 'There was an error on our end. Please try again.',
+                  variant: 'destructive',
+              });
+              }
+              
+            } catch (e) {
+              setisAdding(false)
+              closeDialog()
+              // Handle network errors or other exceptions
+              console.error('Error during file upload:', e)
+              toast({
+                title: 'Something went wrong',
+                description: 'There was an error on our end. Please try again.',
+                variant: 'destructive',
+            });
+            }
+          }
 
              // function will trigger the dialog
              const openDialog = () => {
