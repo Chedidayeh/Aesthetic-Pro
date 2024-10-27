@@ -266,10 +266,7 @@ const MobileView = ({ordersData}: ViewProps) => {
                           className='flex py-2'>
                           <div className='flex-shrink-0 mb-10'>
                             <div className='h-52 w-52'>
-                            <Link
-                            href={`/fripMarket/ProductView/${item.productId}`}>
                             <ImageSlider urls={item.capturedMockup}/>
-                            </Link>
                             </div>
                           </div>
                         </li>

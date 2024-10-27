@@ -58,6 +58,7 @@ import { Platform, Store } from "@prisma/client"
 import path from "path"
 import { storage } from "@/firebase/firebaseConfig"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
+import { uploadDesignDataUrlToFirebase } from "../createProduct/actions"
 
 
 
@@ -74,7 +75,7 @@ const CreateDesignView = ({platform , store}: ProductViewProps) => {
     const alertDialogTriggerRef = useRef<HTMLButtonElement>(null);
     const alertDialogCancelRef = useRef<HTMLButtonElement>(null);
     const { toast } = useToast()
-    const MAX_FILE_SIZE = 16 * 1024 * 1024; // 16 MB
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
 
 
 
@@ -110,7 +111,7 @@ const CreateDesignView = ({platform , store}: ProductViewProps) => {
           if (file.size > MAX_FILE_SIZE) {
             toast({
               title: 'File size exceeds the limit.',
-              description: 'Please choose a file equal or smaller than 15MB.',
+              description: 'Please choose a file equal or smaller than 5MB.',
               variant: 'destructive',
             });
             setFile(null)
@@ -200,7 +201,25 @@ const CreateDesignView = ({platform , store}: ProductViewProps) => {
     
     
     
-    
+          const getDesignDataUrl = async (file: File): Promise<string | undefined> => {
+            try {
+              return await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                  if (typeof reader.result === 'string') {
+                    resolve(reader.result); // Successfully returns the data URL
+                  } else {
+                    reject(new Error("Failed to read file as data URL"));
+                  }
+                };
+                reader.onerror = () => reject(new Error("Error reading file"));
+                reader.readAsDataURL(file);
+              });
+            } catch (error) {
+              console.error("Error uploading design:", error);
+              return undefined;
+            }
+          };
     
     
     
@@ -223,7 +242,9 @@ const CreateDesignView = ({platform , store}: ProductViewProps) => {
           tags.push(inputTag)
         }
 
-        const designPath = await uploadDesign(file)
+        const designDataUrl = await getDesignDataUrl(file);
+        const designPath = await uploadDesignDataUrlToFirebase(designDataUrl! , store.storeName)
+
 
         // Check if success
         if (designPath) {
@@ -298,8 +319,8 @@ const CreateDesignView = ({platform , store}: ProductViewProps) => {
                         <CardContent className="items-center space-y-6 grid" >                          
                         <div className="space-y-2">
                         <h3>1-Upload a Design:</h3>
-                        <p className="text-xs text-zinc-500 ml-5">PNG, JPG, JPEG max (15MB)</p>
-                        <p className="text-xs text-zinc-500 ml-5">(3000px*3000px)</p>
+                        <p className="text-xs text-zinc-500 ml-5">PNG, JPG, JPEG max (5MB)</p>
+                        <p className="text-xs text-zinc-500 ml-5">recommended (3000px*3000px)</p>
 
                         <div className="flex justify-center">
                           <SingleImageDropzone

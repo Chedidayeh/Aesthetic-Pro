@@ -173,6 +173,7 @@ const removeItem = async (cartProductId : string) =>{
           description: '',
           variant: 'default',
         });
+        router.refresh()
         return
         }
   } catch (error) {

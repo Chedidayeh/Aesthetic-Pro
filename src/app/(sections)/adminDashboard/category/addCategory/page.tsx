@@ -255,55 +255,6 @@ const Page = () => {
     }
   };
   
-            // const uploadImage = (file: File): Promise<string | null> => {
-            //   return new Promise((resolve, reject) => {
-            //     if (!file) {
-            //       console.log('No file selected.');
-            //       resolve(null);
-            //       return;
-            //     }
-            
-            //     // Read the file as a base64 string
-            //     const reader = new FileReader();
-            //     reader.readAsDataURL(file);
-            //     reader.onloadend = async () => {
-            //       const base64data = reader.result?.toString().split(',')[1]; // Get the base64 string only
-            
-            //       try {
-            //         const response = await fetch('/api/uploadCategory', {
-            //           method: 'POST',
-            //           headers: {
-            //             'Content-Type': 'application/json',
-            //           },
-            //           body: JSON.stringify({ file: base64data, category: label }),
-            //         });
-            
-            //         if (!response.ok) {
-            //           throw new Error('Failed to upload category image');
-            //         }
-            
-            //         const data = await response.json();
-            //         const path = data.url; // Get the uploaded URL
-            
-            //         toast({
-            //           title: 'category Upload Success',
-            //           description: 'category image uploaded successfully!',
-            //         });
-            
-            //         resolve(path); // Resolve the promise with the URL
-            //       } catch (error) {
-            //         toast({
-            //           title: 'Upload Error',
-            //           description: 'Error uploading the category image!',
-            //           variant: 'destructive',
-            //         });
-            //         console.error(error);
-            //         reject(error); // Reject the promise on error
-            //       }
-            //     };
-            //   });
-            // };
-
 
             const uploadImage = async (file: File) => {
               const pica = new Pica(); // Correct instantiation

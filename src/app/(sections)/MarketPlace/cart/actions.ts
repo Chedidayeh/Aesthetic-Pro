@@ -142,7 +142,7 @@ interface FormattedCartProduct {
       });
   
       if (!user || !user.cart) {
-        return
+        return []
       }
   
       const cartProducts = user.cart.selectedProducts;

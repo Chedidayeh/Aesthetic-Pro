@@ -21,7 +21,7 @@ export async function getUserFavoriteList(userId: string) {
   
       if (!favList || !favList.products) {
         // If the favorite list doesn't exist or it has no products, return an empty array or null as per your preference
-        return null; // or return []
+        return []; // or return []
       }
   
       // Return the favorite list with products

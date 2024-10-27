@@ -51,6 +51,7 @@ import { getSizes } from "./actions"
 import ViewCategoryQuality from "@/components/MarketPlace/ViewCategoryQuality"
 import clsx from 'clsx'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+import { revalidatePath } from 'next/cache'
 
   
 
@@ -74,7 +75,7 @@ interface ViewProductProps {
 }
 const ViewProduct: React.FC<ViewProductProps> = ({ product , frontdesign , backdesign , user ,categoryProducts , category , sizes , platform }) => {
 
-
+  const router = useRouter()
   let designs = [
     frontdesign,
     backdesign
@@ -130,7 +131,11 @@ const combinedUrls = interleaveArrays(product.croppedFrontProduct, product.cropp
   const [selectedImage, setSelectedImage] = useState(combinedUrls[0]);
 
 
-
+// reidrectToCart function 
+const redirectToCart = () => {
+  router.prefetch('/MarketPlace/cart');
+  router.push("/MarketPlace/cart")
+}
 
   
 
@@ -237,7 +242,7 @@ const combinedUrls = interleaveArrays(product.croppedFrontProduct, product.cropp
                 <ViewDesign designs={designs}/>
               </div>
               <Link href={`/MarketPlace/create-client-product/upload?category=${product.category}`} >
-                <Button variant="link">try other designs</Button>
+                <Button variant="link">try other designs &rarr;</Button>
               </Link>
             </div>
           </div>
@@ -407,11 +412,12 @@ const combinedUrls = interleaveArrays(product.croppedFrontProduct, product.cropp
                  />
               </div>
               <div className="flex justify-center items-center mt-2">
-              <Link href="/MarketPlace/cart">
-              <Button onClick={()=>setOpen(true)} variant="link" className="flex justify-center items-center">
-                View Cart
+              <Button onClick={()=>
+              {setOpen(true)
+              redirectToCart()}} 
+              variant="link" className="flex justify-center items-center">
+                View Cart &rarr;
               </Button>
-              </Link>
               </div>
 
        

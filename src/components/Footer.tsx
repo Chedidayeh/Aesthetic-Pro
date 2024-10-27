@@ -35,7 +35,7 @@ const Footer = async () => {
       <Link href={"https://www.facebook.com/profile.php?id=61564936846426"}>
       <FaFacebook className="text-2xl cursor-pointer hover:text-blue-600" />
       </Link>
-      <Link href={"https://www.instagram.com/astheticpro.tn/"}>
+      <Link href={"https://www.instagram.com/aestheticpro.tn/"}>
       <FaInstagram className="text-2xl cursor-pointer hover:text-red-600" />
       </Link>
     </div>

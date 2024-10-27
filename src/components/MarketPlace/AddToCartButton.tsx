@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Loader2 } from 'lucide-react'
 import LoginModal from '../LoginModal'
+import { useRouter } from 'next/navigation'
 const AddToCartButton = ({
   user,
   product,
@@ -36,6 +37,7 @@ const AddToCartButton = ({
   platform: Platform
 }) => {
   const { toast } = useToast()
+  const router = useRouter()
 
     const [isSuccess, setIsSuccess] = useState<boolean>(false)
 
@@ -102,6 +104,7 @@ const AddToCartButton = ({
         duration: 5000,
 
       });
+      router.refresh()
       return
       }
       if(!result) {

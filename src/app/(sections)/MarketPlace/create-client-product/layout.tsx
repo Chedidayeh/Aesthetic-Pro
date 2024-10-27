@@ -7,7 +7,7 @@ import { Toaster } from "@/components/ui/toaster"
 const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <>
-    <div className='p-20'>
+    <div className='p-4 sm:p-16'>
       <Steps />
       {children}
     </div>

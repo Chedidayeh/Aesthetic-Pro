@@ -58,6 +58,7 @@ import { useRouter } from 'next/navigation';
 import { Platform, SellerDesign } from '@prisma/client';
 import { Badge } from '@/components/ui/badge';
 import { useMutation } from '@tanstack/react-query';
+import LoadingState from '@/components/LoadingState';
 interface DesignViewProps {
     SellerDesignsData: SellerDesign[];
     platform : Platform
@@ -192,7 +193,22 @@ const DesignView = ({
      setIsDownloadOpen(true);
      const response = await fetch(imageUrl);
      const blob = await response.blob();
-     const url = window.URL.createObjectURL(blob);
+     const file = new File([blob], `design.png`, { type: 'image/png' });
+     const data = new FormData()
+     data.set('file', file)
+     const res = await fetch('/api/downloadDesign', {
+       method: 'POST',
+       body: data
+     })
+     // handle the error
+     if (!res.ok) throw new Error(await res.text())
+     // Parse response JSON
+     const result = await res.json()
+      console.log(result); // Log the result to inspect its structure
+     result.optimizedBuffer
+    //  convert optimizedBuffer to blob
+    const optimizedBlob = new Blob([new Uint8Array(atob(result.optimizedBuffer).split("").map(c => c.charCodeAt(0)))], { type: 'image/png' });
+    const url = window.URL.createObjectURL(optimizedBlob);
      const a = document.createElement("a");
      a.href = url;
      a.download = "design_image.png"; // You can set the filename here
@@ -209,6 +225,11 @@ const DesignView = ({
      });
    }
  };
+
+
+
+
+
 
   return (
 
@@ -290,9 +311,8 @@ const DesignView = ({
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 md:grid-cols-2">
             {/* designs Cards */}
             {filteredDesigns.map((design, index) => (
-                <HoverCard key={index}>
-                  <HoverCardTrigger asChild>
                     <Card
+                      key={index}
                       x-chunk="dashboard-05-chunk-3"
                       className={cn('lg:rounded-lg shadow-lg', isDarkMode ? 'bg-gray-900' : 'bg-gray-100', 'hover:transform hover:scale-105 transition duration-300')}
                     >
@@ -317,7 +337,7 @@ const DesignView = ({
                             </Badge>
                           )}
 
-                <div className="absolute top-8 right-0 z-10 text-center">
+                      <div className="absolute top-8 right-0 z-10 text-center">
                       <Badge 
                        onClick={() => {
                         setIsDownloadOpen(true);
@@ -326,7 +346,22 @@ const DesignView = ({
                       className="bg-purple-500 hover:bg-purple-400  cursor-pointer px-2 py-1 text-white rounded">
                             Download Design
                       </Badge>
-                        </div>
+                      </div>
+
+                      
+                      <div className="absolute top-8 left-0 z-10 text-center">
+                      <Badge variant="secondary" className="bg-gray-200">
+                          <CircleDollarSign className="mr-2 h-4 w-4 text-green-800 opacity-70" />
+                          <span className="text-xs text-gray-600">{design.price} TND</span>
+                      </Badge>
+                      </div>
+
+                      <div className="absolute top-14 left-0 z-10 text-center">
+                      <Badge variant="secondary" className="bg-gray-200">
+                          <CreditCard className="mr-2 h-4 w-4 text-red-800 opacity-70" />
+                          <span className="text-xs text-gray-600">{design.totalSales} sales</span>
+                      </Badge>
+                      </div>
 
                         </div>
 
@@ -457,28 +492,6 @@ const DesignView = ({
                         
                       </CardFooter>
                     </Card>
-                  </HoverCardTrigger>
-                  <HoverCardContent className="w-50 bg-gray-200">
-                    <div className="flex justify-between space-x-4">
-                      <div className="space-y-1">
-                        <div className="flex items-center text-green-900 pt-2">
-                          <CircleDollarSign className="mr-2 h-4 w-4 opacity-70" />{" "}
-                          <span className="text-xs text-muted-foreground">{design.price} TND (price)</span>
-                        </div>
-                        <div className="flex items-center text-green-900 pt-2">
-                          <CreditCard className="mr-2 h-4 w-4 opacity-70" />{" "}
-                          <span className="text-xs text-muted-foreground">{design.totalSales} Sales</span>
-                        </div>
-                        <div className="flex items-center text-gray-900 pt-2">
-                          <Tags className="mr-2 h-4 w-4 opacity-70" />{" "}
-                          <span className="text-xs text-muted-foreground">
-                            {design.tags?.join(', ')}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </HoverCardContent>
-                </HoverCard>
             ))}
           </div>
         </div>
@@ -492,6 +505,7 @@ const DesignView = ({
 
                              
  
+<LoadingState isOpen={isDownloadOpen} />
 
                             
 

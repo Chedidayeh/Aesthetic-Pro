@@ -179,7 +179,7 @@ export default async function Page() {
               href='/MarketPlace/create-client-product/select-category'
               className={buttonVariants({
                 size: 'sm',
-                className: 'hidden sm:flex items-center gap-1',
+                className: 'items-center gap-1',
               })}>
               Create your product
               <ArrowRight className='ml-1.5 h-5 w-5' />

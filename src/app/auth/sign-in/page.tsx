@@ -178,8 +178,12 @@ const Page = () => {
               Sign in to your {' '}
               account
             </h1>
-
-
+              {redirectUrl && redirectUrl === "/sellerDashboard" && (
+              <p className="text-xs text-green-500 animate-pulse">Sign In Again to get access to your Seller Dashboard !</p>
+              )}
+              {redirectUrl && redirectUrl === "/affiliateDashboard" && (
+              <p className="text-xs text-green-500 animate-pulse">Sign In Again to get access to your Affiliate Dashboard !</p>
+              )}
           </div>
 
           <div className="flex flex-col items-center space-y-2  text-center">

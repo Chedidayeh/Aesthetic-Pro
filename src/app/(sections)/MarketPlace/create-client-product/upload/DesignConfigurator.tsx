@@ -5,7 +5,6 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import Pica from 'pica';
 
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -55,7 +54,7 @@ import { toPng } from 'html-to-image';
 import { SingleImageDropzone } from '@/components/sellerDashboard/SingleImageDropzone';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { getUserPreOrderByUserId, savePreOrderB, savePreOrderF, savePreOrderFB1, savePreOrderFB2, savePreOrderFBClient, savePreOrderFBSeller } from "./actions"
+import { getUserPreOrderByUserId, savePreOrderB, savePreOrderF, savePreOrderFB1, savePreOrderFB2, savePreOrderFBClient, savePreOrderFBSeller, uploadDesignDataUrlToFirebase, uploadProductToFirebase } from "./actions"
 import { getUser } from "@/actions/actions"
 import Link from "next/link"
 import { BackBorder, Category, Color, FrontBorder, Platform, SellerDesign, Size, Store, User } from "@prisma/client"
@@ -138,10 +137,10 @@ const DesignConfigurator: React.FC<DesignConfiguratorProps> = ({ SellersDesignsD
   const [isBackBorderHidden, setisBackBorderHidden] = useState(true);
 
       // isClicked state
-      const [isClicked, setIsClicked] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
 
   const [selectedCatColor, setselectedCatColor] = useState<Color>(selectedP.colors[0]); // to change the category colors
-  const MAX_FILE_SIZE = 15 * 1024 * 1024;
+  const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 
   // design  width and height
@@ -249,7 +248,7 @@ const handleFileChange = (file : File) => {
       setFrontDesignFile(undefined)
       toast({
         title: 'File size exceeds the limit.',
-        description: 'Please choose a file equal or smaller than 15MB.',
+        description: 'Please choose a file equal or smaller than 5MB.',
         variant: 'destructive',
       });
 
@@ -295,7 +294,7 @@ const handleFileChange = (file : File) => {
         setclientBackDesignPrice(0)
         toast({
           title: 'File size exceeds the limit.',
-          description: 'Please choose a file equal or smaller than 15MB.',
+          description: 'Please choose a file equal or smaller than 5MB.',
           variant: 'destructive',
         });
   
@@ -469,115 +468,15 @@ const handleSortChange = (event: string) => {
 
 
 
-const uploadCapturedMockup = async (file: File) => {
-  const pica = new Pica(); // Correct instantiation
-
-  try {
-    // Create an image element
-    const img = new Image();
-    img.src = URL.createObjectURL(file);
-    
-    // Wait for the image to load
-    await new Promise<void>((resolve) => {
-      img.onload = () => resolve();
-    });
-
-    // Create a canvas for resizing
-    const canvas = document.createElement('canvas');
-    const targetWidth = 800; // Set your desired width
-    const targetHeight = (img.height / img.width) * targetWidth; // Maintain aspect ratio
-
-    canvas.width = targetWidth;
-    canvas.height = targetHeight;
-
-    // Use Pica to resize the image
-    await pica.resize(img, canvas);
-
-    // Convert the canvas to a Blob
-    const optimizedBlob = await new Promise<Blob>((resolve, reject) => {
-      canvas.toBlob((blob) => {
-        if (blob) {
-          resolve(blob); // Resolve with the Blob
-        } else {
-          reject(new Error('Failed to convert canvas to Blob')); // Reject if null
-        }
-      }, 'image/png', 0.9); // Adjust quality (0.9 = 90%)
-    });
-
-    // Upload the optimized image
-    const storageRef = ref(storage, `orders/clients orders/${user.name}/clients products/${Date.now()}.png`);
-    const snapshot = await uploadBytes(storageRef, optimizedBlob);
-    const downloadURL = await getDownloadURL(snapshot.ref);
-    
-    if (downloadURL) {
-      toast({
-        title: 'Product Image Upload Success',
-        description: 'Product image uploaded successfully!',
-      });
-      return downloadURL;
-    }
-  } catch (error) {
-    console.error('Error uploading image:', error);
-    toast({
-      title: 'Upload Failed',
-      description: 'There was an error uploading the product image. Please try again.',
-    });
-    throw error; // Optionally re-throw the error if needed
-  }
-};
 
 
 
 
-                // function to upload the Captured Product
-                // const uploadCapturedMockup = (file: File): Promise<string | null> => {
-                //   return new Promise((resolve, reject) => {
-                //     if (!file) {
-                //       console.log('No file selected.');
-                //       resolve(null);
-                //       return;
-                //     }
-                
-                //     const reader = new FileReader();
-                //     reader.readAsDataURL(file);
-                //     reader.onloadend = async () => {
-                //       const base64data = reader.result?.toString().split(',')[1]; // Get the base64 string only
-                
-                //       try {
-                //         const response = await fetch('/api/uploadCapturedOrder', {
-                //           method: 'POST',
-                //           headers: {
-                //             'Content-Type': 'application/json',
-                //           },
-                //           body: JSON.stringify({ file: base64data , userName : user?.name }),
-                //         });
-                
-                //         if (!response.ok) {
-                //           throw new Error('Failed to upload image');
-                //         }
-                
-                //         const data = await response.json();
-                //         const path = data.url; // Extract the URL from the response
-                
-                //         toast({
-                //           title: 'Product Image Upload Success',
-                //           description: 'Product image uploaded successfully!',
-                //         });
-                
-                //         resolve(path); // Resolve the Promise with the URL
-                //       } catch (error) {
-                //         toast({
-                //           title: 'Upload Error',
-                //           description: 'Error uploading the image!',
-                //           variant: 'destructive',
-                //         });
-                //         reject(error); // Reject the Promise in case of error
-                //       }
-                //     };
-                //   });
-                // };
 
-            // function to transform base64 To Blob to get the file from blob
+  
+         
+         
+         
             function base64ToBlob(base64: string, mimeType: string) {
               const byteCharacters = atob(base64)
               const byteNumbers = new Array(byteCharacters.length)
@@ -588,81 +487,7 @@ const uploadCapturedMockup = async (file: File) => {
               return new Blob([byteArray], { type: mimeType })
             }
 
-              // function to upload the cleint design in uploads folder
-              // const uploadDesign = (file: File): Promise<string | null> => {
-              //   return new Promise((resolve, reject) => {
-              //     if (!file) {
-              //       console.log('No file selected.');
-              //       resolve(null);
-              //       return;
-              //     }
-              
-              //     // Read the file as a base64 string
-              //     const reader = new FileReader();
-              //     reader.readAsDataURL(file);
-              //     reader.onloadend = async () => {
-              //       const base64data = reader.result?.toString().split(',')[1]; // Get the base64 string only
-              
-              //       try {
-              //         const response = await fetch('/api/uploadClientDesigns', {
-              //           method: 'POST',
-              //           headers: {
-              //             'Content-Type': 'application/json',
-              //           },
-              //           body: JSON.stringify({ file: base64data, designName: file.name , userName : user?.name }),
-              //         });
-              
-              //         if (!response.ok) {
-              //           throw new Error('Failed to upload image');
-              //         }
-              
-              //         const data = await response.json();
-              //         const path = data.url; // Get the uploaded URL
-              
-              //         toast({
-              //           title: 'Design Upload Success',
-              //           description: 'Design image uploaded successfully!',
-              //         });
-              
-              //         resolve(path); // Resolve the promise with the URL
-              //       } catch (error) {
-              //         toast({
-              //           title: 'Upload Error',
-              //           description: 'Error uploading the image!',
-              //           variant: 'destructive',
-              //         });
-              //         console.error(error);
-              //         reject(error); // Reject the promise on error
-              //       }
-              //     };
-              //   });
-              // };
-
-
-              const uploadDesign = async (file: File) => {
-                const designNameWithoutExt = path.parse(file.name).name;
-                const storageRef = ref(storage, `orders/clients orders/${user.name}/clients designs/${designNameWithoutExt}-${Date.now()}.png`);
-              
-                try {
-                  const snapshot = await uploadBytes(storageRef, file);
-                  const downloadURL = await getDownloadURL(snapshot.ref);
-                  if(downloadURL) {
-                    toast({
-                     title: 'Design Upload Success',
-                      description: 'Design image uploaded successfully!',
-                      });
-                      return downloadURL
-                  }
-                } catch (error) {
-                  console.error("Error uploading design:", error);
-                  toast({
-                  title: 'Upload Error',
-                  description: 'Error uploading the image!',
-                  variant: 'destructive',
-                  });              
-                }
-              }
-              
+           
               
                 
                 const openDialog = () => {
@@ -681,7 +506,25 @@ const uploadCapturedMockup = async (file: File) => {
 
 
 
-
+                const getDesignDataUrl = async (file: File): Promise<string | undefined> => {
+                  try {
+                    return await new Promise((resolve, reject) => {
+                      const reader = new FileReader();
+                      reader.onload = () => {
+                        if (typeof reader.result === 'string') {
+                          resolve(reader.result); // Successfully returns the data URL
+                        } else {
+                          reject(new Error("Failed to read file as data URL"));
+                        }
+                      };
+                      reader.onerror = () => reject(new Error("Error reading file"));
+                      reader.readAsDataURL(file);
+                    });
+                  } catch (error) {
+                    console.error("Error uploading design:", error);
+                    return undefined;
+                  }
+                }
                 
 
                 const savePreOrder = async () => {
@@ -726,7 +569,8 @@ const uploadCapturedMockup = async (file: File) => {
                   img.src = selectedCatColor.frontImageUrl;
                 
                   if (frontDesignPrice === 0) {
-                    const frontDesignPath = await uploadDesign(FrontDesignFile!);
+                    const frontDesignUrl = await getDesignDataUrl(FrontDesignFile!)
+                    const frontDesignPath = await uploadDesignDataUrlToFirebase(frontDesignUrl! , user.name!)
                     await saveCapturedFrontDesign(user, frontDesignPath!, 'front', false);
                   } else {
                     const design = document.querySelector(".front-design") as HTMLImageElement;
@@ -735,14 +579,15 @@ const uploadCapturedMockup = async (file: File) => {
                     }        
                     await saveCapturedFrontDesign(user, selectedFrontDesignId, 'front', true);
                   }
-                };
+                }
                 
                 const handleBackDesign = async (user : User) => {
                   const img = document.querySelector(".back-product") as HTMLImageElement;
                   img.src = selectedCatColor.backImageUrl;
                 
                   if (backDesignPrice === 0) {
-                    const backDesignPath = await uploadDesign(BackDesignFile!);
+                    const backDesignUrl = await getDesignDataUrl(BackDesignFile!)
+                    const backDesignPath = await uploadDesignDataUrlToFirebase(backDesignUrl! , user.name!)
                     await saveCapturedBackDesign(user, backDesignPath!, 'back', false);
                   } else {
                     const design = document.querySelector(".back-design") as HTMLImageElement;
@@ -760,7 +605,8 @@ const uploadCapturedMockup = async (file: File) => {
                   backImg.src = selectedCatColor.backImageUrl;
             
                   if (frontDesignPrice === 0 && backDesignPrice !== 0) {
-                    const frontDesignPath = await uploadDesign(FrontDesignFile!);
+                    const frontDesignUrl = await getDesignDataUrl(FrontDesignFile!)
+                    const frontDesignPath = await uploadDesignDataUrlToFirebase(frontDesignUrl! , user.name!)                    
                     const design = document.querySelector(".back-design") as HTMLImageElement;
                     if (design) {
                       design.src = selectedBackDesign;
@@ -770,7 +616,8 @@ const uploadCapturedMockup = async (file: File) => {
                     handleSaveResult(result);
                   }
                   else if (frontDesignPrice !== 0 && backDesignPrice === 0) {
-                    const backDesignPath = await uploadDesign(BackDesignFile!);
+                    const backDesignUrl = await getDesignDataUrl(BackDesignFile!)
+                    const backDesignPath = await uploadDesignDataUrlToFirebase(backDesignUrl! , user.name!)                    
                     const design = document.querySelector(".front-design") as HTMLImageElement;
                     if (design) {
                       design.src = selectedFrontDesign;
@@ -793,8 +640,10 @@ const uploadCapturedMockup = async (file: File) => {
                     handleSaveResult(result);
                   }
                   else if (frontDesignPrice === 0 && backDesignPrice === 0) {
-                    const frontDesignPath = await uploadDesign(FrontDesignFile!);
-                    const backDesignPath = await uploadDesign(BackDesignFile!);
+                    const frontDesignUrl = await getDesignDataUrl(FrontDesignFile!)
+                    const frontDesignPath = await uploadDesignDataUrlToFirebase(frontDesignUrl! , user.name!)   
+                    const backDesignUrl = await getDesignDataUrl(BackDesignFile!)
+                    const backDesignPath = await uploadDesignDataUrlToFirebase(backDesignUrl! , user.name!)                        
                     const paths = await saveCapturedBothDesigns();
                     const result = await savePreOrderFBClient(user?.id!,frontDesignPath!,backDesignPath!,totalPrice,productPrice,quantity,selectedColor,selectedSize,selectedP.label,paths)
                     handleSaveResult(result);
@@ -807,24 +656,20 @@ const uploadCapturedMockup = async (file: File) => {
                   const containerRef = designType === 'front' ? FrontcontainerRef : BackcontainerRef;
                   const dataUrl = await toPng(containerRef.current!, { cacheBust: false, pixelRatio: 10 });
                 
-                  const file = getFile(dataUrl);
-                  const capturedProductPath = await uploadCapturedMockup(file);
-                  const paths = [capturedProductPath!];
-                
+                  const frontProductPath = await uploadProductToFirebase(dataUrl , user.name!)
+                  const paths = [frontProductPath];
                   const result = await savePreOrderF(user?.id!, designPath, totalPrice,productPrice, quantity, selectedColor, selectedSize, selectedP.label, paths, isSellerDesign);
                 
                   handleSaveResult(result);
-                };
-            
+                }
+                
             
                 const saveCapturedBackDesign = async (user : User, designPath : string, designType : string, isSellerDesign : boolean) => {
                   const containerRef = designType === 'front' ? FrontcontainerRef : BackcontainerRef;
                   const dataUrl = await toPng(containerRef.current!, { cacheBust: false, pixelRatio: 10 });
                 
-                  const file = getFile(dataUrl);
-                  const capturedProductPath = await uploadCapturedMockup(file);
-                  const paths = [capturedProductPath!];
-                
+                  const backProductPath = await uploadProductToFirebase(dataUrl , user.name!)
+                  const paths = [backProductPath];
                   const result = await savePreOrderB(user?.id!, designPath, totalPrice,productPrice, quantity, selectedColor, selectedSize, selectedP.label, paths, isSellerDesign);
                 
                   handleSaveResult(result);
@@ -832,16 +677,15 @@ const uploadCapturedMockup = async (file: File) => {
                 
             
                 const saveCapturedBothDesigns = async () => {
+
                   const frontDataUrl = await toPng(FrontcontainerRef.current!, { cacheBust: false, pixelRatio: 10 });
                   const backDataUrl = await toPng(BackcontainerRef.current!, { cacheBust: false, pixelRatio: 10 });
                 
-                  const frontFile = getFile(frontDataUrl);
-                  const backFile = getFile(backDataUrl);
                 
-                  const frontCapturedPath = await uploadCapturedMockup(frontFile);
-                  const backCapturedPath = await uploadCapturedMockup(backFile);
+                  const frontProductPath = await uploadProductToFirebase(frontDataUrl , user.name!)
+                  const backProductPath = await uploadProductToFirebase(backDataUrl , user.name!)
                 
-                  return [frontCapturedPath!, backCapturedPath!];
+                  return [frontProductPath, backProductPath];
                 };
                 
                 const handleSaveResult = (result : {
@@ -864,32 +708,6 @@ const uploadCapturedMockup = async (file: File) => {
                   toast({ title, description, variant });
                 };
                 
-                const getFile = (dataUrl : string) => {
-                  const base64Data = dataUrl.split(',')[1];
-                  const blob = base64ToBlob(base64Data, 'image/png');
-                  return new File([blob], `order.png`, { type: 'image/png' });
-                };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1002,8 +820,8 @@ const uploadCapturedMockup = async (file: File) => {
 
                               <div className='space-y-2'>
                                 <h3>Upload a Design:</h3>
-                                <p className='text-xs text-zinc-500 ml-5'>PNG, JPG, JPEG max (15MB)</p>
-                                <p className="text-xs text-zinc-500 ml-5">Recommended (3000px*3000px)</p>
+                                <p className='text-xs text-zinc-500 ml-5'>PNG, JPG, JPEG max (5MB)</p>
+                                <p className="text-xs text-zinc-500 ml-5">recommended (3000px*3000px)</p>
                                 <p className='text-xs text-zinc-500 ml-5'>One Design will cost {platform.clientDesignPrice} TND !</p>  
                               <div className="flex flex-col lg:flex-row justify-center lg:space-x-4 space-y-4 lg:space-y-0">
                                 {/* front design input */}
@@ -1205,7 +1023,7 @@ const uploadCapturedMockup = async (file: File) => {
                             <div className="flex-1 text-center"> 
                                 <Popover>
                                 <PopoverTrigger asChild>
-                                  <Button variant="default">Order Details</Button>
+                                  <Button variant="default">Create Order</Button>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-full max-w-md sm:max-w-lg lg:max-w-xl">
                                 <div className='flex flex-col gap-6 px-4 py-6'>

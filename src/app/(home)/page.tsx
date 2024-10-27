@@ -39,9 +39,9 @@ export default async function Page() {
     <>
 
     {/* hero section */}
-    <div className='py-20 mt-2 mx-auto text-center flex flex-col w-[80%] rounded-2xl items-center bg-center 
+    <div className='py-10 mt-2 mx-auto text-center flex flex-col w-[80%] rounded-2xl items-center border-2 bg-center 
     bg-[url("/bgBanner.png")]'>
-  <h1 className='text-4xl font-bold tracking-tight text-white sm:text-6xl'>
+  <h1 className='text-4xl font-bold tracking-tight text-white sm:text-6xl animate-pulse'>
   Aesthetic Prints, {' '}
     <span className='text-blue-600'>
     Pro Quality
@@ -93,7 +93,7 @@ export default async function Page() {
 
 
 {/* buying section */}
-<div className='py-10 mt-2 mx-auto flex flex-col w-[80%] rounded-2xl bg-center 
+<div className='py-10 mt-2 mx-auto flex flex-col w-[80%] rounded-2xl bg-center border-2
     bg-[url("/bgBanner.png")]'>
 
   <div className="text-center flex flex-col items-center">
@@ -150,7 +150,7 @@ export default async function Page() {
 
     {/* Right Side - Image */}
     <div className="flex justify-center ">
-      <div className="w-[75%] xl:w-[55%]">
+      <div className="w-[95%] xl:w-[55%]">
       <ProductListing
         user={user!}
         product={trendingProducts[0]}
@@ -176,7 +176,7 @@ export default async function Page() {
 
 
 {/* selling section */}
-<div className='py-10 mt-2 mx-auto  flex flex-col w-[80%] rounded-2xl  bg-center 
+<div className='py-10 mt-2 mx-auto  flex flex-col w-[80%] rounded-2xl  bg-center  border-2
     bg-[url("/bgBanner.png")]'>
 
       <div className="text-center flex flex-col items-center">
@@ -232,10 +232,10 @@ export default async function Page() {
     </div>
 
     {/* Right Side - Image */}
-    <div className="flex justify-center mt-10">
-    <div className='px-6 lg:px-8'>
-              <div className='mt-2 flow-root sm:mt-10'>
-                <div className='-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4'>
+    <div className="flex justify-center my-8">
+    <div className='px-2 lg:px-10'>
+              <div className='mt-2 flow-root sm:mt-24'>
+                <div className='-m-10 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-16 lg:rounded-2xl lg:p-4'>
                   <NextImage
                     src={"/Seller Dashboard.png"}
                     alt='seller store preview'
@@ -266,7 +266,7 @@ export default async function Page() {
 
 
 {/* Affiliate program section */}
-<div className='py-10 mt-2 mx-auto flex flex-col w-[80%] rounded-2xl bg-center 
+<div className='py-10 mt-2 mx-auto flex flex-col w-[80%] rounded-2xl bg-center  border-2
     bg-[url("/bgBanner.png")]'>
 
   <div className="text-center flex flex-col items-center">
@@ -309,22 +309,22 @@ export default async function Page() {
     </div>
 
     {/* Right Side - Image */}
-    <div className="flex justify-center mt-10">
-  <div className='px-4 sm:px-6 lg:px-8'>
-    <div className='mt-4 sm:mt-8'>
-      <div className='-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 sm:-m-4 sm:rounded-2xl sm:p-4'>
-        <NextImage
-          src={"/Affiliate Dashboard.png"}
-          alt='seller store preview'
-          width={1013}
-          height={1013}
-          quality={100}
-          className='rounded-md bg-white object-contain sm:object-cover shadow-2xl ring-1 ring-gray-900/10 w-full h-auto'
-        />
-      </div>
+    <div className="flex justify-center my-8">
+    <div className='px-2 lg:px-10'>
+              <div className='mt-2 flow-root sm:mt-16'>
+                <div className='-m-10 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-16 lg:rounded-2xl lg:p-4'>
+                  <NextImage
+                    src={"/Affiliate Dashboard.png"}
+                    alt='affiliate dashboard preview'
+                    width={1013}
+                    height={1013}
+                    quality={100}
+                    className='rounded-md bg-white object-fill shadow-2xl ring-1 ring-gray-900/10'
+                  />
+                </div>
+              </div>
+            </div>
     </div>
-  </div>
-</div>
 
   </div>
 

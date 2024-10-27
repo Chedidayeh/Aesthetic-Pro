@@ -1122,11 +1122,62 @@ export async function addProductToCart(
 
 
 
+// get user cart products count : 
+export async function fetchCartProductCount(userId: string) {
+  try {
+    // Find the user and include only the cart and its selectedProducts to count them
+    const user = await db.user.findUnique({
+      where: { id: userId },
+      include: {
+        cart: {
+          include : {
+            selectedProducts : true
+          }
+        },
+      },
+    });
+
+    // Return 0 if the user or their cart is not found
+    if (!user || !user.cart) {
+      return 0;
+    }
+
+    // Count the number of selected products in the cart
+    const cartProductCount = user.cart.selectedProducts.length;
+
+    return cartProductCount;
+  } catch (error) {
+    console.error('Error fetching cart product count:', error);
+    throw error;
+  }
+}
 
 
+// get user orders : 
+export async function getUserOrders(userId: string) {
+  try {
+    const orders = await db.order.findMany({
+      where: {
+        userId: userId,
+        isSellerOrder: false,
+        status: {
+          not: "CANCELED", // Adjust based on the actual status value for canceled orders
+        },
+      },
+      include: {
+        orderItems: true, // Include order items if you need them
+      },
+    });
 
+    // Filter out orders that don't have any order items
+    const filteredOrders = orders.filter(order => order.orderItems.length > 0);
 
-
+    return filteredOrders;
+  } catch (error) {
+    console.error('Error fetching user orders:', error);
+    throw error;
+  }
+}
 
 
 

@@ -543,10 +543,7 @@ const OrderData = ({ordersData}: DesignViewProps) => {
                           className='flex py-6 sm:py-10'>
                           <div className='flex-shrink-0 mb-10'>
                             <div className='h-72 w-72'>
-                            <Link
-                            href={`/MarketPlace/product/${item.productId}`}>
                             <ImageSlider urls={item.capturedMockup}/>
-                            </Link>
                             </div>
                           </div>
                         </li>

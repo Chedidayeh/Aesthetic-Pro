@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import MaxWidthWrapper from './MaxWidthWrapper'
 import { buttonVariants } from './ui/button'
-import { ArrowRight, BookOpenText, Box, CircleDollarSign, GraduationCap, Heart, Home, LayoutPanelTop, Palette, School, Shirt, ShoppingCart, Store, UserRoundCog } from 'lucide-react'
+import { ArrowRight, BookOpenText, Box, CircleDollarSign, GraduationCap, Heart, Home, LayoutPanelTop, Menu, Palette, School, Shirt, ShoppingBasket, ShoppingCart, Store, UserRoundCog } from 'lucide-react'
 import {
   Avatar,
   AvatarFallback,
@@ -30,11 +30,12 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
-import { getUser } from '@/actions/actions'
+import { fetchCartProductCount, getUser, getUserOrders } from '@/actions/actions'
 import { HamburgerMenuIcon } from '@radix-ui/react-icons'
 import UserProfile from './UserProfile'
 import { ModeToggle } from './ModeToggle'
 import { db } from '@/db'
+import { fetchCartProducts } from '@/app/(sections)/MarketPlace/cart/actions'
 
 
 const Navbar = async () => {
@@ -45,28 +46,35 @@ const Navbar = async () => {
   const isSeller = user?.userType === "SELLER"
   const isFactoryAdmin = user?.userType === "FACTORY"
   const platform = await db.platform.findFirst()
-
+  const cartProductList = await fetchCartProductCount(user?.id ? user.id : "")
+  const orders = await getUserOrders(user?.id ? user.id : "")
   return (
     <nav className='sticky z-[100] h-14 inset-x-0 top-0 w-full  backdrop-blur-lg transition-all'>
       <MaxWidthWrapper>
         <div className='flex h-14 items-center justify-between'>
           {/* Logo */}
-      <div style={{ width: '50px', height: '50px' }} className='h-full  right-0'>
-          <NextImage
-              src={"/aestheticpro.png"}
+          <div
+            style={{ width: '50px', height: '50px' }}
+            className="h-full xl:right-0 sm:items-center hidden sm:block"
+          >
+            <NextImage
+              src="/aestheticpro.png"
               width={1000}
               height={1000}
               alt="logo"
               draggable={false}
-          />
-      </div>
+            />
+          </div>
+
 
 
           {/* Hamburger Icon for Small Devices */}
           <Dialog>
             <SheetTrigger className="md:hidden">
-              <HamburgerMenuIcon />
-            </SheetTrigger>
+            <Button variant="outline" size="icon" className="shrink-0 md:hidden">
+            <Menu className="h-5 w-5" />
+            <span className="sr-only">Toggle navigation menu</span>
+          </Button>            </SheetTrigger>
             <SheetContent side="left" className='w-[60%] mt-4'>
               {/* Middle Section for small devices */}
               <div className='md:hidden flex flex-col mt-16 space-y-2'>
@@ -107,12 +115,31 @@ const Navbar = async () => {
                 <Link href="/MarketPlace/cart" className={buttonVariants({
               size: 'sm',
               variant: 'ghost',
-              className: "hover:text-blue-500"
+              className: "relative hover:text-blue-500"
             })}>
               <ShoppingCart size={15} className='mr-1' />
+                <span className="absolute -top-1 -right-1 bg-blue-500 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
+                  {cartProductList ?? 0}
+                </span>
               Cart
             </Link>
                 </DialogClose>
+               
+               
+                <DialogClose>
+
+                <Link href="/MarketPlace/userOrders" className={buttonVariants({
+              size: 'sm',
+              variant: 'ghost',
+              className: "relative hover:text-green-500"
+            })}>
+              <ShoppingBasket size={15} className='mr-1' />
+                <span className="absolute -top-1 -right-1 bg-green-500 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
+                  {orders.length ?? 0}
+                </span>
+              Your Orders
+            </Link>
+            </DialogClose>
 
 
                 {
@@ -202,14 +229,33 @@ const Navbar = async () => {
               About Us ✨
             </Link>
 
+            <div className='h-8 w-px bg-zinc-200 hidden sm:block' />
+
+
             <Link href="/MarketPlace/cart" className={buttonVariants({
               size: 'sm',
               variant: 'ghost',
-              className: "hover:text-blue-500"
+              className: "relative hover:text-blue-500"
             })}>
               <ShoppingCart size={15} className='mr-1' />
+                <span className="absolute -top-1 -right-1 bg-blue-500 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
+                  {cartProductList ?? 0}
+                </span>
               Cart
             </Link>
+
+            <Link href="/MarketPlace/userOrders" className={buttonVariants({
+              size: 'sm',
+              variant: 'ghost',
+              className: "relative hover:text-green-500"
+            })}>
+              <ShoppingBasket size={15} className='mr-1' />
+                <span className="absolute -top-1 -right-1 bg-green-500 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
+                  {orders.length ?? 0}
+                </span>
+              Your Orders
+            </Link>
+
           </div>
 
                     {/* Right Section */}
@@ -276,6 +322,18 @@ const Navbar = async () => {
 
           {/* User Profile for small devices */}
           <div className='md:hidden flex items-center space-x-2'>
+          <div
+              style={{ width: '50px', height: '50px' }}
+              className="h-full mr-16"
+            >
+              <NextImage
+                src="/aestheticpro.png"
+                width={1000}
+                height={1000}
+                alt="logo"
+                draggable={false}
+              />
+            </div>
             <UserProfile user={user!} platform={platform!} />
             <ModeToggle/>
           </div>

@@ -40,7 +40,7 @@ const CategoryConfigurator = () => {
 
       // isClicked state
 
-  const MAX_FILE_SIZE = 15 * 1024 * 1024;
+  const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 
   // design  width and height
@@ -95,7 +95,7 @@ const handleFileChange = (file : File) => {
       setFrontDesignFile(undefined)
       toast({
         title: 'File size exceeds the limit.',
-        description: 'Please choose a file equal or smaller than 15MB.',
+        description: 'Please choose a file equal or smaller than 5MB.',
         variant: 'destructive',
       });
 

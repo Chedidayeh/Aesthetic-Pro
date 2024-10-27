@@ -61,6 +61,9 @@ export const updateDesign = async ({ designId, newName,newPrice }: UpdateDesignA
       throw new Error('Failed to delete design from the database');
     }
   };
+
+
+
   
 
 

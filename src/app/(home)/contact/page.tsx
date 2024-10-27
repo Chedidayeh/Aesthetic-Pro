@@ -18,7 +18,7 @@ const Page = () => {
   };
 
   const handleInstagramIconClick = () => {
-    const url = "https://www.instagram.com/astheticpro.tn/";
+    const url = "https://www.instagram.com/aestheticpro.tn/";
     window.open(url!, '_blank', 'noopener,noreferrer');
   };
 
@@ -50,7 +50,7 @@ const Page = () => {
               1- FaceBook Page : 
             </h4>
              <p className="text-gray-400 inline-flex cursor-pointer items-center hover:text-blue-600" onClick={handleFacebookIconClick}>
-               Asthetic Pro
+               Aesthetic Pro
             </p>
 
           </div>
@@ -60,7 +60,7 @@ const Page = () => {
               2- Instagram Page : 
             </h4>
             <p className="text-gray-400 inline-flex cursor-pointer items-center hover:text-red-600" onClick={handleInstagramIconClick}>
-               @astheticpro.tn
+               @aestheticpro.tn
             </p>
           </div>
 
