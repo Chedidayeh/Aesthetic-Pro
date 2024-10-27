@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import NotFound from "../[...not-found]/page";
 import { createAffiliateClick, getAffiliateLinkByCode, updateTotalVisits } from "./actions";
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription } from '@/components/ui/alert-dialog';
-import { Loader } from 'lucide-react';
 import RedirectPage from './RedirectPage';
 import { auth } from '@/auth';
 import { getUser } from '@/actions/actions';

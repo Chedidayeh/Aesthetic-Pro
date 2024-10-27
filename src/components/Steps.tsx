@@ -55,7 +55,7 @@ const Steps = () => {
                   i !== 0 ? 'lg:pl-9' : '',
                   'flex items-center px-6 py-4 text-sm font-medium'
                 )}>
-                <span className='flex-shrink-0'>
+                <span className='flex-shrink-0 animate-pulse'>
                   <NextImage
                     src={imgPath}
                     alt={`Step ${i + 1}`}

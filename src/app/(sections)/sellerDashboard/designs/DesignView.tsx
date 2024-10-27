@@ -18,7 +18,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import React from 'react';
-import {  CircleDollarSign, CreditCard, Heart, Loader2, OctagonAlert, SquarePen, Tags, Trash2 } from 'lucide-react';
+import {  CircleDollarSign, CreditCard, Heart, Loader, OctagonAlert, SquarePen, Tags, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import {
     AlertDialog,
@@ -189,42 +189,37 @@ const DesignView = ({
 
  // Function to handle download
  const downloadDesign = async (imageUrl: string) => {
-   try {
-     setIsDownloadOpen(true);
-     const response = await fetch(imageUrl);
-     const blob = await response.blob();
-     const file = new File([blob], `design.png`, { type: 'image/png' });
-     const data = new FormData()
-     data.set('file', file)
-     const res = await fetch('/api/downloadDesign', {
-       method: 'POST',
-       body: data
-     })
-     // handle the error
-     if (!res.ok) throw new Error(await res.text())
-     // Parse response JSON
-     const result = await res.json()
-      console.log(result); // Log the result to inspect its structure
-     result.optimizedBuffer
-    //  convert optimizedBuffer to blob
-    const optimizedBlob = new Blob([new Uint8Array(atob(result.optimizedBuffer).split("").map(c => c.charCodeAt(0)))], { type: 'image/png' });
-    const url = window.URL.createObjectURL(optimizedBlob);
-     const a = document.createElement("a");
-     a.href = url;
-     a.download = "design_image.png"; // You can set the filename here
-     document.body.appendChild(a);
-     a.click();
-     a.remove();
-     setIsDownloadOpen(false);
-   } catch (error) {
-     setIsDownloadOpen(false);
-     console.error("Error downloading design:", error);
-     toast({
-       title: "Download failed",
-       variant: "destructive",
-     });
-   }
- };
+
+  if(imageUrl === '') {
+    toast({
+      title: "No design found !",
+      variant: "destructive",
+    });
+    return;
+  }
+  setIsDownloadOpen(true)
+  try {
+    const response = await fetch(imageUrl);
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "design_image.png"; // You can set the filename here
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setIsDownloadOpen(false)
+
+  } catch (error) {
+    console.error("Error downloading design:", error);
+    toast({
+      title: "Download failed",
+      variant: "destructive",
+    });
+    setIsDownloadOpen(false)
+
+  }
+};
 
 
 

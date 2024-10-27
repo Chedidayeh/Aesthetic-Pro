@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/avatar"
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { Loader2, MousePointerClick, RocketIcon } from 'lucide-react'
+import { Loader, MousePointerClick, RocketIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import Confetti from 'react-dom-confetti'
 import { Input } from '@/components/ui/input'
@@ -299,7 +299,7 @@ const Page = () => {
           After that try to SignIn again.
         </AlertDialogDescription>
       </AlertDialogHeader>
-      <Loader2 className="text-blue-700 h-[15%] w-[15%] animate-spin mt-3" />
+      <Loader className="text-blue-700 h-[15%] w-[15%] animate-spin mt-3" />
       </AlertDialogContent>
   </AlertDialog>
 

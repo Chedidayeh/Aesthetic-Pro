@@ -72,7 +72,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import React from 'react';
-import {   Eye, Loader2, OctagonAlert, PenTool, SquareArrowDown, Trash2 } from 'lucide-react';
+import {   Eye, Loader, OctagonAlert, PenTool, SquareArrowDown, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import {
     AlertDialog,

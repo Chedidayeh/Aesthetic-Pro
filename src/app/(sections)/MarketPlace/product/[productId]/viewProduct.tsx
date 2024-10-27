@@ -372,26 +372,37 @@ const redirectToCart = () => {
           <Label htmlFor="username" className="text-left">
             Select Color :
           </Label>
-          <div className="ml-3">
-          <ToggleGroup
-            type="single"
-            value={selectedColor}
-            onValueChange={(value) => {
-              const index = product.colors.indexOf(value);
-              handleColorChange(value, index);
-            }}
-          >
-            {product.colors.map((color, index) => (
-              <ToggleGroupItem
-                key={index}
-                value={color}
-                className="px-4 py-2 rounded text-white"
-              >
-                {color}
-              </ToggleGroupItem>
-            ))}
-          </ToggleGroup>
-        </div>
+
+
+          <div className="ml-3 w-full"> {/* Set full width for responsive layout */}
+            <ToggleGroup
+              type="single"
+              value={selectedColor}
+              onValueChange={(value) => {
+                const index = product.colors.indexOf(value);
+                handleColorChange(value, index);
+              }}
+              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2" // Responsive grid layout
+            >
+              {product.colors.map((color, index) => (
+                <ToggleGroupItem
+                  key={index}
+                  value={color}
+                  className={`px-4 py-2 flex items-center space-x-2 rounded text-white ${
+                    selectedColor === color ? "bg-blue-500" : "bg-gray-300"
+                  }`}
+                >
+                  {color}
+                  {selectedColor === color && (
+                    <Check
+                      className="w-4 h-4 ml-1"
+                      aria-hidden="true"
+                    />
+                  )}
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
+          </div>
         </div>
 
 

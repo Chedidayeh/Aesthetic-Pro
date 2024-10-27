@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { cn } from '@/lib/utils'
 import { CartProduct, Platform, User } from '@prisma/client'
-import { Check, Loader2, TriangleAlert, X } from 'lucide-react'
+import { Check, Loader, TriangleAlert, X } from 'lucide-react'
 import NextImage from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -231,8 +231,7 @@ useEffect(() => {
                               </AlertDialogTitle>
                               <AlertDialogDescription className="flex flex-col items-center">
                                 This will take a moment.
-                                {/* Replace Loader2 with your loader component */}
-                                <Loader2 className="text-blue-700 h-[50%] w-[50%] animate-spin mt-3" />
+                                <Loader className="text-blue-700 h-[50%] w-[50%] animate-spin mt-3" />
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogCancel className="hidden" ref={alertDialogCancelRef}>Cancel</AlertDialogCancel>

@@ -16,7 +16,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { Frown, Loader2 } from 'lucide-react';
+import { Frown, Loader } from 'lucide-react';
 import { getPlatformForTheWebsite } from '@/actions/actions';
 
 

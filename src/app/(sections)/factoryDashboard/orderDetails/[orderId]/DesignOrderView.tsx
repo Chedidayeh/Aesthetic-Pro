@@ -44,7 +44,7 @@ import {
       Eye,
       FileType,
       Heart,
-      Loader2,
+      Loader,
       Menu,
       OctagonAlert,
       Package2,

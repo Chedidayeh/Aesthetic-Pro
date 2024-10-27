@@ -62,7 +62,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import React from 'react';
-import {  CircleDollarSign, CreditCard, EllipsisVertical, Eye, Heart, Loader2, OctagonAlert, PenTool, SquareArrowDown, SquarePen, Tags, Trash2 } from 'lucide-react';
+import {  CircleDollarSign, CreditCard, EllipsisVertical, Eye, Heart, Loader, OctagonAlert, PenTool, SquareArrowDown, SquarePen, Tags, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import {
     AlertDialog,

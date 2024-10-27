@@ -45,7 +45,7 @@ import {
     DollarSign,
     Eye,
     Heart,
-    Loader2,
+    Loader,
     Menu,
     OctagonAlert,
     Package2,
@@ -699,7 +699,7 @@ const handleSwitchChange = () => {
                                         </AlertDialogTrigger>
                                           <AlertDialogContent className=" flex flex-col items-center justify-center">
                                               <AlertDialogHeader className="flex flex-col items-center justify-center">
-                                              <Loader2 className="animate-spin text-blue-800 h-[50%] w-[50%]" />
+                                              <Loader className="animate-spin text-blue-800 h-[50%] w-[50%]" />
                                               <AlertDialogTitle className="flex flex-col items-center justify-center">Loading</AlertDialogTitle>
                                             </AlertDialogHeader>
                                             <AlertDialogDescription className="flex flex-col items-center justify-center">

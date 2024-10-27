@@ -2,7 +2,7 @@
 
 import { ChangeEvent, useState } from 'react';
 import Link from "next/link";
-import { CornerDownLeft, Loader2 } from "lucide-react";
+import { CornerDownLeft, Loader } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -110,7 +110,7 @@ export default function Page() {
           This can take a while.
         </AlertDialogDescription>
       </AlertDialogHeader>
-      <Loader2 className="text-blue-700 h-[15%] w-[15%] animate-spin mt-3" />
+      <Loader className="text-blue-700 h-[15%] w-[15%] animate-spin mt-3" />
       </AlertDialogContent>
   </AlertDialog>
   

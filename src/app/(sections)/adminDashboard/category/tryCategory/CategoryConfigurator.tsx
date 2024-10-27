@@ -70,22 +70,13 @@ const CategoryConfigurator = () => {
 
 
 
-  function View (){
-    setIsBorderHidden(true);
+  function toggleFrontBorder() {
+    setIsBorderHidden((prev) => !prev);
   }
 
-  function notView (){
-    setIsBorderHidden(false);
+  function toggleBackBorder() {
+    setisBackBorderHidden((prev) => !prev);
   }
-
-  function ViewBack (){
-    setisBackBorderHidden(true)
-  }
-
-  function notViewBack (){
-    setisBackBorderHidden(false)
-  }
-
 
 
   // Function to handle Front file upload
@@ -558,14 +549,12 @@ const [backImage, setBackImage] = useState("/Loading.png"); // Default back imag
                           </div>
 
                                 <div className="text-center">
-                                  <Button className='mt-4'
-                                    onMouseDown={View}
-                                    onMouseUp={notView}
-                                    disabled={!selectedFrontDesign} 
-                                    >
-                                    Hold to Preview
-                                    <MousePointerClick className='ml-1'/>
-                                  </Button>
+                                <Button
+                            className='mt-4'
+                            onClick={toggleFrontBorder}
+                          >
+                            {isBorderHidden ? "Show Border" : "Hide Border"}
+                          </Button>
                                 </div>
 
                     <div className='w-full h-px bg-zinc-200 my-5' />
@@ -620,14 +609,12 @@ const [backImage, setBackImage] = useState("/Loading.png"); // Default back imag
                           </div>
 
                                 <div className="text-center">
-                                      <Button className='mt-4'
-                                        onMouseDown={ViewBack}
-                                        onMouseUp={notViewBack}
-                                        disabled={!selectedBackDesign} 
-                                      >
-                                        Hold to Preview
-                                      <MousePointerClick className='ml-1'/>
-                                      </Button>
+                                <Button
+                            className='mt-4'
+                            onClick={toggleBackBorder}
+                          >
+                            {isBackBorderHidden ? "Show Border" : "Hide Border"}
+                            </Button>
                                     </div>
                           </>
                       )}

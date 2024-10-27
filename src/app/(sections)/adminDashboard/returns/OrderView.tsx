@@ -42,7 +42,7 @@ import {
     DollarSign,
     Eye,
     Heart,
-    Loader2,
+    Loader,
     Menu,
     OctagonAlert,
     Package2,
@@ -244,8 +244,7 @@ interface OrderViewProps {
                               </AlertDialogTitle>
                               <AlertDialogDescription className="flex flex-col items-center">
                                 This will take a moment.
-                                {/* Replace Loader2 with your loader component */}
-                                <Loader2 className="text-blue-700 h-[50%] w-[50%] animate-spin mt-3" />
+                                <Loader className="text-blue-700 h-[50%] w-[50%] animate-spin mt-3" />
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogCancel className="hidden" ref={alertDialogCancelRef}>Cancel</AlertDialogCancel>

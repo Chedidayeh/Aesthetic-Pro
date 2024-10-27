@@ -32,7 +32,7 @@ import {
   Home,
   LineChart,
   ListFilter,
-  Loader2,
+  Loader,
   MoreVertical,
   OctagonAlert,
   Package,

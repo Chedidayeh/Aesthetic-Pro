@@ -46,7 +46,7 @@ import { RootState } from '@/store/reducers/reducers';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
-import { CircleCheckBig, CircleDollarSign, FileText, FolderPen, Loader2, Receipt, SquareArrowOutUpRight, Tags } from 'lucide-react';
+import { CircleCheckBig, CircleDollarSign, FileText, FolderPen, Loader, Receipt, SquareArrowOutUpRight, Tags } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Switch } from '@/components/ui/switch';
 import { toPng } from 'html-to-image';
@@ -179,8 +179,12 @@ const CreateDesignView = ({platform , store}: ProductViewProps) => {
 
             const designNameWithoutExt = path.parse(file.name).name;
             const storageRef = ref(storage, `sellers/stores/${store.storeName}/designs/${designNameWithoutExt}-${Date.now()}.png`);
-          
+            let downloadURL
+
             try {
+
+              if (file.size >= (2 * 1024 * 1024)) {
+
                // Create an image element
                const img = new Image();
                img.src = URL.createObjectURL(file);
@@ -192,9 +196,9 @@ const CreateDesignView = ({platform , store}: ProductViewProps) => {
            
                // Create a canvas for resizing
                const canvas = document.createElement('canvas');
-               const targetWidth = 2000; // Set your desired width
+               const targetWidth = 1000; // Set your desired width
               //  const targetHeight = (img.height / img.width) * targetWidth; // Maintain aspect ratio
-               const targetHeight = 2000
+               const targetHeight = 1000
                canvas.width = targetWidth;
                canvas.height = targetHeight;
            
@@ -215,7 +219,16 @@ const CreateDesignView = ({platform , store}: ProductViewProps) => {
 
 
               const snapshot = await uploadBytes(storageRef, optimizedBlob);
-              const downloadURL = await getDownloadURL(snapshot.ref);
+              downloadURL = await getDownloadURL(snapshot.ref);
+
+              }else {
+                const snapshot = await uploadBytes(storageRef, file);
+                downloadURL = await getDownloadURL(snapshot.ref);
+               }
+    
+
+
+
               if(downloadURL) {
                   return downloadURL
               }
@@ -320,7 +333,7 @@ const CreateDesignView = ({platform , store}: ProductViewProps) => {
 
 
               <div className='relative mt-5 grid grid-cols-1  mb-20 pb-20'>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:grid-cols-2">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:grid-cols-1">
 
 
                 <Card x-chunk="dashboard-05-chunk-3" className={cn(' lg:rounded-2xl shadow-lg')}>
@@ -447,8 +460,8 @@ const CreateDesignView = ({platform , store}: ProductViewProps) => {
                               </AlertDialogTitle>
                               <AlertDialogDescription className="flex flex-col items-center">
                                 This will take a moment.
-                                {/* Replace Loader2 with your loader component */}
-                                <Loader2 className="text-blue-700 h-[50%] w-[50%] animate-spin mt-3" />
+                                {/* Replace Loader with your loader component */}
+                                <Loader className="text-blue-700 h-[50%] w-[50%] animate-spin mt-3" />
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogCancel className="hidden" ref={alertDialogCancelRef}>Cancel</AlertDialogCancel>

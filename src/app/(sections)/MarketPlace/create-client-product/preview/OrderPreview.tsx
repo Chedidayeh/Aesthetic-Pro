@@ -23,7 +23,7 @@ import {
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation' // Import useRouter from next/router
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, ArrowRight, Check, Loader2, TriangleAlert, X } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Check, Loader, TriangleAlert, X } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   Card,
@@ -221,8 +221,8 @@ const closeDialog = () => {
                               </AlertDialogTitle>
                               <AlertDialogDescription className="flex flex-col items-center">
                                 This will take a moment.
-                                {/* Replace Loader2 with your loader component */}
-                                <Loader2 className="text-blue-700 h-[50%] w-[50%] animate-spin mt-3" />
+                                {/* Replace Loader with your loader component */}
+                                <Loader className="text-blue-700 h-[50%] w-[50%] animate-spin mt-3" />
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogCancel className="hidden" ref={alertDialogCancelRef}>Cancel</AlertDialogCancel>

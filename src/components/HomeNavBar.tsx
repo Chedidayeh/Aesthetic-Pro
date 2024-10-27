@@ -55,7 +55,7 @@ const Navbar = async () => {
           {/* Logo */}
           <div
             style={{ width: '50px', height: '50px' }}
-            className="h-full xl:right-0 sm:items-center hidden sm:block"
+            className="h-full xl:right-0 sm:items-center hidden animate-pulse sm:block"
           >
             <NextImage
               src="/aestheticpro.png"
@@ -324,7 +324,7 @@ const Navbar = async () => {
           <div className='md:hidden flex items-center space-x-2'>
           <div
               style={{ width: '50px', height: '50px' }}
-              className="h-full mr-16"
+              className="h-full mr-16 animate-pulse"
             >
               <NextImage
                 src="/aestheticpro.png"

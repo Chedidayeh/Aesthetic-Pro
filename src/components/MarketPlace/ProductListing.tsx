@@ -27,7 +27,7 @@ import { Product, Store, User, UserType } from '@prisma/client'
 import ImageSlider from './ImageSlider'
 import { Badge } from "../ui/badge"
 import { Label } from "@radix-ui/react-label"
-import { Heart, Loader2, ShoppingBag } from "lucide-react"
+import { Heart, Loader, ShoppingBag } from "lucide-react"
 import { buttonVariants } from "../ui/button"
 import { auth } from "@/auth"
 import { useToast } from "../ui/use-toast"
@@ -185,7 +185,7 @@ const ProductListing = ({
                               </AlertDialogTitle>
                               <AlertDialogDescription className="flex flex-col items-center">
                                 This will take a moment.
-                                <Loader2 className="text-blue-700 h-[50%] w-[50%] animate-spin mt-3" />
+                                <Loader className="text-blue-700 h-[50%] w-[50%] animate-spin mt-3" />
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                           </AlertDialogContent>

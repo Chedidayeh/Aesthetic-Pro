@@ -1,6 +1,6 @@
 'use client'
 
-import { Loader2, Search } from "lucide-react"
+import { Loader, Search } from "lucide-react"
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
 import { ChangeEvent, useState } from "react"
@@ -36,7 +36,7 @@ const SearchQuery = ()=>{
           This will take a moment.
         </AlertDialogDescription>
       </AlertDialogHeader>
-      <Loader2 className="text-blue-700 h-[15%] w-[15%] animate-spin mt-3" />
+      <Loader className="text-blue-700 h-[15%] w-[15%] animate-spin mt-3" />
       </AlertDialogContent>
   </AlertDialog>
   

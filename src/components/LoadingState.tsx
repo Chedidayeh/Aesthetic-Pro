@@ -10,7 +10,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
   } from "@/components/ui/alert-dialog"
-import { Loader2 } from "lucide-react"
+import { Loader } from "lucide-react"
 
 const LoadingState = ({isOpen} : {isOpen : boolean}) =>{
 
@@ -25,7 +25,7 @@ const LoadingState = ({isOpen} : {isOpen : boolean}) =>{
             </AlertDialogTitle>
             <AlertDialogDescription className="flex flex-col items-center">
               This will take a moment.
-              <Loader2 className="text-blue-700 h-[50%] w-[50%] animate-spin mt-3" />
+              <Loader className="text-blue-700 h-[50%] w-[50%] animate-spin mt-3" />
             </AlertDialogDescription>
           </AlertDialogHeader>
         </AlertDialogContent>

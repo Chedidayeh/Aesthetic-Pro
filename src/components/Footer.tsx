@@ -21,7 +21,7 @@ const Footer = async () => {
       <div className="p-5">
   <ul>
 
-  <div style={{ width: '100px', height: '100px' }}>
+  <div className='animate-pulse' style={{ width: '100px', height: '100px' }}>
     <NextImage
         draggable={false}
         src={"/aestheticpro.png"}

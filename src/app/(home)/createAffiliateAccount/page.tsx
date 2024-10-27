@@ -11,7 +11,7 @@ import {
   useRouter
 } from 'next/navigation';
 import {
-  Loader2,
+  Loader,
   MousePointerClick,
   RocketIcon
 } from 'lucide-react';
@@ -138,7 +138,7 @@ const [isOpen, setIsOpen] = useState < boolean > (false);
             After that try to SignIn again.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <Loader2 className="text-blue-700 h-[15%] w-[15%] animate-spin mt-3" />
+          <Loader className="text-blue-700 h-[15%] w-[15%] animate-spin mt-3" />
         </AlertDialogContent>
       </AlertDialog>
 

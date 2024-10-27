@@ -45,7 +45,7 @@ import { RootState } from '@/store/reducers/reducers';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
-import { CircleCheckBig, CircleDollarSign, FileText, FolderPen, Loader, Loader2, MousePointerClick, OctagonAlert, Receipt, Smile, Tags } from 'lucide-react';
+import { CircleCheckBig, CircleDollarSign, FileText, FolderPen, Loader, MousePointerClick, OctagonAlert, Receipt, Smile, Tags } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { toPng } from 'html-to-image';
 import { SingleImageDropzone } from '@/components/sellerDashboard/SingleImageDropzone';

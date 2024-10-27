@@ -24,7 +24,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import React from 'react';
-import {  CircleDollarSign, CreditCard, Eye, EyeIcon, Heart, Loader2, OctagonAlert, PenTool, SquarePen, Tags, Trash2 } from 'lucide-react';
+import {  CircleDollarSign, CreditCard, Eye, EyeIcon, Heart, Loader, OctagonAlert, PenTool, SquarePen, Tags, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import {
     AlertDialog,
@@ -252,7 +252,7 @@ const ProductView = ({
                                         </AlertDialogTrigger>
                                           <AlertDialogContent className=" flex flex-col items-center justify-center">
                                               <AlertDialogHeader className="flex flex-col items-center justify-center">
-                                              <Loader2 className="animate-spin text-blue-800 h-[50%] w-[50%]" />
+                                              <Loader className="animate-spin text-blue-800 h-[50%] w-[50%]" />
                                               <AlertDialogTitle className="flex flex-col items-center justify-center">Loading</AlertDialogTitle>
                                             </AlertDialogHeader>
                                             <AlertDialogDescription className="flex flex-col items-center justify-center">

@@ -48,13 +48,13 @@ import {
 import { RootState } from '@/store/reducers/reducers';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, Check, ChevronsUpDown, CircleCheckBig, CircleDollarSign, FileText, FolderPen, Loader, Loader2, MousePointerClick, Receipt, Smile, Tags } from 'lucide-react';
+import { ArrowRight, Check, ChevronsUpDown, CircleCheckBig, CircleDollarSign, FileText, FolderPen, Loader, MousePointerClick, Receipt, Smile, Tags } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { toPng } from 'html-to-image';
 import { SingleImageDropzone } from '@/components/sellerDashboard/SingleImageDropzone';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { getUserPreOrderByUserId, savePreOrderB, savePreOrderF, savePreOrderFB1, savePreOrderFB2, savePreOrderFBClient, savePreOrderFBSeller, uploadDesignDataUrlToFirebase, uploadProductToFirebase } from "./actions"
+import { getUserPreOrderByUserId, savePreOrderB, savePreOrderF, savePreOrderFB1, savePreOrderFB2, savePreOrderFBClient, savePreOrderFBSeller } from "./actions"
 import { getUser } from "@/actions/actions"
 import Link from "next/link"
 import { BackBorder, Category, Color, FrontBorder, Platform, SellerDesign, Size, Store, User } from "@prisma/client"
@@ -221,23 +221,13 @@ const DesignConfigurator: React.FC<DesignConfiguratorProps> = ({ SellersDesignsD
     }
 
 
+    function toggleFrontBorder() {
+      setIsBorderHidden((prev) => !prev);
+    }
 
-  function View (){
-    setIsBorderHidden(true);
-  }
-
-  function notView (){
-    setIsBorderHidden(false);
-  }
-
-  function ViewBack (){
-    setisBackBorderHidden(true)
-  }
-
-  function notViewBack (){
-    setisBackBorderHidden(false)
-  }
-
+    function toggleBackBorder() {
+      setisBackBorderHidden((prev) => !prev);
+    }
 
 
   // Function to handle Front file upload
@@ -502,19 +492,58 @@ const handleSortChange = (event: string) => {
                     alertDialogCancelRef.current.click();
                   }
                 };
-     
+
                 const uploadDesign = async (file: File) => {
+                  const pica = new Pica();
+      
                   const designNameWithoutExt = path.parse(file.name).name;
                   const storageRef = ref(storage, `orders/clients orders/${user.name}/clients designs/${designNameWithoutExt}-${Date.now()}.png`);
-                
+                  let downloadURL
+
                   try {
-                    const snapshot = await uploadBytes(storageRef, file);
-                    const downloadURL = await getDownloadURL(snapshot.ref);
+
+
+                    if (file.size >= (2 * 1024 * 1024)) {
+                    // Create an image element
+                    const img = new Image();
+                    img.src = URL.createObjectURL(file);
+                    
+                    // Wait for the image to load
+                    await new Promise<void>((resolve) => {
+                      img.onload = () => resolve();
+                    });
+
+                    // Create a canvas for resizing
+                    const canvas = document.createElement('canvas');
+                    const targetWidth = 1000; // Set your desired width
+                  //  const targetHeight = (img.height / img.width) * targetWidth; // Maintain aspect ratio
+                    const targetHeight = 1000
+                    canvas.width = targetWidth;
+                    canvas.height = targetHeight;
+
+                    // Use Pica to resize the image
+                    await pica.resize(img, canvas);
+
+                    // Convert the canvas to a Blob
+                    const optimizedBlob = await new Promise<Blob>((resolve, reject) => {
+                      canvas.toBlob((blob) => {
+                        if (blob) {
+                          resolve(blob); // Resolve with the Blob
+                        } else {
+                          reject(new Error('Failed to convert canvas to Blob')); // Reject if null
+                        }
+                      }, 'image/png', 1); // Adjust quality (0.9 = 90%)
+                    })
+
+                    const snapshot = await uploadBytes(storageRef, optimizedBlob);
+                    downloadURL = await getDownloadURL(snapshot.ref);
+
+                     }else {
+                      const snapshot = await uploadBytes(storageRef, file);
+                      downloadURL = await getDownloadURL(snapshot.ref);
+                     }
+
                     if(downloadURL) {
-                      toast({
-                       title: 'Design Upload Success',
-                        description: 'Design image uploaded successfully!',
-                        });
                         return downloadURL
                     }
                   } catch (error) {
@@ -526,6 +555,7 @@ const handleSortChange = (event: string) => {
                     });              
                   }
                 }
+     
 
                 const uploadCapturedMockup = async (file: File) => {
                   const pica = new Pica(); // Correct instantiation
@@ -795,8 +825,8 @@ const handleSortChange = (event: string) => {
                               </AlertDialogTitle>
                               <AlertDialogDescription className="flex flex-col items-center">
                                 This will take a moment.
-                                {/* Replace Loader2 with your loader component */}
-                                <Loader2 className="text-blue-700 h-[50%] w-[50%] animate-spin mt-3" />
+                                {/* Replace Loader with your loader component */}
+                                <Loader className="text-blue-700 h-[50%] w-[50%] animate-spin mt-3" />
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogCancel className="hidden" ref={alertDialogCancelRef}>Cancel</AlertDialogCancel>
@@ -809,7 +839,7 @@ const handleSortChange = (event: string) => {
 
 
               <div className='relative mt-5 grid grid-cols-1  mb-20 pb-20'>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:grid-cols-2">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:grid-cols-1">
 
                           {/* first card */}
                      <Card x-chunk="dashboard-05-chunk-3" className={cn(' lg:rounded-2xl shadow-lg')}>
@@ -1309,14 +1339,13 @@ const handleSortChange = (event: string) => {
                           </div>
 
                                 <div className="text-center">
-                                  <Button className='mt-4'
-                                    onMouseDown={View}
-                                    onMouseUp={notView}
-                                    disabled={!selectedFrontDesign} 
-                                    >
-                                    Hold to Preview
-                                    <MousePointerClick className='ml-1'/>
-                                  </Button>
+                                  <Button
+                                  className='mt-4'
+                                  onClick={toggleFrontBorder}
+                                  disabled={!selectedFrontDesign}
+                                >
+                                  {isBorderHidden ? "Show Border" : "Hide Border"}
+                                </Button>
                                 </div>
 
                     <div className='w-full h-px bg-zinc-200 my-5' />
@@ -1371,14 +1400,13 @@ const handleSortChange = (event: string) => {
                           </div>
 
                                 <div className="text-center">
-                                      <Button className='mt-4'
-                                        onMouseDown={ViewBack}
-                                        onMouseUp={notViewBack}
-                                        disabled={!selectedBackDesign} 
-                                      >
-                                        Hold to Preview
-                                      <MousePointerClick className='ml-1'/>
-                                      </Button>
+                                      <Button
+                                    className='mt-4'
+                                    onClick={toggleBackBorder}
+                                    disabled={!selectedBackDesign}
+                                  >
+                                    {isBackBorderHidden ? "Show Border" : "Hide Border"}
+                                    </Button>
                                     </div>
                           </>
                       )}

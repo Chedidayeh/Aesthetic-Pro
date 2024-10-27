@@ -309,75 +309,9 @@ export async function savePreOrderFB2(
     }
 }
 
-// upload captured order product to firebase
 
-export const uploadProductToFirebase = async (dataUrl: string , userName : string ) => {
-  
-      // Get the file type from the URL and convert base64 to Blob
-      const base64Data = dataUrl.split(',')[1];
-      const blob = base64ToBlob(base64Data, 'image/png'); // Ensure base64ToBlob is defined
-      const file = new File([blob], `product.png`, { type: 'image/png' });
-      const bytes = await file.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-  
-      // Optimize the image using sharp
-      const optimizedBuffer = await sharp(buffer)
-        .resize({ width: 1000 }) // Resize to 1000px wide or adjust as needed
-        .toFormat('png', { quality: 100 }) // Convert to PNG with specified quality
-        .toBuffer();
-  
-      // Upload the optimized image
-      const storageRef = ref(storage, `orders/clients orders/${userName}/clients products/${Date.now()}.png`);
-      const snapshot = await uploadBytes(storageRef, optimizedBuffer);
-      const downloadURL = await getDownloadURL(snapshot.ref);
-  
-  
-    return downloadURL;
-  }
 
-// upload front design 
-export const uploadDesignDataUrlToFirebase = async (dataUrl: string , userName: string) => {
 
-    try {
-      // Extract base64 data and convert it to a Blob
-      const base64Data = dataUrl.split(',')[1];
-      const blob = base64ToBlob(base64Data, 'image/png');
-      const file = new File([blob], `product.png`, { type: 'image/png' });
-      
-      // Convert File to ArrayBuffer and then to Buffer
-      const buffer = Buffer.from(await file.arrayBuffer());
-  
-      // Optimize the image using sharp
-      const optimizedBuffer = await sharp(buffer)
-        .resize({ width: 2000 })
-        .toFormat('png', { quality: 100 })
-        .toBuffer()
-  
-      // Create references for the optimized and original images
-      const storageRef = ref(storage, `orders/clients orders/${userName}/clients designs/${Date.now()}.png`);
-  
-      // Upload the optimized image
-      const optimizedSnapshot = await uploadBytes(storageRef, optimizedBuffer);
-      const optimizedDownloadURL = await getDownloadURL(optimizedSnapshot.ref);
-  
-  
-      return optimizedDownloadURL
-      
-    } catch (error) {
-      console.error("Error uploading design to Firebase:", error);
-      throw new Error("Failed to upload design. Please try again.");
-    }
-  }
-
-  function base64ToBlob(base64: string, mimeType: string) {
-    const byteCharacters = atob(base64)
-    const byteNumbers = new Array(byteCharacters.length)
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i)
-    }
-    const byteArray = new Uint8Array(byteNumbers)
-    return new Blob([byteArray], { type: mimeType })
-  }
 
 
 

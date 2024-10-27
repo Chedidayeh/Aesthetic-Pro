@@ -58,7 +58,7 @@ import { RootState } from '@/store/reducers/reducers';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { v4 as uuidv4 } from 'uuid';
-import { CircleCheckBig, CircleDollarSign, FileText, FolderPen, Loader, Loader2, MousePointerClick, Receipt, Smile, Tags } from 'lucide-react';
+import { Check, CircleCheckBig, CircleDollarSign, FileText, FolderPen, Loader, MousePointerClick, Receipt, Smile, Tags } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { toPng } from 'html-to-image';
 import { SingleImageDropzone } from '@/components/sellerDashboard/SingleImageDropzone';
@@ -70,6 +70,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 import { storage } from "@/firebase/firebaseConfig"
 import path from "path"
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 
 
 type SelectedColorsState = {
@@ -154,7 +155,6 @@ const CreateProductView = ({categories , platform , store}: ProductViewProps) =>
   const productPrice = BasePrice + sellerProfit + (addFrontDesign && addBackDesign ? platform.ExtraDesignForProductPrice : 0);
   const checkedColors = getSelectedColors(selectedColors);
   const filteredColors = CatColors.filter(color => checkedColors.includes(color.label));
-
   // to save tags
   const [inputTag, setInputTag] = useState('');
 
@@ -234,21 +234,13 @@ const CreateProductView = ({categories , platform , store}: ProductViewProps) =>
 
 
 
-  function View (){
-    setIsBorderHidden(true);
-  }
+    function toggleFrontBorder() {
+      setIsBorderHidden((prev) => !prev);
+    }
 
-  function notView (){
-    setIsBorderHidden(false);
-  }
-
-  function ViewBack (){
-    setisBackBorderHidden(true)
-  }
-
-  function notViewBack (){
-    setisBackBorderHidden(false)
-  }
+    function toggleBackBorder() {
+      setisBackBorderHidden((prev) => !prev);
+    }
 
 
 
@@ -471,11 +463,15 @@ const handleFileChange = (file : File) => {
   
               const uploadDesign = async (file: File) => {
                 const pica = new Pica();
-
+    
                 const designNameWithoutExt = path.parse(file.name).name;
                 const storageRef = ref(storage, `sellers/stores/${store.storeName}/designs/${designNameWithoutExt}-${Date.now()}.png`);
-              
+                let downloadURL
+    
                 try {
+    
+                  if (file.size >= (2 * 1024 * 1024)) {
+    
                    // Create an image element
                    const img = new Image();
                    img.src = URL.createObjectURL(file);
@@ -487,9 +483,9 @@ const handleFileChange = (file : File) => {
                
                    // Create a canvas for resizing
                    const canvas = document.createElement('canvas');
-                   const targetWidth = 2000; // Set your desired width
+                   const targetWidth = 1000; // Set your desired width
                   //  const targetHeight = (img.height / img.width) * targetWidth; // Maintain aspect ratio
-                   const targetHeight = 2000
+                   const targetHeight = 1000
                    canvas.width = targetWidth;
                    canvas.height = targetHeight;
                
@@ -506,11 +502,20 @@ const handleFileChange = (file : File) => {
                        }
                      }, 'image/png', 1); // Adjust quality (0.9 = 90%)
                    })
-
-
-
+    
+    
+    
                   const snapshot = await uploadBytes(storageRef, optimizedBlob);
-                  const downloadURL = await getDownloadURL(snapshot.ref);
+                  downloadURL = await getDownloadURL(snapshot.ref);
+    
+                  }else {
+                    const snapshot = await uploadBytes(storageRef, file);
+                    downloadURL = await getDownloadURL(snapshot.ref);
+                   }
+        
+    
+    
+    
                   if(downloadURL) {
                       return downloadURL
                   }
@@ -885,8 +890,8 @@ const handleFileChange = (file : File) => {
                               </AlertDialogTitle>
                               <AlertDialogDescription className="flex flex-col items-center">
                                 This will take a moment.
-                                {/* Replace Loader2 with your loader component */}
-                                <Loader2 className="text-blue-700 h-[50%] w-[50%] animate-spin mt-3" />
+                                {/* Replace Loader with your loader component */}
+                                <Loader className="text-blue-700 h-[50%] w-[50%] animate-spin mt-3" />
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogCancel className="hidden" ref={alertDialogCancelRef}>Cancel</AlertDialogCancel>
@@ -901,7 +906,7 @@ const handleFileChange = (file : File) => {
 
 
               <div className='relative mt-5 grid grid-cols-1  mb-20 pb-20'>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:grid-cols-2">
+                <div className="grid grid-cols-1  lg:grid-cols-2 gap-6 md:grid-cols-1">
 
                           {/* first card */}
                      <Card x-chunk="dashboard-05-chunk-3" className={cn(' lg:rounded-2xl shadow-lg')}>
@@ -1057,27 +1062,38 @@ const handleFileChange = (file : File) => {
                                 <div className="space-y-2">
                         <h3>4-Select Your Product Colors:</h3>
 
-                        {/* Render checkboxes for each color */}
-                        <div className="grid grid-cols-2 xl:grid-cols-6 gap-4">
-                          {selectedP.colors.map((color: Color) => (
-                            <>
-                            <div key={color.label} className="flex items-center space-x-2">
-                              <input
-                                type="checkbox"
-                                id={color.label}
-                                className="ml-2"
-                                checked={!!selectedColors[color.label]}
-                                onChange={() => handleColorCheckboxChange(color.label)}
-                              />
-                              <label
-                                htmlFor={color.label}
-                                className="text-sm font-medium leading-none cursor-pointer"
+
+
+                        <div className="w-full"> {/* Set full width to make the grid responsive */}
+                          <ToggleGroup
+                            type="multiple" // Allows selecting multiple colors
+                            value={Object.keys(selectedColors).filter((label) => selectedColors[label])} // Set initial selected values
+                            onValueChange={(value) => {
+                              const updatedColors = value.reduce<Record<string, boolean>>((acc, label) => {
+                                acc[label] = true;
+                                return acc;
+                              }, {});
+                              setSelectedColors(updatedColors);
+                            }}
+                            className="grid grid-cols-2 sm:grid-cols-3 gap-2" // Responsive grid classes
+                          >
+                            {selectedP.colors.map((color: Color, index) => (
+                              <ToggleGroupItem
+                                key={color.label}
+                                value={color.label} // Set the value for each item
+                                className={`px-4 py-2 flex items-center space-x-2 rounded bg-gray-300 dark:bg-gray-800`}
+                                onClick={() => handleColorCheckboxChange(color.label)} // Toggle color selection
                               >
                                 {color.label}
-                              </label>
-                            </div>
-                          </>
-                          ))}
+                                {selectedColors[color.label] && (
+                                  <Check
+                                    className="w-4 h-4 ml-1"
+                                    aria-hidden="true"
+                                  />
+                                )}
+                              </ToggleGroupItem>
+                            ))}
+                          </ToggleGroup>
                         </div>
                       </div>
 
@@ -1349,14 +1365,13 @@ const handleFileChange = (file : File) => {
                                   </RadioGroup>
 
                           <div>
-                                <Button className='mt-4'
-                                  onMouseDown={View}
-                                  onMouseUp={notView}
-                                  disabled={!isDesignUploaded} 
-                                >
-                                  Hold to Preview
-                                  <MousePointerClick className='ml-1'/>
-                                </Button>
+                          <Button
+                            className='mt-4'
+                            onClick={toggleFrontBorder}
+                            disabled={!isDesignUploaded}
+                          >
+                            {isBorderHidden ? "Show Border" : "Hide Border"}
+                          </Button>
                               </div>
         
                         </CardHeader>
@@ -1464,14 +1479,13 @@ const handleFileChange = (file : File) => {
                                 </div>
                               </RadioGroup>
                               <div>
-                                    <Button className='mt-4'
-                                      onMouseDown={ViewBack}
-                                      onMouseUp={notViewBack}
-                                      disabled={!isBackDesignUploaded} 
-                                    >
-                                      Hold to Preview
-                                    <MousePointerClick className='ml-1'/>
-                                    </Button>
+                              <Button
+                            className='mt-4'
+                            onClick={toggleBackBorder}
+                            disabled={!isBackDesignUploaded}
+                          >
+                            {isBackBorderHidden ? "Show Border" : "Hide Border"}
+                            </Button>
                                   </div>
             
                                   </>
