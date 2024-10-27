@@ -151,11 +151,13 @@ export default async function Page() {
     {/* Right Side - Image */}
     <div className="flex justify-center ">
       <div className="w-[95%] xl:w-[55%]">
+        {trendingProducts.length > 0 && (
       <ProductListing
         user={user!}
         product={trendingProducts[0]}
         index={0}
-    />
+         />
+        )}
       </div>
     </div>
   </div>
