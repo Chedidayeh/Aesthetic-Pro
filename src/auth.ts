@@ -46,7 +46,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       return session
     },
-    async jwt ({token}) {
+    async jwt ({token , trigger , session }) {
+      if (trigger === "update" && session.user.role) {
+        token.role = session.user.role
+      }
       if(!token.sub) return token
       const existingUser = await getUserById(token.sub)
       if(!existingUser) return token

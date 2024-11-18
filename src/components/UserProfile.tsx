@@ -107,13 +107,13 @@ const UserProfile = ({ user , platform } : {user : User , platform : Platform | 
           <>        
           <DropdownMenuSeparator />
             <DropdownMenuGroup>
-            <DropdownMenuItem>
+            {/* <DropdownMenuItem>
             <Button onClick={()=>(router.push("/auth/sign-up"))} size={"sm"} variant={"ghost"} className="flex justify-between items-center w-full">
                Sign Up 
                 <UserRoundPlus size={20} />
             </Button>
-            </DropdownMenuItem>              
-            <DropdownMenuSeparator />
+            </DropdownMenuItem>               */}
+            {/* <DropdownMenuSeparator /> */}
             <DropdownMenuItem>
             <Button onClick={()=>(router.push("/auth/sign-in"))} size={"sm"} variant={"ghost"} className="flex justify-between items-center w-full">
             Sign In

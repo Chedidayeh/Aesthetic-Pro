@@ -891,7 +891,7 @@ const handleFileChange = (file : File) => {
                               <AlertDialogDescription className="flex flex-col items-center">
                                 This will take a moment.
                                 {/* Replace Loader with your loader component */}
-                                <Loader className="text-blue-700 h-[50%] w-[50%] animate-spin mt-3" />
+                                <Loader className="text-blue-700 h-[35%] w-[35%] animate-spin mt-3" />
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogCancel className="hidden" ref={alertDialogCancelRef}>Cancel</AlertDialogCancel>

@@ -21,14 +21,8 @@ export const fetchName = async (name: string) => {
     }
   }
 
-  type StoreArgs = {
-    storeName: string;
-    logoPath: string;
-    phoneNumber : string
-  };
-  
 
-export const addStore = async ({ storeName, logoPath , phoneNumber } : StoreArgs) => {
+export const addStore = async ( storeName : string, logoPath : string , phoneNumber : string) => {
 
   try {
 
@@ -42,14 +36,14 @@ export const addStore = async ({ storeName, logoPath , phoneNumber } : StoreArgs
       }
     })
 
-    await db.user.update({
+    const updatedUser = await db.user.update({
       where:{id:store.userId},
       data:{
         userType:"SELLER",
       }
     })    
 
-    if(user!.isAffiliate) {
+    if(updatedUser!.isAffiliate) {
       await db.affiliate.delete({
         where:{
           userId:user!.id
@@ -63,6 +57,7 @@ export const addStore = async ({ storeName, logoPath , phoneNumber } : StoreArgs
               }
           })
     }
+    return updatedUser
   } catch (error) {
     console.log(error)
   }

@@ -144,9 +144,8 @@ const StoreView = ({ store, user , designs , categories , collections , follower
             src={store.logoUrl}
             alt="store"
             layout="fill"
-            objectFit="cover"
             quality={40}
-            className="rounded-full"
+            className="rounded-full object-contain"
           />
      </div>
   
@@ -205,7 +204,7 @@ const StoreView = ({ store, user , designs , categories , collections , follower
 
 
     <div className='flex justify-center my-4'>
-  <section className='border rounded-2xl w-[30%] bg-muted/50 border-gray-200'>
+  <section className='border rounded-2xl w-[50%] bg-muted/50 border-gray-200'>
     <MaxWidthWrapper className='py-4 text-center'>
       <div className='my-2'>
         <p className='text-sm'>Contact the seller</p>

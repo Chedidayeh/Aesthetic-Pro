@@ -85,7 +85,7 @@ const Page =  async () => {
             src={store.logoUrl}
             alt="store"
             layout="fill"
-            objectFit="cover"
+            objectFit="contain"
             quality={40}
             className="rounded-full"
           />

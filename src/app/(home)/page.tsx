@@ -1,6 +1,3 @@
-/* eslint-disable jsx-a11y/alt-text */
-/* eslint-disable @next/next/no-img-element */
-import Marquee from "react-fast-marquee";
 import {
   Button,
 } from '@/components/ui/button'
@@ -12,8 +9,7 @@ import ProductSlider from "@/components/MarketPlace/ProductSlider";
 import { fetchTrendingProducts, getFollowedStoreProductsFirst, getUser } from "@/actions/actions";
 import ProductReel from "@/components/MarketPlace/ProductReel";
 import PerkSection from "@/components/PerkSection";
-import { CircleDollarSign, DollarSign, Heart } from "lucide-react";
-import { Label } from "@/components/ui/label";
+import { CircleDollarSign, Heart } from "lucide-react";
 import RedirectToCreateSellerProfile from "@/components/RedirectToCreateSellerProfile";
 import RedirectToCreateAffiliateAccount from "@/components/RedirectToCreateAffiliateAccount";
 import ProductListing from "@/components/MarketPlace/ProductListing";
@@ -51,6 +47,7 @@ export default async function Page() {
     With AestheticPro.tn !
   </p>
 </div>
+
 
 
 {filteredTrendingProducts.length > 0 && (

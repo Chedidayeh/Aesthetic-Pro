@@ -28,16 +28,32 @@ export async function doesStoreNameExist(storeName: string): Promise<boolean> {
     }
   }
 
-export async function deleteStore(userId: string) {
+export async function deleteStore(storeId : string, userId: string) {
   try {
-    const updatedUser = await db.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        userType: 'USER',
-      },
-    });
+     // Delete the store and all related records, and update the user type to "user"
+     const store = await db.store.findUnique({
+      where: { id: storeId },
+      });
+
+      if (!store) {
+          return false
+      }
+
+      if (store.userId !== userId) {
+          return false
+      }
+
+      await db.$transaction([
+          // Delete the store
+          db.store.delete({
+              where: { id: storeId },
+          }),
+          // Update the user type
+          db.user.update({
+              where: { id: userId },
+              data: { userType: "USER" },
+          }),
+      ]);
     return true
   } catch (error) {
     console.error('Error updating user type:', error);

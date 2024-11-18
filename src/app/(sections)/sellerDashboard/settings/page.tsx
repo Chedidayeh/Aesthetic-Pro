@@ -24,7 +24,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
 import LoadingState from "@/components/LoadingState"
-import {  doesStoreNameExist, updateSocialLinks, updateStoreBio, updateStoreLogo, updateStoreName } from "./actions"
+import {  deleteStore, doesStoreNameExist, updateSocialLinks, updateStoreBio, updateStoreLogo, updateStoreName } from "./actions"
 import { getStoreByUserId, getUser } from "@/actions/actions"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/components/ui/use-toast"
@@ -195,58 +195,6 @@ export default function Page() {
         }
     };
 
-
-                  // function to upload the seller logo in uploads folder and get the path
-                //   const uploadLogo = (file: File): Promise<string > => {
-                //     return new Promise((resolve, reject) => {
-                //       if (!file) {
-                //         console.log('No file selected.');
-                //         resolve("");
-                //         return;
-                //       }
-                  
-                //       // Read the file as a base64 string
-                //       const reader = new FileReader();
-                //       reader.readAsDataURL(file);
-                //       reader.onloadend = async () => {
-                //         const base64data = reader.result?.toString().split(',')[1]; // Get the base64 string only
-                  
-                //         try {
-                //           const response = await fetch('/api/uploadSellerStoreImg', {
-                //             method: 'POST',
-                //             headers: {
-                //               'Content-Type': 'application/json',
-                //             },
-                //             body: JSON.stringify({ file: base64data, storeName: storeName }),
-                //           });
-                  
-                //           if (!response.ok) {
-                //             throw new Error('Failed to upload image');
-                //           }
-                  
-                //           const data = await response.json();
-                //           const path = data.url; // Get the uploaded URL
-                  
-                //           toast({
-                //             title: 'Design Upload Success',
-                //             description: 'Design image uploaded successfully!',
-                //           });
-                  
-                //           resolve(path); // Resolve the promise with the URL
-                //         } catch (error) {
-                //           toast({
-                //             title: 'Upload Error',
-                //             description: 'Error uploading the image!',
-                //             variant: 'destructive',
-                //           });
-                //           console.error(error);
-                //           reject(error); // Reject the promise on error
-                //         }
-                //       };
-                //     });
-                //   };
-
-
                 const uploadLogo = async (file: File) => {
                     const storageRef = ref(storage, `sellers/stores/${storeName}/store image/$${Date.now()}.png`);
                   
@@ -269,6 +217,48 @@ export default function Page() {
                       });              
                     }
                   }
+
+
+                  const handleStoreDelete = async () => {
+                    try {
+                        setOpen(true);
+                                
+                        const user = await getUser();
+                        const store = await getStoreByUserId(user!.id);
+                
+                        // Assuming you have a deleteStore action to handle deletion
+                        const res = await deleteStore(store.id , user!.id);
+                
+                        if (res) {
+                            toast({
+                                title: "Store deleted successfully",
+                                description: "Your store has been permanently deleted.",
+                                variant: "default",
+                            });
+                            router.push("/api/auth/logout");
+                        } else {
+                            toast({
+                                title: "Store deletion failed",
+                                description: "Something went wrong while trying to delete your store.",
+                                variant: "destructive",
+                            });
+                            setOpen(false);
+                            return
+                        }
+                    } catch (error) {
+                        console.error("Error deleting store:", error);
+                        toast({
+                            title: "Error",
+                            description: "An error occurred while attempting to delete your store.",
+                            variant: "destructive",
+                        });
+                    } finally {
+                        setOpen(false);
+                    }
+                };
+
+                
+                
     return (
         <>
             <div className="flex min-h-screen w-full flex-col">
@@ -285,6 +275,9 @@ export default function Page() {
                             </Link>
                             <Link href="#" className={`font-semibold ${selectedSection === "SocialLinks" ? "text-primary" : ""}`} onClick={() => setSelectedSection("SocialLinks")}>
                                 Social Links
+                            </Link>
+                            <Link href="#" className={`font-semibold ${selectedSection === "deletestore" ? "text-primary" : ""}`} onClick={() => setSelectedSection("deletestore")}>
+                                Delete store
                             </Link>
                         </nav>
                         <div className="grid gap-6">
@@ -369,6 +362,20 @@ export default function Page() {
                                     </CardContent>
                                     <CardFooter className="border-t px-6 py-4">
                                         <Button onClick={handleAddSocialLinks} disabled={facebookLink==="" && instagramLink===""} >Add</Button>
+                                    </CardFooter>
+                                </Card>
+                            )}
+
+                            {selectedSection === "deletestore" && (
+                                <Card x-chunk="dashboard-04-chunk-1">
+                                    <CardHeader>
+                                        <CardTitle>Delete your store</CardTitle>
+                                        <CardDescription>
+                                        Your store will be permanently deleted, and you will no longer have access to it.                                        
+                                        </CardDescription>
+                                    </CardHeader>
+                                    <CardFooter className="border-t px-6 py-4">
+                                        <Button onClick={handleStoreDelete} className="bg-red-500 hover:bg-red-400" >Delete</Button>
                                     </CardFooter>
                                 </Card>
                             )}

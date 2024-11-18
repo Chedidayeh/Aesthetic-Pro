@@ -252,7 +252,7 @@ const ProductView = ({
                                         </AlertDialogTrigger>
                                           <AlertDialogContent className=" flex flex-col items-center justify-center">
                                               <AlertDialogHeader className="flex flex-col items-center justify-center">
-                                              <Loader className="animate-spin text-blue-800 h-[50%] w-[50%]" />
+                                              <Loader className="animate-spin text-blue-800 h-[35%] w-[35%]" />
                                               <AlertDialogTitle className="flex flex-col items-center justify-center">Loading</AlertDialogTitle>
                                             </AlertDialogHeader>
                                             <AlertDialogDescription className="flex flex-col items-center justify-center">

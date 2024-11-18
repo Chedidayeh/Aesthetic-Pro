@@ -29,6 +29,8 @@ import { User } from "@prisma/client"
 import path from "path"
 import { storage } from "@/firebase/firebaseConfig"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
+import { auth } from "@/auth"
+import { useSession } from "next-auth/react"
 
 const arabicInfos = [
   "جودة التصاميم: لضمان أفضل جودة للمنتجات، يجب أن تكون التصاميم المقدمة عالية الدقة. يساهم هذا في الحفاظ على وضوح التفاصيل وضمان طباعة مثالية على المنتجات",
@@ -44,11 +46,14 @@ const Page = () => {
   const [showConfetti, setShowConfetti] = useState<boolean>(false)
   const router = useRouter()
   router.forward()
-
+  const { data: session, update } = useSession()
   const [isClicked, setIsClicked] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+  // isRedirecting state
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const { toast } = useToast()
-  const MAX_FILE_SIZE = 4 * 1024 * 1024;
+  const MAX_FILE_SIZE = 2 * 1024 * 1024;
   const [logo, setLogo] = useState<string>("");
   const [logoFile, setlogoFile] = useState<File>();
   const [storeName, setStoreName] = useState<string>('')
@@ -78,38 +83,9 @@ const Page = () => {
     checkPlatformStoreCreation();
   }, [router]); // Empty dependency array ensures this runs only once on mount
 
-
-  const{mutate : create , isPending} = useMutation({
-    mutationFn:addStore,
-    onSuccess:()=>{
-      toast({
-        title: 'Your Store is successfully created!',
-        description: 'Try to SignIn again',
-        variant: 'default',
-        duration: 5000,
-      });
-      const pathname = "/sellerDashboard"
-      dispatch(saveRedirectUrl(pathname));
-      router.push("/api/auth/redirectNewSeller")
-      router.refresh()
-    },
-    onError:(error)=>{
-      console.log(error)
-      toast({
-        title: 'Something went wrong',
-        description: 'There was an error on our end. Please try again.',
-        variant: 'destructive',
-      });
-      setIsClicked(false)
-      return
-      
-    }
-  })
-
-  // iscliked state
- 
   const createStore=async ()=>{
-    setIsClicked(true)
+      setIsCreating(true)
+      setIsClicked(true)
       const isValid = await fetchName(storeName)
       if(!isValid) {
         toast({
@@ -118,36 +94,74 @@ const Page = () => {
           variant: 'destructive',
         });
         setIsClicked(false)
+        setIsCreating(false)
         return 
       }
-
-
 
         if(!logoFile) return
 
         const logoPath = await uploadLogo(logoFile)
         if(logoPath) {
-          create({storeName ,logoPath , phoneNumber});
+          try {
+            const updatedUser = await addStore(storeName, logoPath , phoneNumber)
+            if (updatedUser) {
+               await update({
+                ...session,
+                user: {
+                  ...session!.user,
+                  role: updatedUser.userType,
+                },
+              });
+              setIsCreating(false)
+              setIsRedirecting(true)
+              toast({
+                title: 'Your Store is successfully created!',
+                description: 'Redirecting you... !',
+                variant: 'default',
+                duration: 8000,
+              });
+            // Delay redirection
+            setTimeout(() => {
+              router.push("/sellerDashboard");
+            }, 3000);             
+        }else {
+              return
+            }
+          } catch (error) {
+            console.log(error)
+            toast({
+              title: 'Something went wrong here !',
+              description: 'There was an error on our end. Please try again.',
+              variant: 'destructive',
+            });
+            setIsClicked(false)
+            setIsCreating(false)
+            return
+          }
+
+
+
+
         }else {
             toast({
               title: 'Error , uploading your image!',
               variant: 'destructive',
             });
-            return
+        return
         }
   }
 
 
 
-  // Event handler for terms checkbox change
-  const handleTermsCheckboxChange = () => {
-    if(!termsAccepted){
-    setTermsAccepted(true);
-  }
-  else{
-    setTermsAccepted(false);
-  }
-  };
+        // Event handler for terms checkbox change
+        const handleTermsCheckboxChange = () => {
+          if(!termsAccepted){
+          setTermsAccepted(true);
+        }
+        else{
+          setTermsAccepted(false);
+        }
+        };
 
 
                 // Function to handle Front file upload
@@ -157,7 +171,7 @@ const Page = () => {
                   if (file.size > MAX_FILE_SIZE) {
                     toast({
                       title: 'File size exceeds the limit.',
-                      description: 'Please choose a file equal or smaller than 4MB.',
+                      description: 'Please choose a file equal or smaller than 2MB.',
                       variant: 'destructive',
                     });
 
@@ -188,62 +202,6 @@ const Page = () => {
               };
 
 
-              const tags = Array.from({ length: 10 }).map(
-                (_, i, a) => `Bla.${a.length + i}`
-              )
-
-
-
-
-              // const uploadLogo = (file: File): Promise<string > => {
-              //   return new Promise((resolve, reject) => {
-              //     if (!file) {
-              //       console.log('No file selected.');
-              //       resolve("");
-              //       return;
-              //     }
-              
-              //     // Read the file as a base64 string
-              //     const reader = new FileReader();
-              //     reader.readAsDataURL(file);
-              //     reader.onloadend = async () => {
-              //       const base64data = reader.result?.toString().split(',')[1]; // Get the base64 string only
-              
-              //       try {
-              //         const response = await fetch('/api/uploadSellerStoreImg', {
-              //           method: 'POST',
-              //           headers: {
-              //             'Content-Type': 'application/json',
-              //           },
-              //           body: JSON.stringify({ file: base64data, storeName: storeName }),
-              //         });
-              
-              //         if (!response.ok) {
-              //           throw new Error('Failed to upload image');
-              //         }
-              
-              //         const data = await response.json();
-              //         const path = data.url; // Get the uploaded URL
-              
-              //         toast({
-              //           title: 'Design Upload Success',
-              //           description: 'Design image uploaded successfully!',
-              //         });
-              
-              //         resolve(path); // Resolve the promise with the URL
-              //       } catch (error) {
-              //         toast({
-              //           title: 'Upload Error',
-              //           description: 'Error uploading the image!',
-              //           variant: 'destructive',
-              //         });
-              //         console.error(error);
-              //         reject(error); // Reject the promise on error
-              //       }
-              //     };
-              //   });
-              // };
-
               const uploadLogo = async (file: File) => {
                 const storageRef = ref(storage, `sellers/stores/${storeName}/store image/$${Date.now()}.png`);
               
@@ -251,17 +209,13 @@ const Page = () => {
                   const snapshot = await uploadBytes(storageRef, file);
                   const downloadURL = await getDownloadURL(snapshot.ref);
                   if(downloadURL) {
-                    toast({
-                     title: 'Design Upload Success',
-                      description: 'Design image uploaded successfully!',
-                      });
                       return downloadURL
                   }
                 } catch (error) {
                   console.error("Error uploading design:", error);
                   toast({
                   title: 'Upload Error',
-                  description: 'Error uploading the image!',
+                  description: 'Error uploading the Logo!',
                   variant: 'destructive',
                   });              
                 }
@@ -287,7 +241,7 @@ const Page = () => {
   return (
     <>
 
-<AlertDialog open={isPending}>
+<AlertDialog open={isCreating}>
     <AlertDialogTrigger asChild>
     </AlertDialogTrigger>
     <AlertDialogContent className="flex flex-col items-center">
@@ -296,14 +250,28 @@ const Page = () => {
           Creating Your Store !
         </AlertDialogTitle>
         <AlertDialogDescription className="flex flex-col items-center">
-          After that try to SignIn again.
+        Please wait while we create your store !
         </AlertDialogDescription>
       </AlertDialogHeader>
-      <Loader className="text-blue-700 h-[15%] w-[15%] animate-spin mt-3" />
+      <Loader className="text-blue-700 h-[8%] w-[8%] animate-spin mt-3" />
       </AlertDialogContent>
   </AlertDialog>
 
-
+  <AlertDialog open={isRedirecting}>
+    <AlertDialogTrigger asChild>
+    </AlertDialogTrigger>
+    <AlertDialogContent className="flex flex-col items-center">
+      <AlertDialogHeader className="flex flex-col items-center">
+        <AlertDialogTitle className="text-2xl text-blue-700 font-bold text-center">
+          Redirecting You !
+        </AlertDialogTitle>
+        <AlertDialogDescription className="flex flex-col items-center">
+            Please wait while we redirect you !
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <Loader className="text-blue-700 h-[8%] w-[8%] animate-spin mt-3" />
+      </AlertDialogContent>
+  </AlertDialog>
 
 
               <div
@@ -400,8 +368,9 @@ const Page = () => {
             <div className='flex flex-col-2 flex-row mt-4'>
             <Avatar className="w-[20%] h-[20%] rounded-full border bg-gray-100 border-black overflow-hidden">
             <AvatarImage
-                src={logo ? logo : "https://github.com/shadcn.png"}                 
-                alt="" />
+                src={logo ? logo : "/storeLogo.jpg"}                 
+                alt=""
+                className="object-contain" />
               </Avatar>
             </div>
            </div>
@@ -447,7 +416,7 @@ const Page = () => {
             <div>
             <p className="mr-3 mb-2 text-sm text-gray-500">Done ? What are waiting for !</p>
             </div>
-            <Button disabled={isClicked || isPending || !logoFile || storeName==="" || !termsAccepted || phoneNumber.length != 8}
+            <Button disabled={isClicked || isCreating || !logoFile || storeName==="" || !termsAccepted || phoneNumber.length != 8}
               onClick={createStore} className="w-full sm:w-[40%]">Create Store Now
               <MousePointerClick className="ml-2"/>
             </Button>

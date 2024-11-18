@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "tactical-hydra-424919-a1",
+  "private_key_id": "75ac95f4de757e0e151322fc823983a63e715ca0",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCJJXzMfqCNyNkL\nChiKBRdcrf3P2rqXah4+u1aq5+ypR0tXW6kD+eGMv387fUNwk/c/2iVUREzHyswq\nJPSzqNFLrhxVk2IEAFiPrpIuchU2E6NlGmM4Vxf/CCpEGjZMH0Pi8pBJhs51lUOk\nWYs0xsU86Gmu3GzMajx278IIXqMhzKXAe43adqVAr0nHIbmCs3pkO/V8dnPVEN4D\nUhGmoVQp7V2gPCwTsvic15tTVbLXFqNghp0JDr6JLnoHi2iOiAZST01s1+FYY1nh\nf4mVPNGQdbE6ahiqEaFKgVyqJzXCmMKiJoEdfL4dMJ0WFPDYXuY2JCA/2d0jOETT\n6pZZVWzBAgMBAAECggEAAg1GBzczxrtFCAXAJTx7Q38052mx1fcX+b9KxibPIx82\ncNmltzIDXlw1FppCqooELnfgjBizf1+42z6PTKrPas7xjJQ2aLHqoUeu1zQMvjDg\nBnC1IFApQz8HhtpPiqcDGH+higAS0a6Igwp16zW4GLevcRbKJ+rE+dCPehmUXjqQ\nevQlKLymopYeHqKDioWKYMImhDSQ0W7ruA6LtSa6aApnP7z7osiaqBh0bBCC7jVH\n40mI7DMCAAfB7d/Wzqdu/9DsOPsFavdoL1M3NyMgDrvvOGaKy7dl1X5J8hZVqEr8\nHqRlQ+SYDoiE3Hg9/YaG2zzLWHbUhfg9nHbSn2qgAQKBgQC7LA/BjXZ073U9IoAO\nj6r53qtLhk5RkrYeIWsSWMCrh9uedCQMAHPPQgO8CfG4A02nFJKYkUUBWL31XYZw\nLy1oiXbKKesFKmeCGnc/W6QL3GWXIGqQfjXjCJ2RU0qd/lek7FSnO70Qx+sIIpqG\nhRUrakI+XHjuvU4F0i7yzmfjAQKBgQC7lCCTBaRRafblJwMCRm45Km/TQGpx5G4H\n0aVDhzQxX+6vVtpHj5gUJ359oi3N/ihCQFrVJjcVjwSRSumCGZRodOzeJX0juMyt\nKLTcWA42ZqbDdlsfqtQojMp7//nFbJ8ATebDONwEw/Ro9c0PqCNhTbxk43aa5rHU\nTClGRUhJwQKBgCbppSjvORZchjo8hvUAB2LFWUVtWbD52GTxO6pnyz6eExmhObFJ\nEsqfBdm9E4TXIvi+fS+82+TIx01QsVd3Z3BZS9oB1vuO8lAJIouIiNVyb6h4s87w\nflGCBAgnkdbA/wWpoHvYHplzhrh9QTUATANnpvgCD55KuwLYzKvsH4sBAoGBAJfN\n4ybY1AiHRyZgkhDPSvi8nU9LvFl70ohFZAfobZbf2lzQX0q2rQ7yf23RSFyDKbWk\nO15w1Pd/jOTAyYVeijqXFfMaR9IXBp3EacpBAQ+Jt8BMEqboK1a9ykjb+hmKNIuc\nf/rSE01QAIbJFjFrk2Z18Nd9NklaFeSH1odmHoCBAoGAB3MCj567PiUJYdIWMsOT\nil6l82t7PgrVrDS/kSfCVApl4WRxO2w6dyFsr5jffpWNuX6d6+GaOPfm4oxIP/qX\naxkPA4zX1FUnhAdLus4dxFhRO2HLzxAnjYv+kD66iqXx5A39xWaYH7Aq7YOO3ZLB\nC2SjLb+PInOo2jNKfgViHZs=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-tbyr5@tactical-hydra-424919-a1.iam.gserviceaccount.com",
+  "client_id": "107484047136126609326",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-tbyr5%40tactical-hydra-424919-a1.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

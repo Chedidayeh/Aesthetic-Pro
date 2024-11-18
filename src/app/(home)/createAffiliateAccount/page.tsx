@@ -49,6 +49,7 @@ import {
 } from "@/actions/actions";
 import { createAccount } from './actions';
 import { User } from '@prisma/client';
+import { useSession } from 'next-auth/react';
 
 const Page = () => {
   const [showConfetti, setShowConfetti] = useState < boolean > (true);
@@ -56,6 +57,8 @@ const Page = () => {
   const { toast } = useToast()
   const dispatch = useDispatch();
   const [user, setUser] = useState<User>();
+  const { data: session, update } = useSession()
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
 
   useEffect(() => {
@@ -87,21 +90,26 @@ const [isOpen, setIsOpen] = useState < boolean > (false);
     try {
       setIsOpen(true);  
       // Attempt to create an affiliate account
-      const res = await createAccount(user!);
+      const updatedUser = await createAccount(user!);
   
-      if (res) {
+      if (updatedUser) {
+        await update({
+          ...session,
+          user: {
+            ...session!.user,
+            role: updatedUser.userType,
+          },
+        });
+        setIsRedirecting(true)
         // Success toast message
         toast({
           title: 'Affiliate account created successfully!',
           description: 'You are now part of the affiliate program. Try to SignIn again to continue !',
-          duration : 5000
+          duration : 8000
         });
-  
-        // Redirect to the dashboard if account creation is successful
-        const pathname = "/affiliateDashboard"
-        dispatch(saveRedirectUrl(pathname));
-        router.push("/api/auth/redirectNewSeller")
-        router.refresh()
+        setTimeout(() => {
+          router.push("/affiliateDashboard");
+        }, 3000);   
             } else {
         // Failure toast message in case of error
         toast({
@@ -138,9 +146,25 @@ const [isOpen, setIsOpen] = useState < boolean > (false);
             After that try to SignIn again.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <Loader className="text-blue-700 h-[15%] w-[15%] animate-spin mt-3" />
+          <Loader className="text-blue-700 h-[8%] w-[8%] animate-spin mt-3" />
         </AlertDialogContent>
       </AlertDialog>
+
+      <AlertDialog open={isRedirecting}>
+    <AlertDialogTrigger asChild>
+    </AlertDialogTrigger>
+    <AlertDialogContent className="flex flex-col items-center">
+      <AlertDialogHeader className="flex flex-col items-center">
+        <AlertDialogTitle className="text-2xl text-blue-700 font-bold text-center">
+          Redirecting You !
+        </AlertDialogTitle>
+        <AlertDialogDescription className="flex flex-col items-center">
+            Please wait while we redirect you !
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <Loader className="text-blue-700 h-[8%] w-[8%] animate-spin mt-3" />
+      </AlertDialogContent>
+  </AlertDialog>
 
       <div aria-hidden='true' className='pointer-events-none select-none absolute inset-0 overflow-hidden flex justify-center'>
         <Confetti active={showConfetti} config={{ elementCount: 100, spread: 50 }} />

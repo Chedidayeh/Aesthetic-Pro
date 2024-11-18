@@ -39,7 +39,7 @@ export const createAccount = async (user: User) => {
       }
 
       // Step 3: Return the new affiliate instance or confirmation message
-      return newAffiliate;
+      return updatedUser;
     });
 
     // Transaction successful, return true or the result

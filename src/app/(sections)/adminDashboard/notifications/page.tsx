@@ -110,7 +110,7 @@ export default function Page() {
           This can take a while.
         </AlertDialogDescription>
       </AlertDialogHeader>
-      <Loader className="text-blue-700 h-[15%] w-[15%] animate-spin mt-3" />
+      <Loader className="text-blue-700 h-[8%] w-[8%] animate-spin mt-3" />
       </AlertDialogContent>
   </AlertDialog>
   

@@ -122,7 +122,7 @@ const Page = () => {
 
 
   const handleClick = async () => {
-  dispatch(saveRedirectUrl(null));
+   dispatch(saveRedirectUrl(null));
    await GoogleLogin(redirectUrl)
   };
 

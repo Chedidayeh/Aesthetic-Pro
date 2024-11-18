@@ -11,6 +11,8 @@ import TopBar from "@/components/TopBar";
 import { ReactNode } from "react";
 import SearchBar from "@/components/MarketPlace/SearchBar";
 import { Platform, User } from "@prisma/client";
+import { SessionProvider } from "next-auth/react";
+import { Session } from "next-auth";
 const recursive = Recursive({ subsets: ["latin-ext"] });
 export const dynamic = 'force-dynamic';
 
@@ -20,7 +22,7 @@ export const metadata: Metadata = {
   description: "Tunisian Platfrom",
 };
 
-const Layout = ({ children }: { children: ReactNode }) => {
+const Layout = ({ children , session }: { children: ReactNode , session : Session }) => {
 
 
   
@@ -42,6 +44,8 @@ const Layout = ({ children }: { children: ReactNode }) => {
       <StoreProvider>
       <main className='flex flex-col min-h-[calc(100vh-3.5rem-1px)]'>
         <div className='flex-1 flex flex-col h-full'>
+        <SessionProvider session={session}>
+
            <Providers>
     <TopBar/>
     <HomeNavBar/>
@@ -50,6 +54,8 @@ const Layout = ({ children }: { children: ReactNode }) => {
          <Footer />
            <Toaster/>
             </Providers>
+            </SessionProvider>
+
           </div>
         </main> 
       </StoreProvider>

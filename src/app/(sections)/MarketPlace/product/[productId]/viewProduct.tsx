@@ -187,7 +187,7 @@ const redirectToCart = () => {
             <div
               key={index}
               className={clsx(
-                "cursor-pointer border-2 overflow-hidden rounded-md",
+                "cursor-pointer border-2 overflow-hidden rounded-md bg-slate-50",
                 selectedImage === url ? "border-blue-500" : "border-gray-200"
               )}
               onClick={() => setSelectedImage(url)}
@@ -200,7 +200,7 @@ const redirectToCart = () => {
                 alt={`Thumbnail ${index + 1}`}
                 width={420}
                 height={420}
-                className="object-cover w-full h-40"
+                className="xl:object-cover object-contain w-full h-40"
                 onContextMenu={(e) => e.preventDefault()}
                 draggable={false}
               />

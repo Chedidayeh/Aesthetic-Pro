@@ -55,7 +55,7 @@ const Navbar = async () => {
           {/* Logo */}
           <div
             style={{ width: '50px', height: '50px' }}
-            className="h-full xl:right-0 sm:items-center hidden animate-pulse sm:block"
+            className="hidden xl:block h-full xl:right-0 sm:items-center animate-pulse"
           >
             <NextImage
               src="/aestheticpro.png"
@@ -68,16 +68,18 @@ const Navbar = async () => {
 
 
 
+
           {/* Hamburger Icon for Small Devices */}
           <Dialog>
-            <SheetTrigger className="md:hidden">
-            <Button variant="outline" size="icon" className="shrink-0 md:hidden">
+            <SheetTrigger className="flex xl:hidden">
+            <Button variant="outline" size="icon" className="shrink-0">
             <Menu className="h-5 w-5" />
             <span className="sr-only">Toggle navigation menu</span>
-          </Button>            </SheetTrigger>
-            <SheetContent side="left" className='w-[60%] mt-4'>
+          </Button>            
+          </SheetTrigger>
+            <SheetContent side="left" className='w-[40%] xs:[30%] mt-4'>
               {/* Middle Section for small devices */}
-              <div className='md:hidden flex flex-col mt-16 space-y-2'>
+              <div className='flex justify-center items-start flex-col mt-16 space-y-2'>
                 <DialogClose>
                 <Link href="/" className={buttonVariants({
                   size: 'sm',
@@ -197,7 +199,7 @@ const Navbar = async () => {
           </Dialog>
 
           {/* Middle Section */}
-          <div className='hidden md:flex h-full left-0 items-center space-x-8'>
+          <div className='hidden xl:flex h-full left-0 items-center space-x-8'>
 
 
           <Link href="/" className={buttonVariants({
@@ -259,7 +261,7 @@ const Navbar = async () => {
           </div>
 
                     {/* Right Section */}
-            <div className='hidden md:flex items-center space-x-2'>
+            <div className='hidden xl:flex items-center space-x-2'>
             {user  && platform && (
               <>
                 {isAdmin && (
@@ -320,20 +322,25 @@ const Navbar = async () => {
 
           </div>
 
-          {/* User Profile for small devices */}
-          <div className='md:hidden flex items-center space-x-2'>
+          {/* Logo visible only in small and medium devices */}
           <div
-              style={{ width: '50px', height: '50px' }}
-              className="h-full mr-16 animate-pulse"
+            style={{ width: '50px', height: '50px' }}
+            className="block xl:hidden h-full animate-pulse"
             >
-              <NextImage
-                src="/aestheticpro.png"
-                width={1000}
-                height={1000}
-                alt="logo"
-                draggable={false}
-              />
-            </div>
+            <NextImage
+              src="/aestheticpro.png"
+              width={1000}
+              height={1000}
+              alt="logo"
+              draggable={false}
+            />
+          </div>
+
+
+
+          {/* User Profile for small devices */}
+          <div className='flex xl:hidden items-center space-x-2'>
+
             <UserProfile user={user!} platform={platform!} />
             <ModeToggle/>
           </div>

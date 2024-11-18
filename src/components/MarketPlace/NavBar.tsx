@@ -52,7 +52,7 @@ const Navbar = async () => {
           {/* Logo */}
           <div
               style={{ width: '50px', height: '50px' }}
-              className="h-full xl:right-0 sm:items-center hidden sm:block animate-pulse"
+              className="h-full xl:right-0 sm:items-center hidden xl:block animate-pulse"
             >
               <NextImage
                 src="/aestheticpro.png"
@@ -65,15 +65,15 @@ const Navbar = async () => {
 
           {/* Hamburger Icon for Small Devices */}
           <Dialog>
-            <SheetTrigger className="md:hidden">
-            <Button variant="outline" size="icon" className="shrink-0 md:hidden">
+            <SheetTrigger className="flex xl:hidden">
+            <Button variant="outline" size="icon" className="shrink-0">
             <Menu className="h-5 w-5" />
             <span className="sr-only">Toggle navigation menu</span>
           </Button>
             </SheetTrigger>
             <SheetContent side="left" className='w-[50%]  mt-4'>
               {/* Middle Section for small devices */}
-              <div className='md:hidden flex flex-col mt-16 space-y-2'>
+              <div className=' flex justify-center items-start flex-col mt-16 space-y-2'>
                 <DialogClose>
                 <Link href="/" className={buttonVariants({
                   size: 'sm',
@@ -182,7 +182,7 @@ const Navbar = async () => {
 
 
           {/* Middle Section */}
-          <div className='hidden md:flex h-full left-0 items-center space-x-4'>
+          <div className='hidden xl:flex h-full left-0 items-center space-x-4'>
 
             <Link href="/" className={buttonVariants({
               size: 'sm',
@@ -278,28 +278,30 @@ const Navbar = async () => {
           </div>
 
           {/* Right Section */}
-          <div className='hidden md:flex items-center space-x-4'>
+          <div className='hidden xl:flex items-center space-x-4'>
             <div className='h-8 w-px bg-zinc-200 hidden sm:block' />
             {/* User Profile */}
             <UserProfile user={user!} />
             <ModeToggle/>
           </div>
 
+                    {/* Logo visible only in small and medium devices */}
+            <div
+            style={{ width: '50px', height: '50px' }}
+            className="block xl:hidden h-full animate-pulse"
+            >
+            <NextImage
+              src="/aestheticpro.png"
+              width={1000}
+              height={1000}
+              alt="logo"
+              draggable={false}
+            />
+          </div>
+
 
           {/* User Profile for small devices */}
-          <div className='md:hidden flex items-center space-x-4'>
-          <div
-              style={{ width: '50px', height: '50px' }}
-              className="h-full mr-16 animate-pulse"
-            >
-              <NextImage
-                src="/aestheticpro.png"
-                width={1000}
-                height={1000}
-                alt="logo"
-                draggable={false}
-              />
-            </div>
+          <div className='flex xl:hidden items-center space-x-4'>
             <UserProfile user={user!} />
             <ModeToggle/>
           </div>

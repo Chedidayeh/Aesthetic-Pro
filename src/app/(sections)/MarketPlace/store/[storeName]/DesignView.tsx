@@ -284,7 +284,7 @@ const handleSortChange = (event: string) => {
             </div>
             <div className="mt-3  text-sm">
             <Link href={'/MarketPlace/create-client-product/upload'}>
-                  <Button size={"sm"} variant={"secondary"}>Try these Designs !</Button>
+                  <Button size={"sm"} variant={"default"}>Try these Designs !</Button>
               </Link>  
           </div>
           </div>
@@ -296,7 +296,7 @@ const handleSortChange = (event: string) => {
               'relative h-96 sm:h-[400px] lg:h-[600px] flex-1 my-8 w-full  p-2    flex justify-center flex-col items-center'
             )}
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 p-2">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 p-2">
               {filteredAndSortedDesigns.map((design, index) => (
                 <div key={index} className="flex flex-col items-center">
                   <div onClick={() => copyToClipboard(design.name)} className={cn(`border-2 rounded-xl p-1 cursor-pointer `, isDarkMode ? 'bg-gray-900' : 'bg-gray-100' )}>
