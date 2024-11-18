@@ -5,10 +5,10 @@ import { SessionProvider } from 'next-auth/react'
 import { Session } from 'next-auth'
 
 
-const Layout = ({ children , session }: { children: ReactNode  , session :Session}) => {
+const Layout = ({ children }: { children: ReactNode  }) => {
   return (
 
-    <SessionProvider session={session}>
+    <SessionProvider>
 
     <MaxWidthWrapper className='flex-1 flex flex-col'>
       {children}

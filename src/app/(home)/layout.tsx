@@ -22,16 +22,13 @@ export const metadata: Metadata = {
   description: "Tunisian Platfrom",
 };
 
-const Layout = ({ children , session }: { children: ReactNode , session : Session }) => {
-
-
-  
+type LayoutProps = {
+  children: ReactNode;
+};
+const Layout = ({ children }: LayoutProps) => {
 
 
   return (
-
-
-
 
     <html lang="en">
       <body className={recursive.className}>
@@ -44,7 +41,7 @@ const Layout = ({ children , session }: { children: ReactNode , session : Sessio
       <StoreProvider>
       <main className='flex flex-col min-h-[calc(100vh-3.5rem-1px)]'>
         <div className='flex-1 flex flex-col h-full'>
-        <SessionProvider session={session}>
+        <SessionProvider >
 
            <Providers>
     <TopBar/>
