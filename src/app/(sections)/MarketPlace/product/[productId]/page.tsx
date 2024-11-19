@@ -63,8 +63,6 @@ const Page = async ({ params }: PageProps) => {
 
   try {
 
-    await trackProductView(productId);
-
     const user = await getUser()
 
     const product = await db.product.findFirst({

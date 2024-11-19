@@ -1542,6 +1542,297 @@ export async function createAffiliateNotification(affiliateId : string, content 
 }
 
 
+// chart : 
+
+
+export async function getProductViewsChartData(storeId: string , month: number, year: number) {
+  // Calculate the start and end dates for the given month
+  const startDate = new Date(year, month - 1, 1);
+  const endDate = new Date(year, month, 0); // Last day of the month
+
+
+  // Generate all dates in the range
+  const allDates = [];
+  for (
+    let d = new Date(startDate);
+    d <= endDate;
+    d.setDate(d.getDate() + 1)
+  ) {
+    allDates.push(d.toISOString().split("T")[0]); // Format: YYYY-MM-DD
+  }
+
+  // Fetch all products for the given storeId
+  const products = await db.product.findMany({
+    where: { storeId },
+    select: { id: true, title: true }, // Fetch product ids and titles
+  });
+
+  const productIds = products.map((product) => product.id);
+  const productTitles = Object.fromEntries(
+    products.map((product) => [product.id, product.title])
+  );
+
+  // Query product views for the last month for these products
+  const productViewsPerDay = await db.productViews.groupBy({
+    by: ["viewedAt", "productId"], // Include productId in the grouping
+    _count: {
+      productId: true,
+    },
+    where: {
+      productId: { in: productIds }, // Only include views for products from the given store
+      viewedAt: {
+        gte: startDate, // Start date: One month ago
+        lte: endDate, // End date: Today
+      },
+    },
+    orderBy: {
+      viewedAt: "asc", // Sort by the date of view
+    },
+  });
+
+  // Aggregate views and product details by day
+  const dailyData: {
+    [key: string]: {
+      views: number;
+      productDetails: { title: string; views: number }[];
+    };
+  } = {};
+
+  // Populate daily data with views
+  productViewsPerDay.forEach((view) => {
+    const date = view.viewedAt.toISOString().split("T")[0]; // Extract "YYYY-MM-DD" from Date
+    if (!dailyData[date]) {
+      dailyData[date] = { views: 0, productDetails: [] };
+    }
+
+    // Increment total views
+    dailyData[date].views += view._count.productId;
+
+    // Update product-level views
+    const product = dailyData[date].productDetails.find(
+      (p) => p.title === productTitles[view.productId]
+    );
+    if (product) {
+      product.views += view._count.productId;
+    } else {
+      dailyData[date].productDetails.push({
+        title: productTitles[view.productId],
+        views: view._count.productId,
+      });
+    }
+  });
+
+  // Generate chart data for all dates in the range
+  const chartData = allDates.map((date) => ({
+    date,
+    views: dailyData[date]?.views || 0,
+    productDetails: dailyData[date]?.productDetails || [],
+  }));
+
+  // Return the chart data
+  return chartData;
+}
+
+
+
+export async function getAffiliateChartData(affiliateId: string , month: number, year: number) {
+  // Calculate the start and end dates for the given month
+  const startDate = new Date(year, month - 1, 1);
+  const endDate = new Date(year, month, 0); // Last day of the month
+
+  // Generate all dates in the range
+  const allDates = [];
+  for (
+    let d = new Date(startDate);
+    d <= endDate;
+    d.setDate(d.getDate() + 1)
+  ) {
+    allDates.push(d.toISOString().split("T")[0]); // Format: YYYY-MM-DD
+  }
+
+  // Fetch affiliate links for the given affiliateId
+  const affiliateLinks = await db.affiliateLink.findMany({
+    where: { affiliateId },
+    select: { id: true, productId: true, product: { select: { title: true } } },
+  });
+
+  const affiliateLinkIds = affiliateLinks.map((link) => link.id);
+  const productTitles = Object.fromEntries(
+    affiliateLinks.map((link) => [link.id, link.product.title])
+  );
+
+  // Query affiliate clicks grouped by day
+  const affiliateClicksPerDay = await db.affiliateClick.groupBy({
+    by: ["clickedAt", "affiliateLinkId"], // Group by the date and link ID
+    _count: {
+      affiliateLinkId: true,
+    },
+    where: {
+      affiliateLinkId: { in: affiliateLinkIds }, // Include only clicks for this affiliate's links
+      clickedAt: {
+        gte: startDate, // Start date: One month ago
+        lte: endDate, // End date: Today
+      },
+    },
+    orderBy: {
+      clickedAt: "asc", // Sort by the click date
+    },
+  });
+
+  // Aggregate clicks and link details by day
+  const dailyData: {
+    [key: string]: {
+      linkClicks: number;
+      linkDetails: { title: string; views: number }[];
+    };
+  } = {};
+
+  affiliateClicksPerDay.forEach((click) => {
+    const date = click.clickedAt.toISOString().split("T")[0]; // Extract "YYYY-MM-DD" from Date
+    if (!dailyData[date]) {
+      dailyData[date] = { linkClicks: 0, linkDetails: [] };
+    }
+
+    // Increment total clicks
+    dailyData[date].linkClicks += click._count.affiliateLinkId;
+
+    // Update link-level views
+    const productTitle = productTitles[click.affiliateLinkId];
+    const product = dailyData[date].linkDetails.find((p) => p.title === productTitle);
+    if (product) {
+      product.views += click._count.affiliateLinkId;
+    } else {
+      dailyData[date].linkDetails.push({
+        title: productTitle,
+        views: click._count.affiliateLinkId,
+      });
+    }
+  });
+
+  // Generate chart data for all dates in the range
+  const chartData = allDates.map((date) => ({
+    date,
+    linkClicks: dailyData[date]?.linkClicks || 0,
+    linkDetails: dailyData[date]?.linkDetails || [],
+  }));
+
+  // Return the chart data
+  return chartData;
+}
+
+interface ChartData {
+  date: string;        // Date in "YYYY-MM-DD" format
+  totalOrders: number; // Total number of orders on this day
+  paidOrders: number;  // Number of paid orders on this day
+  totalAmount: number; // Total amount for all orders on this day
+  receivedAmount: number; // Total amount received for paid orders
+}
+export async function getOrderChartData(month: number, year: number) {
+  // Calculate the start and end dates for the given month
+  const startDate = new Date(year, month - 1, 1);
+  const endDate = new Date(year, month, 0); // Last day of the month
+
+  // Generate all dates in the range
+  const allDates: string[] = [];
+  for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+    allDates.push(d.toISOString().split("T")[0]); // Format: YYYY-MM-DD
+  }
+
+  // Fetch orders within the specified month
+  const orders = await db.order.findMany({
+    where: {
+      createdAt: {
+        gte: startDate,
+        lte: endDate,
+      },
+    },
+    select: {
+      createdAt: true,
+      amount: true,
+      isPaid: true,
+    },
+  });
+
+  // Aggregate data per day
+  const dailyData: {
+    [key: string]: {
+      totalOrders: number;
+      paidOrders: number;
+      totalAmount: number;
+      receivedAmount: number;
+    };
+  } = {};
+
+  orders.forEach((order) => {
+    const date = order.createdAt.toISOString().split("T")[0];
+    if (!dailyData[date]) {
+      dailyData[date] = {
+        totalOrders: 0,
+        paidOrders: 0,
+        totalAmount: 0,
+        receivedAmount: 0,
+      };
+    }
+
+    // Update daily stats
+    dailyData[date].totalOrders += 1;
+    dailyData[date].totalAmount += order.amount;
+    if (order.isPaid) {
+      dailyData[date].paidOrders += 1;
+      dailyData[date].receivedAmount += order.amount;
+    }
+  });
+
+  // Generate chart data for all dates in the range
+  const chartData: ChartData[] = allDates.map((date) => ({
+    date,
+    totalOrders: dailyData[date]?.totalOrders || 0,
+    paidOrders: dailyData[date]?.paidOrders || 0,
+    totalAmount: dailyData[date]?.totalAmount || 0,
+    receivedAmount: dailyData[date]?.receivedAmount || 0,
+  }));
+
+  // Return the chart data
+  return chartData;
+}
+
+
+export async function getStoreStats() {
+  // Fetch stores and related data
+  const stores = await db.store.findMany({
+    include: {
+      products: {
+        where : {isProductAccepted : true}
+      },
+      designs: {
+        where : {isDesignForSale : true , isDesignAccepted : true}
+      },
+      followers: true,
+    },
+  });
+
+  // Map the data to the required chartData format
+  const chartData = stores.map((store) => ({
+    store: store.storeName,
+    totalRevenue: store.revenue,
+    totalSales: store.totalSales,
+    totalProducts: store.products.length,
+    totalDesigns: store.designs.length,
+    totalFollowers: store.followers.length,
+    totalLikes: store.totalLikes,
+  }));
+
+  return chartData;
+}
+
+
+
+
+
+
+
+
+
 
 
 

@@ -370,256 +370,227 @@ interface fetchedCat extends Category {
         ))}
       </div>
 
-    {selectedCat &&   (
-        <>
-
-        {/* manage sizes */}
-
-     <div className='flex items-center justify-center my-4'>
-    <h3 className='text-xl font-bold tracking-tight '>
-    Available Sizes    
-    </h3>
+      {selectedCat && (
+  <>
+    {/* Manage Sizes */}
+    <div className="flex items-center justify-center my-4">
+      <h3 className="text-lg md:text-xl font-bold tracking-tight">Available Sizes</h3>
     </div>
 
-    <div className="flex items-center space-x-4">
-  {/* Label for delete action */}
-  <p className="text-xs text-red-500">Click to delete</p>
+    <div className="flex flex-wrap items-center space-y-2 sm:space-y-0 sm:space-x-4">
+      {/* Label for delete action */}
+      <p className="text-xs text-red-500">Click to delete</p>
 
-  {/* Badges */}
-  <div className="flex flex-wrap space-x-2">
-    {selectedCat.sizes.map((size) => (
-      <Badge
-        key={size.value}
-        className="flex-shrink-0 cursor-pointer"
-        onClick={() => {
-            setIsSizeDeleteOpen(true);
-          setSizeId(size.id);
-        }} 
-      >
-        {size.label}
-      </Badge>
-    ))}
-  </div>
-</div>
-
-
-
-    <div className='flex items-center justify-center my-4'>
-    <h3 className='text-xl font-bold tracking-tight '>
-    Add Sizes    
-    </h3>
+      {/* Badges */}
+      <div className="flex flex-wrap gap-2">
+        {selectedCat.sizes.map((size) => (
+          <Badge
+            key={size.value}
+            className="cursor-pointer"
+            onClick={() => {
+              setIsSizeDeleteOpen(true);
+              setSizeId(size.id);
+            }}
+          >
+            {size.label}
+          </Badge>
+        ))}
+      </div>
     </div>
 
-    
-            <Card className="col-span-full" x-chunk="dashboard-01-chunk-4">
-              <CardContent className='my-2'>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-[50%]">Label</TableHead>
-                      <TableHead className="w-[50%]">Value</TableHead>
-                      <TableHead>Action</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {newSizes.map((size, index) => (
-                      <TableRow key={index}>
-                        <TableCell className="font-semibold">
-                          <Input
-                            type="text"
-                            placeholder="Small"
-                            value={size.label}
-                            onChange={(e) => {
-                              const Sizes = [...newSizes];
-                              Sizes[index].label = e.target.value;
-                              setNewSizes(Sizes);
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <Input
-                            type="text"
-                            placeholder="S"
-                            value={size.value}
-                            onChange={(e) => {
-                              const Sizes = [...newSizes];
-                              Sizes[index].value = e.target.value;
-                              setNewSizes(Sizes);
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <X
-                            className="text-gray-600 hover:text-red-500 cursor-pointer"
-                            onClick={() => handleRemovenewSize(index)}
-                          />
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-              <CardFooter className="justify-center border-t p-4">
-                <Button size="sm" variant="ghost" className="gap-1" onClick={handleAddnewSize}>
-                  <PlusCircle className="h-3.5 w-3.5" />
-                  Add Size
-                </Button>
-              </CardFooter>
-            </Card>
-
-
-
-        {/* manage colors */}
-
-        <div className='flex items-center justify-center my-4'>
-    <h3 className='text-xl font-bold tracking-tight '>
-    Available Colors    
-    </h3>
+    <div className="flex items-center justify-center my-4">
+      <h3 className="text-lg md:text-xl font-bold tracking-tight">Add Sizes</h3>
     </div>
 
-    <div className="flex items-center space-x-4">
-  {/* Label for delete action */}
-  <p className="text-xs text-red-500">Click to delete</p>
+    <Card className="col-span-full">
+      <CardContent className="overflow-auto">
+        <Table className="min-w-full">
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[50%]">Label</TableHead>
+              <TableHead className="w-[50%]">Value</TableHead>
+              <TableHead>Action</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {newSizes.map((size, index) => (
+              <TableRow key={index}>
+                <TableCell className="font-semibold">
+                  <Input
+                    type="text"
+                    placeholder="Small"
+                    value={size.label}
+                    onChange={(e) => {
+                      const Sizes = [...newSizes];
+                      Sizes[index].label = e.target.value;
+                      setNewSizes(Sizes);
+                    }}
+                  />
+                </TableCell>
+                <TableCell>
+                  <Input
+                    type="text"
+                    placeholder="S"
+                    value={size.value}
+                    onChange={(e) => {
+                      const Sizes = [...newSizes];
+                      Sizes[index].value = e.target.value;
+                      setNewSizes(Sizes);
+                    }}
+                  />
+                </TableCell>
+                <TableCell>
+                  <X
+                    className="text-gray-600 hover:text-red-500 cursor-pointer"
+                    onClick={() => handleRemovenewSize(index)}
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </CardContent>
+      <CardFooter className="justify-center border-t p-4">
+        <Button size="sm" variant="ghost" className="gap-1" onClick={handleAddnewSize}>
+          <PlusCircle className="h-3.5 w-3.5" />
+          Add Size
+        </Button>
+      </CardFooter>
+    </Card>
 
-  {/* Badges */}
-  <div className="flex flex-wrap space-x-2">
-    {selectedCat.colors.map((color) => (
-      <Badge
-        key={color.value}
-        className="flex-shrink-0 cursor-pointer"
-        onClick={() => {
-         setIsColorDeleteOpen(true);
-          setColorId(color.id);
-        }} 
-      >
-        {color.label}
-      </Badge>
-    ))}
-  </div>
-</div>
-
-
-
-    <div className='flex items-center justify-center my-4'>
-    <h3 className='text-xl font-bold tracking-tight '>
-    Add Colors    
-    </h3>
+    {/* Manage Colors */}
+    <div className="flex items-center justify-center my-4">
+      <h3 className="text-lg md:text-xl font-bold tracking-tight">Available Colors</h3>
     </div>
 
-                {/* category colors */}
-                <Card className="col-span-full" x-chunk="dashboard-01-chunk-4">
-              <CardHeader>
-                <CardTitle>Colors</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-[10%]">Label</TableHead>
-                      <TableHead className="w-[10%]">Value</TableHead>
-                      <TableHead className="w-[12%]">Tw</TableHead>
-                      <TableHead>FrontImageUrl</TableHead>
-                      <TableHead>BackImageUrl</TableHead>
-                      <TableHead>Action</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {colors.map((color, index) => (
-                      <TableRow key={index}>
-                        <TableCell className="font-semibold">
-                          <Input
-                            type="text"
-                            placeholder="Black"
-                            value={color.label}
-                            onChange={(e) => {
-                              const newColors = [...colors];
-                              newColors[index].label = e.target.value;
-                              setColors(newColors);
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <Input
-                            type="text"
-                            placeholder="black"
-                            value={color.value}
-                            onChange={(e) => {
-                              const newColors = [...colors];
-                              newColors[index].value = e.target.value;
-                              setColors(newColors);
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <Input
-                            type="text"
-                            placeholder="zinc-900"
-                            value={color.tw}
-                            onChange={(e) => {
-                              const newColors = [...colors];
-                              newColors[index].tw = e.target.value;
-                              setColors(newColors);
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell>
-                        <SingleImageDropzone
-                        className="border border-blue-800"
-                        width={200}
-                        height={200}
-                        value={color.frontImage!}
-                        onChange={(file) => {
-                          const newColors = [...colors];
-                          newColors[index].frontImage = file!;
-                          setColors(newColors);
-                        }}
-                      />
-                        </TableCell>
-                        <TableCell>
-                        <SingleImageDropzone
-                        className="border border-blue-800"
-                        width={200}
-                        height={200}
-                        value={color.backImage!}
-                        onChange={(file) => {
-                          const newColors = [...colors];
-                          newColors[index].backImage = file!;
-                          setColors(newColors);
-                        }}
-                      />
-                        </TableCell>
-                        <TableCell>
-                          <X
-                            className="text-gray-600 hover:text-red-500 cursor-pointer"
-                            onClick={() => handleRemoveColor(index)}
-                          />
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </CardContent>
-              <CardFooter className="justify-center border-t p-4">
-                <Button size="sm" variant="ghost" className="gap-1" onClick={handleAddColor}>
-                  <PlusCircle className="h-3.5 w-3.5" />
-                  Add Color
-                </Button>
-              </CardFooter>
-            </Card>
+    <div className="flex flex-wrap items-center space-y-2 sm:space-y-0 sm:space-x-4">
+      <p className="text-xs text-red-500">Click to delete</p>
+      <div className="flex flex-wrap gap-2">
+        {selectedCat.colors.map((color) => (
+          <Badge
+            key={color.value}
+            className="cursor-pointer"
+            onClick={() => {
+              setIsColorDeleteOpen(true);
+              setColorId(color.id);
+            }}
+          >
+            {color.label}
+          </Badge>
+        ))}
+      </div>
+    </div>
 
+    <div className="flex items-center justify-center my-4">
+      <h3 className="text-lg md:text-xl font-bold tracking-tight">Add Colors</h3>
+    </div>
 
-            <div className="my-4">
-            {/* Save Category Button */}
-            <Button size="sm" onClick={handleSaveCategory}>
-              Save Category
-            </Button>
-            </div>
+    <Card className="col-span-full">
+      <CardContent className="overflow-auto">
+        <Table className="min-w-full">
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[10%]">Label</TableHead>
+              <TableHead className="w-[10%]">Value</TableHead>
+              <TableHead className="w-[12%]">Tw</TableHead>
+              <TableHead>FrontImageUrl</TableHead>
+              <TableHead>BackImageUrl</TableHead>
+              <TableHead>Action</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {colors.map((color, index) => (
+              <TableRow key={index}>
+                <TableCell className="font-semibold">
+                  <Input
+                    type="text"
+                    placeholder="Black"
+                    value={color.label}
+                    onChange={(e) => {
+                      const newColors = [...colors];
+                      newColors[index].label = e.target.value;
+                      setColors(newColors);
+                    }}
+                  />
+                </TableCell>
+                <TableCell>
+                  <Input
+                    type="text"
+                    placeholder="black"
+                    value={color.value}
+                    onChange={(e) => {
+                      const newColors = [...colors];
+                      newColors[index].value = e.target.value;
+                      setColors(newColors);
+                    }}
+                  />
+                </TableCell>
+                <TableCell>
+                  <Input
+                    type="text"
+                    placeholder="zinc-900"
+                    value={color.tw}
+                    onChange={(e) => {
+                      const newColors = [...colors];
+                      newColors[index].tw = e.target.value;
+                      setColors(newColors);
+                    }}
+                  />
+                </TableCell>
+                <TableCell>
+                  <SingleImageDropzone
+                    className="border border-blue-800 max-w-full h-auto"
+                    width={200}
+                    height={200}
+                    value={color.frontImage!}
+                    onChange={(file) => {
+                      const newColors = [...colors];
+                      newColors[index].frontImage = file!;
+                      setColors(newColors);
+                    }}
+                  />
+                </TableCell>
+                <TableCell>
+                  <SingleImageDropzone
+                    className="border border-blue-800 max-w-full h-auto"
+                    width={200}
+                    height={200}
+                    value={color.backImage!}
+                    onChange={(file) => {
+                      const newColors = [...colors];
+                      newColors[index].backImage = file!;
+                      setColors(newColors);
+                    }}
+                  />
+                </TableCell>
+                <TableCell>
+                  <X
+                    className="text-gray-600 hover:text-red-500 cursor-pointer"
+                    onClick={() => handleRemoveColor(index)}
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </CardContent>
+      <CardFooter className="justify-center border-t p-4">
+        <Button size="sm" variant="ghost" className="gap-1" onClick={handleAddColor}>
+          <PlusCircle className="h-3.5 w-3.5" />
+          Add Color
+        </Button>
+      </CardFooter>
+    </Card>
 
+    <div className="my-4">
+      {/* Save Category Button */}
+      <Button size="sm" onClick={handleSaveCategory}>
+        Save Category
+      </Button>
+    </div>
+  </>
+)}
 
-                </>
-
-                
-    )}
         </div>
       </>
       ) : (

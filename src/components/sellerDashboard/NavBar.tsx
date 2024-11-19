@@ -28,6 +28,7 @@ import {
   TrendingUp,
   TriangleAlert,
   Users,
+  Wallet,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
@@ -122,7 +123,7 @@ const [user, setUser] = useState<User>();
               onClick={()=>router.push("/sellerDashboard")}
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <LayoutDashboard className="h-3 w-3" />
+                <LayoutDashboard className="h-4 w-4" />
               </div>
               Dashboard
             </Button>
@@ -135,7 +136,7 @@ const [user, setUser] = useState<User>();
               onClick={()=>router.push("/sellerDashboard/products")}
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <Shirt className="h-3 w-3" />
+                <Shirt className="h-4 w-4" />
               </div>
               Products
             </Button>
@@ -148,7 +149,7 @@ const [user, setUser] = useState<User>();
               variant="ghost"
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <Palette className="h-3 w-3" />
+                <Palette className="h-4 w-4" />
               </div>
               Designs
             </Button>
@@ -161,7 +162,7 @@ const [user, setUser] = useState<User>();
               variant="ghost"
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <ShoppingBasket  className="h-3 w-3" />
+                <ShoppingBasket  className="h-4 w-4" />
               </div>
               Orders
             </Button>
@@ -174,7 +175,7 @@ const [user, setUser] = useState<User>();
                variant="ghost"
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <BadgeDollarSign className="h-3 w-3" />
+                <Wallet className="h-4 w-4" />
               </div>
               Wallet
             </Button>
@@ -187,7 +188,7 @@ const [user, setUser] = useState<User>();
 
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <Receipt className="h-3 w-3" />
+                <Receipt className="h-4 w-4" />
               </div>
               Requested Payments
             </Button>
@@ -200,7 +201,7 @@ const [user, setUser] = useState<User>();
               variant="ghost"
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <Bell className="h-3 w-3" />
+                <Bell className="h-4 w-4" />
               </div>
               Notifications
               {notifications && notifications?.length > 0 && (
@@ -222,7 +223,7 @@ const [user, setUser] = useState<User>();
 
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <BookOpenCheck className="h-3 w-3" />
+                <BookOpenCheck className="h-4 w-4" />
               </div>
               Guide
             </Button>
@@ -239,7 +240,7 @@ const [user, setUser] = useState<User>();
 
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <Settings className="h-3 w-3" />
+                <Settings className="h-4 w-4" />
               </div>
               Settings
             </Button>
@@ -252,7 +253,7 @@ const [user, setUser] = useState<User>();
 
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <Home className="h-3 w-3" />
+                <Home className="h-4 w-4" />
               </div>
               MarketPlace
             </Button>

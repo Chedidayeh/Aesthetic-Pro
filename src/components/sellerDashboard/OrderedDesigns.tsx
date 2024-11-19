@@ -24,7 +24,7 @@ const DesignsOrder = async () => {
   const storeOrdersForDesigns = await getOrderedDesignsByStoreId(store!.id);
 
   return (
-    <Card className="xl:col-span-4" x-chunk="dashboard-01-chunk-4">
+    <Card className="col-span-4" x-chunk="dashboard-01-chunk-4">
       <CardHeader className="flex flex-row items-center">
         <div className="grid gap-2">
           <CardTitle>Ordered Designs</CardTitle>

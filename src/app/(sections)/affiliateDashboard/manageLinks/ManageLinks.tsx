@@ -140,7 +140,7 @@ const ManageLinks = ({ Links , platform }: ViewProps) => {
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Sort Options</SelectLabel>
-                <SelectItem value="views">Clicks and views</SelectItem>
+                <SelectItem value="views">Clicks</SelectItem>
                 <SelectItem value="profit">Profit</SelectItem>
               </SelectGroup>
             </SelectContent>
@@ -161,7 +161,7 @@ const ManageLinks = ({ Links , platform }: ViewProps) => {
                         <TableHead className="">Product Title</TableHead>
                         <TableHead className="">Product Price</TableHead>
                         <TableHead className="">Your Profit ( {platform.affiliateUserProfit}% on every sale made)</TableHead>
-                        <TableHead>Total views and clicks</TableHead>
+                        <TableHead>Total clicks</TableHead>
                         <TableHead>Total Link sales</TableHead>
                         <TableHead className="">Actions</TableHead>
                     </TableRow>
@@ -173,7 +173,7 @@ const ManageLinks = ({ Links , platform }: ViewProps) => {
                             <TableCell className="">{link.product.title}</TableCell>
                             <TableCell className="">{(link.product.price).toFixed(2)} TND</TableCell>
                             <TableCell className="">{(link.probableProfit.toFixed(2))} TND</TableCell>
-                            <TableCell>{link.totalViews} views</TableCell>
+                            <TableCell>{link.totalViews} clicks</TableCell>
                             <TableCell>{link.totalSales} sales</TableCell>
                             <TableCell className="">
                             <TooltipProvider>

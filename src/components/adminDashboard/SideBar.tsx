@@ -101,7 +101,7 @@ const SideBar = () => {
               onClick={()=>router.push("/adminDashboard")}
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <LayoutDashboard className="h-3 w-3" />
+                <LayoutDashboard className="h-4 w-4" />
               </div>
               Dashboard
             </Button>
@@ -114,7 +114,7 @@ const SideBar = () => {
               onClick={()=>router.push("/adminDashboard/stores")}
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <Store className="h-3 w-3" />
+                <Store className="h-4 w-4" />
               </div>
               Manage Stores
               {(count?.awaitingActionProductCount ?? 0) + (count?.awaitingActionDesignCount ?? 0) > 0 && (
@@ -134,7 +134,7 @@ const SideBar = () => {
               onClick={()=>router.push("/adminDashboard/requests")}
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <Store className="h-3 w-3" />
+                <Store className="h-4 w-4" />
               </div>
               Manage Requests
               {(count?.storeRequestsCount ?? 0) > 0 && (count?.affiliateRequestsCount ?? 0) > 0 && (
@@ -154,7 +154,7 @@ const SideBar = () => {
               onClick={()=>router.push("/adminDashboard/products")}
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <Shirt className="h-3 w-3" />
+                <Shirt className="h-4 w-4" />
               </div>
               Manage Products
               {(count?.awaitingActionProductCount ?? 0) > 0 && (
@@ -174,7 +174,7 @@ const SideBar = () => {
               variant="ghost"
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <Palette className="h-3 w-3" />
+                <Palette className="h-4 w-4" />
               </div>
               Manage Designs
               {(count?.awaitingActionDesignCount ?? 0) > 0 && (
@@ -194,7 +194,7 @@ const SideBar = () => {
               variant="ghost"
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <ShoppingBasket  className="h-3 w-3" />
+                <ShoppingBasket  className="h-4 w-4" />
               </div>
               
               Manage Orders
@@ -215,7 +215,7 @@ const SideBar = () => {
               variant="ghost"
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <ShoppingBasket  className="h-3 w-3" />
+                <ShoppingBasket  className="h-4 w-4" />
               </div>
               
               Manage Returns
@@ -236,7 +236,7 @@ const SideBar = () => {
               variant="ghost"
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <Layers3 className="h-3 w-3" />
+                <Layers3 className="h-4 w-4" />
               </div>
               Manage Stock
             </Button>
@@ -249,7 +249,7 @@ const SideBar = () => {
               variant="ghost"
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <LayoutGrid className="h-3 w-3" />
+                <LayoutGrid className="h-4 w-4" />
               </div>
               Manage Categories
             </Button>
@@ -266,7 +266,7 @@ const SideBar = () => {
               variant="ghost"
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <Bell className="h-3 w-3" />
+                <Bell className="h-4 w-4" />
               </div>
               Send Notification
             </Button>
@@ -284,7 +284,7 @@ const SideBar = () => {
 
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <Settings className="h-3 w-3" />
+                <Settings className="h-4 w-4" />
               </div>
               Settings
             </Button>
@@ -296,7 +296,7 @@ const SideBar = () => {
               onClick={()=>router.push("/MarketPlace")}            variant="ghost"
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <Home className="h-3 w-3" />
+                <Home className="h-4 w-4" />
               </div>
               MarketPlace
             </Button>

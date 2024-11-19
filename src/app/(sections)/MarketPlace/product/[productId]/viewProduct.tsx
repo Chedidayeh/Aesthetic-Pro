@@ -47,7 +47,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import ViewDesign from "@/components/MarketPlace/ViewDesign"
 import LoadingState from "@/components/LoadingState"
-import { getSizes } from "./actions"
+import { getSizes, trackProductView } from "./actions"
 import ViewCategoryQuality from "@/components/MarketPlace/ViewCategoryQuality"
 import clsx from 'clsx'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
@@ -123,7 +123,7 @@ const combinedUrls = interleaveArrays(product.croppedFrontProduct, product.cropp
 
   const handleSizeChange = (event: string) => {
     setSelectedSize(event);
-  };
+  }
 
 
   const [open, setOpen] = useState<boolean>(false);
@@ -137,6 +137,27 @@ const redirectToCart = () => {
   router.push("/MarketPlace/cart")
 }
 
+
+  // New useEffect for sessionId and tracking product views
+
+  useEffect(() => {
+    const trackView = async () => {
+      const sessionId = localStorage.getItem("viewSessionId");
+  
+      if (!sessionId) {
+        const newSessionId = crypto.randomUUID();
+        localStorage.setItem("viewSessionId", newSessionId);
+  
+        // Track the product view with the new sessionId
+        await trackProductView(product.id, newSessionId , user?.id);
+      } else {
+        // Track the product view with the existing sessionId
+        await trackProductView(product.id, sessionId ,user?.id);
+      }
+    };
+  
+    trackView();
+  }, [product.id, user?.id]);
   
 
 

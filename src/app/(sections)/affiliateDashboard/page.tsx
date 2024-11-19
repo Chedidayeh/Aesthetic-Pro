@@ -7,8 +7,11 @@ import {
   CreditCard,
   DollarSign,
   Heart,
+  Link2,
   Menu,
+  MousePointerClick,
   Package2,
+  Receipt,
   Search,
   Shirt,
   User,
@@ -42,7 +45,7 @@ import {
 import Link from "next/link";
 
 import { cn } from "@/lib/utils";
-import { getAffiliateLinksAndCommissions, getAffiliateStats, getAllCommissionsByAffiliateId, getStoreByUserId, getUnreadNotificationsForStore, getUser } from "@/actions/actions";
+import { getAffiliateChartData, getAffiliateLinksAndCommissions, getAffiliateStats, getAllCommissionsByAffiliateId, getStoreByUserId, getUnreadNotificationsForStore, getUser } from "@/actions/actions";
 import React from "react"
 import OrderedDesigns from "@/components/sellerDashboard/OrderedDesigns"
 import OrderedProducts from "@/components/sellerDashboard/OrderedProducts"
@@ -51,6 +54,7 @@ import { getStoreFollowersCount } from '../MarketPlace/store/[storeName]/actions
 import { getAffiliateIdByUserId } from './products/actions';
 import CommissionsTable from '@/components/affiliateDashboard/CommissionsTable';
 import { getAffiliateNotification } from './notifications/actions';
+import { Component } from '@/components/affiliateDashboard/AffiliateChart';
 
 
 
@@ -111,7 +115,7 @@ const Page =  async () => {
               <CardTitle className="text-sm font-medium">
                 Total Links
               </CardTitle>
-              <CreditCard className="h-4 w-4 text-muted-foreground" />
+              <Link2 className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{affiliate?.links.length}</div>
@@ -124,7 +128,7 @@ const Page =  async () => {
               <CardTitle className="text-sm font-medium">
                 Total Clicks
               </CardTitle>
-              <User className="h-4 w-4 text-muted-foreground" />
+              <MousePointerClick className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
             <div className="text-2xl font-bold">{affiliateStats.totalClicks}</div>
@@ -136,16 +140,23 @@ const Page =  async () => {
               <CardTitle className="text-sm font-medium">
                 Total sales
                 </CardTitle>
-              <Heart className="h-4 w-4 text-muted-foreground" />
+              <Receipt className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
             <div className="text-2xl font-bold">{affiliateStats.totalSales}</div>
             </CardContent>
           </Card>
 
-          <CommissionsTable commissions={commissions} affiliateStats={affiliateStats}  />
       
     </section>
+
+
+    <div className='flex flex-col space-y-5'>
+    <Component affiliateId={affiliate!.id} />
+    <div className='hidden xl:flex flex-col space-y-5'>
+    <CommissionsTable commissions={commissions} affiliateStats={affiliateStats} />
+    </div>
+    </div>
 
 
 

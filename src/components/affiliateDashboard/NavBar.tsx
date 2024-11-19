@@ -28,6 +28,7 @@ import {
   TrendingUp,
   TriangleAlert,
   Users,
+  Wallet,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
@@ -110,7 +111,7 @@ useEffect(() => {
               onClick={()=>router.push("/affiliateDashboard")}
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <LayoutDashboard className="h-3 w-3" />
+                <LayoutDashboard className="h-4 w-4" />
               </div>
               Dashboard
             </Button>
@@ -123,7 +124,7 @@ useEffect(() => {
               onClick={()=>router.push("/affiliateDashboard/products")}
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <Shirt className="h-3 w-3" />
+                <Shirt className="h-4 w-4" />
               </div>
               Products
             </Button>
@@ -136,7 +137,7 @@ useEffect(() => {
               onClick={()=>router.push("/affiliateDashboard/manageLinks")}
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <Shirt className="h-3 w-3" />
+                <Shirt className="h-4 w-4" />
               </div>
               Manage Links
             </Button>
@@ -149,7 +150,7 @@ useEffect(() => {
               variant="ghost"
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <ShoppingBasket  className="h-3 w-3" />
+                <ShoppingBasket  className="h-4 w-4" />
               </div>
               Orders
             </Button>
@@ -162,7 +163,7 @@ useEffect(() => {
                variant="ghost"
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <BadgeDollarSign className="h-3 w-3" />
+                <Wallet className="h-4 w-4" />
               </div>
               Wallet
             </Button>
@@ -175,7 +176,7 @@ useEffect(() => {
 
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <Receipt className="h-3 w-3" />
+                <Receipt className="h-4 w-4" />
               </div>
               Requested Payments
             </Button>
@@ -188,7 +189,7 @@ useEffect(() => {
               variant="ghost"
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <Bell className="h-3 w-3" />
+                <Bell className="h-4 w-4" />
               </div>
               Notifications
               {notifications && notifications?.length > 0 && (
@@ -210,7 +211,7 @@ useEffect(() => {
 
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <Settings className="h-3 w-3" />
+                <Settings className="h-4 w-4" />
               </div>
               Settings
             </Button>
@@ -223,7 +224,7 @@ useEffect(() => {
 
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <Home className="h-3 w-3" />
+                <Home className="h-4 w-4" />
               </div>
               MarketPlace
             </Button>

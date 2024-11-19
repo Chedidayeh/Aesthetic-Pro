@@ -43,64 +43,53 @@ export async function getSizes(categoryLabel: string) {
   }
 
 // Server Action: Track product views
-export async function trackProductView(productId: string) {
-  const session = await auth(); // NextAuth session for logged-in users
-  const clientIp = headers().get('x-forwarded-for') || headers().get('remote-addr'); // Get user's IP address
-  
-  let userId = session?.user?.id || null;
-  let sessionId = !userId ? getClientSessionId() : null; // Generate session ID for non-logged-in users
+export async function trackProductView(productId: string, sessionId: string, userId?: string) {
+  try {
+    let existingView;
 
-  let existingView
-  if(userId) {
- // Check if the product has already been viewed by this user
-      existingView = await db.productViews.findFirst({
-      where: {
-       productId,
-       userId: userId ,
-    }
-    });
-  }
-  else if (sessionId) {
- // Check if the product has already been viewed by this session
+    if (userId) {
+      // Check for an existing view with the given userId
       existingView = await db.productViews.findFirst({
         where: {
           productId,
-          sessionId: sessionId ,
-      }
+          userId,
+        },
       });
-  }else {
-     // Check if the product has already been viewed by this session
-     existingView = await db.productViews.findFirst({
-      where: {
-        productId,
-        ipAddress: clientIp,
     }
-    });
-  }
 
+    if (!existingView) {
+      // If no existing view is found for userId, check for sessionId
+      existingView = await db.productViews.findFirst({
+        where: {
+          productId,
+          sessionId,
+        },
+      });
+    }
 
-  // If no existing view found, record the view
-  if (!existingView) {
-    await db.productViews.create({
-      data: {
-        productId: productId,
-        userId: userId,
-        sessionId: sessionId,
-        ipAddress: clientIp,
-      }
-    });
+    // If no existing view is found, create a new one
+    if (!existingView) {
+      await db.productViews.create({
+        data: {
+          productId,
+          sessionId,
+          userId: userId || null, // Store userId if available, otherwise null
+        },
+      });
 
-    // Optionally, increment the product view count in the product table
-    await db.product.update({
-      where: { id: productId },
-      data: { totalViews: { increment: 1 } },
-    });
+      // Optionally, increment the product view count
+      await db.product.update({
+        where: { id: productId },
+        data: { totalViews: { increment: 1 } },
+      });
+    }
+  } catch (error) {
+    console.error("Error tracking product view:", error);
   }
 }
 
-// Helper function: Generate a unique session ID for anonymous users
-function getClientSessionId() {
-  // Create a unique session ID for anonymous users (using UUID or any other method)
-  return crypto.randomUUID();
-}
+
+
+
+
   

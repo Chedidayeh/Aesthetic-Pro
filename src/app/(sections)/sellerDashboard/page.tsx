@@ -22,13 +22,6 @@ import {
 } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 
 import {
   Table,
@@ -42,7 +35,7 @@ import {
 import Link from "next/link";
 
 import { cn } from "@/lib/utils";
-import { getStoreByUserId, getUnreadNotificationsForStore, getUser } from "@/actions/actions";
+import { getProductViewsChartData, getStoreByUserId, getUnreadNotificationsForStore, getUser } from "@/actions/actions";
 import React from "react"
 import OrderedDesigns from "@/components/sellerDashboard/OrderedDesigns"
 import OrderedProducts from "@/components/sellerDashboard/OrderedProducts"
@@ -51,6 +44,15 @@ import { getStoreFollowersCount } from '../MarketPlace/store/[storeName]/actions
 
 
 
+
+
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Component } from '@/components/sellerDashboard/Chart';
 
 
 
@@ -64,7 +66,6 @@ const Page =  async () => {
   const store = await getStoreByUserId(user!.id!)
   const notifications = await getUnreadNotificationsForStore(store.id)
   const followersCount = await getStoreFollowersCount(store!.id);
-
   return (
     <>
 
@@ -157,18 +158,21 @@ const Page =  async () => {
             </CardContent>
           </Card>
 
-
-          <OrderedProducts/>
-
-          <OrderedDesigns/>
-
-      
     </section>
+    <div className='flex flex-col space-y-5'>
+    <Component storeId={store.id} />
+
+    <div className='hidden xl:flex flex-col space-y-5'>
+
+    <OrderedProducts/>
+
+    <OrderedDesigns/>
+
+    </div>
+
+    </div>
 
 
-
-    <section className={cn(' grid grid-cols-1 p-11 gap-4 transition-all lg:grid-cols-4')}>
-</section>
 
   </div>
 

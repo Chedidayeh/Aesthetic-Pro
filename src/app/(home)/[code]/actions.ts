@@ -21,25 +21,6 @@ export async function getAffiliateLinkByCode(code: string) {
     }
   }
 
-export async function updateTotalVisits(code: string): Promise<boolean> {
-    try {
-      // Update the totalViews by incrementing it by 1 for the affiliate link with the provided code
-      const updatedAffiliateLink = await db.affiliateLink.update({
-        where: { code },
-        data: {
-          totalViews: {
-            increment: 1, // Increment totalViews by 1
-          },
-        },
-      });
-  
-      // Return true if the update was successful
-      return !!updatedAffiliateLink;
-    } catch (error) {
-      console.error('Error updating total views:', error);
-      return false;
-    }
-  }
 
 
   export async function createAffiliateClick(affiliateLink: AffiliateLink, sessionId: string) {
@@ -54,6 +35,15 @@ export async function updateTotalVisits(code: string): Promise<boolean> {
   
       // Create a new click record if it doesn't exist
       if (!existingClick) {
+        await db.affiliateLink.update({
+          where: { id : affiliateLink.id },
+          data: {
+            totalViews: {
+              increment: 1, // Increment totalViews by 1
+            },
+          },
+        });
+
         existingClick = await db.affiliateClick.create({
           data: {
             affiliateLinkId: affiliateLink.id, // The affiliate link ID

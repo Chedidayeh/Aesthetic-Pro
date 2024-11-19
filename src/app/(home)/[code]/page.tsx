@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from "next/navigation";
 import NotFound from "../[...not-found]/page";
-import { createAffiliateClick, getAffiliateLinkByCode, updateTotalVisits } from "./actions";
+import {  getAffiliateLinkByCode } from "./actions";
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription } from '@/components/ui/alert-dialog';
 import RedirectPage from './RedirectPage';
 import { auth } from '@/auth';
@@ -21,7 +21,6 @@ export default async function Page({ params }: RedirectPageProps) {
         return <NotFound />;
     }
     else {
-        await updateTotalVisits(code);
         return (
             <RedirectPage affiliateLink={affiliateLink}  />
         );

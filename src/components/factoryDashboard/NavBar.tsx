@@ -94,7 +94,7 @@ const NavBar = () => {
               onClick={()=>router.push("/factoryDashboard")}
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <LayoutDashboard className="h-3 w-3" />
+                <LayoutDashboard className="h-4 w-4" />
               </div>
               Dashboard
             </Button>
@@ -107,7 +107,7 @@ const NavBar = () => {
               variant="ghost"
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <ShoppingBasket  className="h-3 w-3" />
+                <ShoppingBasket  className="h-4 w-4" />
               </div>
               
               Manage Orders
@@ -134,7 +134,7 @@ const NavBar = () => {
               onClick={()=>router.push("/MarketPlace")}            variant="ghost"
             >
               <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
-                <Home className="h-3 w-3" />
+                <Home className="h-4 w-4" />
               </div>
               MarketPlace
             </Button>

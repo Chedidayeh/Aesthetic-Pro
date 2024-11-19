@@ -395,8 +395,8 @@ model Order {
   status          OrderStatus @default(PROCESSING)
   type            OrderType  @default(NOT_CONFIRMED)
 
-  isSellerOrder  Boolean     @default(false)
-  sellerStore    String?
+  isSellerOrder   Boolean     @default(false)
+  sellerStore     String?
 
 
   isClientMadeOrder Boolean  @default(false)
@@ -413,7 +413,7 @@ model Order {
 
   shippingAddress String
   phoneNumber     String
-  clientName      String? 
+  clientName      String?
 
   orderItems      OrderItem[]
 
@@ -428,7 +428,6 @@ model OrderItem {
 
   orderId               String 
   order                 Order   @relation(fields: [orderId], references: [id] , onDelete: Cascade)
-
 
   frontsellerDesignId   String?
   frontsellerDesign     SellerDesign? @relation("FrontDesign",fields: [frontsellerDesignId], references: [id],onDelete: Cascade )
@@ -452,7 +451,6 @@ model OrderItem {
   productSize           String
   productCategory       String
   capturedMockup        String[]
-
 
   createdAt             DateTime @default(now())
   updatedAt             DateTime? @updatedAt
@@ -509,8 +507,6 @@ model Affiliate {
 
   createdAt     DateTime    @default(now())
   updatedAt     DateTime?   @updatedAt
-
-
 }
 
 

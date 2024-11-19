@@ -518,7 +518,7 @@ const handleSwitchChange = () => {
   <CardContent className="p-4 md:p-6 lg:p-8 max-w-full">
   <p className=" flex items-center justify-center font-bold my-4">View Product :</p>
   <div className="flex items-center justify-center w-full p-4">
-    <div className="w-full max-w-lg"> {/* You can adjust max-w-lg as per your desired size */}
+    <div className="w-80 xl:w-full max-w-lg"> {/* You can adjust max-w-lg as per your desired size */}
       <ImageSlider
         urls={[
           ...(selectedProduct.croppedFrontProduct ?? []),
@@ -600,7 +600,7 @@ const handleSwitchChange = () => {
 
   {/* Product Cards */}
     <div key={index} className='flex flex-col items-center mb-4'>
-    <div className='relative h-52 w-52 sm:h-52 sm:w-52 lg:h-80 lg:w-80'>
+    <div className='relative h-72 w-72 lg:h-80 lg:w-80'>
 
 
        <ImageSlider urls={combinedUrls} />

@@ -5,7 +5,7 @@ import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, A
 import { useRouter } from 'next/navigation';
 import { Loader } from 'lucide-react';
 import { AffiliateLink } from '@prisma/client';
-import { createAffiliateClick, updateTotalVisits } from './actions';
+import { createAffiliateClick } from './actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/reducers/reducers';
 import { saveSessionId } from '@/store/actions/action';

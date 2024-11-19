@@ -149,7 +149,7 @@ const UsersTable = () => {
 
 
 
-<Card className="xl:col-span-4 md:col-span-2 hidden sm:block" x-chunk="dashboard-01-chunk-4">
+<Card className="col-span-4 hidden xl:block" x-chunk="dashboard-01-chunk-4">
       <CardHeader className="flex flex-row items-center">
         <div className="grid gap-2">
           <CardTitle>Users</CardTitle>
