@@ -134,8 +134,12 @@ export async function refuseProduct(productId: string , reasonForRejection : str
     })
 
     // send notification : 
-    await createNotification(productDetails.storeId, reasonForRejection, "Admin");
-
+    await createNotification(
+      productDetails.storeId,
+      `We regret to inform you that your product ${product.title} has been rejected. Reason for rejection: ${reasonForRejection}`,
+      "Admin"
+    );
+    
     // send an email : 
     await sendProductRejetedEmail(productDetails.store.user.email,productDetails.store.user.name!, productDetails.title , reasonForRejection )
 
@@ -206,6 +210,11 @@ export async function refuseDesign(designId: string , reasonForRejection : strin
     }
     // send notification:
     await createNotification(designDetails.storeId, reasonForRejection, "Admin");
+    await createNotification(
+      designDetails.storeId,
+      `We regret to inform you that your design ${design.name} has been rejected. Reason for rejection: ${reasonForRejection}`,
+      "Admin"
+    );
 
     // send an email : 
     await sendDesignRejetedEmail(designDetails.store.user.email,designDetails.store.user.name!, designDetails.name , reasonForRejection )

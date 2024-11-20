@@ -66,7 +66,7 @@ export const generateVerificationEmailHTML = (username: string, token: string) =
         <body>
           <div class="container">
             <div class="logo">
-              <span class="part1">Aesthetic</span><span class="part2">Pro</span>
+              <img src="https://firebasestorage.googleapis.com/v0/b/tactical-hydra-424919-a1.appspot.com/o/aestheticpro.png?alt=media&token=3d5c4c50-bc46-4e81-af42-4ab3763a9ed5" alt="AestheticPro Logo" style="max-width: 200px; margin-bottom: 1px;">
             </div>
             <p class="message">Hi ${username},</p>
             <p class="message">Welcome to AestheticPro.tn ! We're excited to have you on board.</p>
@@ -147,7 +147,7 @@ export const generateResetPassEmailHTML = (username: string, token: string) => {
         <body>
           <div class="container">
             <div class="logo">
-              <span class="part1">Aesthetic</span><span class="part2">Pro</span>
+              <img src="https://firebasestorage.googleapis.com/v0/b/tactical-hydra-424919-a1.appspot.com/o/aestheticpro.png?alt=media&token=3d5c4c50-bc46-4e81-af42-4ab3763a9ed5" alt="AestheticPro Logo" style="max-width: 200px; margin-bottom: 1px;">
             </div>
             <p class="message">Hi ${username},</p>
             <p class="message">You requested to reset your password. Please click the button below to proceed:</p>
@@ -215,7 +215,7 @@ export const generateDesignRejectedEmailHTML = (username: string, designName: st
       <body>
         <div class="container">
           <div class="logo">
-              <span class="part1">Aesthetic</span><span class="part2">Pro</span>
+              <img src="https://firebasestorage.googleapis.com/v0/b/tactical-hydra-424919-a1.appspot.com/o/aestheticpro.png?alt=media&token=3d5c4c50-bc46-4e81-af42-4ab3763a9ed5" alt="AestheticPro Logo" style="max-width: 200px; margin-bottom: 1px;">
           </div>
           <p class="message">Hi ${username},</p>
           <p class="message">We regret to inform you that your design "${designName}" has been rejected.</p>
@@ -285,7 +285,7 @@ export const generateProductRejectedEmailHTML = (username: string, productName: 
       <body>
         <div class="container">
           <div class="logo">
-              <span class="part1">Aesthetic</span><span class="part2">Pro</span>
+              <img src="https://firebasestorage.googleapis.com/v0/b/tactical-hydra-424919-a1.appspot.com/o/aestheticpro.png?alt=media&token=3d5c4c50-bc46-4e81-af42-4ab3763a9ed5" alt="AestheticPro Logo" style="max-width: 200px; margin-bottom: 1px;">
           </div>
           <p class="message">Hi ${username},</p>
           <p class="message">We regret to inform you that your product "${productName}" has been rejected.</p>
@@ -399,9 +399,10 @@ export const generateOrderEmailHTML = (order: OrderWithItems) => {
       <div class="container">
         <div class="header">
           <div class="logo">
-              <span class="part1">Aesthetic</span><span class="part2">Pro</span>
+              <img src="https://firebasestorage.googleapis.com/v0/b/tactical-hydra-424919-a1.appspot.com/o/aestheticpro.png?alt=media&token=3d5c4c50-bc46-4e81-af42-4ab3763a9ed5" alt="AestheticPro Logo" style="max-width: 200px; margin-bottom: 1px;">
           </div>
-          <h1>Thank You for Your Order!</h1>
+        <h1 style="font-size: 28px; font-weight: bold; color: #333;">We Appreciate Your Order! 💖</h1>
+        <p style="font-size: 16px; color: #555; margin-top: 8px;">Thak you for your trust.</p>
         </div>
         <div class="content">
           <p>Hi ${order.user.name},</p>
