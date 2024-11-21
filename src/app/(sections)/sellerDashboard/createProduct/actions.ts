@@ -9,8 +9,8 @@ import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import sharp from 'sharp';
 
 
-
     export const addProductToDb = async (
+      storeId : string,
       productCat: string,
       checkedColors: string[],
       frontPaths: string[],
@@ -33,14 +33,10 @@ import sharp from 'sharp';
       privateProduct : boolean
     ): Promise<{ success: boolean; productId: string | null; error: boolean }> => {
       try {
-        // Fetch user session
-        const session = await auth();
-        if (!session) {
-          return { success: false, productId: null, error: true };
-        }
+
     
         // Fetch store associated with the user
-        const store = await db.store.findUnique({ where: { userId: session.user.id } });
+        const store = await db.store.findUnique({ where: { id: storeId } });
         if (!store) {
           return { success: false, productId: null, error: true };
         }
@@ -107,6 +103,7 @@ import sharp from 'sharp';
 
 
     export const addProductToDbF = async (
+      storeId : string,
       productCat: string,
       checkedColors: string[],
       Paths: string[],
@@ -125,14 +122,9 @@ import sharp from 'sharp';
 
     ): Promise<{ success: boolean; productId: string | null; error: boolean }> => {
       try {
-        // Fetch user session
-        const session = await auth();
-        if (!session) {
-          return { success: false, productId: null, error: true };
-        }
     
         // Fetch store associated with the user
-        const store = await db.store.findUnique({ where: { userId: session.user.id } });
+        const store = await db.store.findUnique({ where: { id: storeId } });
         if (!store) {
           return { success: false, productId: null, error: true };
         }
@@ -186,6 +178,7 @@ import sharp from 'sharp';
     
 
     export const addProductToDbB = async (
+      storeId : string,
       productCat: string,
       checkedColors: string[],
       Paths: string[],
@@ -205,14 +198,9 @@ import sharp from 'sharp';
 
     ): Promise<{ success: boolean; productId: string | null; error: boolean }> => {
       try {
-        // Fetch user session
-        const session = await auth();
-        if (!session) {
-          return { success: false, productId: null, error: true };
-        }
     
         // Fetch store associated with the user
-        const store = await db.store.findUnique({ where: { userId: session.user.id } });
+        const store = await db.store.findUnique({ where: { id: storeId } });
         if (!store) {
           return { success: false, productId: null, error: true };
         }

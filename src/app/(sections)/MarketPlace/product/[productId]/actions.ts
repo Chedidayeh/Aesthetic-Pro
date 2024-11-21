@@ -43,7 +43,11 @@ export async function getSizes(categoryLabel: string) {
   }
 
 // Server Action: Track product views
-export async function trackProductView(productId: string, sessionId: string, userId?: string) {
+export async function trackProductView(
+  productId: string, 
+  sessionId: string, 
+  userId?: string
+) {
   try {
     let existingView;
 
@@ -67,8 +71,16 @@ export async function trackProductView(productId: string, sessionId: string, use
       });
     }
 
-    // If no existing view is found, create a new one
-    if (!existingView) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Normalize to start of the day
+
+    const isSameDay =
+      existingView &&
+      existingView.viewedAt &&
+      new Date(existingView.viewedAt).setHours(0, 0, 0, 0) === today.getTime();
+
+    // If no existing view or existing view is from a different day, create a new one
+    if (!existingView || !isSameDay) {
       await db.productViews.create({
         data: {
           productId,
@@ -87,6 +99,7 @@ export async function trackProductView(productId: string, sessionId: string, use
     console.error("Error tracking product view:", error);
   }
 }
+
 
 
 

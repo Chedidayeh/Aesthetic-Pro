@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/reducers/reducers';
 import { saveSessionId } from '@/store/actions/action';
 
-const SESSION_ID_KEY = 'session_id'; // Key for local storage
+const SESSION_ID_KEY = 'affiliateSessionId'; // Key for local storage
 
 interface PageProps {
   affiliateLink: AffiliateLink;

@@ -405,6 +405,145 @@ const handleFileChange = (file : File) => {
   }
 
 
+                  const generateAllFrontProductFiles = async () => {
+                    setIsBorderHidden(true);
+                    const files = [] as File[]; 
+                    const colors = [] as string[]
+
+                    for (const color of filteredColors) {
+                      const img = document.querySelector(".front-product") as HTMLImageElement;
+                      if (img) {
+                        img.src = color.frontImageUrl;
+                      }
+                      // get the url of the captured product with front design
+                      const pixelRatio = 10; 
+                      const dataUrl = await toPng(FrontcontainerRef.current!, { cacheBust: false, pixelRatio });
+                      // get the file type from the url
+                      const base64Data = dataUrl.split(',')[1]
+                      const blob = base64ToBlob(base64Data, 'image/png')
+                      const file = new File([blob], `${productTitle}.png`, { type: 'image/png' });
+                      files.push(file)
+                      colors.push(color.label)
+
+                    }
+                    return {files , colors}
+                  }
+
+
+                  //save Product with Front Design:
+                  const SaveFrontDesignn = async () =>{
+                    if (!FrontDesignFile) return;
+  
+                  try {
+                    openDialog()
+                    setIsBorderHidden(true)
+                    setisAdding(true)
+  
+                    if(inputTag != "") {
+                      tags.push(inputTag)
+                    }
+  
+                    // upload the front design in the uploads folder and get the path
+                    // const frontdesignPath = await uploadDesign(FrontDesignFile)
+                    const frontDesignName = removeExtension(FrontDesignFile.name)
+
+                    const data = await generateAllFrontProductFiles()
+
+                    const productData = new FormData();
+
+                    productData.append('storeId', store.id);
+                    productData.append('storeName', store.storeName);
+                    productData.append('productCat', selectedP.label);
+                    productData.append('checkedColors', JSON.stringify(data.colors)); // Serialize arrays
+                    productData.append('frontDesignFile', FrontDesignFile); // Serialize arrays
+                    productData.append('productTitle', productTitle);
+                    productData.append('productDescription', productDescription);
+                    productData.append('tags', JSON.stringify(tags)); // Serialize arrays
+                    productData.append('productPrice', JSON.stringify(productPrice)); // Serialize
+                    productData.append('BasePrice', JSON.stringify(BasePrice)); // Serialize
+                    productData.append('sellerProfit', JSON.stringify(sellerProfit)); // Serialize
+                    productData.append('frontDesignName', frontDesignName);
+                    productData.append('Frontwidth', JSON.stringify(Frontwidth)); // Serialize
+                    productData.append('Frontheight', JSON.stringify(Frontheight)); // Serialize
+                    productData.append('selectedCollection', selectedCollection);
+                    productData.append('privateProduct', JSON.stringify(privateProduct)); // Serialize
+
+                    // Append files if they exist
+                    if (data.files && Array.isArray(data.files)) {
+                      data.files.forEach((file, index) => {
+                        productData.append('files[]', file); // Append files individually
+                      });
+                    }
+
+                    const response = await fetch('/api/createFrontProduct', {
+                      method: 'POST',
+                      body: productData, // Send FormData directly (don't stringify)
+                    });
+                    
+                
+                    if (response.ok) {
+                      router.push("/sellerDashboard/products")
+                      closeDialog()
+                      setisAdding(false)
+                      const result = await response.json();
+                      console.log("Product creation triggered successfully:", result);
+                      toast({
+                        title: 'Note',
+                        description: 'We will notify you when the product is created.',
+                        variant: 'default',
+                        duration : 10000
+                      });
+                      return
+                    } else {
+                      closeDialog()
+                      setisAdding(false)
+                      console.error("Failed to trigger product creation:", response.statusText);
+                      toast({
+                        title: 'Error',
+                        description: 'Failed to add product. Please try again later.',
+                        variant: 'destructive',
+                      });
+                      return
+                    }
+
+
+  
+
+                    
+                  } catch (error) {
+                    console.log(error)
+                    closeDialog()
+                    setisAdding(false)
+                    toast({
+                      title: 'Error',
+                      description: 'Failed to add product. Please try again later.',
+                      variant: 'destructive',
+                    });
+                    return
+                  }
+                  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
               const uploadCapturedMockup = async (file: File) => {
@@ -461,6 +600,63 @@ const handleFileChange = (file : File) => {
               };
 
   
+
+
+              const uploadAllCapForFront = async () => {
+                setIsBorderHidden(true);
+                const paths = [] as string[]; // Array to store all the captured product paths
+                const colors = [] as string[]
+                for (const color of filteredColors) {
+                  // Set the image source to the current color's front image URL
+                  const img = document.querySelector(".front-product") as HTMLImageElement;
+                    if (img) {
+                      img.src = color.frontImageUrl;
+                    }
+                  // get the url of the captured product with front design
+                  const pixelRatio = 10; 
+                  const dataUrl = await toPng(FrontcontainerRef.current!, { cacheBust: false, pixelRatio });
+    
+                  // get the file type from the url
+                  const base64Data = dataUrl.split(',')[1]
+                  const blob = base64ToBlob(base64Data, 'image/png')
+                  const file = new File([blob], `${productTitle}.png`, { type: 'image/png' });
+                  // upload the captured product in the uploads folder and get the path 
+                  const CapturedProductPath = await uploadCapturedMockup(file)
+                  paths.push(CapturedProductPath ?? ""); // Store the path in the array
+                  colors.push(color.label)
+                };
+                return { frontPaths: paths.filter(path => path !== ""), colors: colors };
+              };   
+              
+               // Function to map over filteredColors and upload each cat color and return the list of paths
+               const uploadAllCapForBack = async () => {
+                setIsBorderHidden(true);
+                const paths = [] as string[]; // Array to store all the captured product paths
+                const colors = [] as string[]
+                for (const color of filteredColors) {
+                  // Set the image source to the current color's front image URL
+                  const img = document.querySelector(".back-product") as HTMLImageElement;
+                    if (img) {
+                      img.src = color.backImageUrl;
+                    }
+                  // get the url of the captured product with front design
+                  const pixelRatio = 10; 
+                  const dataUrl = await toPng(BackcontainerRef.current!, { cacheBust: false, pixelRatio });
+    
+                  // get the file type from the url
+                  const base64Data = dataUrl.split(',')[1]
+                  const blob = base64ToBlob(base64Data, 'image/png')
+                  const file = new File([blob], `${productTitle}.png`, { type: 'image/png' });
+                  // upload the captured product in the uploads folder and get the path 
+                  const CapturedProductPath = await uploadCapturedMockup(file)
+                  paths.push(CapturedProductPath ?? ""); // Store the path in the array
+                  colors.push(color.label)
+    
+                };
+                return {backPaths : paths.filter(path => path !== "") , colors : colors}
+              };  
+
+
               const uploadDesign = async (file: File) => {
                 const pica = new Pica();
     
@@ -528,60 +724,6 @@ const handleFileChange = (file : File) => {
                   });              
                 }
               }
-
-              const uploadAllCapForFront = async () => {
-                setIsBorderHidden(true);
-                const paths = [] as string[]; // Array to store all the captured product paths
-                const colors = [] as string[]
-                for (const color of filteredColors) {
-                  // Set the image source to the current color's front image URL
-                  const img = document.querySelector(".front-product") as HTMLImageElement;
-                    if (img) {
-                      img.src = color.frontImageUrl;
-                    }
-                  // get the url of the captured product with front design
-                  const pixelRatio = 10; 
-                  const dataUrl = await toPng(FrontcontainerRef.current!, { cacheBust: false, pixelRatio });
-    
-                  // get the file type from the url
-                  const base64Data = dataUrl.split(',')[1]
-                  const blob = base64ToBlob(base64Data, 'image/png')
-                  const file = new File([blob], `${productTitle}.png`, { type: 'image/png' });
-                  // upload the captured product in the uploads folder and get the path 
-                  const CapturedProductPath = await uploadCapturedMockup(file)
-                  paths.push(CapturedProductPath ?? ""); // Store the path in the array
-                  colors.push(color.label)
-                };
-                return { frontPaths: paths.filter(path => path !== ""), colors: colors };
-              };   
-              
-               // Function to map over filteredColors and upload each cat color and return the list of paths
-               const uploadAllCapForBack = async () => {
-                setIsBorderHidden(true);
-                const paths = [] as string[]; // Array to store all the captured product paths
-                const colors = [] as string[]
-                for (const color of filteredColors) {
-                  // Set the image source to the current color's front image URL
-                  const img = document.querySelector(".back-product") as HTMLImageElement;
-                    if (img) {
-                      img.src = color.backImageUrl;
-                    }
-                  // get the url of the captured product with front design
-                  const pixelRatio = 10; 
-                  const dataUrl = await toPng(BackcontainerRef.current!, { cacheBust: false, pixelRatio });
-    
-                  // get the file type from the url
-                  const base64Data = dataUrl.split(',')[1]
-                  const blob = base64ToBlob(base64Data, 'image/png')
-                  const file = new File([blob], `${productTitle}.png`, { type: 'image/png' });
-                  // upload the captured product in the uploads folder and get the path 
-                  const CapturedProductPath = await uploadCapturedMockup(file)
-                  paths.push(CapturedProductPath ?? ""); // Store the path in the array
-                  colors.push(color.label)
-    
-                };
-                return {backPaths : paths.filter(path => path !== "") , colors : colors}
-              };  
         
 
                 //save Product with Both Design:
@@ -636,7 +778,7 @@ const handleFileChange = (file : File) => {
                     return
                     }
 
-                    const result = await addProductToDb(selectedP.label,res.colors,
+                    const result = await addProductToDb(store.id,selectedP.label,res.colors,
                     res.frontPaths,backPaths,
                     productTitle,productDescription,tags,productPrice,BasePrice,sellerProfit,
                     frontDesignName,Frontwidth,Frontheight,frontdesignPath!,
@@ -714,7 +856,7 @@ const handleFileChange = (file : File) => {
                     return
                     }
 
-                  const result = await addProductToDbF(selectedP.label,res.colors,res.frontPaths,
+                  const result = await addProductToDbF(store.id,selectedP.label,res.colors,res.frontPaths,
                   productTitle,productDescription,tags,productPrice,BasePrice,sellerProfit,
                   frontDesignName,Frontwidth,Frontheight,
                   frontdesignPath! , selectedCollection , privateProduct)
@@ -791,7 +933,7 @@ const handleFileChange = (file : File) => {
                     return
                     }
 
-                    const result = await addProductToDbB(selectedP.label,res.colors,res.backPaths,
+                    const result = await addProductToDbB(store.id,selectedP.label,res.colors,res.backPaths,
                     productTitle,productDescription,tags,productPrice,BasePrice,sellerProfit,
                     backDesignName,Backwidth,Backheight,
                     backdesignPath! , selectedCollection , privateProduct)
@@ -1265,7 +1407,7 @@ const handleFileChange = (file : File) => {
                                 !isAnyColorSelected || FrontDesignFile===undefined || 
                                 sellerProfit > platform.maxProductSellerProfit || sellerProfit < 1 || sellerProfit === 0  || !sellerProfit 
                               }
-                              onClick={SaveFrontDesign}                         >
+                              onClick={SaveFrontDesignn}                         >
                                     Add Product To Store
                                     <span className="ml-1"><CircleCheckBig /></span>
                             </Button>

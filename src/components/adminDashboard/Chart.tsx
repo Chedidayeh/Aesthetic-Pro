@@ -202,17 +202,14 @@ export function Component() {
         </ChartContainer>
         <div className="flex space-x-4 mt-4">
           {Object.keys(chartConfig).map((key) => (
-              <Button
-              variant={"secondary"}
-              size={"sm"}
-              key={key}
-              onClick={() => setActiveChart(key as keyof typeof chartConfig)}
-              className={`text-sm px-3 py-1 rounded ${
-                activeChart === key ? "bg-blue-500 text-white" : "border"
-              }`}
-            >
-              {chartConfig[key as keyof typeof chartConfig].label}
-            </Button>
+                <Button
+                variant={activeChart === key ? "default" : "secondary"}
+                size="sm"
+                key={key}
+                onClick={() => setActiveChart(key as keyof typeof chartConfig)}
+              >
+                {chartConfig[key as keyof typeof chartConfig].label}
+              </Button>
           ))}
         </div>
       </CardContent>
