@@ -59,6 +59,7 @@ import { Platform, SellerDesign } from '@prisma/client';
 import { Badge } from '@/components/ui/badge';
 import { useMutation } from '@tanstack/react-query';
 import LoadingState from '@/components/LoadingState';
+import { ScrollArea } from '@/components/ui/scroll-area';
 interface DesignViewProps {
     SellerDesignsData: SellerDesign[];
     platform : Platform
@@ -302,6 +303,7 @@ const DesignView = ({
       </>
     ) : (
       <>
+        <ScrollArea className="h-[984px] w-full border p-2 rounded-lg">
         <div className='relative mt-5 grid grid-cols-1 mb-20 pb-20'>
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 md:grid-cols-2">
             {/* designs Cards */}
@@ -490,6 +492,7 @@ const DesignView = ({
             ))}
           </div>
         </div>
+        </ScrollArea>
       </>
     )}
   </CardContent>

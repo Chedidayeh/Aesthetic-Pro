@@ -66,6 +66,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from "@/components/ui/use-toast";
 import ImageSlider from "@/components/MarketPlace/ImageSlider";
 import LoadingState from "@/components/LoadingState";
+import { ScrollArea } from "@/components/ui/scroll-area";
 interface ProductViewProps {
   sellerProductsData: Product[];
   totalProductViews:number
@@ -345,6 +346,7 @@ const ProductView = ({
       </>
     ) : (
       <>
+        <ScrollArea className="h-[984px] w-full border p-2 rounded-lg">
         <div className="relative mt-5 grid grid-cols-1 mb-20 pb-20">
            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-2">
             {/* Product Cards */}
@@ -450,6 +452,7 @@ const ProductView = ({
             ))}
           </div>
         </div>
+        </ScrollArea>
       </>
     )}
   </CardContent>

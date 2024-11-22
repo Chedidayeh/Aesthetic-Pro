@@ -7,7 +7,7 @@ import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
 import sharp from 'sharp';
-import { addProductToDbF } from '@/app/(sections)/sellerDashboard/createProduct/actions';
+import { addProductToDbB } from '@/app/(sections)/sellerDashboard/createProduct/actions';
 
 
 export async function POST(req: NextRequest) {
@@ -19,41 +19,41 @@ export async function POST(req: NextRequest) {
   const productCat = data.get('productCat') as string;
   const checkedColors = data.get('checkedColors') ? JSON.parse(data.get('checkedColors') as string) : []; // Parse if JSON string
   const files = data.getAll('files[]') as File[];
-  const frontDesignFile = data.get('frontDesignFile') as File;
+  const backDesignFile = data.get('backDesignFile') as File;
   const productTitle = data.get('productTitle') as string;
   const productDescription = data.get('productDescription') as string;
   const tags = data.get('tags') ? JSON.parse(data.get('tags') as string) : []; // Parse if JSON string
   const productPrice = data.get('productPrice') ? JSON.parse(data.get('productPrice') as string) : ''; // Parse if JSON string
   const BasePrice = data.get('BasePrice') ? JSON.parse(data.get('BasePrice') as string) : ''; // Parse if JSON string
   const sellerProfit = data.get('sellerProfit') ? JSON.parse(data.get('sellerProfit') as string) : ''; // Parse if JSON string
-  const frontDesignName = data.get('frontDesignName') as string;
-  const Frontwidth = data.get('Frontwidth') ? JSON.parse(data.get('Frontwidth') as string) : ''; // Parse if JSON string
-  const Frontheight = data.get('Frontheight') ? JSON.parse(data.get('Frontheight') as string) : ''; // Parse if JSON string
+  const backDesignName = data.get('backDesignName') as string;
+  const Backwidth = data.get('Backwidth') ? JSON.parse(data.get('Backwidth') as string) : ''; // Parse if JSON string
+  const Backheight = data.get('Backheight') ? JSON.parse(data.get('Backheight') as string) : ''; // Parse if JSON string
   const selectedCollection = data.get('selectedCollection') as Collection;
   const privateProduct = data.get('privateProduct') ? JSON.parse(data.get('privateProduct') as string) : false; // Parse if JSON string
   
   try {
 
-    const frontProductPaths = await uploadFilesToFirebase(files,storeName,productTitle)
-    const frontDesignPath = await uploadDesignToFirebase(frontDesignFile,storeName)
+    const backProductPaths = await uploadFilesToFirebase(files,storeName,productTitle)
+    const backDesignPath = await uploadDesignToFirebase(backDesignFile,storeName)
     const nonNullFilter = (path: string | null): path is string => path != null;
-    const frontProductPathsFiltered = frontProductPaths.filter(nonNullFilter);
+    const backProductPathsFiltered = backProductPaths.filter(nonNullFilter);
 
-    const result = await addProductToDbF(
+    const result = await addProductToDbB(
         storeId,
         productCat,
         checkedColors,
-        frontProductPathsFiltered,
+        backProductPathsFiltered,
         productTitle,
         productDescription,
         tags,
         productPrice,
         BasePrice,
         sellerProfit,
-        frontDesignName,
-        Frontwidth,
-        Frontheight,
-        frontDesignPath!,
+        backDesignName,
+        Backwidth,
+        Backheight,
+        backDesignPath!,
         selectedCollection,
         privateProduct
     );

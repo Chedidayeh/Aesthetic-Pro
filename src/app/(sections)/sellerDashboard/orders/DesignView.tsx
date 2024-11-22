@@ -101,6 +101,7 @@ import {   DeleteOrder } from './actions';
 import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import { Order, OrderItem } from '@prisma/client';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 
 interface OrderWithItems  {
@@ -226,6 +227,7 @@ const DesignView: React.FC<DesignViewProps> = ({ orderedDesigns }) => {
     </div>
   </CardHeader>
   <CardContent>
+  <ScrollArea  className="h-[384px] w-full border rounded-lg">
     <Table className='mt-8'>
       <TableHeader>
         <TableRow>
@@ -273,6 +275,7 @@ const DesignView: React.FC<DesignViewProps> = ({ orderedDesigns }) => {
         ))}
       </TableBody>
     </Table>
+    </ScrollArea>
   </CardContent>
 </Card>
 

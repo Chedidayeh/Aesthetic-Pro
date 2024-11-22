@@ -46,6 +46,7 @@ import { deleteNotificationById, markAllNotificationsAsViewed, markNotificationA
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import LoadingState from "@/components/LoadingState";
+import { ScrollArea } from "@/components/ui/scroll-area";
 interface NotiViewProps {
   notifications: AffiliateNotification[];
 }
@@ -124,11 +125,13 @@ const ViewNotification = ({ notifications }: NotiViewProps) => {
         )}
         </CardHeader>
         <CardContent>
+        <ScrollArea className="h-[384px] w-full border rounded-lg">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Sender</TableHead>
                 <TableHead>Received At</TableHead>
+                <TableHead>Content</TableHead>
                 <TableHead>Action</TableHead>
               </TableRow>
             </TableHeader>
@@ -140,6 +143,7 @@ const ViewNotification = ({ notifications }: NotiViewProps) => {
                 >                  
                 <TableCell className={notification.isViewed ? "" : " text-blue-500"}>{notification.sender}</TableCell>
                   <TableCell className={notification.isViewed ? "" : " text-blue-500"}>{new Date(notification.createdAt).toLocaleString()}</TableCell>
+                  <TableCell className={notification.isViewed ? "" : " text-blue-500"}>{notification.content}</TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -164,6 +168,7 @@ const ViewNotification = ({ notifications }: NotiViewProps) => {
               ))}
             </TableBody>
           </Table>
+          </ScrollArea>
         </CardContent>
       </Card>
 

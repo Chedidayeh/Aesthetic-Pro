@@ -294,6 +294,9 @@ const [user, setUser] = useState<User>();
 </DropdownMenuLabel>
 
     <DropdownMenuSeparator />
+    <ScrollArea
+      className={`w-full ${notifications.length > 0 ? "h-60" : ""}`}
+          >    
     {notifications.length > 0 ? (
       notifications.map((notification, index) => (
         <React.Fragment key={notification.id}>
@@ -313,6 +316,7 @@ const [user, setUser] = useState<User>();
     ) : (
       <DropdownMenuItem>You don't have any new notifications for now !</DropdownMenuItem>
     )}
+    </ScrollArea>
   </DropdownMenuContent>
 </DropdownMenu>
 

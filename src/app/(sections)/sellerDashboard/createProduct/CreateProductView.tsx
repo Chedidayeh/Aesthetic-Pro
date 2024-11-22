@@ -429,6 +429,30 @@ const handleFileChange = (file : File) => {
                     return {files , colors}
                   }
 
+                  const generateAllBackProductFiles = async () => {
+                    setisBackBorderHidden(true)
+                    const files = [] as File[]; 
+                    const colors = [] as string[]
+
+                    for (const color of filteredColors) {
+                      const img = document.querySelector(".back-product") as HTMLImageElement;
+                      if (img) {
+                        img.src = color.backImageUrl;
+                      }
+                      // get the url of the captured product with front design
+                      const pixelRatio = 10; 
+                      const dataUrl = await toPng(BackcontainerRef.current!, { cacheBust: false, pixelRatio });
+                      // get the file type from the url
+                      const base64Data = dataUrl.split(',')[1]
+                      const blob = base64ToBlob(base64Data, 'image/png')
+                      const file = new File([blob], `${productTitle}.png`, { type: 'image/png' });
+                      files.push(file)
+                      colors.push(color.label)
+
+                    }
+                    return {files , colors}
+                  }
+
 
                   //save Product with Front Design:
                   const SaveFrontDesignn = async () =>{
@@ -482,22 +506,126 @@ const handleFileChange = (file : File) => {
                     
                 
                     if (response.ok) {
-                      router.push("/sellerDashboard/products")
                       closeDialog()
                       setisAdding(false)
                       const result = await response.json();
-                      console.log("Product creation triggered successfully:", result);
+                      console.log("Product creation is successfully:", result);
                       toast({
-                        title: 'Note',
-                        description: 'We will notify you when the product is created.',
+                        title: 'Your product is successfully created',
+                        description: 'Redirecting you!',
                         variant: 'default',
                         duration : 10000
                       });
+                      router.push("/sellerDashboard/products")
                       return
                     } else {
                       closeDialog()
                       setisAdding(false)
                       console.error("Failed to trigger product creation:", response.statusText);
+                      toast({
+                        title: 'Error',
+                        description: 'Failed to create product. Please try again later.',
+                        variant: 'destructive',
+                      });
+                      return
+                    }
+                    
+                  } catch (error) {
+                    console.log(error)
+                    closeDialog()
+                    setisAdding(false)
+                    toast({
+                      title: 'Error',
+                      description: 'Failed to create your product. Please try again later.',
+                      variant: 'destructive',
+                    });
+                    return
+                  }
+                  }
+
+
+                  //save Product with Back Design:
+                  const SaveBackDesignn = async () =>{
+                    if (!BackDesignFile) return;
+
+                    try {
+                      openDialog()
+                      setisBackBorderHidden(true)
+                      setisAdding(true)
+
+                      if(inputTag != "") {
+                        tags.push(inputTag)
+                      }
+
+                      // upload the front design in the uploads folder and get the path
+                        // const frontdesignPath = await uploadDesign(FrontDesignFile)
+                        const backDesignName = removeExtension(BackDesignFile.name)
+
+                        const data = await generateAllBackProductFiles()
+
+                        const productData = new FormData();
+
+                        productData.append('storeId', store.id);
+                        productData.append('storeName', store.storeName);
+                        productData.append('productCat', selectedP.label);
+                        productData.append('checkedColors', JSON.stringify(data.colors)); // Serialize arrays
+                        productData.append('backDesignFile', BackDesignFile); // Serialize arrays
+                        productData.append('productTitle', productTitle);
+                        productData.append('productDescription', productDescription);
+                        productData.append('tags', JSON.stringify(tags)); // Serialize arrays
+                        productData.append('productPrice', JSON.stringify(productPrice)); // Serialize
+                        productData.append('BasePrice', JSON.stringify(BasePrice)); // Serialize
+                        productData.append('sellerProfit', JSON.stringify(sellerProfit)); // Serialize
+                        productData.append('backDesignName', backDesignName);
+                        productData.append('Backwidth', JSON.stringify(Backwidth)); // Serialize
+                        productData.append('Backheight', JSON.stringify(Backheight)); // Serialize
+                        productData.append('selectedCollection', selectedCollection);
+                        productData.append('privateProduct', JSON.stringify(privateProduct)); // Serialize
+
+                        // Append files if they exist
+                        if (data.files && Array.isArray(data.files)) {
+                          data.files.forEach((file, index) => {
+                            productData.append('files[]', file); // Append files individually
+                          });
+                        }
+
+                        const response = await fetch('/api/createBackProduct', {
+                          method: 'POST',
+                          body: productData, // Send FormData directly (don't stringify)
+                        });
+                        
+                    
+                        if (response.ok) {
+                          closeDialog()
+                          setisAdding(false)
+                          const result = await response.json();
+                          console.log("Product creation is successfully:", result);
+                          toast({
+                            title: 'Your product is successfully created',
+                            description: 'Redirecting you!',
+                            variant: 'default',
+                            duration : 10000
+                          });
+                          router.push("/sellerDashboard/products")
+                          return
+                        } else {
+                          closeDialog()
+                          setisAdding(false)
+                          console.error("Failed to trigger product creation:", response.statusText);
+                          toast({
+                            title: 'Error',
+                            description: 'Failed to create product. Please try again later.',
+                            variant: 'destructive',
+                          });
+                          return
+                        }
+
+                    
+                      
+                    } catch (error) {
+                      closeDialog()
+                      setisAdding(false)
+                      console.log(error)
                       toast({
                         title: 'Error',
                         description: 'Failed to add product. Please try again later.',
@@ -506,33 +634,122 @@ const handleFileChange = (file : File) => {
                       return
                     }
 
+                  }
 
-  
 
-                    
-                  } catch (error) {
-                    console.log(error)
-                    closeDialog()
-                    setisAdding(false)
-                    toast({
-                      title: 'Error',
-                      description: 'Failed to add product. Please try again later.',
-                      variant: 'destructive',
+
+
+
+                  //save Product with Both Design:
+                  const SaveBothDesignn = async () =>{
+                    if (!FrontDesignFile || !BackDesignFile) {
+                      toast({
+                        title: 'No uploaded designs found',
+                        description: 'please make sure to upload both front and back desing.',
+                        variant: 'destructive',
+                      });
+                      return
+                    }
+
+                    try {
+                      
+                      openDialog()
+                      setisAdding(true)
+                      setIsBorderHidden(true)
+                      setisBackBorderHidden(true)
+
+                      if(inputTag != "") {
+                        tags.push(inputTag)
+                      }
+
+                      const frontDesignName = removeExtension(FrontDesignFile.name)
+                      const backDesignName = removeExtension(BackDesignFile.name)
+
+                      const frontData = await generateAllFrontProductFiles()
+                      const backData = await generateAllBackProductFiles()
+
+                      const productData = new FormData();
+
+                    productData.append('storeId', store.id);
+                    productData.append('storeName', store.storeName);
+                    productData.append('productCat', selectedP.label);
+                    productData.append('checkedColors', JSON.stringify(frontData.colors)); // Serialize arrays
+                    productData.append('frontDesignFile', FrontDesignFile); // Serialize arrays
+                    productData.append('backDesignFile', BackDesignFile); // Serialize arrays
+                    productData.append('productTitle', productTitle);
+                    productData.append('productDescription', productDescription);
+                    productData.append('tags', JSON.stringify(tags)); // Serialize arrays
+                    productData.append('productPrice', JSON.stringify(productPrice)); // Serialize
+                    productData.append('BasePrice', JSON.stringify(BasePrice)); // Serialize
+                    productData.append('sellerProfit', JSON.stringify(sellerProfit)); // Serialize
+                    productData.append('frontDesignName', frontDesignName);
+                    productData.append('backDesignName', backDesignName);
+                    productData.append('Frontwidth', JSON.stringify(Frontwidth)); // Serialize
+                    productData.append('Frontheight', JSON.stringify(Frontheight)); // Serialize
+                    productData.append('Backwidth', JSON.stringify(Backwidth)); // Serialize
+                    productData.append('Backheight', JSON.stringify(Backheight)); // Serialize
+                    productData.append('selectedCollection', selectedCollection);
+                    productData.append('privateProduct', JSON.stringify(privateProduct)); // Serialize
+
+                    // Append files if they exist
+                    if (frontData.files && Array.isArray(frontData.files)) {
+                      frontData.files.forEach((file, index) => {
+                        productData.append('frontFiles[]', file); // Append files individually
+                      });
+                    }
+
+                    if (backData.files && Array.isArray(backData.files)) {
+                      backData.files.forEach((file, index) => {
+                        productData.append('backFiles[]', file); // Append files individually
+                      });
+                    }
+
+                    const response = await fetch('/api/createFrontAndBackProduct', {
+                      method: 'POST',
+                      body: productData, // Send FormData directly (don't stringify)
                     });
-                    return
+                    
+                
+                    if (response.ok) {
+                      closeDialog()
+                      setisAdding(false)
+                      const result = await response.json();
+                      console.log("Product creation is successfully:", result);
+                      toast({
+                        title: 'Your product is successfully created',
+                        description: 'Redirecting you!',
+                        variant: 'default',
+                        duration : 10000
+                      });
+                      router.push("/sellerDashboard/products")
+                      return
+                    } else {
+                      closeDialog()
+                      setisAdding(false)
+                      console.error("Failed to trigger product creation:", response.statusText);
+                      toast({
+                        title: 'Error',
+                        description: 'Failed to create product. Please try again later.',
+                        variant: 'destructive',
+                      });
+                      return
+                    }
+
+                      
+                      
+                    } catch (error) {
+                      setisAdding(false)
+                      closeDialog()
+                      console.log(error)
+                      toast({
+                        title: 'Error',
+                        description: 'Failed to add product. Please try again later.',
+                        variant: 'destructive',
+                      });
+                      return
+                    } 
+
                   }
-                  }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1377,7 +1594,7 @@ const handleFileChange = (file : File) => {
                                       || BackDesignFile===undefined || 
                                       sellerProfit > platform.maxProductSellerProfit || sellerProfit < 1 || sellerProfit === 0 || !sellerProfit 
                                     }
-                                    onClick={SaveBothDesign}
+                                    onClick={SaveBothDesignn}
                                   >
                                     Add Product To Store
                                     <span className="ml-1"><CircleCheckBig /></span>
@@ -1437,9 +1654,9 @@ const handleFileChange = (file : File) => {
                                 !isAnyColorSelected || BackDesignFile===undefined || 
                                 sellerProfit > platform.maxProductSellerProfit || sellerProfit < 1  || sellerProfit === 0 || !sellerProfit 
                               }
-                              onClick={SaveBackDesign}                          >
-                                    Add Product To Store
-                                    <span className="ml-1"><CircleCheckBig /></span>
+                              onClick={SaveBackDesignn}                          >
+                              Add Product To Store
+                              <span className="ml-1"><CircleCheckBig /></span>
                             </Button>
                           </div>
                           <div>

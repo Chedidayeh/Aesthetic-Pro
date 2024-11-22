@@ -92,6 +92,7 @@ import { useRouter } from 'next/navigation';
 import { Order } from '@prisma/client';
 import { Badge } from '@/components/ui/badge';
 import ImageSlider from "@/components/MarketPlace/ImageSlider";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ProductsViewProps {
   ordersData: Order[];
@@ -348,8 +349,7 @@ const ProductsView = ({
     </div>
   </CardHeader>
   <CardContent>
-
-
+  <ScrollArea  className="h-[384px] w-full border rounded-lg">
   <Table className="mt-8">
   <TableHeader>
     <TableRow>
@@ -458,6 +458,8 @@ const ProductsView = ({
     ))}
   </TableBody>
 </Table>
+
+</ScrollArea>
 
   </CardContent>
 </Card>
