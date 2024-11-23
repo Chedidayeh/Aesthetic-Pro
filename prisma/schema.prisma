@@ -13,7 +13,7 @@ datasource db {
 
 
 
-// Tunipod db
+// aesthetic pro db
 
 enum UserType {
 // Sellers who create and manage products

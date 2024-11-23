@@ -1,5 +1,5 @@
 {
-  "name": "tunipod",
+  "name": "aesthetic-pro",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -47,6 +47,7 @@
     "@trigger.dev/sdk": "^3.2.1",
     "@types/bcryptjs": "^2.4.6",
     "@uploadthing/react": "^6.7.2",
+    "aesthetic-pro": "file:",
     "argon2": "^0.40.3",
     "axios": "^1.7.7",
     "bcryptjs": "^2.4.3",
