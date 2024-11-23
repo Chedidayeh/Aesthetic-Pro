@@ -521,7 +521,7 @@ const handleFileChange = (file : File) => {
                     } else {
                       closeDialog()
                       setisAdding(false)
-                      console.error("Failed to trigger product creation:", response.statusText);
+                      console.error("Failed to create product", response.statusText);
                       toast({
                         title: 'Error',
                         description: 'Failed to create product. Please try again later.',
@@ -635,9 +635,6 @@ const handleFileChange = (file : File) => {
                     }
 
                   }
-
-
-
 
 
                   //save Product with Both Design:
@@ -1594,7 +1591,7 @@ const handleFileChange = (file : File) => {
                                       || BackDesignFile===undefined || 
                                       sellerProfit > platform.maxProductSellerProfit || sellerProfit < 1 || sellerProfit === 0 || !sellerProfit 
                                     }
-                                    onClick={SaveBothDesignn}
+                                    onClick={SaveBothDesign}
                                   >
                                     Add Product To Store
                                     <span className="ml-1"><CircleCheckBig /></span>
@@ -1624,7 +1621,7 @@ const handleFileChange = (file : File) => {
                                 !isAnyColorSelected || FrontDesignFile===undefined || 
                                 sellerProfit > platform.maxProductSellerProfit || sellerProfit < 1 || sellerProfit === 0  || !sellerProfit 
                               }
-                              onClick={SaveFrontDesignn}                         >
+                              onClick={SaveFrontDesign}                         >
                                     Add Product To Store
                                     <span className="ml-1"><CircleCheckBig /></span>
                             </Button>
@@ -1654,7 +1651,7 @@ const handleFileChange = (file : File) => {
                                 !isAnyColorSelected || BackDesignFile===undefined || 
                                 sellerProfit > platform.maxProductSellerProfit || sellerProfit < 1  || sellerProfit === 0 || !sellerProfit 
                               }
-                              onClick={SaveBackDesignn}                          >
+                              onClick={SaveBackDesign}                          >
                               Add Product To Store
                               <span className="ml-1"><CircleCheckBig /></span>
                             </Button>

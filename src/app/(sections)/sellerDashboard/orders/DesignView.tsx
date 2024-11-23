@@ -283,11 +283,6 @@ const DesignView: React.FC<DesignViewProps> = ({ orderedDesigns }) => {
 
 </div>
 
-                             
- 
-
-                            
-
                             </>
   
   );

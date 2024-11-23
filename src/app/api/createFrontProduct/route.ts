@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
          } 
 
   } catch (error) {
-    console.error('Error triggering task:', error);
+    console.error('Error creating product:', error);
     return new Response(JSON.stringify({ message: 'Failed to create Product!.' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
