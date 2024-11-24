@@ -84,6 +84,8 @@ export function Component({affiliateId} : {affiliateId : string}) {
 
   return (
     <>
+        <LoadingState isOpen={isLoading} />
+
     <Card className="col-span-4" x-chunk="dashboard-01-chunk-4">
       <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
@@ -114,6 +116,7 @@ export function Component({affiliateId} : {affiliateId : string}) {
             setDate(selectedDate);
           }
         }}
+        initialFocus
       />
       </PopoverContent>
     </Popover>
@@ -215,7 +218,6 @@ export function Component({affiliateId} : {affiliateId : string}) {
         </ChartContainer>
       </CardContent>
     </Card>
-        <LoadingState isOpen={isLoading} />
      </>
   );
 }
