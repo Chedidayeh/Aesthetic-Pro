@@ -114,7 +114,6 @@ export function Component({affiliateId} : {affiliateId : string}) {
             setDate(selectedDate);
           }
         }}
-        initialFocus
       />
       </PopoverContent>
     </Popover>

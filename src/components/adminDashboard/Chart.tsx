@@ -129,7 +129,6 @@ export function Component() {
             setDate(selectedDate);
           }
         }}
-        initialFocus
       />
       </PopoverContent>
     </Popover>

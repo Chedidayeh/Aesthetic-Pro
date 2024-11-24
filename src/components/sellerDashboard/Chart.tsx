@@ -113,7 +113,6 @@ export function Component({storeId} : {storeId : string}) {
             setDate(selectedDate);
           }
         }}
-        initialFocus
       />
       </PopoverContent>
     </Popover>
