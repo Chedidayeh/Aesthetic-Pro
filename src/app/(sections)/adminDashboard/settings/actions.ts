@@ -2,6 +2,84 @@
 
 import { db } from "@/db";
 
+export async function getAllCollections() {
+  try {
+    // Fetch all collections from the database
+    const collections = await db.collection.findMany({
+      orderBy: {
+        createdAt: "asc", // Optional: Order by creation date
+      },
+      include : {
+        products : true
+      }
+    });
+
+    return collections
+  } catch (error) {
+    console.error("Error fetching collections:", error);
+
+    return []
+    
+  }
+}
+
+export async function deleteTopBarCollection(collectionId: string) {
+  try {
+    // Check if the collection exists
+    const existingCollection = await db.collection.findUnique({
+      where: { id: collectionId },
+    });
+
+    if (!existingCollection) {
+      return {
+        success: false,
+        message: "Collection not found.",
+      };
+    }
+
+    // Delete the collection
+    await db.collection.delete({
+      where: { id: collectionId },
+    });
+
+    return {
+      success: true,
+      message: "Collection deleted successfully.",
+    };
+  } catch (error) {
+    console.error("Error deleting collection:", error);
+
+    return {
+      success: false,
+      message: "An error occurred while deleting the collection.",
+    };
+  }
+}
+
+
+
+export async function addNewCollection(newCollection : string) {
+  try {
+    // Create a new collection in the database
+    const collection = await db.collection.create({
+      data: {
+        name: newCollection,
+      },
+    });
+
+    return {
+      success: true,
+      message: "Collection added successfully.",
+      collection,
+    };
+  } catch (error) {
+    console.error("Error adding new collection:", error);
+    return {
+      success: false,
+      message: "An error occurred while adding the collection.",
+    };
+  }
+}
 
 
 

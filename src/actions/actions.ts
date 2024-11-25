@@ -136,7 +136,7 @@ export async function getAllCategories() {
 
 // returns an array of all the available categories 
 
-export async function getAllPodProductsCategories() {
+export async function getAllProductsCategories() {
   try {
     const categories = await db.product.findMany({
       where : {isProductAccepted : true},
@@ -154,21 +154,36 @@ export async function getAllPodProductsCategories() {
 
 // returns an array of all the available collections 
 
-export async function getAllPodProductsCollections() {
+export async function getAllProductCollectionNames(): Promise<string[]> {
   try {
-    const collections = await db.product.findMany({
-      where : {isProductAccepted : true , privateProduct : false},
-      select: {
-        collection: true,
+    // Fetch unique collection names from accepted public products
+    const productsWithCollections = await db.product.findMany({
+      where: {
+        isProductAccepted: true,
+        privateProduct: false,
       },
-      distinct: ['collection']
+      include: {
+        collection : true
+      }
     });
-    return collections.map(product => product.collection);
+
+    // Extract unique collection names
+    const uniqueCollectionNames = [
+      ...new Set(
+        productsWithCollections
+          .map((product) => product.collection?.name)
+          .filter((name): name is string => !!name) // Filter out `null` or `undefined` values
+      ),
+    ];
+
+    return uniqueCollectionNames;
   } catch (error) {
-    console.error("Error retrieving collections:", error);
-    throw error;
+    console.error("Error retrieving collection names:", error);
+    throw new Error("Failed to retrieve collection names.");
   }
 }
+
+
 
 // get categorie by id
 export async function getCategorieById(catId : string) {
@@ -749,13 +764,13 @@ export async function getProductsGroupedByCollection() {
   
       // Group products by collection
       const groupedByCollection = products.reduce((acc, product) => {
-        const collection = product.collection;
+        const collection = product.collectionName;
   
-        if (!acc[collection]) {
-          acc[collection] = [];
+        if (!acc[collection!]) {
+          acc[collection!] = [];
         }
   
-        acc[collection].push(product);
+        acc[collection!].push(product);
         return acc;
       }, {} as Record<string, typeof products>);
   
@@ -854,11 +869,11 @@ export async function fetchProductsByCategory(category : string) {
 
 
   // fetch products by collection
-  export async function fetchProductsByCollection(collection : Collection) {
+  export async function fetchProductsByCollection(collection : string) {
     try {
       const products = await db.product.findMany({
         where: {
-          collection: collection,
+          collectionName: collection,
           isProductAccepted : true, 
           privateProduct : false
         },
@@ -1369,7 +1384,7 @@ export async function getFactoryDashboardCounts() {
 
 
 // Return a list of strings containing categories, tags, and titles and collection that start with the same characters as the given query
-export async function searchPodProducts(query: string) {
+export async function searchProducts(query: string) {
   try {
       const decodedQuery = decodeURIComponent(query).toLowerCase(); // Decode the URI-encoded query string and convert to lowercase
 
@@ -1401,6 +1416,9 @@ export async function searchPodProducts(query: string) {
           if (product.store.storeName.toLowerCase().startsWith(decodedQuery) || product.store.storeName.toLowerCase().includes(decodedQuery) ) {
             results.push(product.store.storeName);
         }
+        if (product.collection?.name.toLowerCase().startsWith(decodedQuery) || product.collection?.name.toLowerCase().includes(decodedQuery) ) {
+          results.push(product.collection?.name);
+      }
       });
 
       // Deduplicate and return results

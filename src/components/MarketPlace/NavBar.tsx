@@ -28,7 +28,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
-import { fetchBestSellingProducts, fetchCartProductCount, getAllPodProductsCategories, getUser, getUserOrders } from '@/actions/actions'
+import { fetchBestSellingProducts, fetchCartProductCount, getAllProductsCategories, getUser, getUserOrders } from '@/actions/actions'
 import { HamburgerMenuIcon } from '@radix-ui/react-icons'
 import MaxWidthWrapper from '../MaxWidthWrapper'
 import UserProfile from './UserProfile'
@@ -38,7 +38,7 @@ import { getUserFavoriteList } from '@/app/(sections)/MarketPlace/favList/action
 
 const Navbar = async () => {
 
-  const categories = await getAllPodProductsCategories()
+  const categories = await getAllProductsCategories()
   const user = await getUser()
   const bestSellingProducts = await fetchBestSellingProducts();
   const cartProductList = await fetchCartProductCount(user?.id ? user.id : "")

@@ -798,7 +798,7 @@ const viewProductData = (product : ExtraProduct) => {
         </AlertDialogHeader>
         <div className="mt-4 space-y-2">
           <p>
-            <strong>Collection:</strong> {selectedDataProduct.collection}
+            <strong>Collection:</strong> {selectedDataProduct.collectionName}
           </p>
           <p>
             <strong>Title:</strong> {selectedDataProduct.title}

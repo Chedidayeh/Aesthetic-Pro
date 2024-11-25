@@ -16,7 +16,7 @@ import Link from 'next/link'
 import { db } from '@/db'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
-import {  fetchProductsByCategory, getAllPodProductsCategories, getAllPodProductsCollections, getUser } from '@/actions/actions'
+import {  fetchProductsByCategory, getAllProductCollectionNames, getUser } from '@/actions/actions'
 import ProductsByCategory from './ProductsByCategory'
 
 
@@ -32,7 +32,7 @@ export default async function Page({ params }: PageProps) {
   const decodedCategory = decodeURIComponent(category)
   const categoryProducts = await fetchProductsByCategory(decodedCategory);
   const user = await getUser()
-  const collections = await getAllPodProductsCollections()
+  const collections = await getAllProductCollectionNames()
 
   
   return (

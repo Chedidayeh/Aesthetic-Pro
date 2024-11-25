@@ -70,12 +70,18 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 interface ProductViewProps {
   sellerProductsData: Product[];
   totalProductViews:number
+  collections : ExtraCollection[]
+  }
+
+  interface ExtraCollection extends Collection {
+    products : Product[]
   }
 
 
 const ProductView = ({
   sellerProductsData,
   totalProductViews,
+  collections,
   }: ProductViewProps) => {
         const router = useRouter();
         const { toast } = useToast()
@@ -87,16 +93,15 @@ const ProductView = ({
 
         const [selectedProduct, setSelectedProduct] = useState<Product>();
         const [newTitle, setnewTitle] = useState("");
-        const [selectedCollection, setSelectedCollection] = useState<Collection>();
+        const [selectedCollection, setSelectedCollection] = useState(selectedProduct?.collectionName!);
         const [isClicked, setIsClicked] = useState(false);
         const [open, setOpen] = useState<boolean>(false);
 
-        const collections = Object.values(Collection);
 
         // Handle change of selection
         const handleSelectChange = (value: string) => {
           // Ensure the value is of type Collection
-          setSelectedCollection(value as Collection);
+          setSelectedCollection(value);
         };
 
 
@@ -473,7 +478,7 @@ const ProductView = ({
                   Title: <span className='text-gray-700 font-semibold'>{selectedProduct.title}</span>
                 </div>
                 <div>
-                  Collection: <span className='text-gray-700 font-semibold'>{selectedProduct.collection}</span>
+                  Collection: <span className='text-gray-700 font-semibold'>{selectedProduct.collectionName}</span>
                 </div>
                 <div>
                   Product Base Price: <span className='text-gray-700 font-semibold'>{selectedProduct.basePrice} TND</span>
@@ -514,7 +519,7 @@ const ProductView = ({
                   Change Collection
                 </Label>
                 <Select
-                  defaultValue={selectedProduct.collection}
+                  defaultValue={selectedProduct.collectionName!}
                   onValueChange={handleSelectChange}>
                   <SelectTrigger className="w-full sm:w-[180px]">
                     <SelectValue placeholder="Select a collection" />
@@ -522,9 +527,9 @@ const ProductView = ({
                   <SelectContent>
                     <SelectGroup>
                       <SelectLabel>Collections</SelectLabel>
-                      {collections.map((collection) => (
-                        <SelectItem key={collection} value={collection}>
-                          {collection.replace(/_/g, ' ')}
+                      {collections.map((collection , index) => (
+                        <SelectItem key={index} value={collection.name}>
+                          {collection.name}
                         </SelectItem>
                       ))}
                     </SelectGroup>
@@ -537,7 +542,7 @@ const ProductView = ({
             <AlertDialogFooter>
               <AlertDialogCancel onClick={()=>{                      
               setnewTitle("")
-              setSelectedCollection(undefined)
+              setSelectedCollection("")
               setIsEditOpen(false)}}>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 disabled={newTitle === "" || selectedCollection === undefined}

@@ -206,7 +206,7 @@ const ProductView = ({ products, user , affiliateId, categories , collections , 
           // Step 5: Apply collection filter
           if (filterByCollection) {
             filteredProducts = filteredProducts.filter((product) =>
-              product.collection.toLowerCase().includes(filterByCollection.toLowerCase())
+              product.collectionName!.toLowerCase().includes(filterByCollection.toLowerCase())
             );
           }
         

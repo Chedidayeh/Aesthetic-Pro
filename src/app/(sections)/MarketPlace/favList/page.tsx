@@ -16,7 +16,7 @@ import Link from 'next/link'
 import { db } from '@/db'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
-import { fetchNewProducts, getAllPodProductsCategories, getAllPodProductsCollections, getUser } from '@/actions/actions'
+import { fetchNewProducts, getAllProductsCategories, getAllProductCollectionNames, getUser } from '@/actions/actions'
 import FavList from './FavList'
 import { getUserFavoriteList } from './actions'
 
@@ -27,8 +27,8 @@ import { getUserFavoriteList } from './actions'
 export default async function Page() {
   const user = await getUser()
   const products = await getUserFavoriteList(user?.id? user?.id : "");
-  const categories = await getAllPodProductsCategories()
-  const collections = await getAllPodProductsCollections()
+  const categories = await getAllProductsCategories()
+  const collections = await getAllProductCollectionNames()
 
   return (
     <>

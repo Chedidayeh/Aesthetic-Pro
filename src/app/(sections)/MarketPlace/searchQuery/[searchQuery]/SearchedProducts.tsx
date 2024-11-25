@@ -112,7 +112,7 @@ const SearchedProducts = ({ products, user , categories , collections , searchQu
 
     if (filterByCollection) {
       result = result.filter((product) =>
-        product.collection.toLowerCase().includes(filterByCollection.toLowerCase())
+        product.collectionName.toLowerCase().includes(filterByCollection.toLowerCase())
       );
     }
   

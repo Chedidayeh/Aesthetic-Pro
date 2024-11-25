@@ -30,7 +30,7 @@ interface PageProps {
 export default async function Page({ params }: PageProps) {
   const { collection } = params
   const decodedCollection = decodeURIComponent(collection)
-  const collectionProducts = await fetchProductsByCollection(decodedCollection as Collection);
+  const collectionProducts = await fetchProductsByCollection(decodedCollection);
   const user = await getUser()
   const categories = await getAllPodProductsCategories(decodedCollection)
 

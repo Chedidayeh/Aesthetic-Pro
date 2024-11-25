@@ -4,7 +4,7 @@
 
 
 import View from './View'
-import {  fetchAllProducts, getAllPodProductsCategories, getAllPodProductsCollections, getUser } from '@/actions/actions'
+import {  fetchAllProducts, getAllProductsCategories, getAllProductCollectionNames, getUser } from '@/actions/actions'
 
 
 
@@ -13,8 +13,8 @@ import {  fetchAllProducts, getAllPodProductsCategories, getAllPodProductsCollec
 export default async function Page() {
   const products = await fetchAllProducts();
   const user = await getUser()
-  const categories = await getAllPodProductsCategories()
-  const collections = await getAllPodProductsCollections()
+  const categories = await getAllProductsCategories()
+  const collections = await getAllProductCollectionNames()
 
   return (
     <>

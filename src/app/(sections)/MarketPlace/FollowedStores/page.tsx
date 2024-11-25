@@ -17,7 +17,7 @@ import { db } from '@/db'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import NewReleased from './FollowedStores'
-import { fetchBestSellingProducts, fetchNewProducts, getAllPodProductsCategories, getAllPodProductsCollections, getFollowedStoreProductsFirst, getUser } from '@/actions/actions'
+import { fetchBestSellingProducts, fetchNewProducts, getAllProductsCategories, getAllProductCollectionNames, getFollowedStoreProductsFirst, getUser } from '@/actions/actions'
 import FollowedStores from './FollowedStores'
 
 import { error } from 'console';
@@ -41,8 +41,8 @@ import { Frown, OctagonAlert } from 'lucide-react';
 export default async function Page() {
   const user = await getUser()
   const followedStoresProducts = user ? await getFollowedStoreProductsFirst(user.id) : [];
-  const categories = await getAllPodProductsCategories()
-  const collections = await getAllPodProductsCollections()
+  const categories = await getAllProductsCategories()
+  const collections = await getAllProductCollectionNames()
 
   if(!user) {
     return (

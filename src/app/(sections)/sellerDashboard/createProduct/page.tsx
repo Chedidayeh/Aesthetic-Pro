@@ -56,12 +56,13 @@ import CreateProductView from "./CreateProductView";
 import Link from "next/link";
 
 import { unstable_noStore as noStore } from "next/cache"
+import { getAllCollections } from "../../adminDashboard/settings/actions"
 const Page =  async () => {
 
   noStore()
   const user = await getUser()
   const store = await getStore(user!.id)
-
+  const collections = await getAllCollections()
   const categories = await getAllCategories()
   const platform  = await getPlatformForTheWebsite()
 
@@ -95,7 +96,7 @@ const Page =  async () => {
   return (
 
     <>
-    <CreateProductView categories={categories} platform={platform!} store={store} />
+    <CreateProductView categories={categories} platform={platform!} store={store} collections={collections} />
                           
   </>
   

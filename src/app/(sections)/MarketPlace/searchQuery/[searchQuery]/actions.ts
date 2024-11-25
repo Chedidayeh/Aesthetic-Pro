@@ -25,6 +25,12 @@ export async function searchProducts(query: string) {
               },
             },
             {
+              collectionName: {
+                contains: decodedQuery, // Match products with exact title (ignoring spaces)
+                mode: 'insensitive',
+              },
+            },
+            {
               description: {
                 contains: decodedQuery,
                 mode: 'insensitive', // Case insensitive search for description

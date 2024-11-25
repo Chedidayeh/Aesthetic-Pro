@@ -118,7 +118,7 @@ const DiscountDeals = ({ products, user , categories , collections }: ProductRee
 
     if (filterByCollection) {
       result = result.filter((product) =>
-        product.collection.toLowerCase().includes(filterByCollection.toLowerCase())
+        product.collectionName.toLowerCase().includes(filterByCollection.toLowerCase())
       );
     }
   

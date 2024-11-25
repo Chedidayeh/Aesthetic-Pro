@@ -116,7 +116,7 @@ const NewReleased = ({ products, user , categories , collections }: ProductReelP
 
     if (filterByCollection) {
       result = result.filter((product) =>
-        product.collection.toLowerCase().includes(filterByCollection.toLowerCase())
+        product.collectionName.toLowerCase().includes(filterByCollection.toLowerCase())
       );
     }
 

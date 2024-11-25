@@ -1,6 +1,6 @@
 'use server';
 
-import { getAllPodProductsCategories, getAllPodProductsCollections, getUser } from "@/actions/actions";
+import { getAllProductCollectionNames, getAllProductsCategories, getUser } from "@/actions/actions";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { ArrowDownToLine, CheckCircle, Leaf } from "lucide-react";
 import SearchedProducts from "./SearchedProducts";
@@ -19,8 +19,8 @@ const Page = async ({ params }: PageProps) => {
   try {
     const user = await getUser()
     const products = await searchProducts(searchQuery)
-    const categories = await getAllPodProductsCategories()
-    const collections = await getAllPodProductsCollections()
+    const categories = await getAllProductsCategories()
+    const collections = await getAllProductCollectionNames()
 
         // Decode the URL-encoded string
     let decodedQuery = decodeURIComponent(searchQuery);

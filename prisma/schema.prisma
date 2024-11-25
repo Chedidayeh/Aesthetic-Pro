@@ -217,7 +217,10 @@ model Product {
   croppedFrontProduct   String[]
   croppedBackProduct    String[]
 
-  collection        Collection  @default(CASUAL_WEAR)
+  collectionName        String
+
+  collectionId   String?
+  collection     Collection?  @relation(fields: [collectionId], references: [id])
 
   title           String
   description     String
@@ -280,19 +283,27 @@ model ProductViews {
   @@unique([productId, userId, sessionId, ipAddress]) // Ensure that views are unique per product-user-session-IP
 }
 
-
-
-enum Collection {
-  STREET_WEAR
-  CINEMATIC_WEAR
-  ANIME_WEAR
-  WALL_ART_WEAR
-  SPORTS_WEAR
-  CARTOON_WEAR
-  QUOTES_WEAR
-  TUNISIAN_TRADITION_WEAR
-  CASUAL_WEAR
+model Collection {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  products  Product[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
+
+
+
+// enum Collection {
+//   STREET_WEAR
+//   CINEMATIC_WEAR
+//   ANIME_WEAR
+//   WALL_ART_WEAR
+//   SPORTS_WEAR
+//   CARTOON_WEAR
+//   QUOTES_WEAR
+//   TUNISIAN_TRADITION_WEAR
+//   CASUAL_WEAR
+// }
 
 
 model CartProduct {
@@ -343,8 +354,6 @@ model SellerDesign {
   tags            String[]
   price           Int           @default(3)
   sellerProfit    Int           @default(1)
-
-  collection        Collection  @default(CASUAL_WEAR)
 
 
   isDesignForSale Boolean      @default(false)

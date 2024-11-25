@@ -115,7 +115,7 @@ const FavList = ({ products, user , categories , collections }: ProductReelProps
     }
     if (filterByCollection) {
       result = result.filter((product) =>
-        product.collection.toLowerCase().includes(filterByCollection.toLowerCase())
+        product.collectionName.toLowerCase().includes(filterByCollection.toLowerCase())
       );
     }
 

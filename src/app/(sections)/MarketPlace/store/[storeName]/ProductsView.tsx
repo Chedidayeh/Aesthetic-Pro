@@ -127,7 +127,7 @@ const ProductsView = ({ store, user , categories , collections }: ProductReelPro
 
       if (filterByCollection) {
         result = result.filter((product) =>
-          product.collection.toLowerCase().includes(filterByCollection.toLowerCase())
+          product.collectionName.toLowerCase().includes(filterByCollection.toLowerCase())
         );
       }
 

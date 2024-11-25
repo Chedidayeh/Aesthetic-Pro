@@ -27,7 +27,7 @@ import Link from 'next/link'
 import { db } from '@/db'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
-import {  fetchProductsByCategory, getAllPodProductsCategories, getAllPodProductsCollections, getUser } from '@/actions/actions'
+import {  fetchProductsByCategory, getAllProductsCategories, getAllProductCollectionNames, getUser } from '@/actions/actions'
 import ProductsByCategory from './StoreView'
 import StoreView from './StoreView'
 import {  checkIfUserFollowsStore, getDesignsByStoreId, getStoreFollowersCount, getStoreProducts } from './actions'
@@ -47,8 +47,8 @@ export default async function Page({ params }: PageProps) {
   const user = await getUser()
   const store = await getStoreProducts(decodedCategory)  
   const storeDesigns = await getDesignsByStoreId(store?.id ?? "")
-  const categories = await getAllPodProductsCategories()
-  const collections = await getAllPodProductsCollections()
+  const categories = await getAllProductsCategories()
+  const collections = await getAllProductCollectionNames()
   const followersCount = await getStoreFollowersCount(store!.id);
   const follows = await checkIfUserFollowsStore(user?.id ?? "", store!.id);
 

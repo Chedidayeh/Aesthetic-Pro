@@ -7,7 +7,7 @@ import { ChangeEvent, KeyboardEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import MaxWidthWrapper from "../MaxWidthWrapper";
-import { searchPodProducts } from "@/actions/actions";
+import { searchProducts } from "@/actions/actions";
 
 const SearchBar = () => {
   const router = useRouter();
@@ -34,7 +34,7 @@ const SearchBar = () => {
       return;
     }
     try {
-      const searchData = await searchPodProducts(value);
+      const searchData = await searchProducts(value);
       setData(searchData.slice(0, 8));
       setIsSearching(false);
     } catch (error) {

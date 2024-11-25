@@ -1,16 +1,19 @@
  'use server'
 import { db } from '@/db';
 import ProductView from './ProductView';
-import { auth } from '@/auth';
+import { getUser } from '@/actions/actions';
+import { getAllCollections } from '../../adminDashboard/settings/actions';
 
 const Page = async () => {
 
   try {
-    const session = await auth();
+    const user = await getUser();
+
+    const collections = await getAllCollections()
 
 
     const store = await db.store.findUnique({
-      where: { userId: session!.user.id },
+      where: { userId: user!.id },
       include: {
         products: {
           select: {
@@ -31,6 +34,7 @@ const Page = async () => {
      <ProductView
         sellerProductsData={sellerProducts}
         totalProductViews={totalProductViews}
+        collections={collections}
     />
     
     );

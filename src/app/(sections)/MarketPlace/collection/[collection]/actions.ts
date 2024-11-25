@@ -6,7 +6,7 @@ import { Collection } from "@prisma/client";
 export async function getAllPodProductsCategories(decodedCollection : string) {
     try {
       const categories = await db.product.findMany({
-        where : {isProductAccepted : true , collection : decodedCollection as Collection},
+        where : {isProductAccepted : true , collectionName : decodedCollection},
         select: {
           category: true,
         },

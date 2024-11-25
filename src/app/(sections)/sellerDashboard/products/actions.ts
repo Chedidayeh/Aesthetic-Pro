@@ -5,22 +5,31 @@ import { Collection } from "@prisma/client";
 
 interface UpdateProductArgs {
   productId: string;
-    newTitle: string;
-    selectedCollection : Collection | undefined
+  newTitle: string;
+  selectedCollection : string
 
 
   }
 
 export const updateProduct = async ({ productId, newTitle , selectedCollection }: UpdateProductArgs) => {
     try {
-      const updatedProduct = await db.product.update({
-        where: { id: productId },
-        data: {
-            title: newTitle,
-            collection : selectedCollection
-        },
+      let collection = await db.collection.findUnique({
+        where: { name: selectedCollection },
       });
-      return updatedProduct;
+
+      if(collection) {
+        const updatedProduct = await db.product.update({
+          where: { id: productId },
+          data: {
+              title: newTitle,
+              collectionName : selectedCollection,
+              collectionId: collection.id,
+            },
+        });
+        return updatedProduct;
+      }
+
+
     } catch (error) {
       console.error('Error updating product:', error);
       throw new Error('Failed to update design in product');

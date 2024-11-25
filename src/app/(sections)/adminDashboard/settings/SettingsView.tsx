@@ -44,18 +44,21 @@ import LoadingState from "@/components/LoadingState"
 import { getStoreByUserId, getUser } from "@/actions/actions"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/components/ui/use-toast"
-import { addTopBarContent, deleteTopBarContent, updateCreation, updatePlatformData, updateStoreCreation } from "./actions"
-import { Platform } from '@prisma/client';
+import { addNewCollection, addTopBarContent, deleteTopBarCollection, deleteTopBarContent, updateCreation, updatePlatformData, updateStoreCreation } from "./actions"
+import { Collection, Platform, Product } from '@prisma/client';
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 
-
+interface ExtraCollection extends Collection {
+  products : Product[]
+}
 interface ViewProps {
     platform : Platform
+    collections : ExtraCollection[]
 }
 
 
-const SettingsView = ({ platform }: ViewProps ) => { 
+const SettingsView = ({ platform , collections }: ViewProps ) => { 
 
 
 
@@ -64,6 +67,7 @@ const SettingsView = ({ platform }: ViewProps ) => {
     const [selectedSection, setSelectedSection] = useState("general");
     const [open, setOpen] = useState<boolean>(false);
     const [newContent, setNewContent] = useState("");
+    const [newCollection, setNewCollection] = useState("");
 
     const [isStoreCreationEnabled, setIsStoreCreationEnabled] = useState(!platform.closeStoreCreation);
 
@@ -81,6 +85,36 @@ const SettingsView = ({ platform }: ViewProps ) => {
         affiliateUserProfit : platform.affiliateUserProfit,
         freeShippingFeeLimit : platform.freeShippingFeeLimit
       });
+
+      const handleAddCollection = async () => {
+        try {
+            setOpen(true);
+            // Call the function to add new content
+            const res = await addNewCollection(newCollection);
+            if (res.success) {
+                setOpen(false);
+                toast({
+                    title: 'Collection Added Successfully',
+                    variant: 'default',
+                });
+                router.refresh();
+            } else {
+                setOpen(false);
+                toast({
+                    title: 'Failed to Add Collection',
+                    variant: 'destructive',
+                });
+                router.refresh();
+            }
+        } catch (error) {
+            console.log(error);
+            setOpen(false);
+            toast({
+                title: 'Error',
+                variant: 'destructive',
+            });
+        }
+    };
 
     const handleAddContent = async () => {
         try {
@@ -112,7 +146,34 @@ const SettingsView = ({ platform }: ViewProps ) => {
         }
     };
 
-
+    const handleDeleteCollection = async (collection: ExtraCollection) => {
+      try {
+          setOpen(true);
+          const res = await deleteTopBarCollection(collection.id);
+          if (res.success) {
+              setOpen(false);
+              toast({
+                  title: 'collection Deleted Successfully',
+                  variant: 'default',
+              });
+              router.refresh();
+          } else {
+              setOpen(false);
+              toast({
+                  title: 'Failed to Delete collection',
+                  variant: 'destructive',
+              });
+              router.refresh();
+          }
+      } catch (error) {
+          console.log(error);
+          setOpen(false);
+          toast({
+              title: 'Error',
+              variant: 'destructive',
+          });
+      }
+  };
 
 
     const handleDeleteContent = async (content: string) => {
@@ -290,6 +351,79 @@ const SettingsView = ({ platform }: ViewProps ) => {
                                                                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                                                     <DropdownMenuItem
                                                                         onClick={() => handleDeleteContent(phrase)}
+                                                                    >
+                                                                        Delete
+                                                                    </DropdownMenuItem>
+                                                                </DropdownMenuContent>
+                                                            </DropdownMenu>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                ))}
+                                            </TableBody>
+                            </Table>     
+                           </CardContent>
+
+                        </Card>
+
+                    )}
+
+                    {selectedSection === "general" && (
+                                <Card>
+                                <CardHeader>
+                                    <CardTitle>Collections</CardTitle>
+                                    <CardDescription>Add collection</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <Input 
+                                        placeholder="Add a collection" 
+                                        value={newCollection}
+                                        onChange={(e) => setNewCollection(e.target.value)}
+                                    />
+                                </CardContent>
+                                <CardFooter className="border-t px-6 py-4">
+                                    <Button onClick={handleAddCollection}>Add</Button>
+                                </CardFooter>
+                            </Card>
+                    )}
+
+{selectedSection === "general" && (
+                            <Card x-chunk="dashboard-04-chunk-1">
+                            <CardHeader>
+                                <CardTitle>Collection</CardTitle>
+                                <CardDescription>
+                                    contents: 
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                            <Table>
+                              <TableHeader>
+                                <TableRow>
+                                  <TableHead>Collection</TableHead>
+                                  <TableHead>Products</TableHead>
+                                  <TableHead className="text-right">Action</TableHead>
+                                </TableRow>
+                              </TableHeader>
+                              <TableBody>
+                                                {collections.map((collection, index) => (
+                                                    <TableRow key={index}>
+                                                        <TableCell>{collection.name}</TableCell>
+                                                        <TableCell>{collection.products.length}</TableCell>
+                                                        <TableCell className="text-right">
+                                                            <DropdownMenu>
+                                                                <DropdownMenuTrigger asChild>
+                                                                    <Button
+                                                                        aria-haspopup="true"
+                                                                        size="icon"
+                                                                        variant="ghost"
+                                                                    >
+                                                                        <MoreHorizontal className="h-4 w-4" />
+                                                                        <span className="sr-only">Toggle menu</span>
+                                                                    </Button>
+                                                                </DropdownMenuTrigger>
+                                                                <DropdownMenuContent align="end">
+                                                                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                                                    <DropdownMenuItem
+                                                                        onClick={() => handleDeleteCollection(collection)}
                                                                     >
                                                                         Delete
                                                                     </DropdownMenuItem>

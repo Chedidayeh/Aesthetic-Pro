@@ -17,7 +17,7 @@ import { db } from '@/db'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import NewReleased from './NewReleased'
-import { fetchNewProducts, getAllPodProductsCategories, getAllPodProductsCollections, getUser } from '@/actions/actions'
+import { fetchNewProducts, getAllProductsCategories, getAllProductCollectionNames, getUser } from '@/actions/actions'
 
 
 
@@ -26,8 +26,8 @@ import { fetchNewProducts, getAllPodProductsCategories, getAllPodProductsCollect
 export default async function Page() {
   const products = await fetchNewProducts();
   const user = await getUser()
-  const categories = await getAllPodProductsCategories()
-  const collections = await getAllPodProductsCollections()
+  const categories = await getAllProductsCategories()
+  const collections = await getAllProductCollectionNames()
 
   return (
     <>

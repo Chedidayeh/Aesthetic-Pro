@@ -1,13 +1,12 @@
 
 'use server'
 
-import { auth } from '@/auth';
 import { db } from '@/db';
-import { storage } from '@/firebase/firebaseConfig';
-import { Collection } from '@prisma/client';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import sharp from 'sharp';
+import { Collection, Product } from '@prisma/client';
 
+interface ExtraCollection extends Collection {
+  products : Product[]
+}
 
     export const addProductToDb = async (
       storeId : string,
@@ -29,7 +28,7 @@ import sharp from 'sharp';
       Backwidth: number,
       Backheight: number,
       backdesignPath: string,
-      selectedCollection : Collection,
+      selectedCollection : ExtraCollection,
       privateProduct : boolean
     ): Promise<{ success: boolean; productId: string | null; error: boolean }> => {
       try {
@@ -81,7 +80,8 @@ import sharp from 'sharp';
               sellerProfit: sellerProfit,
               frontDesignId: frontDesign.id,
               backDesignId: backDesign.id,
-              collection : selectedCollection,
+              collectionName : selectedCollection.name,
+              collectionId : selectedCollection.id,
               privateProduct : privateProduct
 
             },
@@ -117,7 +117,7 @@ import sharp from 'sharp';
       Frontwidth: number,
       Frontheight: number,
       frontdesignPath: string,
-      selectedCollection : Collection,
+      selectedCollection : ExtraCollection,
       privateProduct : boolean,
 
     ): Promise<{ success: boolean; productId: string | null; error: boolean }> => {
@@ -156,7 +156,8 @@ import sharp from 'sharp';
               basePrice: BasePrice,
               sellerProfit: sellerProfit,
               frontDesignId: frontDesign.id,
-              collection : selectedCollection,
+              collectionName : selectedCollection.name,
+              collectionId : selectedCollection.id,
               privateProduct : privateProduct
 
 
@@ -192,7 +193,7 @@ import sharp from 'sharp';
       Backwidth: number,
       Backheight: number,
       backdesignPath: string,
-      selectedCollection : Collection,
+      selectedCollection : ExtraCollection,
       privateProduct : boolean,
 
 
@@ -232,7 +233,8 @@ import sharp from 'sharp';
               basePrice: BasePrice,
               sellerProfit: sellerProfit,
               backDesignId: backDesign.id,
-              collection : selectedCollection,
+              collectionName : selectedCollection.name,
+              collectionId : selectedCollection.id,              
               privateProduct : privateProduct
 
             },

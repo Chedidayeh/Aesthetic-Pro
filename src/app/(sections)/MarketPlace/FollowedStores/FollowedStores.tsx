@@ -109,7 +109,7 @@ const FollowedStores = ({ products, user , categories , collections }: ProductRe
 
     if (filterByCollection) {
       result = result.filter((product) =>
-        product.collection.toLowerCase().includes(filterByCollection.toLowerCase())
+        product.collectionName.toLowerCase().includes(filterByCollection.toLowerCase())
       );
     }
   

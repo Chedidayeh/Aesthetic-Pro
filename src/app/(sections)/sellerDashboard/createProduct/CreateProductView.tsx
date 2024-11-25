@@ -65,7 +65,7 @@ import { SingleImageDropzone } from '@/components/sellerDashboard/SingleImageDro
 import { addProductToDb, addProductToDbB, addProductToDbF } from './actions';
 import LoadingState from "@/components/LoadingState"
 import { getAllCategories, getStoreByUserId, getUser } from "@/actions/actions"
-import { Category, Color, Size, FrontBorder, BackBorder, Collection, Platform, Store } from "@prisma/client"
+import { Category, Color, Size, FrontBorder, BackBorder, Collection, Platform, Store, Product } from "@prisma/client"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 import { storage } from "@/firebase/firebaseConfig"
@@ -84,25 +84,44 @@ interface fetchedCat extends Category {
   backBorders : BackBorder[]
 }
 
+interface ExtraCollection extends Collection {
+  products : Product[]
+}
+
+
 interface ProductViewProps {
     categories : fetchedCat[]
     platform : Platform
     store :Store
+    collections : ExtraCollection[]
+
 }
 
-const CreateProductView = ({categories , platform , store}: ProductViewProps) => {  
+const CreateProductView = ({categories , platform , store ,  collections}: ProductViewProps) => {  
 
   const { toast } = useToast()
   const router = useRouter();
 
-  const collections = Object.values(Collection);
 
-  const [selectedCollection, setSelectedCollection] = useState<Collection>(Collection.CASUAL_WEAR);
+  const [selectedCollection, setSelectedCollection] = useState(collections[0]);
 
   // Handle change of selection
   const handleSelectChange = (value: string) => {
-    // Ensure the value is of type Collection
-    setSelectedCollection(value as Collection);
+    // Find the collection matching the value string
+    const matchingCollection = collections.find(
+      (collection) => collection.name === value
+    );
+
+    // If a matching collection is found, set it as the selected collection
+    if (matchingCollection) {
+      setSelectedCollection(matchingCollection);
+    } else {
+      toast({
+        title: "Collection not found",
+        description: `No collection matches the name "${value}".`,
+        variant : "destructive"
+      });
+    }
   };
 
 
@@ -452,306 +471,6 @@ const handleFileChange = (file : File) => {
                     }
                     return {files , colors}
                   }
-
-
-                  //save Product with Front Design:
-                  const SaveFrontDesignn = async () =>{
-                    if (!FrontDesignFile) return;
-  
-                  try {
-                    openDialog()
-                    setIsBorderHidden(true)
-                    setisAdding(true)
-  
-                    if(inputTag != "") {
-                      tags.push(inputTag)
-                    }
-  
-                    // upload the front design in the uploads folder and get the path
-                    // const frontdesignPath = await uploadDesign(FrontDesignFile)
-                    const frontDesignName = removeExtension(FrontDesignFile.name)
-
-                    const data = await generateAllFrontProductFiles()
-
-                    const productData = new FormData();
-
-                    productData.append('storeId', store.id);
-                    productData.append('storeName', store.storeName);
-                    productData.append('productCat', selectedP.label);
-                    productData.append('checkedColors', JSON.stringify(data.colors)); // Serialize arrays
-                    productData.append('frontDesignFile', FrontDesignFile); // Serialize arrays
-                    productData.append('productTitle', productTitle);
-                    productData.append('productDescription', productDescription);
-                    productData.append('tags', JSON.stringify(tags)); // Serialize arrays
-                    productData.append('productPrice', JSON.stringify(productPrice)); // Serialize
-                    productData.append('BasePrice', JSON.stringify(BasePrice)); // Serialize
-                    productData.append('sellerProfit', JSON.stringify(sellerProfit)); // Serialize
-                    productData.append('frontDesignName', frontDesignName);
-                    productData.append('Frontwidth', JSON.stringify(Frontwidth)); // Serialize
-                    productData.append('Frontheight', JSON.stringify(Frontheight)); // Serialize
-                    productData.append('selectedCollection', selectedCollection);
-                    productData.append('privateProduct', JSON.stringify(privateProduct)); // Serialize
-
-                    // Append files if they exist
-                    if (data.files && Array.isArray(data.files)) {
-                      data.files.forEach((file, index) => {
-                        productData.append('files[]', file); // Append files individually
-                      });
-                    }
-
-                    const response = await fetch('/api/createFrontProduct', {
-                      method: 'POST',
-                      body: productData, // Send FormData directly (don't stringify)
-                    });
-                    
-                
-                    if (response.ok) {
-                      closeDialog()
-                      setisAdding(false)
-                      const result = await response.json();
-                      console.log("Product creation is successfully:", result);
-                      toast({
-                        title: 'Your product is successfully created',
-                        description: 'Redirecting you!',
-                        variant: 'default',
-                        duration : 10000
-                      });
-                      router.push("/sellerDashboard/products")
-                      return
-                    } else {
-                      closeDialog()
-                      setisAdding(false)
-                      console.error("Failed to create product", response.statusText);
-                      toast({
-                        title: 'Error',
-                        description: 'Failed to create product. Please try again later.',
-                        variant: 'destructive',
-                      });
-                      return
-                    }
-                    
-                  } catch (error) {
-                    console.log(error)
-                    closeDialog()
-                    setisAdding(false)
-                    toast({
-                      title: 'Error',
-                      description: 'Failed to create your product. Please try again later.',
-                      variant: 'destructive',
-                    });
-                    return
-                  }
-                  }
-
-
-                  //save Product with Back Design:
-                  const SaveBackDesignn = async () =>{
-                    if (!BackDesignFile) return;
-
-                    try {
-                      openDialog()
-                      setisBackBorderHidden(true)
-                      setisAdding(true)
-
-                      if(inputTag != "") {
-                        tags.push(inputTag)
-                      }
-
-                      // upload the front design in the uploads folder and get the path
-                        // const frontdesignPath = await uploadDesign(FrontDesignFile)
-                        const backDesignName = removeExtension(BackDesignFile.name)
-
-                        const data = await generateAllBackProductFiles()
-
-                        const productData = new FormData();
-
-                        productData.append('storeId', store.id);
-                        productData.append('storeName', store.storeName);
-                        productData.append('productCat', selectedP.label);
-                        productData.append('checkedColors', JSON.stringify(data.colors)); // Serialize arrays
-                        productData.append('backDesignFile', BackDesignFile); // Serialize arrays
-                        productData.append('productTitle', productTitle);
-                        productData.append('productDescription', productDescription);
-                        productData.append('tags', JSON.stringify(tags)); // Serialize arrays
-                        productData.append('productPrice', JSON.stringify(productPrice)); // Serialize
-                        productData.append('BasePrice', JSON.stringify(BasePrice)); // Serialize
-                        productData.append('sellerProfit', JSON.stringify(sellerProfit)); // Serialize
-                        productData.append('backDesignName', backDesignName);
-                        productData.append('Backwidth', JSON.stringify(Backwidth)); // Serialize
-                        productData.append('Backheight', JSON.stringify(Backheight)); // Serialize
-                        productData.append('selectedCollection', selectedCollection);
-                        productData.append('privateProduct', JSON.stringify(privateProduct)); // Serialize
-
-                        // Append files if they exist
-                        if (data.files && Array.isArray(data.files)) {
-                          data.files.forEach((file, index) => {
-                            productData.append('files[]', file); // Append files individually
-                          });
-                        }
-
-                        const response = await fetch('/api/createBackProduct', {
-                          method: 'POST',
-                          body: productData, // Send FormData directly (don't stringify)
-                        });
-                        
-                    
-                        if (response.ok) {
-                          closeDialog()
-                          setisAdding(false)
-                          const result = await response.json();
-                          console.log("Product creation is successfully:", result);
-                          toast({
-                            title: 'Your product is successfully created',
-                            description: 'Redirecting you!',
-                            variant: 'default',
-                            duration : 10000
-                          });
-                          router.push("/sellerDashboard/products")
-                          return
-                        } else {
-                          closeDialog()
-                          setisAdding(false)
-                          console.error("Failed to trigger product creation:", response.statusText);
-                          toast({
-                            title: 'Error',
-                            description: 'Failed to create product. Please try again later.',
-                            variant: 'destructive',
-                          });
-                          return
-                        }
-
-                    
-                      
-                    } catch (error) {
-                      closeDialog()
-                      setisAdding(false)
-                      console.log(error)
-                      toast({
-                        title: 'Error',
-                        description: 'Failed to add product. Please try again later.',
-                        variant: 'destructive',
-                      });
-                      return
-                    }
-
-                  }
-
-
-                  //save Product with Both Design:
-                  const SaveBothDesignn = async () =>{
-                    if (!FrontDesignFile || !BackDesignFile) {
-                      toast({
-                        title: 'No uploaded designs found',
-                        description: 'please make sure to upload both front and back desing.',
-                        variant: 'destructive',
-                      });
-                      return
-                    }
-
-                    try {
-                      
-                      openDialog()
-                      setisAdding(true)
-                      setIsBorderHidden(true)
-                      setisBackBorderHidden(true)
-
-                      if(inputTag != "") {
-                        tags.push(inputTag)
-                      }
-
-                      const frontDesignName = removeExtension(FrontDesignFile.name)
-                      const backDesignName = removeExtension(BackDesignFile.name)
-
-                      const frontData = await generateAllFrontProductFiles()
-                      const backData = await generateAllBackProductFiles()
-
-                      const productData = new FormData();
-
-                    productData.append('storeId', store.id);
-                    productData.append('storeName', store.storeName);
-                    productData.append('productCat', selectedP.label);
-                    productData.append('checkedColors', JSON.stringify(frontData.colors)); // Serialize arrays
-                    productData.append('frontDesignFile', FrontDesignFile); // Serialize arrays
-                    productData.append('backDesignFile', BackDesignFile); // Serialize arrays
-                    productData.append('productTitle', productTitle);
-                    productData.append('productDescription', productDescription);
-                    productData.append('tags', JSON.stringify(tags)); // Serialize arrays
-                    productData.append('productPrice', JSON.stringify(productPrice)); // Serialize
-                    productData.append('BasePrice', JSON.stringify(BasePrice)); // Serialize
-                    productData.append('sellerProfit', JSON.stringify(sellerProfit)); // Serialize
-                    productData.append('frontDesignName', frontDesignName);
-                    productData.append('backDesignName', backDesignName);
-                    productData.append('Frontwidth', JSON.stringify(Frontwidth)); // Serialize
-                    productData.append('Frontheight', JSON.stringify(Frontheight)); // Serialize
-                    productData.append('Backwidth', JSON.stringify(Backwidth)); // Serialize
-                    productData.append('Backheight', JSON.stringify(Backheight)); // Serialize
-                    productData.append('selectedCollection', selectedCollection);
-                    productData.append('privateProduct', JSON.stringify(privateProduct)); // Serialize
-
-                    // Append files if they exist
-                    if (frontData.files && Array.isArray(frontData.files)) {
-                      frontData.files.forEach((file, index) => {
-                        productData.append('frontFiles[]', file); // Append files individually
-                      });
-                    }
-
-                    if (backData.files && Array.isArray(backData.files)) {
-                      backData.files.forEach((file, index) => {
-                        productData.append('backFiles[]', file); // Append files individually
-                      });
-                    }
-
-                    const response = await fetch('/api/createFrontAndBackProduct', {
-                      method: 'POST',
-                      body: productData, // Send FormData directly (don't stringify)
-                    });
-                    
-                
-                    if (response.ok) {
-                      closeDialog()
-                      setisAdding(false)
-                      const result = await response.json();
-                      console.log("Product creation is successfully:", result);
-                      toast({
-                        title: 'Your product is successfully created',
-                        description: 'Redirecting you!',
-                        variant: 'default',
-                        duration : 10000
-                      });
-                      router.push("/sellerDashboard/products")
-                      return
-                    } else {
-                      closeDialog()
-                      setisAdding(false)
-                      console.error("Failed to trigger product creation:", response.statusText);
-                      toast({
-                        title: 'Error',
-                        description: 'Failed to create product. Please try again later.',
-                        variant: 'destructive',
-                      });
-                      return
-                    }
-
-                      
-                      
-                    } catch (error) {
-                      setisAdding(false)
-                      closeDialog()
-                      console.log(error)
-                      toast({
-                        title: 'Error',
-                        description: 'Failed to add product. Please try again later.',
-                        variant: 'destructive',
-                      });
-                      return
-                    } 
-
-                  }
-
-
-
-
-
 
 
 
@@ -1391,16 +1110,16 @@ const handleFileChange = (file : File) => {
 
                               <h3>3-Select Your design Collection:</h3>
 
-                              <Select value={selectedCollection} onValueChange={handleSelectChange}>
+                              <Select value={selectedCollection.name} onValueChange={handleSelectChange}>
                                 <SelectTrigger className="w-[180px]">
                                   <SelectValue placeholder="Select a collection" />
                                 </SelectTrigger>
                                 <SelectContent>
                                   <SelectGroup>
                                     <SelectLabel>Collections</SelectLabel>
-                                    {collections.map((collection) => (
-                                      <SelectItem key={collection} value={collection}>
-                                        {collection.replace(/_/g, ' ')}
+                                    {collections.map((collection , index) => (
+                                      <SelectItem key={index} value={collection.name}>
+                                        {collection.name}
                                       </SelectItem>
                                     ))}
                                   </SelectGroup>
