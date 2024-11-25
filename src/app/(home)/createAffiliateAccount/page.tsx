@@ -283,7 +283,7 @@ const [isOpen, setIsOpen] = useState < boolean > (false);
         </div>
 
         <div className="flex justify-end items-end mt-[10%]">
-          <Button disabled={!termsAccepted} onClick={createAffiliateAccount} className="w-full sm:w-[40%]">
+          <Button disabled={!termsAccepted} onClick={createAffiliateAccount} className="w-full sm:w-[40%] text-white">
             Create Affiliate Account Now <MousePointerClick className="ml-2" />
           </Button>
         </div>

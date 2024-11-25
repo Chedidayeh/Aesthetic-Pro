@@ -88,7 +88,7 @@ const NavBar = () => {
 
           <Button
               variant="ghost"
-              className={cn("justify-start gap-2 rounded-lg px-3 py-2 text-zinc-900 transition-all hover:text-blue-600 dark:text-zinc-400 dark:hover:text-gray-50", {
+              className={cn("justify-start gap-2 rounded-lg px-3 py-2 transition-all hover:text-blue-600", {
                 "gap-2 rounded-lg bg-gray-100 px-3 py-2 text-blue-600  transition-all hover:text-blue-600 dark:bg-blue-200 dark:text-blue-600 dark:hover:text-blue-600": pathname === "/factoryDashboard"
               })}
               onClick={()=>router.push("/factoryDashboard")}
@@ -100,7 +100,7 @@ const NavBar = () => {
             </Button>
 
             <Button
-              className={cn("justify-start gap-2 rounded-lg px-3 py-2 text-zinc-900 transition-all hover:text-blue-600 dark:text-zinc-400 dark:hover:text-gray-50", {
+              className={cn("justify-start gap-2 rounded-lg px-3 py-2 transition-all hover:text-blue-600", {
                 " gap-2 rounded-lg bg-gray-100 px-3 py-2 text-blue-600  transition-all hover:text-blue-600 dark:bg-blue-200 dark:text-blue-600 dark:hover:text-blue-600": pathname === "/factoryDashboard/orders"
               })}              
               onClick={()=>router.push("/factoryDashboard/orders")}
@@ -128,7 +128,7 @@ const NavBar = () => {
 
 
             <Button
-              className={cn("justify-start gap-2 rounded-lg px-3 py-2 text-zinc-900 transition-all hover:text-blue-600 dark:text-zinc-400 dark:hover:text-gray-50", {
+              className={cn("justify-start gap-2 rounded-lg px-3 py-2 transition-all hover:text-blue-600", {
                 " gap-2 rounded-lg bg-gray-100 px-3 py-2 text-blue-600  transition-all hover:text-blue-600 dark:bg-blue-200 dark:text-blue-600 dark:hover:text-blue-600": pathname === "/adminDashboard/"
               })}              
               onClick={()=>router.push("/MarketPlace")}            variant="ghost"

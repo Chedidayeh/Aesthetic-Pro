@@ -261,7 +261,7 @@ const DesignView = ({
         />
         <Link href="/sellerDashboard/createDesign">
           <Button
-            className="w-full md:w-auto mb-4"
+            className="w-full md:w-auto mb-4 text-white"
             type="submit"
             loadingText='Redirecting'
             isLoading={isClicked}
@@ -277,7 +277,7 @@ const DesignView = ({
       <p className='text-gray-600 text-sm'><span className='text-blue-600 font-medium'>Guide :</span> Refresh Page to view new added designs!</p>
       <p className='text-gray-600 text-sm'><span className='text-blue-600 font-medium'>Guide :</span> Awaiting Action = Design status will be revealed after review!</p>
       <div className='text-center'>
-        <Button variant="default" size="sm" className="w-full md:w-[30%] mt-2" onClick={handleToggleMode}>
+        <Button variant="default" size="sm" className="w-full md:w-[30%] mt-2 text-white" onClick={handleToggleMode}>
           Toggle Mode
         </Button>
       </div>
@@ -303,7 +303,7 @@ const DesignView = ({
       </>
     ) : (
       <>
-        <ScrollArea className="h-[984px] w-full border p-2 rounded-lg">
+        <ScrollArea className="h-[984px] w-full ">
         <div className='relative mt-5 grid grid-cols-1 mb-20 pb-20'>
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 md:grid-cols-2">
             {/* designs Cards */}

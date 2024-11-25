@@ -65,17 +65,15 @@ const Page = () => {
           </div>
 
           <div className='mx-auto max-w-6xl px-6 lg:px-8'>
-              <div className='mt-2 flow-root sm:mt-10'>
-                <div className='-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4'>
+              <div className='mt-2 flex sm:mt-10 justify-center items-center'>
                   <NextImage
                     src={"/user guide.png"}
                     alt='guide preview'
-                    width={1620}
-                    height={613}
+                    width={500}
+                    height={213}
                     quality={100}
                     className='rounded-md bg-white  object-fill shadow-2xl ring-1 ring-gray-900/10'
                   />
-                </div>
               </div>
             </div>
 
@@ -153,7 +151,7 @@ const Page = () => {
                 </div>
               </li>
             </ol>
-            <div className='flex items-center justify-center mt-4'>
+            {/* <div className='flex items-center justify-center mt-4'>
               <Button variant={"link"} className='mr-4 flex items-center' onClick={handlePrevious}>
                 <CircleArrowLeft size={13} className='mr-1 inline-flex' />Previous
               </Button>
@@ -174,10 +172,10 @@ const Page = () => {
                   />
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className='flex items-center justify-center mt-10'>
               <Link href={"/sellerDashboard/createProduct"}>
-              <Button variant={"default"}>
+              <Button variant={"default"} className='text-white' >
                 Get Started
               </Button>
               </Link>

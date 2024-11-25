@@ -265,7 +265,7 @@ const handleChange = async () =>{
                         </div>
                         <div>
                             <p className="font-bold">Order Status:</p>
-                            <p><Badge className={`${{
+                            <p><Badge className={`text-white ${{
                               'PROCESSING': 'bg-blue-700',
                               'DELIVERED': 'bg-green-700',
                               'REFUSED': 'bg-red-700',
@@ -276,32 +276,24 @@ const handleChange = async () =>{
                         </div>
                         <div>
                             <p className="font-bold">Order Type:</p>
-                            <p><Badge className={`${order.type === 'CONFIRMED' ? 'bg-green-700' : order.type === 'NOT_CONFIRMED' ? 'bg-orange-400' : order.type === 'CANCELED' ? 'bg-red-700' : 'bg-gray-700'} hover:bg-gray-700`}>
+                            <p><Badge className={`text-white ${order.type === 'CONFIRMED' ? 'bg-green-700' : order.type === 'NOT_CONFIRMED' ? 'bg-orange-400' : order.type === 'CANCELED' ? 'bg-red-700' : 'bg-gray-700'} hover:bg-gray-700`}>
                             {order.type}
                             </Badge>
                         </p>
                         </div>
                         <div>
                             <p className="font-bold">Is Order Paid:</p>
-                            <p><Badge className={`${order.isPaid ? 'bg-green-700' :  'bg-red-700'} hover:bg-gray-700`}>
+                            <p><Badge className={`text-white ${order.isPaid ? 'bg-green-700' :  'bg-red-700'} hover:bg-gray-700`}>
                             {order.isPaid ? "Is Paid" : "Not Paid"}
                            </Badge>
                           </p>
                         </div>
                         <div>
                             <p className="font-bold">Is Order Printed:</p>
-                            <p><Badge className={`${order.printed ? 'bg-green-700' :  'bg-red-700'} hover:bg-gray-700`}>
+                            <p><Badge className={`text-white ${order.printed ? 'bg-green-700' :  'bg-red-700'} hover:bg-gray-700`}>
                               {order.printed ? "Printed" : "Not Printed"}
                               </Badge>
                               </p>
-                        </div>
-                        <div>
-                            <p className="font-bold">Client Name:</p>
-                            <p>{order.clientName}</p>
-                        </div>
-                        <div>
-                            <p className="font-bold">Client Phone Number:</p>
-                            <p>{order?.phoneNumber}</p>
                         </div>
                         <div>
                             <p className="font-bold">Shipping Address:</p>
@@ -387,10 +379,6 @@ const handleChange = async () =>{
             <>
           <div className="text-sm">
           <div className="flex space-x-10">
-            <div className="font-bold">Front Design Id : <span className="text-gray-600 font-semibold">
-                {selectedItem.frontclientDesignId ?? selectedItem.frontsellerDesignId ?? "N/A"}
-              </span>
-            </div>
             <div className="font-bold">Front Design Name : <span className="text-gray-600 font-semibold">
                 {selectedItem.frontclientDesign?.name ?? selectedItem.frontsellerDesign?.name ?? "N/A"}
               </span>
@@ -406,10 +394,6 @@ const handleChange = async () =>{
 
           <div className="text-sm">
           <div className="flex space-x-10">
-            <div className="font-bold">Back Design Id : <span className="text-gray-600 font-semibold">
-                {selectedItem.backclientDesignId ?? selectedItem.backsellerDesignId ?? "N/A"}
-              </span>
-            </div>
             <div className="font-bold">Back Design Name : <span className="text-gray-600 font-semibold">
                 {selectedItem.backclientDesign?.name ?? selectedItem.backsellerDesign?.name ?? "N/A"}
               </span>

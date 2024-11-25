@@ -168,7 +168,7 @@ const Page =  async () => {
                   <TableRow key={order.id}>
                     <TableCell className="hidden sm:table-cell">{order.id}</TableCell>
                     <TableCell className="hidden sm:table-cell">
-                      <Badge className={`${{
+                      <Badge className={`text-white ${{
                                'PROCESSING': 'bg-blue-700',
                                'DELIVERED': 'bg-green-700',
                                'REFUSED': 'bg-red-700',
@@ -178,13 +178,13 @@ const Page =  async () => {
                          </Badge>
                          </TableCell>
                     <TableCell>
-                      <Badge className={`${order.type === 'CONFIRMED' ? 'bg-green-700' : order.type === 'NOT_CONFIRMED' ? 'bg-orange-400' : order.type === 'CANCELED' ? 'bg-red-700' : 'bg-gray-700'} hover:bg-gray-700`}>
+                      <Badge className={`text-white ${order.type === 'CONFIRMED' ? 'bg-green-700' : order.type === 'NOT_CONFIRMED' ? 'bg-orange-400' : order.type === 'CANCELED' ? 'bg-red-700' : 'bg-gray-700'} hover:bg-gray-700`}>
                              {order.type}
                       </Badge>
                     </TableCell>
                     <TableCell>{order.createdAt ? new Date(order.createdAt).toLocaleDateString() : ''}</TableCell>
                     <TableCell className="hidden sm:table-cell">
-                      <Badge className={`${order.printed ? 'bg-green-700' :  'bg-red-700'} hover:bg-gray-700`}>
+                      <Badge className={`text-white ${order.printed ? 'bg-green-700' :  'bg-red-700'} hover:bg-gray-700`}>
                             {order.printed ? "Is Printed" : "Not Printed"}
                       </Badge>
                     </TableCell>
@@ -200,10 +200,6 @@ const Page =  async () => {
       
     </section>
 
-
-
-    <section className={cn(' grid grid-cols-1 p-11 gap-4 transition-all lg:grid-cols-4')}>
-</section>
 
   </div>
 

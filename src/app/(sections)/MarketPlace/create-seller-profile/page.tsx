@@ -417,7 +417,7 @@ const Page = () => {
             <p className="mr-3 mb-2 text-sm text-gray-500">Done ? What are waiting for !</p>
             </div>
             <Button disabled={isClicked || isCreating || !logoFile || storeName==="" || !termsAccepted || phoneNumber.length != 8}
-              onClick={createStore} className="w-full sm:w-[40%]">Create Store Now
+              onClick={createStore} className="w-full sm:w-[40%] text-white">Create Store Now
               <MousePointerClick className="ml-2"/>
             </Button>
             </div>

@@ -110,7 +110,7 @@ const CategoryView: React.FC<CategoryViewProps> = ({ categories  }) => {
               isLoading={isButtonPressed}
               loadingText="loading"
               size="default"
-              className=''
+              className='text-white'
               onClick={() => handleButtonClick(selectedCard)}
               disabled={isButtonDisabled}
             >
@@ -134,6 +134,9 @@ const CategoryView: React.FC<CategoryViewProps> = ({ categories  }) => {
                     height={1000}
                     src={category.value!}
                     alt={category.label}
+                    placeholder="blur"
+                    blurDataURL="/Loading.png"
+                    loading='lazy'
                     className="h-full w-full rounded-xl object-cover"
                     onContextMenu={(e) => e.preventDefault()}
                     draggable={false}

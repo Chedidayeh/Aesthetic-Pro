@@ -35,6 +35,8 @@ export default auth (async (req) => {
     const isCreateStoreRoute = nextUrl.pathname.startsWith(createStoreRoute);
     const isCreateAffiliateRoute = nextUrl.pathname.startsWith(createAffiliateRoute);
 
+
+
     // block if a already logged in user try to access to auth routes 
     if(isAuthRoute || isAlreadyVerifiedUserRoute || isAlreadyResetPasswordRoute){
         if (isLoggedIn) {

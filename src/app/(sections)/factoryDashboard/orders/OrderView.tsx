@@ -122,10 +122,7 @@ interface OrderViewProps {
       if (searchQuery) {
         const lowercasedQuery = searchQuery.toLowerCase();
         updatedOrders = updatedOrders.filter(order =>
-          order.id.toLowerCase().includes(lowercasedQuery) ||
-          (order.clientName && order.clientName.toLowerCase().includes(lowercasedQuery)) ||
-          order.phoneNumber.includes(lowercasedQuery)
-        );
+          order.id.toLowerCase().includes(lowercasedQuery)        );
       }
   
       if (filterCriteria) {
@@ -258,7 +255,7 @@ interface OrderViewProps {
             <CardTitle>Orders</CardTitle>
             <CardDescription>Total: {orders.length}</CardDescription>
             <p className="text-red-600 text-sm">
-        <span className="text-blue-600 font-medium">Guide :</span> Click on the order row to view its details or use the Eye action!
+        <span className="text-blue-600 font-medium">Guide :</span> use the Eye action to view the order details !
       </p>
           </div>
         </CardHeader>
@@ -269,7 +266,7 @@ interface OrderViewProps {
           <Input
             type="search"
             className="w-full sm:w-[50%] "
-            placeholder="Enter the order Id , client Name , client Phone Number to make a search..."
+            placeholder="Enter the order Id to make a search..."
             value={searchQuery}
             onChange={handleSearchChange}
           />          
@@ -322,12 +319,10 @@ interface OrderViewProps {
               {filteredOrders.map((order , index) => (
                   <TableRow
                   key={order.id}
-                  className={`cursor-pointer ${selectedIndex === index ? 'border-2 border-blue-500' : ''}`}
-                  onClick={() => handleRowClick(order, index)}
                 >
                     <TableCell className="hidden sm:table-cell">{order.id}</TableCell>
                     <TableCell className="hidden sm:table-cell">
-                      <Badge className={`${{
+                      <Badge className={` text-white ${{
                               'PROCESSING': 'bg-blue-700',
                               'DELIVERED': 'bg-green-700',
                               'REFUSED': 'bg-red-700',
@@ -337,17 +332,17 @@ interface OrderViewProps {
                         </Badge>
                       </TableCell >
                     <TableCell className="hidden sm:table-cell">
-                    <Badge className={`${order.type === 'CONFIRMED' ? 'bg-green-700' : order.type === 'NOT_CONFIRMED' ? 'bg-orange-400' : order.type === 'CANCELED' ? 'bg-red-700' : 'bg-gray-700'} hover:bg-gray-700`}>
+                    <Badge className={`text-white ${order.type === 'CONFIRMED' ? 'bg-green-700' : order.type === 'NOT_CONFIRMED' ? 'bg-orange-400' : order.type === 'CANCELED' ? 'bg-red-700' : 'bg-gray-700'} hover:bg-gray-700`}>
                       {order.type}
                     </Badge>
                       </TableCell>
                     <TableCell className="hidden sm:table-cell">
-                      <Badge className={`${order.printed ? 'bg-green-700' :  'bg-red-700'} hover:bg-gray-700`}>
+                      <Badge className={` text-white ${order.printed ? 'bg-green-700' :  'bg-red-700'} hover:bg-gray-700`}>
                     {order.printed ? "Printed" : "Not Printed"}
                       </Badge>
                       </TableCell>
                     <TableCell className="hidden sm:table-cell">
-                      <Badge className={`${order.isPaid ? 'bg-green-700' :  'bg-red-700'} hover:bg-gray-700`}>
+                      <Badge className={` text-white ${order.isPaid ? 'bg-green-700' :  'bg-red-700'} hover:bg-gray-700`}>
                     {order.isPaid ? "Is Paid" : "Not Paid"}
                       </Badge>
                       </TableCell>
@@ -383,70 +378,6 @@ interface OrderViewProps {
           </ScrollArea>
         </CardContent>
       </Card>  
-
-
-      {selectedOrder && (
-      <Card className="col-span-full" x-chunk="dashboard-01-chunk-4">
-          <CardHeader className="flex flex-col md:flex-row items-center">
-          <div className="grid gap-2">
-             <CardTitle className="font-extrabold">Order Infos :</CardTitle>
-             <CardDescription>
-             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 mt-2">
-             <div>
-                             <p className="font-bold">Order Id:</p>
-                             <p>{selectedOrder?.id}</p>
-                         </div>
-                         <div>
-                             <p className="font-bold">Order Status:</p>
-                             <p><Badge className={`${{
-                               'PROCESSING': 'bg-blue-700',
-                               'DELIVERED': 'bg-green-700',
-                               'REFUSED': 'bg-red-700',
-                               'CANCELED': 'bg-red-700'
-                             }[selectedOrder.status]} hover:bg-gray-700`}>
-                               {selectedOrder.status}
-                         </Badge></p>
-                         </div>
-                         <div>
-                             <p className="font-bold">Order Type:</p>
-                             <p><Badge className={`${selectedOrder.type === 'CONFIRMED' ? 'bg-green-700' : selectedOrder.type === 'NOT_CONFIRMED' ? 'bg-orange-400' : selectedOrder.type === 'CANCELED' ? 'bg-red-700' : 'bg-gray-700'} hover:bg-gray-700`}>
-                             {selectedOrder.type}
-                             </Badge>
-                         </p>
-                         </div>
-                         <div>
-                             <p className="font-bold">Is Order Paid:</p>
-                             <p><Badge className={`${selectedOrder.isPaid ? 'bg-green-700' :  'bg-red-700'} hover:bg-gray-700`}>
-                            {selectedOrder.isPaid ? "Is Paid" : "Not Paid"}
-                      </Badge></p>
-                         </div>
-                         <div>
-                             <p className="font-bold">Is Seller Order:</p>
-                             <p>{selectedOrder.isSellerOrder ? "Yes" : "No"}</p>
-                         </div>
-                         <div>
-                             <p className="font-bold">Client Name:</p>
-                             <p>{selectedOrder.clientName}</p>
-                         </div>
-                         <div>
-                             <p className="font-bold">Client Phone Number:</p>
-                             <p>{selectedOrder?.phoneNumber}</p>
-                         </div>
-                         <div>
-                             <p className="font-bold">Shipping Address:</p>
-                             <p>{selectedOrder.shippingAddress}</p>
-                         </div>
-                         <div>
-                             <p className="font-bold">order Amount:</p>
-                             <p>{selectedOrder.amount} TND</p>
-                         </div>
-                     </div>
-                 </CardDescription>
- 
-           </div>
-         </CardHeader>
-       </Card>
-      )}
         
 
 

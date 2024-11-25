@@ -681,7 +681,42 @@ export async function fetchTrendingProducts() {
 }
 
 
+export async function getAllProductsLength() {
+  try {
+    const count = await db.product.count({
+      where: { isProductAccepted: true, privateProduct: false },
+    });
+    return count ;
+  } catch (error) {
+    console.error(error);
+    return 0
+  }
+}
+
+
     // fetch all products
+    export async function fetchAllProductss(page: number, itemsPerPage: number) {
+      try {
+        const products = await db.product.findMany({
+          where: { isProductAccepted: true, privateProduct: false },
+          include: {
+            store: true,
+          },
+          orderBy: {
+            totalViews: 'desc', // You can change this sorting as per your needs
+          },
+          skip: (page - 1) * itemsPerPage, // Skip the products of previous pages
+          take: itemsPerPage, // Limit the number of products for the current page
+        });
+    
+        return products ;
+      } catch (error) {
+        console.error(error);
+        return  []
+      }
+    }
+
+    
 export async function fetchAllProducts() {
   try {
     const products = await db.product.findMany({

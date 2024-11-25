@@ -813,9 +813,7 @@ const handleFileChange = (file : File) => {
                 }
               };
 
-  
-
-
+              
               const uploadAllCapForFront = async () => {
                 setIsBorderHidden(true);
                 const paths = [] as string[]; // Array to store all the captured product paths
@@ -1437,7 +1435,7 @@ const handleFileChange = (file : File) => {
                               <ToggleGroupItem
                                 key={color.label}
                                 value={color.label} // Set the value for each item
-                                className={`px-4 py-2 flex items-center space-x-2 rounded bg-gray-300 dark:bg-gray-800`}
+                                className={`px-4 py-2 flex border-2 items-center space-x-2 rounded bg-gray-300 hover:bg-gray-200 text-black dark:text-white dark:bg-gray-800`}
                                 onClick={() => handleColorCheckboxChange(color.label)} // Toggle color selection
                               >
                                 {color.label}
@@ -1582,6 +1580,7 @@ const handleFileChange = (file : File) => {
                                 <div className="mb-2">   
                                   <Button
                                     loadingText="Adding"
+                                    className='text-white'
                                     size='default'
                                     isLoading={isAdding}
                                     disabled={
@@ -1615,6 +1614,8 @@ const handleFileChange = (file : File) => {
                           <div className="mb-2">
                             <Button
                               size='default'
+                              className='text-white'
+
                               disabled={
                                 productTitle.length === 0 || 
                                 productDescription.length === 0 || 
@@ -1643,6 +1644,7 @@ const handleFileChange = (file : File) => {
                           <div className="mb-2">
                             <Button
                               loadingText="Adding"
+                              className='text-white'
                               size='default'
                               isLoading={isAdding}
                               disabled={
@@ -1722,7 +1724,7 @@ const handleFileChange = (file : File) => {
 
                           <div>
                           <Button
-                            className='mt-4'
+                            className='mt-4 text-white'
                             onClick={toggleFrontBorder}
                             disabled={!isDesignUploaded}
                           >
@@ -1836,7 +1838,7 @@ const handleFileChange = (file : File) => {
                               </RadioGroup>
                               <div>
                               <Button
-                            className='mt-4'
+                            className='mt-4 text-white'
                             onClick={toggleBackBorder}
                             disabled={!isBackDesignUploaded}
                           >

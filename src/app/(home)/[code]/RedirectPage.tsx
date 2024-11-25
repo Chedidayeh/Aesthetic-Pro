@@ -17,8 +17,6 @@ interface PageProps {
 }
 
 const RedirectPage = ({  affiliateLink }: PageProps) => {
-  const [showAlert, setShowAlert] = useState(false);
-  const [redirectDelay, setRedirectDelay] = useState(5);
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -53,18 +51,7 @@ const RedirectPage = ({  affiliateLink }: PageProps) => {
         if (sessionIdRef.current) {
           // Use sessionId from ref for affiliate click handling
           await createAffiliateClick(affiliateLink, sessionIdRef.current);
-          // Start the countdown for redirect
-          const countdown = setInterval(() => {
-            setRedirectDelay((prevDelay) => {
-              if (prevDelay === 1) {
-                clearInterval(countdown);
-                router.push(affiliateLink.originalLink);
-              }
-              return prevDelay - 1;
-            });
-          }, 1000);
-
-          return () => clearInterval(countdown); // Clean up the interval
+          router.push(affiliateLink.originalLink); // Redirect immediately
         }
       } catch (error) {
         console.error('Error during affiliate click handling:', error);
@@ -72,7 +59,6 @@ const RedirectPage = ({  affiliateLink }: PageProps) => {
       }
     };
 
-    setShowAlert(true);
     handleAffiliateClick();
   }, [affiliateLink, reduxSessionId, router, dispatch]);
 
@@ -89,7 +75,7 @@ const RedirectPage = ({  affiliateLink }: PageProps) => {
               <Loader className="animate-spin" />
             </div>
             <AlertDialogTitle className="text-xl font-bold text-center">
-              Redirecting in {redirectDelay} seconds
+              Redirecting...
             </AlertDialogTitle>
             <AlertDialogDescription className="text-center">
               Please wait while we redirect you to your destination...

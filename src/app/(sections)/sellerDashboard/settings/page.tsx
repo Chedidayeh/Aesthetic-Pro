@@ -297,7 +297,9 @@ export default function Page() {
                                             onChange={(e) => setNewStoreName(e.target.value)}
                                         />                                    </CardContent>
                                     <CardFooter className="border-t px-6 py-4">
-                                        <Button onClick={handleChangeStoreName} disabled={newStoreName===""} >Change</Button>
+                                        <Button                                     
+                                        className='text-white'
+                                         onClick={handleChangeStoreName} disabled={newStoreName===""} >Change</Button>
                                     </CardFooter>
                                 </Card>
 
@@ -314,7 +316,9 @@ export default function Page() {
                                             />
                                         </CardContent>
                                         <CardFooter className="border-t px-6 py-4">
-                                            <Button onClick={handleUpdateStoreBio} disabled={storeBio===""} >Add</Button> 
+                                            <Button                                     
+                                             className='text-white'
+                                             onClick={handleUpdateStoreBio} disabled={storeBio===""} >Add</Button> 
                                         </CardFooter>
                                     </Card>
 
@@ -333,7 +337,7 @@ export default function Page() {
                                             />
                                         </CardContent>
                                         <CardFooter className="border-t px-6 py-4">
-                                            <Button onClick={handleUpdateStoreLogo} disabled={!file}>Update</Button> {/* Use the new function */}
+                                            <Button onClick={handleUpdateStoreLogo} disabled={!file} className='text-white'>Update</Button> {/* Use the new function */}
                                         </CardFooter>
                                     </Card>
 
@@ -361,7 +365,7 @@ export default function Page() {
                                         />  
                                     </CardContent>
                                     <CardFooter className="border-t px-6 py-4">
-                                        <Button onClick={handleAddSocialLinks} disabled={facebookLink==="" && instagramLink===""} >Add</Button>
+                                        <Button onClick={handleAddSocialLinks} disabled={facebookLink==="" && instagramLink===""} className='text-white'>Add</Button>
                                     </CardFooter>
                                 </Card>
                             )}
@@ -375,7 +379,7 @@ export default function Page() {
                                         </CardDescription>
                                     </CardHeader>
                                     <CardFooter className="border-t px-6 py-4">
-                                        <Button onClick={handleStoreDelete} className="bg-red-500 hover:bg-red-400" >Delete</Button>
+                                        <Button onClick={handleStoreDelete} className="bg-red-500 hover:bg-red-400 text-white" >Delete</Button>
                                     </CardFooter>
                                 </Card>
                             )}

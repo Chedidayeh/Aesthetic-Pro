@@ -61,17 +61,14 @@ const chartConfig = {
 
 export function StoreChart() {
   const [chartData, setChartData] = React.useState<ChartData[]>([]);
-  const [isLoading, setIsLoading] = React.useState(false);
   React.useEffect(() => {
     const fetchChartData = async () => {
       try {
-        setIsLoading(true);
         const data = await getStoreStats();
         setChartData(data);
       } catch (err) {
         console.error("Error fetching store stats:", err);
       } finally {
-        setIsLoading(false);
       }
     };
 
@@ -164,7 +161,6 @@ export function StoreChart() {
   </CardFooter>
 </Card>
 
-      <LoadingState isOpen={isLoading} />
     </>
   );
 }

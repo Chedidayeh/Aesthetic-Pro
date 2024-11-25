@@ -409,10 +409,8 @@ const redirectToCart = () => {
                 <ToggleGroupItem
                   key={index}
                   value={color}
-                  className={`px-4 py-2 flex items-center space-x-2 rounded text-white ${
-                    selectedColor === color ? "bg-blue-500" : "bg-gray-300"
-                  }`}
-                >
+                  className={`px-4 py-2 border-2 flex items-center space-x-2 rounded bg-gray-300 hover:bg-gray-200 text-black dark:text-white dark:bg-gray-800`}
+                  >
                   {color}
                   {selectedColor === color && (
                     <Check

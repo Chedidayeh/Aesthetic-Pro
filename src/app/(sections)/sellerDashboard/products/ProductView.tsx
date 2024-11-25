@@ -302,7 +302,7 @@ const ProductView = ({
 
         <Link href="/sellerDashboard/createProduct">
           <Button
-            className="w-full sm:w-auto mb-4 mt-0"
+            className="w-full sm:w-auto mb-4 mt-0 text-white"
             type="submit"
             loadingText="Redirecting"
             isLoading={isClicked}
@@ -346,7 +346,7 @@ const ProductView = ({
       </>
     ) : (
       <>
-        <ScrollArea className="h-[984px] w-full border p-2 rounded-lg">
+        <ScrollArea className="h-[984px] w-full">
         <div className="relative mt-5 grid grid-cols-1 mb-20 pb-20">
            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-2">
             {/* Product Cards */}
@@ -390,7 +390,7 @@ const ProductView = ({
                       </Badge>
                         </div>
 
-
+                        
                       <div className="absolute top-2 left-2 px-2 py-1 z-10 rounded">
                         <Badge variant="secondary" className="bg-gray-200">
                           <CircleDollarSign className="mr-2 h-4 w-4 text-green-800 opacity-70" />

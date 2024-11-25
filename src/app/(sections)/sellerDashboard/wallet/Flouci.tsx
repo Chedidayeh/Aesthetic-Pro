@@ -189,8 +189,8 @@ const Flouci = ({ store }:Props) => {
             </div>
           </div>
 
-          <div className="flex items-center justify-center my-6">
-            <Button disabled={!isFormValid} onClick={handleRequest}>Request Payment</Button>
+          <div className="flex items-center justify-center my-6 ">
+            <Button disabled={!isFormValid} className='text-white' onClick={handleRequest}>Request Payment</Button>
           </div>
 
           <LoadingState isOpen={open} />

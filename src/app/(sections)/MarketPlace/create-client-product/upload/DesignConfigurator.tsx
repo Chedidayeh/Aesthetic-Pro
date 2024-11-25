@@ -598,10 +598,6 @@ const handleSortChange = (event: string) => {
                     const downloadURL = await getDownloadURL(snapshot.ref);
                     
                     if (downloadURL) {
-                      toast({
-                        title: 'Product Image Upload Success',
-                        description: 'Product image uploaded successfully!',
-                      });
                       return downloadURL;
                     }
                   } catch (error) {
@@ -980,7 +976,7 @@ const handleSortChange = (event: string) => {
                             <h3>Or choose an Existing design:</h3>
 
                               <div className="flex items-center justify-center">
-                              <Button variant="secondary" size="sm" className="w-[30%]" onClick={handleToggleMode}>
+                              <Button variant="secondary" size="sm" className="w-[30%] " onClick={handleToggleMode}>
                               Toggle Mode
                             </Button>                              
                             </div>
@@ -1118,7 +1114,7 @@ const handleSortChange = (event: string) => {
                             <div className="flex-1 text-center"> 
                                 <Popover>
                                 <PopoverTrigger asChild>
-                                  <Button variant="default">Create Order</Button>
+                                  <Button variant="default" className="text-white">Create Order</Button>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-full max-w-md sm:max-w-lg lg:max-w-xl">
                                 <div className='flex flex-col gap-6 px-4 py-6'>
@@ -1212,14 +1208,14 @@ const handleSortChange = (event: string) => {
                                         || !addBackDesign) || isClicked || quantity < 1 || quantity > platform.maxProductQuantity || !quantity}
                                       onClick={savePreOrder}
                                       size='default'
-                                      className='w-full'>
+                                      className='w-full text-white'>
                                       Pass To Order Confirmation
                                       <ArrowRight className='h-5 w-5 ml-1.5 inline' />
                                     </Button>
                                     
                                     <div className="mt-4">
                                       <Badge variant="outline" className="text-base">
-                                        <span className="text-gray-600">Total: {totalPrice.toFixed(2)} TND</span> 
+                                        <span className="animate-pulse">Total: {totalPrice.toFixed(2)} TND</span> 
                                       </Badge>
                                     </div>
                                   </div>
@@ -1340,7 +1336,7 @@ const handleSortChange = (event: string) => {
 
                                 <div className="text-center">
                                   <Button
-                                  className='mt-4'
+                                  className='mt-4 text-white'
                                   onClick={toggleFrontBorder}
                                   disabled={!selectedFrontDesign}
                                 >
@@ -1401,7 +1397,7 @@ const handleSortChange = (event: string) => {
 
                                 <div className="text-center">
                                       <Button
-                                    className='mt-4'
+                                    className='mt-4 text-white'
                                     onClick={toggleBackBorder}
                                     disabled={!selectedBackDesign}
                                   >

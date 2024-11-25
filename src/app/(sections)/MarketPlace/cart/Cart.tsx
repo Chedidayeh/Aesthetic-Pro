@@ -519,7 +519,7 @@ useEffect(() => {
     </div>
 
     <div className='mt-6'>
-      <Button disabled={cartProducts.length === 0} onClick={() => setIsConfirmOpen(true)} className='w-full' size='lg'>
+      <Button disabled={cartProducts.length === 0} onClick={() => setIsConfirmOpen(true)} className='w-full text-white' size='lg'>
         Continue
       </Button>
     </div>

@@ -319,7 +319,7 @@ const ProductsView = ({
           </Select>
           <Link href="/sellerDashboard/createOrder">
             <Button
-              className="w-full md:w-auto"
+              className="w-full md:w-auto text-white"
               type="submit"
               loadingText="Redirecting"
               isLoading={isClicked}
@@ -349,7 +349,7 @@ const ProductsView = ({
     </div>
   </CardHeader>
   <CardContent>
-  <ScrollArea  className="h-[384px] w-full border rounded-lg">
+  <ScrollArea  className="h-[384px] w-full">
   <Table className="mt-8">
   <TableHeader>
     <TableRow>
@@ -385,7 +385,7 @@ const ProductsView = ({
                 </TableCell>
                 <TableCell className="text-left" rowSpan={order.items.length}>
                   <Badge
-                    className={`${
+                    className={`text-white ${
                       {
                         PROCESSING: 'bg-blue-700',
                         DELIVERED: 'bg-green-700',
@@ -399,7 +399,7 @@ const ProductsView = ({
                 </TableCell >
                 <TableCell className=" hidden sm:table-cell text-left" rowSpan={order.items.length}>
                   <Badge
-                    className={`${
+                    className={`text-white ${
                       order.type === 'CONFIRMED'
                         ? 'bg-green-700'
                         : order.type === 'NOT_CONFIRMED'
@@ -414,7 +414,7 @@ const ProductsView = ({
                 </TableCell>
                 <TableCell className="hidden sm:table-cell text-left" rowSpan={order.items.length}>
                   <Badge
-                    className={`${order.isPaid ? 'bg-green-700' : 'bg-red-700'} hover:bg-gray-700`}
+                    className={`text-white ${order.isPaid ? 'bg-green-700' : 'bg-red-700'} hover:bg-gray-700`}
                   >
                     {order.isPaid ? 'Is Paid' : 'Not Paid'}
                   </Badge>

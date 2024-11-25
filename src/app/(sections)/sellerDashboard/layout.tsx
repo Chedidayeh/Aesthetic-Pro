@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 const Layout = ({ children }: { children: ReactNode }) => {
     return (
-         <div className="grid min-h-screen w-full md:grid-cols-[230px_1fr]"> {/* Updated grid columns */}
+         <div className="grid min-h-screen w-full md:grid-cols-[230px_1fr]">
         <SideBar />
            <div className="flex flex-col">
         <NavBar />

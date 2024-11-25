@@ -281,6 +281,17 @@ const handleSwitchChange = () => {
 }
 
 
+// openData state
+const [openData, setOpenData] = useState(false);
+
+
+const [selectedDataProduct, setSelectedDataProduct] = useState<ExtraProduct>();
+
+// viewProductData function
+const viewProductData = (product : ExtraProduct) => {
+  setOpenData(true)
+  setSelectedDataProduct(product)
+}
 
     
 
@@ -466,6 +477,8 @@ const handleSwitchChange = () => {
             <p >{selectedProduct.title}</p>
           </div>
 
+
+
           {!selectedProduct.isProductAccepted && !selectedProduct.isProductRefused && (
 
             <>
@@ -612,6 +625,15 @@ const handleSwitchChange = () => {
           </Badge>
       </div>
 
+      <div className="absolute top-8 left-2 px-2 py-1 z-10 rounded">
+      <Badge
+        onClick={() => {
+          viewProductData(product) }} 
+        className='bg-green-500 hover:bg-green-300 text-white cursor-pointer'>
+          View Data
+        </Badge>
+      </div>
+
       
       <div className="absolute top-2 right-2 px-2 py-1 z-10 rounded">
           <Badge variant="default">
@@ -715,7 +737,7 @@ const handleSwitchChange = () => {
                         </AlertDialogContent>
                      </AlertDialog> 
 
-    <AlertDialog open={isDialogOpen}>
+                          <AlertDialog open={isDialogOpen}>
                                     <AlertDialogTrigger asChild>
                                     </AlertDialogTrigger>
                                     <AlertDialogContent>
@@ -741,7 +763,65 @@ const handleSwitchChange = () => {
 
                                   <LoadingState isOpen={open} />
 
-  
+                                  <AlertDialog open={isDeleteOpen}>
+                                    <AlertDialogTrigger asChild>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                      <AlertDialogHeader>
+                                        <AlertDialogTitle>Reason for rejecting</AlertDialogTitle>
+                                      </AlertDialogHeader>
+                                      <div className="grid gap-4 py-4">
+                                          <Input value={reasonForRejection}
+                                          onChange={(e) => setReasonForRejection(e.target.value)} 
+                                          type="text" 
+                                          placeholder='Type the reason' 
+                                          className="w-full bg-gray-100" />
+                                      </div>
+                                      <AlertDialogFooter>
+                                        <AlertDialogCancel onClick={()=>setisDialogOpen(false)}>Cancel</AlertDialogCancel>
+                                        <AlertDialogAction disabled={reasonForRejection === ""} className='bg-red-500 hover:bg-red-400' onClick={()=>{
+                                          setisDialogOpen(false)
+                                          handleRefuse(selectedProduct!.id)
+                                          }}>Delete Product</AlertDialogAction>
+                                      </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                  </AlertDialog>
+
+{selectedDataProduct && (
+
+                    <AlertDialog open={openData} >
+      <AlertDialogContent className="p-6 rounded-md shadow-lg max-w-md mx-auto">
+        <AlertDialogHeader>
+          <AlertDialogTitle className="text-xl font-bold">
+            Product Data
+          </AlertDialogTitle>
+        </AlertDialogHeader>
+        <div className="mt-4 space-y-2">
+          <p>
+            <strong>Collection:</strong> {selectedDataProduct.collection}
+          </p>
+          <p>
+            <strong>Title:</strong> {selectedDataProduct.title}
+          </p>
+          <p>
+            <strong>Description:</strong> {selectedDataProduct.description}
+          </p>
+          <p>
+            <strong>Tags:</strong> {selectedDataProduct.tags.join(", ")}
+          </p>
+        </div>
+        <AlertDialogFooter className="mt-6 flex justify-end">
+          <AlertDialogAction
+            className="px-4 py-2 text-white bg-gray-500 rounded hover:bg-gray-600"
+            onClick={() => setOpenData(false)}
+          >
+            Close
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+                          </AlertDialog>
+ )}
+               
     </>
     );
   }

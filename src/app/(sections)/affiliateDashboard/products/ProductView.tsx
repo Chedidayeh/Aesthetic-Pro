@@ -105,11 +105,14 @@ const ProductView = ({ products, user , affiliateId, categories , collections , 
         // serach and sort filter
         const [searchQuery, setSearchQuery] = useState('');
         // affiliateLink state
-        const [selectedProduct, setSelectedProduct] = useState<Product>();
+        const [selectedProductIndex, setSelectedProductIndex] = useState<number | null>(null);
+        const [selectedProduct, setSelectedProduct] = useState<Productswithstore | null>();
         const [open, setOpen] = useState<boolean>(false);
         const [openWindow, setOpenWindow] = useState(false);
         const [shortenedLink, setShortenedLink] = useState<string | null>(null);
 
+
+  
 
         const handleGenerateAffiliateLink = async (product: Product) => {
           setOpen(true)
@@ -375,7 +378,15 @@ const ProductView = ({ products, user , affiliateId, categories , collections , 
       return paginationItems;
     };
 
-
+    const handleProductClick = (index: number) => {
+      if (index === selectedProductIndex) {
+        setSelectedProductIndex(null);
+        setSelectedProduct(null);
+      } else {
+        setSelectedProductIndex(index);
+        setSelectedProduct(paginatedProducts[index] || null);
+      }
+    };
 
 
     const [isCopied, setIsCopied] = useState(false);
@@ -390,6 +401,7 @@ const ProductView = ({ products, user , affiliateId, categories , collections , 
           console.error('Failed to copy the text: ', err);
         });
     };
+
 
 
   return (
@@ -426,7 +438,7 @@ const ProductView = ({ products, user , affiliateId, categories , collections , 
     <div className="grid gap-2">
       <CardTitle className="font-bold">Product Infos :</CardTitle>
       <CardDescription>
-        <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 mt-2">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 mt-2">
           <div>
             <p className="font-bold">Product Title :</p>
             <p >{selectedProduct.title}</p>
@@ -450,10 +462,15 @@ const ProductView = ({ products, user , affiliateId, categories , collections , 
             <p>{selectedProduct.totalViews} views</p>
           </div>
 
+          <div>
+            <p className="font-bold">Your Profit : ( {platform.affiliateUserProfit} % )</p>
+            <p>{(selectedProduct.price * platform.affiliateUserProfit) / 100} TND  ( on every sale )</p>
+          </div>
+
           <div className="col-span-2 md:col-span-1">
           <Button 
            onClick={() => handleGenerateAffiliateLink(selectedProduct)}
-            variant="link" className="text-green-500 flex items-center">
+            variant="link" className="text-green-500 flex items-center animate-wiggle">
           Generate Affiliate Link
             <CircleDollarSign size={16} className="ml-1 mt-[2px]" />
           </Button>
@@ -469,7 +486,8 @@ const ProductView = ({ products, user , affiliateId, categories , collections , 
   <CardContent className="p-4 md:p-6 lg:p-8 max-w-full">
   <p className=" flex items-center justify-center font-bold my-4">View Product :</p>
   <div className="flex items-center justify-center w-full p-4">
-    <div className="w-full max-w-lg"> {/* You can adjust max-w-lg as per your desired size */}
+    <div className="w-full max-w-lg"
+        >
       <ImageSlider
         urls={[
           ...(selectedProduct.croppedFrontProduct ?? []),
@@ -584,9 +602,13 @@ const ProductView = ({ products, user , affiliateId, categories , collections , 
             {paginatedProducts?.map((product, index) => (
                         <div
                         key={index}
-                        className={`relative aspect-square border-2 rounded-xl ${
+                        className={`relative cursor-pointer aspect-square border-2 rounded-xl ${
                           selectedProduct?.id === product.id ? 'border-blue-500' : 'border-transparent'
                         }`}
+                        onClick={() => {            
+                          setSelectedProduct(product)
+                          handleProductClick(index)
+                         }}
                       >                      
                       <ImageSlider
                         urls={[

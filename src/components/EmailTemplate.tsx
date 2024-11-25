@@ -402,7 +402,7 @@ export const generateOrderEmailHTML = (order: OrderWithItems) => {
               <img src="https://firebasestorage.googleapis.com/v0/b/tactical-hydra-424919-a1.appspot.com/o/aestheticpro.png?alt=media&token=3d5c4c50-bc46-4e81-af42-4ab3763a9ed5" alt="AestheticPro Logo" style="max-width: 200px; margin-bottom: 1px;">
           </div>
         <h1 style="font-size: 28px; font-weight: bold; color: #333;">We Appreciate Your Order! 💖</h1>
-        <p style="font-size: 16px; color: #555; margin-top: 8px;">Thak you for your trust.</p>
+        <p style="font-size: 16px; color: #555; margin-top: 8px;">Thank you for your trust.</p>
         </div>
         <div class="content">
           <p>Hi ${order.user.name},</p>
@@ -410,8 +410,8 @@ export const generateOrderEmailHTML = (order: OrderWithItems) => {
           <div class="order-details">
             <h2>Order Details</h2>
             <p><strong>Order Amount:</strong> ${order.amount} TND</p>
-            <h3>Order Items :</h3>
             <hr style="border: 0; border-top: 1px solid #dcdcdc; margin: 20px 0;">
+            <h3>Order Items :</h3>
             ${orderItemsHTML}
           </div>
         </div>

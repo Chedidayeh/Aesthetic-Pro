@@ -106,7 +106,7 @@ export const resetPassword = async (user: User) => {
 
 
 export const GoogleLogin = async (redirectUrl : any) => {
-    await signIn("google", { redirectTo: redirectUrl ? redirectUrl : DEFAULT_LOGIN_REDIRECT });
+    await signIn("google", { redirectTo: redirectUrl ? redirectUrl : "/MarketPlace" });
 }
 
 

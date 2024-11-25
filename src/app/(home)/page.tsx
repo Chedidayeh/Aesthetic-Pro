@@ -35,9 +35,9 @@ export default async function Page() {
     <>
 
     {/* hero section */}
-    <div className='py-10 mt-2 mx-auto text-center flex flex-col w-[80%] rounded-2xl items-center border-2 bg-center 
+    {/* <div className='py-10 mt-2 mx-auto text-center flex flex-col w-[80%] rounded-2xl items-center border-2 bg-center 
     bg-[url("/bgBanner.png")]'>
-  <h1 className='text-4xl font-bold tracking-tight text-white sm:text-6xl animate-pulse'>
+  <h1 className='text-3xl font-bold tracking-tight text-white animate-pulse'>
   Aesthetic Prints, {' '}
     <span className='text-blue-600'>
     Pro Quality
@@ -46,7 +46,7 @@ export default async function Page() {
   <p className='mt-6 text-md max-w-prose text-muted-foreground'>
     With AestheticPro.tn !
   </p>
-</div>
+</div> */}
 
 
 
@@ -118,8 +118,6 @@ export default async function Page() {
 
 <section className='bg-muted/50 border-2 rounded-2xl dark:border-slate-50 border-slate-500 w-[90%] mx-auto my-8'>
   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-6 px-10">
-    
-    {/* Left Side - Text */}
     <div className="flex flex-col justify-center">
       <h2 className="text-xl font-semibold mb-2">Why Shop at AestheticPro.tn?</h2>
       <p className='my-1 text-md max-w-prose text-gray-500'>
