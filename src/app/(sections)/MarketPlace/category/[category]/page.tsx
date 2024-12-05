@@ -16,8 +16,9 @@ import Link from 'next/link'
 import { db } from '@/db'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
-import {  fetchProductsByCategory, getAllProductCollectionNames, getUser } from '@/actions/actions'
+import {  getAllProductCollectionNames, getUser } from '@/actions/actions'
 import ProductsByCategory from './ProductsByCategory'
+import { fetchPriceRanges, fetchProductsByCategory } from './actions'
 
 
 
@@ -28,11 +29,15 @@ interface PageProps {
 }
 
 export default async function Page({ params }: PageProps) {
-  const { category } = params
+  const { category } = params  
+  const limit = 4; // Number of products per page
+  const page = 1; // Initial page
   const decodedCategory = decodeURIComponent(category)
-  const categoryProducts = await fetchProductsByCategory(decodedCategory);
+  const data = await fetchProductsByCategory(decodedCategory , page , limit);
   const user = await getUser()
   const collections = await getAllProductCollectionNames()
+  const priceRanges = await fetchPriceRanges(decodedCategory)
+
 
   
   return (
@@ -42,10 +47,14 @@ export default async function Page({ params }: PageProps) {
               <section className='border-t border-gray-200 w-full mx-auto' >
                 <div className='w-[85%] mx-auto'>
                 <ProductsByCategory
-                     products={categoryProducts!}
-                     user={user!}
-                     category={decodedCategory}
-                     collections={collections}
+                    initialProducts={data.products}
+                    totalCount={data.totalCount}
+                    initialPage={page}
+                    limit={limit}
+                    priceRanges={priceRanges}
+                    user={user!}
+                    category={decodedCategory}
+                    collections={collections}
                 />
                 </div>
               </section>

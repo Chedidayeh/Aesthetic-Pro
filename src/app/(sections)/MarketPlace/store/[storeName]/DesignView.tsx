@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unescaped-entities */
 'use client'
-import { checkUserLike, updateStoreLikes } from "./actions"
 import NextImage from 'next/image'
 import {
   Select,
@@ -85,28 +84,15 @@ import LoadingState from '@/components/LoadingState'
 import { Label } from '@/components/ui/label'
   
 
-interface StoreDetails extends Store {
-    products: Productswithstore[];
-  }
-  
-  interface Productswithstore extends Product {
-    store : Store
-  }
+
   interface ProductReelProps {
-    store : StoreDetails
-    user : User
     designs : SellerDesign[]
   
   }
   
-  const DesignView = ({ store, user , designs }: ProductReelProps) => { 
+  const DesignView = ({ designs }: ProductReelProps) => { 
 
-    const router = useRouter();
     const { toast } = useToast()
-
-
-
-
 
 
     // toggle Mode
@@ -114,11 +100,6 @@ interface StoreDetails extends Store {
     const handleToggleMode = () => {
       setIsDarkMode((prevMode) => !prevMode);
     };
-
-
-
-
-
 
 
 // Search query for designs
@@ -134,7 +115,8 @@ const filteredAndSortedDesigns = useMemo(() => {
   // Filter designs based on search query
   const filteredDesigns = (designs || []).filter(design =>
     design.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    design.id.toLowerCase().includes(searchQuery.toLowerCase())
+    design.id.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    (design.tags && design.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())))
   );
 
   // Sort the filtered designs based on the selected sort option
@@ -157,48 +139,9 @@ const handleSortChange = (event: string) => {
 };
   
   
-      // manage likes :
-      const [liked, setLiked] = useState(false);
-  
-      useEffect(() => {
-        // Function to check if the store is liked by the user (optional)
-        const checkIfLiked = async () => {
-          try {
-            const response = await checkUserLike(store!.id , user.id)
-            console.log(response)
-            setLiked(response);
-          } catch (error) {
-            console.error('Error checking if liked:', error);
-          }
-        };
-    
-        checkIfLiked();
-      }, );
+
   
   
-      const handleLikeClick = async () => {
-        if (!user) {
-          toast({
-            title: 'No logged in user found !',
-            description: 'Try to login first!',
-            variant: 'destructive',
-          });
-          return;
-        }
-        try {
-          await updateStoreLikes(store?.id!, user.id, !liked)  
-          setLiked(!liked);
-          toast({
-            title: !liked ? 'Store liked' : 'Store unliked',
-            description: '',
-            variant: 'default',
-          }); 
-          router.refresh()
-          return
-        } catch (error) {
-          console.error('Error updating likes:', error);
-        }
-      };
 
 
       const copyToClipboard = (text : string) => {
@@ -258,20 +201,11 @@ const handleSortChange = (event: string) => {
               <Button
                 variant="default"
                 size="sm"
-                className="w-full sm:w-[70%] lg:w-auto"
+                className="w-full sm:w-[70%] lg:w-auto text-white"
                 onClick={handleToggleMode}
               >
                 Toggle Mode
               </Button>
-            </div>
-            <div className="mt-3 flex justify-center lg:mt-0">
-              <div
-                className={`h-10 w-10 group cursor-pointer flex items-center justify-center rounded-full
-                  ${liked ? 'bg-pink-50 text-red-700' : 'bg-pink-50 text-gray-700'} hover:text-red-700`}
-                onClick={handleLikeClick}
-              >
-                <Heart className={`w-1/2 h-1/2 ${liked ? 'fill-current text-red-700' : ''}`} />
-              </div>
             </div>
           </div>
 
@@ -284,7 +218,7 @@ const handleSortChange = (event: string) => {
             </div>
             <div className="mt-3  text-sm">
             <Link href={'/MarketPlace/create-client-product/upload'}>
-                  <Button size={"sm"} variant={"default"}>Try these Designs !</Button>
+                  <Button size={"sm"} className="text-white" variant={"default"}>Try these Designs !</Button>
               </Link>  
           </div>
           </div>
@@ -300,7 +234,7 @@ const handleSortChange = (event: string) => {
               {filteredAndSortedDesigns.map((design, index) => (
                 <div key={index} className="flex flex-col items-center">
                   <div onClick={() => copyToClipboard(design.name)} className={cn(`border-2 rounded-xl p-1 cursor-pointer `, isDarkMode ? 'bg-gray-900' : 'bg-gray-100' )}>
-                    <Badge variant={'default'}>{design.price} TND</Badge>
+                    <Badge variant={'default'} className="text-white">{design.price} TND</Badge>
                     <NextImage
                       alt={`Product image ${index + 1}`}
                       className="aspect-square w-full rounded-md object-contain"
@@ -311,7 +245,7 @@ const handleSortChange = (event: string) => {
                       draggable={false}
                     />
                      <Badge
-                    variant={'default'}>
+                    variant={'default'} className="text-white">
                     {design.name}
                     </Badge>
                   </div>

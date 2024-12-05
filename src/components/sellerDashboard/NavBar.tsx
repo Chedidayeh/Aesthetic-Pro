@@ -60,11 +60,6 @@ import { ModeToggle } from "../ModeToggle"
 import React from "react"
 import SellerProfile from "./SellerProfile"
 
-interface Count {
-  printedOrdersCount: number;
-  awaitingActionProductCount: number;
-  awaitingActionDesignCount: number;
-}
 
 const NavBar = () => {
 

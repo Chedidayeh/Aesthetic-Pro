@@ -26,9 +26,6 @@ import { useState } from "react"
 import { useToast } from "./ui/use-toast"
 import { useRouter } from "next/navigation"
 
-
-
-
 const UserProfile = ({ user , platform } : {user : User , platform : Platform | null})=>{
 
   const [open, setOpen] = useState<boolean>(false);
@@ -85,6 +82,50 @@ const UserProfile = ({ user , platform } : {user : User , platform : Platform | 
           <>
             <p className="text-xs ml-2 text-gray-500">{user.email}</p>
             <DropdownMenuSeparator />
+            {user.userType === "SELLER" && (
+              <>
+            <DropdownMenuItem>
+              <Button onClick={()=>(router.push("/sellerDashboard"))} size={"sm"} variant={"ghost"} className="flex justify-between items-center w-full">
+                Seller Dashboard ✨
+              </Button>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+
+            </>
+            )}
+             {user.userType === "ADMIN" && (
+              <>
+            <DropdownMenuItem>
+              <Button onClick={()=>(router.push("/adminDashboard"))} size={"sm"} variant={"ghost"} className="flex justify-between items-center w-full">
+                Admin Dashboard ✨
+              </Button>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+
+            </>
+            )}
+            {user.userType === "FACTORY" && (
+              <>
+            <DropdownMenuItem>
+              <Button onClick={()=>(router.push("/factoryDashboard"))} size={"sm"} variant={"ghost"} className="flex justify-between items-center w-full">
+                Factory Dashboard ✨
+              </Button>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+
+            </>
+            )}
+            {user.isAffiliate && (
+              <>
+            <DropdownMenuItem>
+              <Button onClick={()=>(router.push("/affiliateDashboard"))} size={"sm"} variant={"ghost"} className="flex justify-between items-center w-full">
+                Affiliate Dashboard ✨
+              </Button>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+
+            </>
+            )}
             <DropdownMenuItem>
             <Button onClick={()=>(router.push("/api/auth/logout"))} size={"sm"} variant={"ghost"} className="flex justify-between items-center w-full">
                 Sign out

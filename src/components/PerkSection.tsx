@@ -15,6 +15,7 @@ import {
   Search,
   Truck,
 } from 'lucide-react'
+import Link from 'next/link'
 
 const PerkSection = () => {
   const perks = [
@@ -52,7 +53,7 @@ const PerkSection = () => {
           <div className='items-center flex justify-center my-2'>
           <h2 className='text-2xl font-bold'>Our Services</h2>
           </div>
-          <div className='grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 lg:gap-x-8 lg:gap-y-0'>
+          <div className='grid grid-cols-2 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 lg:gap-x-8 lg:gap-y-0'>
             {perks.map((perk) => (
               <div
                 key={perk.name}
@@ -73,7 +74,18 @@ const PerkSection = () => {
                 </div>
               </div>
             ))}
+            <div>
+
+            </div>
+            
           </div>
+          <div className='my-2 flex items-center justify-center'>
+        <Link href="/services">
+          <Button className="" variant='link'>
+            Learn More about our services &rarr;
+          </Button>
+        </Link>
+         </div>
         </MaxWidthWrapper>
       </section>
     </div>

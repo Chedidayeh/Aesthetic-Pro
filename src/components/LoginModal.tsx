@@ -51,8 +51,9 @@ const LoginModal = ({
 
         <div className='grid grid-cols-1 gap-6 divide-x divide-gray-200'>
           <Link
-            className={buttonVariants({ variant: 'default' })}
+            className={buttonVariants({ variant: 'default', className : "text-white" })}
             href='/auth/sign-in'
+            
           >
             Login
           </Link>

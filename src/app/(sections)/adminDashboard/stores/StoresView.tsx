@@ -315,8 +315,8 @@ interface StoresViewProps {
     {filteredStores.map((store, index) => (
       <TableRow
         key={store.id}
-        className={`cursor-pointer ${selectedIndex === index ? 'border-2 border-blue-500' : ''}`}
-        onClick={() => handleRowClick(store, index)}
+        className={`${selectedIndex === index ? 'border-2 border-blue-500' : ''}`}
+        // onClick={() => handleRowClick(store, index)}
       >
         {/* Store Id cell */}
         <TableCell className="hidden sm:table-cell">{store.id}</TableCell>
@@ -370,10 +370,10 @@ interface StoresViewProps {
 
 
 
-      <ProductView selectedStore={selectedStore!}/>
+      {/* <ProductView selectedStore={selectedStore!}/>
 
 
-      <DesignView selectedStore={selectedStore!} />
+      <DesignView selectedStore={selectedStore!} /> */}
 
 
       </section>

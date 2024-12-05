@@ -1303,7 +1303,7 @@ const handleFileChange = (file : File) => {
                                     size='default'
                                     isLoading={isAdding}
                                     disabled={
-                                      productTitle.length === 0 || 
+                                      productTitle.length === 0 || productTitle.length > 20 ||
                                       productDescription.length === 0 || 
                                       !isAnyColorSelected || FrontDesignFile===undefined 
                                       || BackDesignFile===undefined || 
@@ -1336,7 +1336,7 @@ const handleFileChange = (file : File) => {
                               className='text-white'
 
                               disabled={
-                                productTitle.length === 0 || 
+                                productTitle.length === 0 || productTitle.length > 20 ||
                                 productDescription.length === 0 || 
                                 !isAnyColorSelected || FrontDesignFile===undefined || 
                                 sellerProfit > platform.maxProductSellerProfit || sellerProfit < 1 || sellerProfit === 0  || !sellerProfit 
@@ -1367,7 +1367,7 @@ const handleFileChange = (file : File) => {
                               size='default'
                               isLoading={isAdding}
                               disabled={
-                                productTitle.length === 0 || 
+                                productTitle.length === 0 || productTitle.length > 20 ||
                                 productDescription.length === 0 || 
                                 !isAnyColorSelected || BackDesignFile===undefined || 
                                 sellerProfit > platform.maxProductSellerProfit || sellerProfit < 1  || sellerProfit === 0 || !sellerProfit 

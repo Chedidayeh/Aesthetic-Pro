@@ -32,7 +32,8 @@ import React from "react"
 import UsersTable from "@/components/adminDashboard/UsersTable"
 import { unstable_noStore as noStore } from "next/cache"
 import { Component } from "@/components/adminDashboard/Chart";
-import { StoreChart } from "@/components/adminDashboard/StoreChart";
+import { StoresTableStats } from "@/components/adminDashboard/StoresTableStats";
+import { ProductsViewsChart } from "@/components/adminDashboard/ProductsViewsChart";
 
 
 export default async function Page() {
@@ -123,7 +124,8 @@ export default async function Page() {
 
     <div className='flex flex-col space-y-5'>
     <Component />
-    <StoreChart />
+    <ProductsViewsChart/>
+    <StoresTableStats />
 
     <div className='hidden xl:flex flex-col space-y-5'>
 

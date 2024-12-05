@@ -140,8 +140,7 @@ interface ProductViewProps {
         ? (filter === "accepted" && product.isProductAccepted) ||
           (filter === "refused" && product.isProductRefused) ||
           (filter === "action" && !product.isProductAccepted && !product.isProductRefused)  ||
-          (filter === "all" && product)  ||
-          (filter === "noItmes") && product.order.length === 0
+          (filter === "all" && product) 
         : true;
 
       return matchesSearch && matchesFilter;
@@ -349,7 +348,6 @@ const viewProductData = (product : ExtraProduct) => {
               <SelectItem value="accepted">Accepted</SelectItem>
               <SelectItem value="refused">Refused</SelectItem>
               <SelectItem value="action">Awaiting action</SelectItem>
-              <SelectItem value="noItems">No Items</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
@@ -454,7 +452,7 @@ const viewProductData = (product : ExtraProduct) => {
       </TableRow>
     ))}
   </TableBody>
-</Table>
+        </Table>
 
           </ScrollArea>
         </CardContent>

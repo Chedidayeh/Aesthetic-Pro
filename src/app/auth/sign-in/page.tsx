@@ -39,7 +39,6 @@ import { checkGoogleLoggedInUser, getUserByEmail } from "@/userData/user"
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/store/reducers/reducers"
 import { saveRedirectUrl } from "@/store/actions/action"
-import { signIn } from "@/auth"
 const emailSchema = z.string().email("Invalid email address");
 
 const Page = () => {
@@ -169,12 +168,19 @@ const Page = () => {
                                   </AlertDialog>
 
 
-
-      <div className='container relative flex pt-10 pb-10 flex-col items-center justify-center lg:px-0 mb-32'>
+      <div className='container relative flex pt-20 pb-10 flex-col items-center justify-center lg:px-0 mb-32'>
         <div className='mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]'>
           <div className='flex flex-col items-center space-y-2 text-center'>
-            <NextImage src="/signIn.png" width={300} height={300} className="w-[30%] h-[30%] " alt="" />
-            <h1 className='text-2xl font-semibold tracking-tight'>
+          <div className='animate-pulse' style={{ width: '100px', height: '100px' }}>
+              <NextImage
+                  draggable={false}
+                  src={"/aestheticpro.png"}
+                  width={1000}
+                  height={1000}
+                  alt="logo"
+              />
+          </div>
+            <h1 className='text-xl font-semibold tracking-tight'>
               Sign in to your {' '}
               account
             </h1>
@@ -302,6 +308,8 @@ const Page = () => {
           </div> */}
         </div>
       </div>
+
+      
     </>
   )
 }

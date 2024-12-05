@@ -6,6 +6,7 @@ import {
   CircleUser,
   CreditCard,
   DollarSign,
+  Eye,
   Heart,
   Menu,
   Package2,
@@ -35,7 +36,7 @@ import {
 import Link from "next/link";
 
 import { cn } from "@/lib/utils";
-import { getProductViewsChartData, getStoreByUserId, getUnreadNotificationsForStore, getUser } from "@/actions/actions";
+import { getProductViewsChartData, getStoreByUserId, getStoreProductsViewsCount, getUnreadNotificationsForStore, getUser } from "@/actions/actions";
 import React from "react"
 import OrderedDesigns from "@/components/sellerDashboard/OrderedDesigns"
 import OrderedProducts from "@/components/sellerDashboard/OrderedProducts"
@@ -53,6 +54,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Component } from '@/components/sellerDashboard/Chart';
+import { StoresTableStats } from '@/components/sellerDashboard/StoresTableStats';
 
 
 
@@ -66,6 +68,8 @@ const Page =  async () => {
   const store = await getStoreByUserId(user!.id!)
   const notifications = await getUnreadNotificationsForStore(store.id)
   const followersCount = await getStoreFollowersCount(store!.id);
+  const productsViewsCount = await getStoreProductsViewsCount(store!.id);
+
   return (
     <>
 
@@ -149,12 +153,12 @@ const Page =  async () => {
           <Card x-chunk="dashboard-01-chunk-4">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
-                Total likes
+                Total views
                 </CardTitle>
-              <Heart className="h-4 w-4 text-muted-foreground" />
+              <Eye className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{store.totalLikes} likes</div>
+              <div className="text-2xl font-bold">{productsViewsCount} views</div>
             </CardContent>
           </Card>
 
@@ -168,7 +172,11 @@ const Page =  async () => {
 
     <OrderedDesigns/>
 
+
+
+
     </div>
+    <StoresTableStats storeId={store.id}/>
 
     </div>
 

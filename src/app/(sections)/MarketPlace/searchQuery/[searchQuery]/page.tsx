@@ -4,7 +4,7 @@ import { getAllProductCollectionNames, getAllProductsCategories, getUser } from 
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { ArrowDownToLine, CheckCircle, Leaf } from "lucide-react";
 import SearchedProducts from "./SearchedProducts";
-import { searchProducts } from "./actions";
+import { fetchPriceRanges, searchProducts } from "./actions";
 
 
 interface PageProps {
@@ -17,8 +17,13 @@ const Page = async ({ params }: PageProps) => {
   const { searchQuery } = params;
 
   try {
+
+    const limit = 4; // Number of products per page
+    const page = 1; // Initial page
+    const priceRanges = await fetchPriceRanges(searchQuery)
+    
     const user = await getUser()
-    const products = await searchProducts(searchQuery)
+    const { products, totalCount } = await searchProducts(searchQuery , page , limit)
     const categories = await getAllProductsCategories()
     const collections = await getAllProductCollectionNames()
 
@@ -35,8 +40,12 @@ const Page = async ({ params }: PageProps) => {
               <section className='border-t border-gray-200  w-full mx-auto' >
                 <div className='w-[85%] mx-auto'>
                 <SearchedProducts
+                    initialProducts={products}
+                    totalCount={totalCount}
+                    initialPage={page}
+                    limit={limit}
+                    priceRanges={priceRanges}
                      user={user!}
-                     products={products!}
                      categories={categories!}
                      collections={collections}
                      searchQuery={decodedQuery}

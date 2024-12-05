@@ -39,22 +39,22 @@ const ProductReel = (props: ProductReelProps) => {
 
 
   //slide products
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 2;
-  const totalProducts = products?.length || 0;
-  const totalPages = Math.ceil(totalProducts / itemsPerPage)
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const itemsPerPage = 2;
+  // const totalProducts = products?.length || 0;
+  // const totalPages = Math.ceil(totalProducts / itemsPerPage)
 
-  const handlePrevPage = () => {
-    setCurrentPage(prev => Math.max(prev - 1, 1));
-  };
+  // const handlePrevPage = () => {
+  //   setCurrentPage(prev => Math.max(prev - 1, 1));
+  // };
 
-  const handleNextPage = () => {
-    setCurrentPage(prev => Math.min(prev + 1, totalPages));
-  };
+  // const handleNextPage = () => {
+  //   setCurrentPage(prev => Math.min(prev + 1, totalPages));
+  // };
 
 
   return (
-    <section className='py-12'>
+    <section className='py-8'>
       <div className='md:flex md:items-center md:justify-between mb-4'>
         <div className='max-w-2xl px-4 lg:max-w-4xl lg:px-0'>
           {title ? (
@@ -97,13 +97,15 @@ const ProductReel = (props: ProductReelProps) => {
             <div className=' w-full grid 
               lg:grid-cols-4 
               md:grid-cols-2 
-              sm:grid-cols-1
-              gap-y-10
+              sm:grid-cols-2
+              grid-cols-2
+              gap-y-4
+              gap-2
               sm:gap-x-8  
               md:gap-y-10
               lg:gap-x-4'>
 
-            {products?.slice(currentPage - 1, currentPage + 3).map((product, index) => (
+            {products?.map((product, index) => (
               <ProductListing
                 user={user!}
                 key={`product-${index}`}
@@ -115,7 +117,7 @@ const ProductReel = (props: ProductReelProps) => {
           </div>
 
 
-          <div className="mt-8">
+          {/* <div className="mt-8">
           <Pagination>
             <PaginationContent>
               <PaginationItem>
@@ -126,7 +128,7 @@ const ProductReel = (props: ProductReelProps) => {
               </PaginationItem>
             </PaginationContent>
           </Pagination>
-        </div>
+        </div> */}
 
         </>
             )}

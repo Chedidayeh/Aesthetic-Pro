@@ -219,95 +219,18 @@ useEffect(() => {
     <>
 
 
-                            {/* The AlertDialog loading component */}
-                            <AlertDialog>
-                          <AlertDialogTrigger asChild ref={alertDialogTriggerRef}>
-                            <button className="hidden">Hidden Trigger</button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader className="flex flex-col items-center">
-                              <AlertDialogTitle className="text-2xl text-blue-700 font-bold text-center">
-                                Creating Your Order!
-                              </AlertDialogTitle>
-                              <AlertDialogDescription className="flex flex-col items-center">
-                                This will take a moment.
-                                <Loader className="text-blue-700 h-[35%] w-[35%] animate-spin mt-3" />
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogCancel className="hidden" ref={alertDialogCancelRef}>Cancel</AlertDialogCancel>
-                          </AlertDialogContent>
-                        </AlertDialog>
 
-
-
-    {/* The AlertDialog create order component */}
-
-<AlertDialog open={isConfirmOpen}>
-      <AlertDialogTrigger asChild>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Creating your Order</AlertDialogTitle>
-          <AlertDialogDescription>
-            Please make sure to fill all the necessary details!
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-left">
-              Your Name :
-            </Label>
-            <Input id="name" type="text" className="col-span-3" value={name} onChange={handleNameChange} />
-          </div>
-          <div className="grid items-center grid-cols-4 gap-4">
-            <Label htmlFor="phoneNumber">Phone Number:</Label>
-            <div className="col-span-3">
-              <Input 
-                id="phoneNumber" 
-                type="number" 
-                pattern="\d{8}"
-                onBlur={handlePhoneNumberBlur}
-                placeholder="99 999 999" 
-                onChange={handlePhoneNumberChange}
-                className={`${inputClassName} focus:ring-0 focus:border-green-500`}
-                required 
-              />
-              {phoneNumberError && (
-                <p className="text-sm text-red-500 mt-1">
-                  {phoneNumberError}
-                </p>
-              )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="address" className="text-left">
-              Your Address:
-            </Label>
-            <Input id="address" placeholder='Region And City | الولاية و المدينة' maxLength={20} type="text" className="col-span-3" value={address} onChange={handleAddressChange} />
-          </div>
-        </div>
-        <AlertDialogFooter>
-          <AlertDialogCancel onClick={()=>setIsConfirmOpen(false)}>Cancel</AlertDialogCancel>
-          <AlertDialogAction disabled={!isValid} 
-          onClick={()=>{
-            setIsConfirmOpen(false)
-            createOrder()
-            }}>Confirm Order</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
 
 
 
         <div className=''>
-      <div className='mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8'>
+      <div className='mx-auto max-w-2xl px-4 pb-24 pt-8 sm:px-6 lg:max-w-7xl lg:px-8'>
       <div className='flex items-center justify-between'>
           <h1 className='text-3xl font-bold tracking-tight sm:text-4xl'>
             Shopping Cart
           </h1>
         </div>
-        <div className='left-2 justify-center items-center flex'>
+        <div className='left-2 mt-4 justify-center items-center flex'>
           <p className='text-md '>Total Items: {cartProducts.length}</p>
         </div>
 
@@ -325,7 +248,7 @@ useEffect(() => {
         </div>
         <h3 className='font-semibold text-2xl'>Your cart is empty</h3>
         <p className='text-muted-foreground text-center'>Whoops! Nothing to show here yet.</p>
-        <Link href='/MarketPlace/ProductsView' className='text-blue-600 text-sm'>
+        <Link href='/MarketPlace' className='text-blue-600 text-sm'>
                 <Button variant='link'>
                 Add items to your cart
                 &rarr;
@@ -336,7 +259,7 @@ useEffect(() => {
       <div className="border-2 rounded-lg p-4">
       <Table >
               <TableCaption>        
-                <Link href='/MarketPlace/ProductsView' className='text-blue-600 text-sm'>
+                <Link href='/MarketPlace' className='text-blue-600 text-sm'>
                 <Button variant='link'>
                 Add other items to your cart &rarr;
                 </Button>
@@ -376,7 +299,7 @@ useEffect(() => {
                     </Link>
                   </TableCell>
                   <TableCell>
-                    <Badge>                          
+                    <Badge className="text-white">                          
                       {(product.price || 0).toFixed(2)} TND
                     </Badge>
                   </TableCell>
@@ -528,6 +451,86 @@ useEffect(() => {
 
       </div>
     </div>
+
+                                {/* The AlertDialog loading component */}
+                                <AlertDialog>
+                          <AlertDialogTrigger asChild ref={alertDialogTriggerRef}>
+                            <button className="hidden">Hidden Trigger</button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader className="flex flex-col items-center">
+                              <AlertDialogTitle className="text-2xl text-blue-700 font-bold text-center">
+                                Creating Your Order!
+                              </AlertDialogTitle>
+                              <AlertDialogDescription className="flex flex-col items-center">
+                                This will take a moment.
+                                <Loader className="text-blue-700 h-[35%] w-[35%] animate-spin mt-3" />
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogCancel className="hidden" ref={alertDialogCancelRef}>Cancel</AlertDialogCancel>
+                          </AlertDialogContent>
+                        </AlertDialog>
+
+
+
+    {/* The AlertDialog create order component */}
+
+<AlertDialog open={isConfirmOpen}>
+      <AlertDialogTrigger asChild>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Creating your Order</AlertDialogTitle>
+          <AlertDialogDescription>
+            Please make sure to fill all the necessary details!
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="name" className="text-left">
+              Your Name :
+            </Label>
+            <Input id="name" type="text" className="col-span-3" value={name} onChange={handleNameChange} />
+          </div>
+          <div className="grid items-center grid-cols-4 gap-4">
+            <Label htmlFor="phoneNumber">Phone Number:</Label>
+            <div className="col-span-3">
+              <Input 
+                id="phoneNumber" 
+                type="number" 
+                pattern="\d{8}"
+                onBlur={handlePhoneNumberBlur}
+                placeholder="99 999 999" 
+                onChange={handlePhoneNumberChange}
+                className={`${inputClassName} focus:ring-0 focus:border-green-500`}
+                required 
+              />
+              {phoneNumberError && (
+                <p className="text-sm text-red-500 mt-1">
+                  {phoneNumberError}
+                </p>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="address" className="text-left">
+              Your Address:
+            </Label>
+            <Input id="address" placeholder='Region And City | الولاية و المدينة' maxLength={20} type="text" className="col-span-3" value={address} onChange={handleAddressChange} />
+          </div>
+        </div>
+        <AlertDialogFooter>
+          <AlertDialogCancel onClick={()=>setIsConfirmOpen(false)}>Cancel</AlertDialogCancel>
+          <AlertDialogAction disabled={!isValid} 
+          onClick={()=>{
+            setIsConfirmOpen(false)
+            createOrder()
+            }}>Confirm Order</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+
     </>
 
   )

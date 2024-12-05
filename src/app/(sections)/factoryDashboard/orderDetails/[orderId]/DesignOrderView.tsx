@@ -314,6 +314,9 @@ const handleChange = async () =>{
         <Separator className="w-full"/>
         <CardContent>
             <p className="text-gray-600 font-extrabold mt-6">Order Items :</p>
+            <p className="text-red-600 text-sm">
+        <span className="text-red-600 font-medium">Guide :</span> Click on the product!
+      </p>
                   <div className="grid grid-cols-3 gap-10 ml-10 mt-6">
                     {order.orderItems.map((item, index) => (
                       <div

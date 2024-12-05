@@ -141,14 +141,20 @@ const CategoryView: React.FC<CatProps> = ({ categories }) => {
 
       try {
         setOpen(true)
-        await apply(catId , discount)
-        toast({
-          title: "Discount was applied",
-          variant: "default",
-        });
-        setOpen(false)
-
-
+        const res = await apply(catId , discount)
+        if(res) {
+          toast({
+            title: "Discount was applied",
+            variant: "default",
+          });
+          setOpen(false)
+        }else {
+          toast({
+            title: "Discount failed",
+            variant: "destructive",
+          }); 
+          setOpen(false)
+        }
 
       
     } catch (error) {

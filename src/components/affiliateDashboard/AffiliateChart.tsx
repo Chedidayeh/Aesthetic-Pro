@@ -91,7 +91,7 @@ export function Component({affiliateId} : {affiliateId : string}) {
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
           <CardTitle>Your Links Stats</CardTitle>
           <CardDescription>
-            Showing total links clicks for the last 30 days
+            Showing total links clicks per month
           </CardDescription>
           <Popover >
       <PopoverTrigger asChild>

@@ -98,6 +98,19 @@ const Page = () => {
         return 
       }
 
+      if(storeName.length > 20) {
+        toast({
+          title: 'Your Store Name is too long !',
+          description: 'Please choose another store name.',
+          variant: 'destructive',
+        });
+        setIsClicked(false)
+        setIsCreating(false)
+        return 
+      }
+
+
+
         if(!logoFile) return
 
         const logoPath = await uploadLogo(logoFile)
@@ -241,50 +254,13 @@ const Page = () => {
   return (
     <>
 
-<AlertDialog open={isCreating}>
-    <AlertDialogTrigger asChild>
-    </AlertDialogTrigger>
-    <AlertDialogContent className="flex flex-col items-center">
-      <AlertDialogHeader className="flex flex-col items-center">
-        <AlertDialogTitle className="text-2xl text-blue-700 font-bold text-center">
-          Creating Your Store !
-        </AlertDialogTitle>
-        <AlertDialogDescription className="flex flex-col items-center">
-        Please wait while we create your store !
-        </AlertDialogDescription>
-      </AlertDialogHeader>
-      <Loader className="text-blue-700 h-[8%] w-[8%] animate-spin mt-3" />
-      </AlertDialogContent>
-  </AlertDialog>
-
-  <AlertDialog open={isRedirecting}>
-    <AlertDialogTrigger asChild>
-    </AlertDialogTrigger>
-    <AlertDialogContent className="flex flex-col items-center">
-      <AlertDialogHeader className="flex flex-col items-center">
-        <AlertDialogTitle className="text-2xl text-blue-700 font-bold text-center">
-          Redirecting You !
-        </AlertDialogTitle>
-        <AlertDialogDescription className="flex flex-col items-center">
-            Please wait while we redirect you !
-        </AlertDialogDescription>
-      </AlertDialogHeader>
-      <Loader className="text-blue-700 h-[8%] w-[8%] animate-spin mt-3" />
-      </AlertDialogContent>
-  </AlertDialog>
 
 
-              <div
-              aria-hidden='true'
-              className='pointer-events-none select-none absolute inset-0 overflow-hidden flex justify-center'>
-              <Confetti
-                active={showConfetti}
-                config={{ elementCount: 100, spread: 50 }}
-              />
-            </div>
+
+
 
     <div className=''>
-      <div className='mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8'>
+      <div className='mx-auto max-w-3xl px-4 py-4 sm:px-6 sm:py-12 lg:px-8'>
         <div className='max-w-2xl'>
           <p className='text-base font-medium text-primary'>Work With Us !</p>
           <h1 className='mt-2 text-4xl font-bold tracking-tight sm:text-5xl'>
@@ -423,6 +399,47 @@ const Page = () => {
             </div>
       </div>
     </div>
+    <div
+              aria-hidden='true'
+              className='pointer-events-none select-none absolute inset-0 overflow-hidden flex justify-center'>
+              <Confetti
+                active={showConfetti}
+                config={{ elementCount: 100, spread: 50 }}
+              />
+            </div>
+
+    <AlertDialog open={isCreating}>
+    <AlertDialogTrigger asChild>
+    </AlertDialogTrigger>
+    <AlertDialogContent className="flex flex-col items-center">
+      <AlertDialogHeader className="flex flex-col items-center">
+        <AlertDialogTitle className="text-2xl text-blue-700 font-bold text-center">
+          Creating Your Store !
+        </AlertDialogTitle>
+        <AlertDialogDescription className="flex flex-col items-center">
+        Please wait while we create your store !
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <Loader className="text-blue-700 h-[8%] w-[8%] animate-spin mt-3" />
+      </AlertDialogContent>
+  </AlertDialog>
+
+  <AlertDialog open={isRedirecting}>
+    <AlertDialogTrigger asChild>
+    </AlertDialogTrigger>
+    <AlertDialogContent className="flex flex-col items-center">
+      <AlertDialogHeader className="flex flex-col items-center">
+        <AlertDialogTitle className="text-2xl text-blue-700 font-bold text-center">
+          Redirecting You !
+        </AlertDialogTitle>
+        <AlertDialogDescription className="flex flex-col items-center">
+            Please wait while we redirect you !
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <Loader className="text-blue-700 h-[8%] w-[8%] animate-spin mt-3" />
+      </AlertDialogContent>
+  </AlertDialog>
+
     </>
   )
 }

@@ -1,10 +1,10 @@
 import "@/app/globals.css"
-import Navbar from "@/components/MarketPlace/NavBar";
 import SearchBar from "@/components/MarketPlace/SearchBar";
 import Footer from "@/components/Footer";
 import { ReactNode } from "react";
 import TopBar from "@/components/TopBar";
 import { Metadata } from "next";
+import Navbar from "@/components/HomeNavBar";
 
 export const metadata: Metadata = {
   title: "MarketPlace",

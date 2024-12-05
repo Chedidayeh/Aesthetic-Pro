@@ -21,7 +21,7 @@ const SearchBar = () => {
     router.push(`/MarketPlace/searchQuery/${searchQuery}`);
     setTimeout(() => {
       setIsPending(false);
-    }, 5000); // 5-second delay
+    }, 7000); // 5-second delay
   };
 
   const handleChange = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -49,7 +49,7 @@ const SearchBar = () => {
     router.push(`/MarketPlace/searchQuery/${option}`);
     setTimeout(() => {
       setIsPending(false);
-    }, 5000); // 5-second delay
+    }, 7000); // 5-second delay
   };
 
   const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {

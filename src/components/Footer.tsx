@@ -17,7 +17,9 @@ const Footer = async () => {
 <footer className='bg-muted/100 border-t border-gray-800 dark:border-gray-200 my-2 relative'>
   <MaxWidthWrapper>
     <div className='p-4'>
-      <div className='flex flex-col sm:flex-row sm:justify-between justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4'>
+      <div className='flex flex-col sm:flex-row sm:justify-between justify-center items-center space-y-2 sm:space-y-0 sm:space-x-4'>
+      
+      
       <div className="p-5">
   <ul>
 
@@ -40,7 +42,9 @@ const Footer = async () => {
       </Link>
     </div>
   </ul>
-</div>
+        </div>
+
+<div className="flex flex-wrap justify-center xs:flex-col xs:items-center">
 
         <div className="p-5">
           <ul>
@@ -95,7 +99,7 @@ const Footer = async () => {
             {user && user.userType === "SELLER" && (
               <Link href={"/sellerDashboard"}>
               <li className="text-muted-foreground text-sm pb-2 font-semibold hover:text-blue-600 cursor-pointer">
-              Selller Dashboard
+              Seller Dashboard
             </li>
             </Link>
             )}
@@ -146,6 +150,9 @@ const Footer = async () => {
             </li>
           </ul>
         </div>
+        </div>
+
+
       </div>
 
       <div className='flex flex-col sm:flex-row sm:justify-between justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4'>

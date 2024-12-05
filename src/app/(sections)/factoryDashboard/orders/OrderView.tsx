@@ -255,7 +255,7 @@ interface OrderViewProps {
             <CardTitle>Orders</CardTitle>
             <CardDescription>Total: {orders.length}</CardDescription>
             <p className="text-red-600 text-sm">
-        <span className="text-blue-600 font-medium">Guide :</span> use the Eye action to view the order details !
+        <span className="text-red-600 font-medium">Guide :</span> use the Eye action to view the order details !
       </p>
           </div>
         </CardHeader>

@@ -2,7 +2,7 @@
 
 import { auth } from "@/auth";
 import { db } from "@/db"
-import { Collection, Order, OrderItem, Product, SellerDesign, UserType } from "@prisma/client";
+import { Collection, Order, OrderItem, Product, SellerDesign, Store, UserType } from "@prisma/client";
 
 export async function createPlatform(userId:string) {
 
@@ -11,7 +11,6 @@ export async function createPlatform(userId:string) {
       userId : userId
     }
   })
-  
 }
 
   // get the auth user
@@ -43,6 +42,8 @@ export const updateUserRole = async (userId: string, newRole: UserType): Promise
   }
 };
 
+
+
 export async function banUser(userId:string) {
   try {
     await db.user.update({
@@ -58,29 +59,7 @@ export async function banUser(userId:string) {
 
 
 
-// Manage new added products : 
-export async function updateNewProductStatus(): Promise<void> {
-  const oneWeekInMillis = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
-  const currentDate = new Date();
 
-  // Fetch all products
-  const products: Product[] = await db.product.findMany({
-    where: {NewProduct : true}
-  });
-
-  // Iterate over each product
-  for (const product of products) {
-    const productAgeInMillis = currentDate.getTime() - new Date(product.createdAt).getTime();
-    
-    if (productAgeInMillis > oneWeekInMillis) {
-      // Update the NewProduct field to false if more than a week has passed
-      await db.product.update({
-        where: { id: product.id },
-        data: { NewProduct: false },
-      });
-    }
-  }
-}
 
 
 // get user by type 
@@ -640,11 +619,6 @@ export async function getAllOrder(){
       }
 
 
-
-
-
-
-
 // return the products of the given ids
 export async function getProductsByIds(productIds : string[]) {
   try {
@@ -668,6 +642,113 @@ export async function getProductsByIds(productIds : string[]) {
 }
 
 
+export async function getAllProductsLength() {
+  try {
+    const count = await db.product.count({
+      where: { isProductAccepted: true, privateProduct: false },
+    });
+    return count ;
+  } catch (error) {
+    console.error(error);
+    return 0
+  }
+}
+
+
+// fetch Products for marketplace
+
+export async function fetchProducts(
+  page: number,
+  limit: number,
+  sortBy?: string,
+  filterByCategory?: string,
+  filterByCollection?: string,
+  priceRange?: [number, number]
+) {
+  const offset = Math.max((page - 1) * limit, 0); // Ensure non-negative offset
+  
+  // Map supported sort options to Prisma `orderBy` format
+  const sortOptions: Record<string, object> = {
+    high: { price: 'desc' }, // Sort by highest price
+    low: { price: 'asc' },  // Sort by lowest price
+    sales: { totalSales: 'desc' }, // Sort by most sold
+  };
+
+  // Fallback to default sorting if `sortBy` is invalid or not provided
+  const orderBy = sortOptions[sortBy!] || { totalViews: 'desc' };
+
+  // Construct `where` filter object dynamically based on the filters provided
+  const where: any = {
+    isProductAccepted: true,
+    privateProduct: false,
+    ...(filterByCategory && { category: filterByCategory }), // Filter by category
+    ...(filterByCollection && { collectionName: filterByCollection }), // Filter by collection
+    ...(priceRange && priceRange[0] !== 0 && priceRange[1] !== 0 && { price: { gte: priceRange[0], lte: priceRange[1] } }), // Filter by price range, avoid invalid range [0, 0]
+  };
+
+  const products = await db.product.findMany({
+    where, // Apply dynamic filters
+    orderBy, // Dynamically apply sorting
+    include: {
+      store: true,
+    },
+    skip: offset,
+    take: limit,
+  });
+
+  const totalCount = await db.product.count({
+    where, // Apply the same filters for counting
+  });
+
+  return { products, totalCount };
+}
+
+
+export async function fetchPriceRanges(): Promise<[number, number][]> {
+  // Fetch all product prices from the database
+  const products = await db.product.findMany({
+    where: {
+      isProductAccepted: true,
+      privateProduct: false,
+    },
+    select: {
+      price: true, // Only fetch the price field
+    },
+  });
+
+  // Calculate and return price ranges
+  return await calculatePriceRanges(products);
+}
+
+interface ProductPrice {
+  price: number;
+}
+export async function calculatePriceRanges(products: ProductPrice[]): Promise<[number, number][]> {
+  if (products.length === 0) return [];
+
+  const prices = products.map(product => product.price);
+  const minPrice = Math.min(...prices);
+  const maxPrice = Math.max(...prices);
+  const range = maxPrice - minPrice;
+
+  // If all prices are the same, return a single range
+  if (range === 0) return [[minPrice, maxPrice]];
+
+  // Determine the number of ranges based on the price distribution
+  const numberOfRanges = range < 5 ? 1 : 3; // Use 1 range for small price ranges, otherwise 3
+
+  const step = Math.ceil(range / numberOfRanges);
+
+  const priceRanges: [number, number][] = [];
+
+  for (let i = 0; i < numberOfRanges; i++) {
+    const start = minPrice + i * step;
+    const end = i === numberOfRanges - 1 ? maxPrice : start + step - 1;
+    priceRanges.push([start, end]);
+  }
+
+  return priceRanges;
+}
 
 
 
@@ -685,7 +766,7 @@ export async function fetchTrendingProducts() {
       orderBy: {
         totalViews: 'desc',
       },
-      take: 10,
+      take: 4,
     });
 
     return trendingProducts;
@@ -695,41 +776,39 @@ export async function fetchTrendingProducts() {
   }
 }
 
+export const getFollowedStoreProductsFirst = async (
+  userId: string,
+) => {
 
-export async function getAllProductsLength() {
-  try {
-    const count = await db.product.count({
-      where: { isProductAccepted: true, privateProduct: false },
+  const followedStores = await db.storeFollow.findMany({
+      where: { userId },
+      select: { storeId: true },
     });
-    return count ;
-  } catch (error) {
-    console.error(error);
-    return 0
-  }
-}
+
+  const storeIds = followedStores.map((follow) => follow.storeId);
+
+  
+  // Fetch new products from followed stores first
+  const followedStoreProducts = await db.product.findMany({
+    where:{storeId: { in: storeIds },
+    isProductAccepted: true,
+    privateProduct: false,},
+    include : {
+      store : true
+    },
+    orderBy : {
+      totalViews : 'desc'
+    },
+    take : 4
+  });
+  
+  return  followedStoreProducts 
+
+};
 
 
-    // fetch all products
-    export async function fetchAllProductss(page: number, itemsPerPage: number) {
-      try {
-        const products = await db.product.findMany({
-          where: { isProductAccepted: true, privateProduct: false },
-          include: {
-            store: true,
-          },
-          orderBy: {
-            totalViews: 'desc', // You can change this sorting as per your needs
-          },
-          skip: (page - 1) * itemsPerPage, // Skip the products of previous pages
-          take: itemsPerPage, // Limit the number of products for the current page
-        });
-    
-        return products ;
-      } catch (error) {
-        console.error(error);
-        return  []
-      }
-    }
+
+
 
     
 export async function fetchAllProducts() {
@@ -752,27 +831,74 @@ export async function fetchAllProducts() {
 
 
 
-  // fetch products group by collection 
-export async function getProductsGroupedByCollection() {
+  export async function fetchBestSellingProducts() {
+    try {  
+      // Batch update topSales in a single query
+      await db.product.updateMany({
+        where: {
+          isProductAccepted: true,
+          privateProduct: false,
+          totalSales: { gt: 9 },
+          topSales : false,
+        },
+        data: { topSales: true },
+      });
+  
+      // Fetch updated best-selling products with pagination
+      const bestSellingProducts = await db.product.findMany({
+        where: { topSales: true, isProductAccepted: true, privateProduct: false },
+        include: {
+          store: true
+        },
+        orderBy: {
+          totalSales: 'desc',
+        },
+        take: 4,
+      });
+  
+  
+      return bestSellingProducts;
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      return []
+    }
+  }
+
+
+  // fetch products group by collection
+  interface Productswithstore extends Product {
+    store : Store
+  } 
+  export async function getProductsGroupedByCollection() {
     try {
-      // Fetch all products from the database
-      const products = await db.product.findMany({
-        where : {isProductAccepted : true , privateProduct : false} ,
-        include : {store : true} ,       
-        orderBy: {totalViews: 'desc'}
+      // Fetch collections and their top 4 products
+      const collections = await db.product.findMany({
+        where: { isProductAccepted: true, privateProduct: false },
+        select: {
+          collectionName: true,
+        },
+        distinct: ['collectionName'], // Select distinct collection names
+      });
+  
+      // Initialize the result object to store the final groups
+      const groupedByCollection: Record<string, Productswithstore[]> = {}; // Use Product type here
+  
+      // For each collection, fetch the top 4 products
+      for (const collection of collections) {
+        const products = await db.product.findMany({
+          where: { 
+            collectionName: collection.collectionName, 
+            isProductAccepted: true, 
+            privateProduct: false
+          },
+          orderBy: { totalViews: 'desc' },
+          take: 4, // Limit to 4 products per collection
+          include: { store: true }, // Include store data if needed
         });
   
-      // Group products by collection
-      const groupedByCollection = products.reduce((acc, product) => {
-        const collection = product.collectionName;
-  
-        if (!acc[collection!]) {
-          acc[collection!] = [];
-        }
-  
-        acc[collection!].push(product);
-        return acc;
-      }, {} as Record<string, typeof products>);
+        // Store the products in the result object
+        groupedByCollection[collection.collectionName] = products;
+      }
   
       return groupedByCollection;
     } catch (error) {
@@ -791,12 +917,29 @@ export async function getProductsGroupedByCollection() {
         },
         include : {
           store : true
-        }
+        },
+        take : 4
       });
 
-      if(products!.length>16) {
-        updateNewProductStatus()
+      const oneWeekInMillis = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
+      const currentDate = new Date();
+
+      const count = await db.product.count({
+        where: {
+          NewProduct: true,
+          isProductAccepted: true,
+          privateProduct: false,
+          createdAt: {
+            lt: new Date(currentDate.getTime() - oneWeekInMillis), // Filter by created date older than one week
+          },
+        },
+      });
+
+      if(count> 0) {
+        await updateNewProductStatus()
       }
+
+      
 
   
       return products;
@@ -805,112 +948,53 @@ export async function getProductsGroupedByCollection() {
     }
   }
 
-
-// For the best selling products
-export async function fetchBestSellingProducts() {
-  try {
-    // Fetch all products with totalSales greater than 9
-    const productsToUpdate = await db.product.findMany({
+  // helper function : Manage new added products : 
+  export async function updateNewProductStatus(): Promise<void> {
+    const oneWeekInMillis = 7 * 24 * 60 * 60 * 1000; // One week in milliseconds
+    const currentDate = new Date();
+  
+    // Update all products that are marked as NewProduct and older than a week in one query
+    await db.product.updateMany({
       where: {
+        NewProduct: true,
         isProductAccepted: true,
-        privateProduct : false,
-        totalSales: { gt: 9 },
+        privateProduct: false,
+        createdAt: {
+          lt: new Date(currentDate.getTime() - oneWeekInMillis), // Filter by created date older than one week
+        },
+      },
+      data: {
+        NewProduct: false, // Set NewProduct to false for all matching products
       },
     });
+  }
+  
 
-    // Update the topSales field to true for all qualifying products in one batch
-    const productIds = productsToUpdate.map((product) => product.id);
 
-    if (productIds.length > 0) {
-      await db.product.updateMany({
-        where: { id: { in: productIds } },
-        data: { topSales: true },
-      });
-    }
-
-    // Fetch the products again to get the updated topSales values
-    const bestSellingProducts = await db.product.findMany({
-      where: { topSales: true, isProductAccepted: true , privateProduct : false },
-      include: {
-        store: true,
-      },
+// fetch Discount Products Deals
+export async function fetchDiscountProductsDeals() {
+  try {
+    const products = await db.product.findMany({
+      where : {isProductAccepted : true , NewProduct : true , isDiscountEnabled : true},
       orderBy: {
-        totalSales: 'desc',
+        totalViews: 'desc'
       },
+      include : {
+        store : true
+      },
+      take : 4
     });
 
-    return bestSellingProducts;
+
+
+    return products;
   } catch (error) {
     console.error('Error fetching products:', error);
+    return null;
   }
 }
 
 
-  // fetch products by category
-export async function fetchProductsByCategory(category : string) {
-    try {
-      const products = await db.product.findMany({
-        where: {
-          category: category,
-          isProductAccepted : true,
-           privateProduct : false
-        },
-        include : {
-          store : true
-        },
-        orderBy: {totalViews: 'desc'}
-      });
-      return products;
-    } catch (error) {
-      console.error(`Error fetching products by category: ${error}`);
-    } 
-  }
-
-
-
-  // fetch products by collection
-  export async function fetchProductsByCollection(collection : string) {
-    try {
-      const products = await db.product.findMany({
-        where: {
-          collectionName: collection,
-          isProductAccepted : true, 
-          privateProduct : false
-        },
-        include : {
-          store : true
-        },
-        orderBy: {totalViews: 'desc'}
-      });
-      return products;
-    } catch (error) {
-      console.error(`Error fetching products by category: ${error}`);
-    } 
-  }
-
-
-
-// Prioritizing New Products from Followed Stores
-export const getFollowedStoreProductsFirst = async (userId: string) => {
-  const followedStores = await db.storeFollow.findMany({
-    where: { userId },
-    select: { storeId: true },
-  });
-
-  const storeIds = followedStores.map((follow) => follow.storeId);
-
-  // Fetch new products from followed stores first
-  const followedStoreProducts = await db.product.findMany({
-    where: { storeId: { in: storeIds }, isProductAccepted : true, 
-    privateProduct : false },
-    include : {
-      store : true
-    },
-    orderBy: { createdAt: 'desc' },
-  });
-
-  return followedStoreProducts;
-};
 
 
 
@@ -921,23 +1005,18 @@ export const getFollowedStoreProductsFirst = async (userId: string) => {
 
 
 
-  // fetch design by id 
 
-  export async function fetchDesignById(designId : string) {
 
-    try {
-      const design = await db.sellerDesign.findFirst({
-        where: { id: designId }
-      });
-  
-      return design?.imageUrl
-    } catch (error) {
 
-      console.log(error)
-      return null
-      
-    }
-  }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1411,7 +1490,8 @@ export async function searchProducts(query: string) {
               results.push(product.title);
           }
           if (product.tags.some(tag => tag.toLowerCase().startsWith(decodedQuery)) || product.tags.some(tag => tag.toLowerCase().includes(decodedQuery))) {
-              results.push(...product.tags.filter(tag => tag.toLowerCase().startsWith(decodedQuery)));
+              // results.push(...product.tags.filter(tag => tag.toLowerCase().startsWith(decodedQuery)));
+              results.push(product.title);
           }
           if (product.store.storeName.toLowerCase().startsWith(decodedQuery) || product.store.storeName.toLowerCase().includes(decodedQuery) ) {
             results.push(product.store.storeName);
@@ -1597,7 +1677,7 @@ export async function createAffiliateNotification(affiliateId : string, content 
 
 // chart : 
 
-
+// for seller dashboard
 export async function getProductViewsChartData(storeId: string , month: number, year: number) {
   // Calculate the start and end dates for the given month
   const startDate = new Date(year, month - 1, 1);
@@ -1680,6 +1760,79 @@ export async function getProductViewsChartData(storeId: string , month: number, 
     date,
     views: dailyData[date]?.views || 0,
     productDetails: dailyData[date]?.productDetails || [],
+  }));
+
+  // Return the chart data
+  return chartData;
+}
+
+// for admin dashboard
+export async function getViewsChartData( month: number, year: number) {
+  // Calculate the start and end dates for the given month
+  const startDate = new Date(year, month - 1, 1);
+  const endDate = new Date(year, month, 0); // Last day of the month
+
+
+  // Generate all dates in the range
+  const allDates = [];
+  for (
+    let d = new Date(startDate);
+    d <= endDate;
+    d.setDate(d.getDate() + 1)
+  ) {
+    allDates.push(d.toISOString().split("T")[0]); // Format: YYYY-MM-DD
+  }
+
+  // Fetch all products for the given storeId
+  const products = await db.product.findMany({
+    select: { id: true, title: true }, // Fetch product ids and titles
+  });
+
+  const productIds = products.map((product) => product.id);
+  const productTitles = Object.fromEntries(
+    products.map((product) => [product.id, product.title])
+  );
+
+  // Query product views for the last month for these products
+  const productViewsPerDay = await db.productViews.groupBy({
+    by: ["viewedAt", "productId"], // Include productId in the grouping
+    _count: {
+      productId: true,
+    },
+    where: {
+      productId: { in: productIds }, // Only include views for products from the given store
+      viewedAt: {
+        gte: startDate, // Start date: One month ago
+        lte: endDate, // End date: Today
+      },
+    },
+    orderBy: {
+      viewedAt: "asc", // Sort by the date of view
+    },
+  });
+
+  // Aggregate views and product details by day
+  const dailyData: {
+    [key: string]: {
+      views: number;
+    };
+  } = {};
+
+  // Populate daily data with views
+  productViewsPerDay.forEach((view) => {
+    const date = view.viewedAt.toISOString().split("T")[0]; // Extract "YYYY-MM-DD" from Date
+    if (!dailyData[date]) {
+      dailyData[date] = { views: 0 };
+    }
+
+    // Increment total views
+    dailyData[date].views += view._count.productId;
+  });
+
+  // Generate chart data for all dates in the range
+  const chartData = allDates.map((date) => ({
+    date,
+    views: dailyData[date]?.views || 0,
   }));
 
   // Return the chart data
@@ -1853,7 +2006,7 @@ export async function getOrderChartData(month: number, year: number) {
 export async function getStoreStats() {
   // Fetch stores and related data
   const stores = await db.store.findMany({
-    include: {
+    select: {
       products: {
         where : {isProductAccepted : true}
       },
@@ -1861,19 +2014,30 @@ export async function getStoreStats() {
         where : {isDesignForSale : true , isDesignAccepted : true}
       },
       followers: true,
+      storeName : true,
+      revenue : true,
+      totalSales : true,
+      logoUrl : true,
+      id:true
     },
   });
 
-  // Map the data to the required chartData format
-  const chartData = stores.map((store) => ({
-    store: store.storeName,
-    totalRevenue: store.revenue,
-    totalSales: store.totalSales,
-    totalProducts: store.products.length,
-    totalDesigns: store.designs.length,
-    totalFollowers: store.followers.length,
-    totalLikes: store.totalLikes,
-  }));
+  const chartData = stores.map((store) => {
+    // Calculate totalViews for the store's accepted products
+    const storeTotalViews = store.products.reduce((sum, product) => sum + (product.totalViews || 0), 0);
+
+    return {
+      storeId: store.id,
+      store: store.storeName,
+      totalRevenue: store.revenue,
+      totalSales: store.totalSales,
+      totalProducts: store.products.length,
+      totalDesigns: store.designs.length,
+      totalFollowers: store.followers.length,
+      totalViews: storeTotalViews,
+      logo : store.logoUrl,
+    };
+  });
 
   return chartData;
 }
@@ -1901,3 +2065,24 @@ export async function getStoreStats() {
 
 
   
+
+
+
+export async function getStoreProductsViewsCount(storeId: string): Promise<number> {
+  try {
+    const result = await db.product.aggregate({
+      _sum: {
+        totalViews: true, // Aggregate the totalViews field
+      },
+      where: {
+        storeId: storeId, // Filter by the store ID
+      },
+    });
+
+    // Return the sum of totalViews, defaulting to 0 if there are no views
+    return result._sum.totalViews || 0;
+  } catch (error) {
+    console.error("Error fetching store products views count:", error);
+    throw new Error("Failed to retrieve store product views count.");
+  }
+}

@@ -1,111 +1,105 @@
 'use server'
 
+import { calculatePriceRanges } from "@/actions/actions";
 import { db } from "@/db";
 
-// Function to update the totalLikes of a store based on a boolean value
-export async function updateStoreLikes(storeId : string , userId : string , increment : boolean) {
-    try {
-      if (increment) {
-        // Add a like record
-        await db.like.create({
-          data: {
-            storeId: storeId,
-            userId: userId,
-          },
-        });
-        
-        // Increment the totalLikes field
-        const updatedStore = await db.store.update({
-          where: { id: storeId },
-          data: {
-            totalLikes: {
-              increment: 1,
-            },
-          },
-        });
-  
-        return updatedStore.totalLikes;
-      } else {
-        // Remove the like record
-        await db.like.deleteMany({
-          where: {
-            storeId: storeId,
-            userId: userId,
-          },
-        });
-        
-        // Decrement the totalLikes field
-        const updatedStore = await db.store.update({
-          where: { id: storeId },
-          data: {
-            totalLikes: {
-              decrement: 1,
-            },
-          },
-        });
-  
-        return updatedStore.totalLikes;
+export async function getStoreByStoreName(storeName:string) {
+  const store = await db.store.findUnique({
+    where : {
+      storeName
+    }
+  })
+  return store;
+}
+
+
+
+
+
+  export async function getStoreProductsCount(storeId:string) {
+    const count = await db.product.count({
+      where : {
+        storeId,
+        isProductAccepted: true,
+        privateProduct: false,
       }
-    } catch (error) {
-      console.error("Error updating store's totalLikes:", error);
-      throw error; // Propagate the error for handling elsewhere
-    }
-  }
-
-
-// check if the user likes the store
-export async function checkUserLike(storeId : string, userId : string) {
-    try {
-      // Query the likes table to check if a record exists for the given user and store
-      const like = await db.like.findFirst({
-        where: {
-          storeId: storeId,
-          userId: userId,
-        },
-      });
-  
-      // If a like record exists, the user has liked the store
-      return !!like; // Returns true if like exists, otherwise false
-    } catch (error) {
-      console.error('Error checking if user likes the store:', error);
-      throw error; // Propagate the error for handling elsewhere
-    }
+    })
+    return count
   }
 
 
 
 // Function to get store's products and designs by store Name
-export async function getStoreProducts(storeName: string) {
+export async function getStoreProducts(
+  storeId: string,
+  page: number,
+  limit: number,
+  sortBy?: string,
+  filterByCategory?: string,
+  filterByCollection?: string,
+  priceRange?: [number, number]
+) {
   try {
-    // Find the store for the given storeId and userId
-    const store = await db.store.findFirst({
-      where: {
-        storeName: storeName,
-      },
-      include: {
-        products: {
-          where : { isProductAccepted : true , privateProduct : false},
-          include : {
-            store : true
-          },
-          orderBy : {
-            totalViews : "desc"
-          }
-        },
-      },
-    });
 
-    if (!store) {
-      // If the store doesn't exist or doesn't belong to the user, return null or handle accordingly
-      return null; // or throw new Error('Store not found or does not belong to the user.');
-    }
+    const offset = Math.max((page - 1) * limit, 0); // Ensure non-negative offset
+  
+  // Map supported sort options to Prisma `orderBy` format
+  const sortOptions: Record<string, object> = {
+    high: { price: 'desc' }, // Sort by highest price
+    low: { price: 'asc' },  // Sort by lowest price
+    sales: { totalSales: 'desc' }, // Sort by most sold
+  };
+
+  // Fallback to default sorting if `sortBy` is invalid or not provided
+  const orderBy = sortOptions[sortBy!] || { totalViews: 'desc' };
+
+  // Construct `where` filter object dynamically based on the filters provided
+  const where: any = {
+    storeId,
+    isProductAccepted: true,
+    privateProduct: false,
+    ...(filterByCategory && { category: filterByCategory }), // Filter by category
+    ...(filterByCollection && { collectionName: filterByCollection }), // Filter by collection
+    ...(priceRange && priceRange[0] !== 0 && priceRange[1] !== 0 && { price: { gte: priceRange[0], lte: priceRange[1] } }), // Filter by price range, avoid invalid range [0, 0]
+  };
+
+  const products = await db.product.findMany({
+    where, // Apply dynamic filters
+    orderBy, // Dynamically apply sorting
+    include: {
+      store: true,
+    },
+    skip: offset,
+    take: limit,
+  });
 
     // Return the products and designs of the store
-    return store
-  } catch (error) {
+    const totalCount = await db.product.count({
+      where, // Apply the same filters for counting
+    });
+  
+    return { products, totalCount };
+    } catch (error) {
     console.error("Error fetching store's products and designs:", error);
-    throw error; // Propagate the error for handling elsewhere
+    return { products : [], totalCount : 0 }; // Propagate the error for handling elsewhere
   }
+}
+
+export async function fetchPriceRanges(storeId: string): Promise<[number, number][]> {
+  // Fetch all product prices from the database
+  const products = await db.product.findMany({
+    where: {
+      isProductAccepted: true,
+      privateProduct: false,
+      storeId,
+    },
+    select: {
+      price: true, // Only fetch the price field
+    },
+  });
+
+  // Calculate and return price ranges
+  return await calculatePriceRanges(products);
 }
 
 
@@ -126,11 +120,6 @@ export async function getDesignsByStoreId(storeId: string) {
 
 }
 
-
-export async function getAllPodProductsStores() {
-  const stores = await db.store.findMany();
-  return stores.map(store => store.storeName);
-}
 
 
 

@@ -106,7 +106,7 @@ export function Component() {
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
           <CardTitle>Orders Stats</CardTitle>
           <CardDescription>
-            Showing order statistics for the selected metric over the last month
+            Showing order statistics for the selected metric
           </CardDescription>
           <Popover >
       <PopoverTrigger asChild>

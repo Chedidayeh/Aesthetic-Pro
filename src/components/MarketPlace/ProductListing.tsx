@@ -57,6 +57,9 @@ const ProductListing = ({
   const { toast } = useToast()
   const router = useRouter()
 
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageFailed, setImageFailed] = useState(false);
+
   const alertDialogTriggerRef = useRef<HTMLButtonElement>(null)
 
     // Interleave the arrays
@@ -83,7 +86,6 @@ const ProductListing = ({
 
   const [currentIndex, setCurrentIndex] = useState(0)
   const [fade, setFade] = useState(false)
-
   useEffect(() => {
     if (combinedUrls.length > 0) {
       const intervalId = setInterval(() => {
@@ -92,7 +94,7 @@ const ProductListing = ({
           setCurrentIndex((prevIndex) => (prevIndex + 1) % combinedUrls.length)
           setFade(false)
         }, 500) // Duration of fade out
-      }, 4000) // Change image every 3 seconds
+      }, 6000)
 
       return () => clearInterval(intervalId)
     }
@@ -194,10 +196,13 @@ const ProductListing = ({
       
  <Card>
       <div className="mx-2 my-2">
-      <div className="mb-2 mt-0 flex items-center"> {/* Added flex container */}
-  <div className="flex-grow"> {/* Added flex-grow to take remaining space */}
+      <div className="mb-2 mt-0 flex flex-wrap items-center">
+  <div className="flex-grow md:mb-0"> {/* Allows items to wrap */}
     <Badge variant="secondary">
-      <Link href={`/MarketPlace/store/${product.store.storeName}`} className=" animate-pulse font-bold group text-xs hover:text-blue-500 cursor-pointer relative block">
+      <Link
+        href={`/MarketPlace/store/${product.store.storeName}`}
+        className="animate-pulse font-bold group text-xs hover:text-blue-500 cursor-pointer relative block"
+      >
         {product.store.storeName}
         <span className="absolute font-normal bottom-5 left-1/2 transform -translate-x-1/2 w-max px-2 py-1 text-xs bg-black text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
           View store
@@ -205,27 +210,9 @@ const ProductListing = ({
       </Link>
     </Badge>
   </div>
-  {product.topSales && (
-  <div className="ml-2"> {/* Added margin for separation */}
-  <Badge variant="outline" className="bg-emerald-700 text-white">Best sell</Badge>
-</div>
-  )}
-  {product.NewProduct && (
-    <>
-  <div className="ml-2"> {/* Added margin for separation */}
-  <Badge variant="outline" className="bg-blue-700 text-white">New</Badge>
+  
 </div>
 
-</>
-  )}
-    {product.isDiscountEnabled && (
-    <>
-  <div className="ml-2"> {/* Added margin for separation */}
-  <Badge variant="outline" className="bg-red-700 text-white">{product.discount}% OFF</Badge>
-</div>
-</>
-  )}
-</div>
 
         <Link
         onClick={openDialog}
@@ -237,32 +224,70 @@ const ProductListing = ({
         )}
         href={`/MarketPlace/product/${product.id}`}>
     <div className="border-2 overflow-hidden rounded-2xl">
-    {combinedUrls.length > 0 && (
+    {combinedUrls.length > 0 && 
+     (
         <>
-          <NextImage
-            src={combinedUrls[currentIndex]}
-            alt="Product Image"
-            loading="lazy"
-            width={1000}
-            height={1000}
-            placeholder="blur"
-            blurDataURL="/Loading.png"
-            className={clsx("transition-all duration-700 hover:scale-150", {
-              'opacity-0': fade ,
-              'opacity-100': !fade ,
-            })}
-            style={{ transitionProperty: 'opacity, transform' }}
-            onContextMenu={(e) => e.preventDefault()}
-            draggable={false}
-          />
-        </>
+ <div className="relative w-full h-full">
+ {!imageLoaded && !imageFailed && (
+        <NextImage
+          src="/Loading.png"
+          alt="Loading placeholder"
+          width={1000}
+          height={1000}
+          className="absolute inset-0 w-full h-full object-cover"
+          priority
+        />
       )}
+    <NextImage
+      src={combinedUrls[currentIndex]}
+      alt="Product Image"
+      loading="lazy"
+      width={1000}
+      height={1000}
+      placeholder="blur"
+      blurDataURL="/Loading.png"
+      className={clsx("transition-all duration-700 hover:scale-150", {
+        "opacity-0": fade,
+        "opacity-100": !fade,
+      })}
+      style={{ transitionProperty: "opacity, transform" }}
+      onContextMenu={(e) => e.preventDefault()}
+      draggable={false}
+      onLoadingComplete={() => setImageLoaded(true)}
+      onError={() => setImageFailed(true)}
+      
+    />
+  <div className="absolute top-0 right-0 m-2">
+  {product.NewProduct && (
+        <Badge variant="secondary" className="bg-blue-700 text-white">
+        New
+      </Badge>
+      )}
+  </div>
+  <div className="absolute top-0 left-0 m-2">
+  {product.topSales && (
+        <Badge variant="secondary" className="bg-emerald-700 text-white">
+          Best Sell
+        </Badge>
+      )}
+  </div>
+  {product.isDiscountEnabled && (
+      <div className="absolute bottom-0 right-0 m-2">
+    <Badge variant="secondary" className="bg-red-700 text-white">
+    {product.discount}% OFF
+  </Badge>
+  </div>
+      )}
+  </div>
+        </>
+      )
+      }
     </div>
         </Link>
 
         <div className="flex mt-2 ml-3 items-center justify-between">
     <div>
-        <Label>{product.title}</Label>
+        <Label className="text-sm">{product.title}</Label>
         <p className="text-sm text-gray-600">{product.category}</p>
     </div>
         {/* add to fav list icon */}
@@ -289,7 +314,7 @@ const ProductListing = ({
           </div>
         </div>
         </div>
-        {/* add to cart list icon */}
+        {/* add to cart list icon
         <Link onClick={openDialog} href={`/MarketPlace/product/${product.id}`}>
         <div className="relative group rounded-full p-2  text-gray-600 cursor-pointer ">
           <ShoppingBag className='text-gray-600 hover:text-blue-600' />
@@ -297,7 +322,7 @@ const ProductListing = ({
             Add to cart
           </span>
           </div> 
-        </Link>
+        </Link> */}
       </div>    
         </div>
     </Card>
@@ -308,6 +333,8 @@ const ProductListing = ({
     )
   }
 }
+
+
 
 const ProductPlaceholder = () => {
   return (

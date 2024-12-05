@@ -3,18 +3,27 @@
 
 
 
+import { revalidatePath } from 'next/cache';
+import { fetchPriceRanges, fetchProducts } from './actions'
 import View from './View'
-import {  fetchAllProducts, getAllProductsCategories, getAllProductCollectionNames, getUser } from '@/actions/actions'
+import {  getAllProductsCategories, getAllProductCollectionNames, getUser } from '@/actions/actions'
 
 
 
 
-
-export default async function Page() {
-  const products = await fetchAllProducts();
+const Page = async () => {
   const user = await getUser()
   const categories = await getAllProductsCategories()
   const collections = await getAllProductCollectionNames()
+
+  const limit = 4; // Number of products per page
+  const page = 1; // Initial page
+  const priceRanges = await fetchPriceRanges()
+
+
+  const { products, totalCount } = await fetchProducts(page, limit);
+
+
 
   return (
     <>
@@ -23,8 +32,12 @@ export default async function Page() {
               <section className='border-t border-gray-200  w-full mx-auto' >
                 <div className='w-[85%] mx-auto'>
                 <View
+                     initialProducts={products}
+                     totalCount={totalCount}
+                     initialPage={page}
+                     limit={limit}
+                     priceRanges={priceRanges}
                      user={user!}
-                     products={products!}
                      categories={categories!}
                      collections={collections}
                 />
@@ -35,4 +48,5 @@ export default async function Page() {
     </>
   )
 }
+export default Page
 

@@ -143,8 +143,7 @@ interface DesignViewProps {
         ? (filter === "accepted" && design.isDesignAccepted) ||
           (filter === "refused" && design.isDesignRefused) ||
           (filter === "action" && !design.isDesignAccepted && !design.isDesignRefused)  ||
-          (filter === "all" && design)  ||
-          (filter === "noItmes") && design.frontOrders.length === 0 && design.backOrders.length
+          (filter === "all" && design) 
         : true;
 
       return matchesSearch && matchesFilter;
@@ -344,7 +343,6 @@ const handleSwitchChange = () => {
               <SelectItem value="accepted">Accepted</SelectItem>
               <SelectItem value="refused">Refused</SelectItem>
               <SelectItem value="action">Awaiting action</SelectItem>
-              <SelectItem value="noItems">No Items</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>

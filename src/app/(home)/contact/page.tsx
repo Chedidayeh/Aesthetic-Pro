@@ -73,6 +73,15 @@ const Page = () => {
             </p>
           </div>
 
+          <div className='mt-10 flex space-y-3 flex-col'>
+            <h4 className='font-semibold '>
+              4- Info Line : 
+            </h4>
+            <p className="text-gray-400 inline-flex hover:text-purple-600 items-center">
+            +216 56027257
+            </p>
+          </div>
+
 
   
 

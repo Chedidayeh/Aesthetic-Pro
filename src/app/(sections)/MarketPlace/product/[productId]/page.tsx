@@ -16,10 +16,10 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { OctagonAlert } from "lucide-react";
-import { fetchDesignById, fetchProductsByCategory, getPlatformForTheWebsite, getUser } from "@/actions/actions";
+import {  getPlatformForTheWebsite, getUser } from "@/actions/actions";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { getCategory, getSizes, trackProductView } from "./actions";
+import { fetchDesignById, fetchProductsByCategory, getCategory, getSizes } from "./actions";
 import { cookies } from "next/headers";
 interface PageProps {
   params: {

@@ -17,14 +17,18 @@ import { db } from '@/db'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import NewReleased from './NewReleased'
-import { fetchNewProducts, getAllProductsCategories, getAllProductCollectionNames, getUser } from '@/actions/actions'
+import { getAllProductsCategories, getAllProductCollectionNames, getUser } from '@/actions/actions'
+import { fetchNewProducts, fetchPriceRanges } from './actions'
 
 
 
 
 
 export default async function Page() {
-  const products = await fetchNewProducts();
+  const limit = 4; // Number of products per page
+  const page = 1; // Initial page
+  const priceRanges = await fetchPriceRanges()
+  const { products, totalCount } = await fetchNewProducts(page,limit);
   const user = await getUser()
   const categories = await getAllProductsCategories()
   const collections = await getAllProductCollectionNames()
@@ -36,8 +40,12 @@ export default async function Page() {
               <section className='border-t border-gray-200 w-full mx-auto' >
                 <div className='w-[85%] mx-auto'>
                 <NewReleased
+                  initialProducts={products}
+                  totalCount={totalCount}
+                  initialPage={page}
+                   limit={limit}
+                    priceRanges={priceRanges}
                      user={user!}
-                     products={products!}
                      categories={categories!}
                      collections={collections}
 

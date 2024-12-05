@@ -45,7 +45,6 @@ import { Input } from '@/components/ui/input'
 import ProductDimenetions from "@/components/MarketPlace/ProductDimenetions"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import ViewDesign from "@/components/MarketPlace/ViewDesign"
 import LoadingState from "@/components/LoadingState"
 import { getSizes, trackProductView } from "./actions"
 import ViewCategoryQuality from "@/components/MarketPlace/ViewCategoryQuality"
@@ -57,7 +56,7 @@ import { revalidatePath } from 'next/cache'
 
 const BREADCRUMBS = [
   { id: 1, name: 'Home', href: '/MarketPlace' },
-  { id: 2, name: 'Products', href: '/MarketPlace/ProductsView' },
+  { id: 2, name: 'Products', href: '/MarketPlace' },
 ]
 
 interface Productswithstore extends Product {
@@ -163,9 +162,6 @@ const redirectToCart = () => {
 
   return (
 <>
-<LoadingState isOpen={open} />
-
-
 
     <MaxWidthWrapper>
 
@@ -259,9 +255,6 @@ const redirectToCart = () => {
               ))}
             </ol>
             <div className="flex items-center flex-col">
-              <div className="mb-1"> 
-                <ViewDesign designs={designs}/>
-              </div>
               <Link href={`/MarketPlace/create-client-product/upload?category=${product.category}`} >
                 <Button variant="link">try other designs &rarr;</Button>
               </Link>
@@ -441,11 +434,11 @@ const redirectToCart = () => {
                 platform={platform} 
                  />
               </div>
-              <div className="flex justify-center items-center mt-2">
+              <div className="flex justify-center items-center my-4">
               <Button onClick={()=>
               {setOpen(true)
               redirectToCart()}} 
-              variant="link" className="flex justify-center items-center">
+              variant="link" className="flex justify-center text-green-500 animate-pulse items-center">
                 View Cart &rarr;
               </Button>
               </div>
@@ -460,7 +453,7 @@ const redirectToCart = () => {
                     className='mr-2 h-5 w-5 flex-shrink-0 text-gray-400'
                   />
                   <span className='text-muted-foreground hover:text-gray-700'>
-                    Payment at delivery
+                    Payment at delivery available
                   </span>
                 </div>
               </div>
@@ -494,6 +487,7 @@ const redirectToCart = () => {
       />
     </MaxWidthWrapper>
 
+    <LoadingState isOpen={open} />
 
     </>
   )

@@ -1,5 +1,4 @@
 
-import { useState, useEffect } from 'react';
 import { useRouter } from "next/navigation";
 import NotFound from "../[...not-found]/page";
 import {  getAffiliateLinkByCode } from "./actions";

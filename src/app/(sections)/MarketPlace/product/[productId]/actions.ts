@@ -100,6 +100,43 @@ export async function trackProductView(
   }
 }
 
+  // fetch products by category
+  export async function fetchProductsByCategory(category : string) {
+    const products = await db.product.findMany({
+      where: {
+        category: category,
+        isProductAccepted : true,
+        privateProduct : false
+      },
+      take: 5,
+      include : {
+        store : true
+      },
+      orderBy: {totalViews: 'desc'},
+    });
+
+  
+    return products
+  }
+
+    // fetch design by id 
+
+    export async function fetchDesignById(designId : string) {
+
+      try {
+        const design = await db.sellerDesign.findFirst({
+          where: { id: designId }
+        });
+    
+        return design?.imageUrl
+      } catch (error) {
+  
+        console.log(error)
+        return null
+        
+      }
+    }
+
 
 
 

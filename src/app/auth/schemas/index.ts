@@ -20,6 +20,5 @@ export const RegisterSchema = z.object ({
     password: z.string().min(8,{
         message: 'At least 8 characters required !'
     }),
-
 });
 

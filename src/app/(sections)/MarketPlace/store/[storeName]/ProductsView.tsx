@@ -38,296 +38,218 @@ import { Heart } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
 import { Store} from '@prisma/client'
-import { checkUserLike, updateStoreLikes } from "./actions"
+import {  getStoreProducts } from "./actions"
 import { Slider } from "@/components/ui/slider"
 import { cn } from "@/lib/utils"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Badge } from '@/components/ui/badge'
+import LoadingState from '@/components/LoadingState'
 
-interface StoreDetails extends Store {
-  products: Productswithstore[];
-}
 
 interface Productswithstore extends Product {
   store : Store
 }
 interface ProductReelProps {
-  store : StoreDetails
+  initialProducts : Productswithstore[]
+  totalCount : number
+  initialPage:number
+  limit:number
+  priceRanges : [number, number][]
+  storeId : string
   user : User
+  storeProductsCount:number
   categories : string[]
   collections : string[]
 
 }
 
 
-const ProductsView = ({ store, user , categories , collections }: ProductReelProps) => {
-    const products = store?.products
-    const { toast } = useToast()
-    const router = useRouter()
-    const [priceRange, setPriceRange] = useState<[number, number]>([0, 0]);
-  
+const ProductsView = ({ initialProducts,totalCount,initialPage,limit,priceRanges,storeId, user ,storeProductsCount, categories , collections }: ProductReelProps) => {
     
-    function calculatePriceRanges(products: Product[]): [number, number][] {
-      if (products.length === 0) return [];
-    
-      const prices = products.map(product => product.price);
-      const minPrice = Math.min(...prices);
-      const maxPrice = Math.max(...prices);
-      const range = maxPrice - minPrice;
-    
-      // If minPrice and maxPrice are the same, there's no range, return a single range
-      if (range === 0) return [[minPrice, maxPrice]];
-    
-      // Calculate three price ranges, dividing the range into three equal parts
-      const step = range / 3;
-    
-      const priceRanges: [number, number][] = [
-        [minPrice, minPrice + step],
-        [minPrice + step, minPrice + 2 * step],
-        [minPrice + 2 * step, maxPrice]
-      ];
-    
-      // Round the price ranges to remove decimals
-      return priceRanges.map(([min, max]) => [Math.floor(min), Math.floor(max)]);
-    }
-    
-
-  const priceRanges: [number, number][] = useMemo(() => calculatePriceRanges(products || []), [products]);
-
-    // Sorting function based on sortBy criteria
+    const [products, setProducts] = useState(initialProducts);
     const [sortBy, setSortBy] = useState<string>(''); // State for selected sort option
-    const [sortByCategory, setSortByCategory] = useState<string>("");
+    const [filterByCategory, setFilterByCategory] = useState<string>("");
+    const [priceRange, setPriceRange] = useState<[number, number]>([0, 0]);
     const [filterByCollection, setFilterByCollection] = useState<string>("");
-
-    const sortedProducts = useMemo(() => {
-      return [...(products || [])].sort((a, b) => {    switch (sortBy) {
-        case 'low':
-          return a.price - b.price;
-          case 'high':
-          return b.price - a.price;
-        case 'sales':
-          return b.totalSales - a.totalSales; 
-        default:
-          return 0
-        }
-    });
-  }, [products, sortBy]);
+    const [currentPage, setCurrentPage] = useState(initialPage);  
+    // totalCount state
+    const [totalCountState, setTotalCountState] = useState(totalCount);
+  
+    const [open, setOpen] = useState<boolean>(false);
   
   
-    // Memoize the filtered products to avoid unnecessary computations
-    const filteredProducts = useMemo(() => {
-      let result = sortedProducts;
-    
-      if (sortByCategory) {
-        result = result.filter((product) =>
-          product.category.toLowerCase().includes(sortByCategory.toLowerCase())
-        );
-      }
-
-      if (filterByCollection) {
-        result = result.filter((product) =>
-          product.collectionName.toLowerCase().includes(filterByCollection.toLowerCase())
-        );
-      }
-
   
-      if (priceRange[0] !== 0 && priceRange[1] !== 0) { // Apply price range filter only if slider is interacted with
-        result = result.filter((product) =>
-          product.price >= priceRange[0] && product.price <= priceRange[1]
-        );
-      }
-    
-    
-      return result;
-    }, [sortedProducts, sortByCategory,filterByCollection, priceRange]);
-
-    const handleSortChange = (event: string) => {
-      setSortBy(event); 
+    const handleSortChange = async (event: string) => {
+      setOpen(true)
       setCurrentPage(1); // Reset to first page on sort change
+      setSortBy(event);
+      const { products , totalCount } = await getStoreProducts(storeId,1, limit, event, filterByCategory, filterByCollection, priceRange);
+      setProducts(products);
+      setTotalCountState(totalCount)
+      setOpen(false)
+    };
+    
+    const handleCategorySortChange = async (event: string) => {
+      setOpen(true)
+      setCurrentPage(1); // Reset to first page on category change
+      setFilterByCategory(event);
+      const { products , totalCount} = await getStoreProducts(storeId,1, limit, sortBy, event, filterByCollection, priceRange);
+      setProducts(products);
+      setTotalCountState(totalCount)
+      setOpen(false)
+  
   
     };
-  
-  
-    const handleCategorySortChange = (event: string) => {
-      setSortByCategory(event);
-      setCurrentPage(1); // Reset to first page on sort change
-  
-    };
-
-    const handleCollectionSortChange = (event: string) => {
+    
+    const handleCollectionSortChange = async (event: string) => {
+      setOpen(true)
+      setCurrentPage(1); // Reset to first page on collection change
       setFilterByCollection(event);
-      setCurrentPage(1); // Reset to first page on sort change
+      const { products , totalCount} = await getStoreProducts(storeId,1, limit, sortBy, filterByCategory, event, priceRange);
+      setProducts(products);
+      setTotalCountState(totalCount)
+      setOpen(false)
+  
   
     };
-  
-    const handlePriceRangeChange = (value: string) => {
+    
+    const handlePriceRangeChange = async (value: string) => {
+      setOpen(true)
       const rangeIndex = parseInt(value, 10);
       setPriceRange(priceRanges[rangeIndex]);
       setCurrentPage(1); // Reset to first page on price range change
+      const { products, totalCount } = await getStoreProducts(storeId,1, limit, sortBy, filterByCategory, filterByCollection, priceRanges[rangeIndex]);
+      setProducts(products);
+      setTotalCountState(totalCount)
+      setOpen(false)
+  
+  
     };
     
   
-          // Pagination 
-      const [currentPage, setCurrentPage] = useState<number>(1);
-      const itemsPerPage = 16; // Display products per page
   
-      const paginatedProducts = useMemo(() => {
-        const start = (currentPage - 1) * itemsPerPage;
-        return filteredProducts.slice(start, start + itemsPerPage);
-      }, [filteredProducts, currentPage, itemsPerPage]);
+  
+  
+  
+    const handlePageChange = async (page: number) => {
+      setOpen(true)
+      if (page >= 1 && page <= totalPages) {
+        const { products , totalCount} = await getStoreProducts(storeId,page, limit, sortBy, filterByCategory, filterByCollection, priceRange);
+        setProducts(products);
+        setCurrentPage(page);
+        setTotalCountState(totalCount)
+        setOpen(false)
+  
+      }
+    };
+  
+    const totalPages = Math.ceil(totalCountState / limit)
+  
+  
+    const renderPaginationItems = () => {
+      const paginationItems = [];
     
-      const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-    
-      const handlePageChange = (page: number) => {
-        if (page >= 1 && page <= totalPages) {
-          setCurrentPage(page);
+      // If total pages are 10 or less, render all pages
+      if (totalPages <= 10) {
+        for (let i = 1; i <= totalPages; i++) {
+          paginationItems.push(
+            <PaginationItem key={i}>
+              <PaginationLink
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handlePageChange(i);
+                }}
+                isActive={currentPage === i} // Include isActive prop here
+                style={{ cursor: 'pointer' }}
+              >
+                {i}
+              </PaginationLink>
+            </PaginationItem>
+          );
         }
-      };
-  
-      const renderPaginationItems = () => {
-        const paginationItems = [];
-  
-        // Less than or equal to 10 pages
-        if (totalPages <= 2) {
-          for (let i = 1; i <= totalPages; i++) {
-            paginationItems.push(
-              <PaginationItem key={i}>
-                <PaginationLink
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handlePageChange(i);
-                  }}
-                  isActive={currentPage === i}
-                  style={{ cursor: 'pointer' }}
-                >
-                  {i}
-                </PaginationLink>
-              </PaginationItem>
-            );
-          }
-        } 
-  
-        // More than 10 pages:
-        else {
-  
-            // Start ellipsis logic
-          if (currentPage > 3) {
-            paginationItems.push(
-              <PaginationItem key={1}>
-                <PaginationLink
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handlePageChange(1);
-                  }}
-                  style={{ cursor: 'pointer' }}
-                >
-                  1
-                </PaginationLink>
-              </PaginationItem>,
-              <PaginationEllipsis key="start-ellipsis" />
-            );
-          }
-  
-  
-      // Middle pages logic
-          const startPage = Math.max(2, currentPage - 2);
-          const endPage = Math.min(totalPages - 1, currentPage + 2);
+      } else {
+        // Always show the first page
+        paginationItems.push(
+          <PaginationItem key={1}>
+            <PaginationLink
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                handlePageChange(1);
+              }}
+              isActive={currentPage === 1} // Include isActive prop here
+              style={{ cursor: 'pointer' }}
+            >
+              1
+            </PaginationLink>
+          </PaginationItem>
+        );
     
-          for (let i = startPage; i <= endPage; i++) {
-            paginationItems.push(
-              <PaginationItem key={i}>
-                <PaginationLink
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handlePageChange(i);
-                  }}
-                  isActive={currentPage === i}
-                  style={{ cursor: 'pointer' }}
-                >
-                  {i}
-                </PaginationLink>
-              </PaginationItem>
-            );
-          }
-  
-  
-      // End ellipsis logic
-          if (currentPage < totalPages - 2) {
-            paginationItems.push(
-              <PaginationEllipsis key="end-ellipsis" />,
-              <PaginationItem key={totalPages}>
-                <PaginationLink
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handlePageChange(totalPages);
-                  }}
-                  style={{ cursor: 'pointer' }}
-                >
-                  {totalPages}
-                </PaginationLink>
-              </PaginationItem>
-            );
-          }
+        // Add start ellipsis if necessary
+        if (currentPage > 4) {
+          paginationItems.push(<PaginationEllipsis key="start-ellipsis" />);
         }
     
-        return paginationItems;
-      };
-  
-  
-  
-  
-      // manage likes :
-      const [liked, setLiked] = useState(false);
-  
-      useEffect(() => {
-        // Function to check if the store is liked by the user (optional)
-        const checkIfLiked = async () => {
-          try {
-            const response = await checkUserLike(store!.id , user.id)
-            console.log(response)
-            setLiked(response);
-          } catch (error) {
-            console.error('Error checking if liked:', error);
-          }
-        };
+        // Render middle pages
+        const startPage = Math.max(2, currentPage - 2);
+        const endPage = Math.min(totalPages - 1, currentPage + 2);
     
-        checkIfLiked();
-      }, );
+        for (let i = startPage; i <= endPage; i++) {
+          paginationItems.push(
+            <PaginationItem key={i}>
+              <PaginationLink
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handlePageChange(i);
+                }}
+                isActive={currentPage === i} // Include isActive prop here
+                style={{ cursor: 'pointer' }}
+              >
+                {i}
+              </PaginationLink>
+            </PaginationItem>
+          );
+        }
+    
+        // Add end ellipsis if necessary
+        if (currentPage < totalPages - 3) {
+          paginationItems.push(<PaginationEllipsis key="end-ellipsis" />);
+        }
+    
+        // Always show the last page
+        paginationItems.push(
+          <PaginationItem key={totalPages}>
+            <PaginationLink
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                handlePageChange(totalPages);
+              }}
+              isActive={currentPage === totalPages} // Include isActive prop here
+              style={{ cursor: 'pointer' }}
+            >
+              {totalPages}
+            </PaginationLink>
+          </PaginationItem>
+        );
+      }
+    
+      return paginationItems;
+    };
   
   
-      const handleLikeClick = async () => {
-        if (!user) {
-          toast({
-            title: 'No logged in user found !',
-            description: 'Try to login first!',
-            variant: 'destructive',
-          });
-          return;
-        }
-        try {
-          await updateStoreLikes(store?.id!, user.id, !liked)  
-          setLiked(!liked);
-          toast({
-            title: !liked ? 'Store liked' : 'Store unliked',
-            description: '',
-            variant: 'default',
-          }); 
-          router.refresh()
-          return
-        } catch (error) {
-          console.error('Error updating likes:', error);
-        }
-      };
+  
+  
+  
+
 
 
   return (
             <>
-                        {products.length > 0 ? (
+                        {storeProductsCount > 0 ? (
                           <>
 
                  <div className=' bg-muted/50 rounded-xl mx-auto text-center flex flex-col items-center max-w-1xl'>
@@ -400,15 +322,6 @@ const ProductsView = ({ store, user , categories , collections }: ProductReelPro
                 </SelectContent>
             </Select>
                 </div>
-                <div className="mt-2 flex justify-center md:mt-3 md:ml-2 md:flex-none">
-                    <div
-                className={`h-10 w-10 group cursor-pointer flex items-center justify-center rounded-full 
-                    ${liked ? 'bg-pink-50 text-red-700' : 'bg-pink-50 text-gray-700'} hover:text-red-700`}
-                onClick={handleLikeClick}
-                >
-                <Heart className={`w-1/2 h-1/2 ${liked ? 'fill-current text-red-700' : ''}`} />
-                </div>
-                </div>
             </div>
             <div className="mt-4 text-gray-600 text-sm flex-1">
     <div className="mt-4"> {priceRange[0] === 0 && priceRange[1] === 0
@@ -416,25 +329,55 @@ const ProductsView = ({ store, user , categories , collections }: ProductReelPro
       : `${priceRange[0]} TND - ${priceRange[1]} TND`}</div>
     </div>
             <div className="mt-3 text-gray-600 text-sm">
-                Total Products found: {paginatedProducts.length}
+                Products found: {totalCountState}
             </div>
+
+            <div className="mt-3 text-gray-500 text-sm">
+    Current Page : {currentPage}
+  </div>
                         </div>
                     </div>
 
                      
 
-                        <div className='relative my-4'>
-            
-        <div className=' w-full grid 
+                    <div className='relative my-4'>
+                        {products.length === 0 ? (
+              <div className='flex h-full flex-col items-center justify-center space-y-1'>
+              <div
+                aria-hidden='true'
+                className='relative mb-4 h-40 w-40 text-muted-foreground'>
+                    <NextImage
+                  fill
+                  src='/hippo-empty-cart.png'
+                  loading='eager'
+                  alt='empty shopping cart hippo'
+                />
+              </div>
+              <h3 className='font-semibold text-2xl'>
+                No Products found !
+              </h3>
+              <p className='text-muted-foreground text-center'>
+                Whoops! Nothing to show here yet.
+              </p>
+            </div>
+            ) : (
+              <>
+
+
+
+                        <LoadingState isOpen={open} />
+                        <div className=' w-full grid 
               lg:grid-cols-4 
               md:grid-cols-2 
-              sm:grid-cols-1
-              gap-y-10
+              sm:grid-cols-2
+              grid-cols-2
+              gap-y-4
+              gap-2
               sm:gap-x-8  
               md:gap-y-10
               lg:gap-x-4'>
 
-            {paginatedProducts?.map((product, index) => (
+            {products?.map((product, index) => (
               <ProductListing
                 user={user}
                 key={`product-${index}`}
@@ -476,6 +419,10 @@ const ProductsView = ({ store, user , categories , collections }: ProductReelPro
             </PaginationContent>
           </Pagination>
         </div>
+
+        </>
+                    )}
+
 
                   </div>
         </>

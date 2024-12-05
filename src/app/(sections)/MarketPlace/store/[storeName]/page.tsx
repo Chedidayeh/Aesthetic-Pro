@@ -27,10 +27,10 @@ import Link from 'next/link'
 import { db } from '@/db'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
-import {  fetchProductsByCategory, getAllProductsCategories, getAllProductCollectionNames, getUser } from '@/actions/actions'
+import {  getAllProductsCategories, getAllProductCollectionNames, getUser } from '@/actions/actions'
 import ProductsByCategory from './StoreView'
 import StoreView from './StoreView'
-import {  checkIfUserFollowsStore, getDesignsByStoreId, getStoreFollowersCount, getStoreProducts } from './actions'
+import {  checkIfUserFollowsStore, fetchPriceRanges, getDesignsByStoreId, getStoreByStoreName, getStoreFollowersCount, getStoreProducts, getStoreProductsCount } from './actions'
 
 
 interface PageProps {
@@ -43,14 +43,19 @@ interface PageProps {
 
 export default async function Page({ params }: PageProps) {
   const { storeName } = params
-  const decodedCategory = decodeURIComponent(storeName)
+  const limit = 4; // Number of products per page
+  const page = 1; // Initial page
+  const decodedStoreName = decodeURIComponent(storeName)
   const user = await getUser()
-  const store = await getStoreProducts(decodedCategory)  
+  const store = await getStoreByStoreName(decodedStoreName)
+  const storeProductsCount = await getStoreProductsCount (store?.id!)
+  const { products, totalCount } = await getStoreProducts(store?.id! , page , limit)  
   const storeDesigns = await getDesignsByStoreId(store?.id ?? "")
   const categories = await getAllProductsCategories()
   const collections = await getAllProductCollectionNames()
   const followersCount = await getStoreFollowersCount(store!.id);
   const follows = await checkIfUserFollowsStore(user?.id ?? "", store!.id);
+  const priceRanges = await fetchPriceRanges(store?.id!)
 
   return (
     <>
@@ -62,8 +67,14 @@ export default async function Page({ params }: PageProps) {
               <section className='border-t border-gray-200 w-full mx-auto' >
                 <div className='w-[85%] mx-auto'>
                 <StoreView  
+                    initialProducts={products}
+                    totalCount={totalCount}
+                    initialPage={page}
+                    limit={limit}
+                    priceRanges={priceRanges}
                      store={store}
                      user={user!}
+                     storeProductsCount={storeProductsCount}
                      designs={storeDesigns!}
                      categories={categories}
                      collections={collections}

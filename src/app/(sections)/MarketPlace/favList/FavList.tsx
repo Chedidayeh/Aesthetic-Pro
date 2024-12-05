@@ -62,20 +62,23 @@ const FavList = ({ products, user , categories , collections }: ProductReelProps
     const maxPrice = Math.max(...prices);
     const range = maxPrice - minPrice;
   
-    // If minPrice and maxPrice are the same, there's no range, return a single range
+    // If all prices are the same, return a single range
     if (range === 0) return [[minPrice, maxPrice]];
   
-    // Calculate three price ranges, dividing the range into three equal parts
-    const step = range / 3;
+    // Determine the number of ranges based on the price distribution
+    const numberOfRanges = range < 5 ? 1 : 3; // Use 1 range for small price ranges, otherwise 3
   
-    const priceRanges: [number, number][] = [
-      [minPrice, minPrice + step],
-      [minPrice + step, minPrice + 2 * step],
-      [minPrice + 2 * step, maxPrice]
-    ];
+    const step = Math.ceil(range / numberOfRanges);
   
-    // Round the price ranges to remove decimals
-    return priceRanges.map(([min, max]) => [Math.floor(min), Math.floor(max)]);
+    const priceRanges: [number, number][] = [];
+  
+    for (let i = 0; i < numberOfRanges; i++) {
+      const start = minPrice + i * step;
+      const end = i === numberOfRanges - 1 ? maxPrice : start + step - 1;
+      priceRanges.push([start, end]);
+    }
+  
+    return priceRanges;
   }
   
   
@@ -124,137 +127,23 @@ const FavList = ({ products, user , categories , collections }: ProductReelProps
 
   const handleSortChange = (event: string) => {
     setSortBy(event); 
-    setCurrentPage(1); // Reset to first page on sort change
 
   };
 
 
   const handleCategorySortChange = (event: string) => {
     setSortByCategory(event);
-    setCurrentPage(1); // Reset to first page on sort change
 
   };
   const handleCollectionSortChange = (event: string) => {
     setFilterByCollection(event);
-    setCurrentPage(1); // Reset to first page on sort change
 
   };
   const handlePriceRangeChange = (value: string) => {
     const rangeIndex = parseInt(value, 10);
     setPriceRange(priceRanges[rangeIndex]);
-    setCurrentPage(1); // Reset to first page on price range change
   };
 
-
-        // Pagination 
-    const [currentPage, setCurrentPage] = useState<number>(1);
-    const itemsPerPage = 16; // Display products per page
-
-    const paginatedProducts = useMemo(() => {
-      const start = (currentPage - 1) * itemsPerPage;
-      return filteredProducts.slice(start, start + itemsPerPage);
-    }, [filteredProducts, currentPage, itemsPerPage]);
-  
-    const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-  
-    const handlePageChange = (page: number) => {
-      if (page >= 1 && page <= totalPages) {
-        setCurrentPage(page);
-      }
-    };
-
-    const renderPaginationItems = () => {
-      const paginationItems = [];
-
-      // Less than or equal to 10 pages
-      if (totalPages <= 2) {
-        for (let i = 1; i <= totalPages; i++) {
-          paginationItems.push(
-            <PaginationItem key={i}>
-              <PaginationLink
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handlePageChange(i);
-                }}
-                isActive={currentPage === i}
-                style={{ cursor: 'pointer' }}
-              >
-                {i}
-              </PaginationLink>
-            </PaginationItem>
-          );
-        }
-      } 
-
-      // More than 10 pages:
-      else {
-
-          // Start ellipsis logic
-        if (currentPage > 3) {
-          paginationItems.push(
-            <PaginationItem key={1}>
-              <PaginationLink
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handlePageChange(1);
-                }}
-                style={{ cursor: 'pointer' }}
-              >
-                1
-              </PaginationLink>
-            </PaginationItem>,
-            <PaginationEllipsis key="start-ellipsis" />
-          );
-        }
-
-
-    // Middle pages logic
-        const startPage = Math.max(2, currentPage - 2);
-        const endPage = Math.min(totalPages - 1, currentPage + 2);
-  
-        for (let i = startPage; i <= endPage; i++) {
-          paginationItems.push(
-            <PaginationItem key={i}>
-              <PaginationLink
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handlePageChange(i);
-                }}
-                isActive={currentPage === i}
-                style={{ cursor: 'pointer' }}
-              >
-                {i}
-              </PaginationLink>
-            </PaginationItem>
-          );
-        }
-
-
-    // End ellipsis logic
-        if (currentPage < totalPages - 2) {
-          paginationItems.push(
-            <PaginationEllipsis key="end-ellipsis" />,
-            <PaginationItem key={totalPages}>
-              <PaginationLink
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handlePageChange(totalPages);
-                }}
-                style={{ cursor: 'pointer' }}
-              >
-                {totalPages}
-              </PaginationLink>
-            </PaginationItem>
-          );
-        }
-      }
-  
-      return paginationItems;
-    };
 
   return (
     <section className='py-4'>
@@ -262,7 +151,7 @@ const FavList = ({ products, user , categories , collections }: ProductReelProps
      <div className='bg-muted/50 rounded-xl py-10 mx-auto text-center flex flex-col items-center max-w-1xl'>
           <h1 className='text-4xl font-bold tracking-tight  sm:text-5xl'>
             Your{' '}
-            <span className='text-blue-600'>
+            <span className='text-red-500'>
             FavList
             </span>
           </h1>
@@ -347,7 +236,7 @@ const FavList = ({ products, user , categories , collections }: ProductReelProps
       : `${priceRange[0]} TND - ${priceRange[1]} TND`}</div>
     </div>
   <div className="mt-3 text-gray-600 text-sm">
-    Total Products found: {paginatedProducts.length}
+    Products found: {products!.length}
   </div>
 
             </div>
@@ -357,7 +246,7 @@ const FavList = ({ products, user , categories , collections }: ProductReelProps
 
             <div className='relative my-4'>
 
-            {paginatedProducts.length === 0 ? (
+            {filteredProducts.length === 0 ? (
               <div className='flex h-full flex-col items-center justify-center space-y-1'>
                 <div
                   aria-hidden='true'
@@ -382,16 +271,18 @@ const FavList = ({ products, user , categories , collections }: ProductReelProps
             ) : (
               <>
             
-        <div className=' w-full grid 
+            <div className=' w-full grid 
               lg:grid-cols-4 
               md:grid-cols-2 
-              sm:grid-cols-1
-              gap-y-10
+              sm:grid-cols-2
+              grid-cols-2
+              gap-y-4
+              gap-2
               sm:gap-x-8  
               md:gap-y-10
               lg:gap-x-4'>
 
-            {paginatedProducts?.map((product, index) => (
+            {filteredProducts?.map((product, index) => (
               <ProductListing
                 user={user}
                 key={`product-${index}`}
@@ -401,39 +292,6 @@ const FavList = ({ products, user , categories , collections }: ProductReelProps
             ))} 
 
           </div>
-
-
-          <div className="mt-8">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handlePageChange(currentPage - 1);
-                  }}
-                  className={currentPage === 1 ? 'disabled' : ''}
-                  aria-disabled={currentPage === 1}
-                  style={{ cursor: currentPage === 1 ? 'default' : 'pointer' }}
-                />
-              </PaginationItem>
-              {renderPaginationItems()}
-              <PaginationItem>
-                <PaginationNext
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handlePageChange(currentPage + 1);
-                  }}
-                  className={currentPage === totalPages ? 'disabled' : ''}
-                  aria-disabled={currentPage === totalPages}
-                  style={{ cursor: currentPage === totalPages ? 'default' : 'pointer' }}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
 
         </>
             )}

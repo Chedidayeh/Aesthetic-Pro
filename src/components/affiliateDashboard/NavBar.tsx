@@ -58,8 +58,8 @@ import { getSideBarTotalCounts, getStoreByUserId , getUnreadAffiliateNotificatio
 import { AffiliateNotification, Notification, User } from "@prisma/client"
 import { ModeToggle } from "../ModeToggle"
 import React from "react"
-import SellerProfile from "./SellerProfile"
 import { getAffiliateIdByUserId } from "@/app/(sections)/affiliateDashboard/products/actions"
+import Profile from "./Profile"
 
 const NavBar = () => {
 
@@ -284,7 +284,7 @@ useEffect(() => {
 
       {/* user Image */}
 
-    <SellerProfile user={user!}/>
+    <Profile user={user!}/>
 
     </header>
   );

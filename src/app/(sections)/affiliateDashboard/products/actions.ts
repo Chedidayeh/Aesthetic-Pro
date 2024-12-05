@@ -88,4 +88,57 @@ export const generateShortAffiliateLink = async (platform : Platform , originalA
   } 
 }
 
+export async function fetchAllProducts(
+  page: number,
+  limit: number,
+  sortBy?: string,
+  filterByCategory?: string,
+  filterByCollection?: string,
+  searchQuery? : string,
+) {
+  try {
+
+    const offset = Math.max((page - 1) * limit, 0); // Ensure non-negative offset
+  
+  // Map supported sort options to Prisma `orderBy` format
+  const sortOptions: Record<string, object> = {
+    high: { price: 'desc' }, // Sort by highest price
+    low: { price: 'asc' },  // Sort by lowest price
+    sales: { totalSales: 'desc' }, // Sort by most sold
+  };
+
+  // Fallback to default sorting if `sortBy` is invalid or not provided
+  const orderBy = sortOptions[sortBy!] || { totalViews: 'desc' };
+
+  // Construct `where` filter object dynamically based on the filters provided
+  const where: any = {
+    isProductAccepted: true,
+    privateProduct: false,
+    ...(filterByCategory && { category: filterByCategory }), // Filter by category
+    ...(filterByCollection && { collectionName: filterByCollection }), // Filter by collection
+    ...(searchQuery && { title: { startsWith: searchQuery, mode: 'insensitive' } }), // Filter by search query
+  };
+
+    const products = await db.product.findMany({
+      where ,
+      include : {
+        store : true
+      },
+      orderBy,
+      skip: offset,
+      take: limit,
+    });
+    const totalCount = await db.product.count({
+      where, // Apply the same filters for counting
+    });
+  
+    return { products, totalCount };
+
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    return { products : [], totalCount : 0 };
+  }
+  }
+
+
 

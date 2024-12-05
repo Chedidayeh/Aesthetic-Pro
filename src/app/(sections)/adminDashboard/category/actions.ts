@@ -57,6 +57,9 @@ export async function getAllCategoriesWithDetails() {
     
         // Step 5: Execute all product updates within the transaction
         await Promise.all(updatePromises);
+      },{
+        maxWait: 10000, // Wait for a connection for up to 10 seconds
+        timeout: 20000, // Allow the transaction to run for up to 20 seconds
       });
     }
       
@@ -141,55 +144,60 @@ export async function getAllCategoriesWithDetails() {
   
   export async function apply(catId: string, discountPercentage: number) {
     try {
-      // Start a transaction
+      // Fetch products and category label first (outside the transaction)
+      const category = await db.category.findUnique({
+        where: { id: catId },
+        select: { label: true },
+      });
+  
+      if (!category) throw new Error("Category not found");
+  
+      const products = await db.product.findMany({
+        where: { category: category.label },
+      });
+  
+      // Start a transaction for updates
       await db.$transaction(async (prisma) => {
-
-       await resetPricesByCategory(catId)
-
-        // Update the category with the discount
+        // Reset prices by category
+        await resetPricesByCategory(catId);
+  
+        // Update category discount
         await prisma.category.update({
           where: { id: catId },
-          data: { discount: discountPercentage }
+          data: { discount: discountPercentage },
         });
   
-        // Fetch the category to get the label
-        const category = await prisma.category.findUnique({
-          where: { id: catId },
-          select: { label: true },
-        });
-  
-        if (!category) {
-          throw new Error('Category not found');
-        }
-  
-        // Fetch products that belong to the category
-        const products = await prisma.product.findMany({
-          where: { category: category.label },
-        });
-  
-        // Apply the discount to each product
-        const updatePromises = products.map(product => {
-          const newPrice = product.price * (1 - discountPercentage / 100);
+        // Update product prices
+        const updatePromises = products.map((product) => {
+          const newPrice = parseFloat(
+            (product.price * (1 - discountPercentage / 100)).toFixed(2)
+          );
           return prisma.product.update({
             where: { id: product.id },
             data: {
-              discount : discountPercentage,
+              discount: discountPercentage,
               oldPrice: product.price,
-              price: Math.round(newPrice),
-              isDiscountEnabled: true
+              price: newPrice,
+              isDiscountEnabled: true,
             },
           });
         });
   
-        // Wait for all updates to complete
         await Promise.all(updatePromises);
+      },
+      {
+        maxWait: 10000, // Wait for a connection for up to 10 seconds
+        timeout: 20000, // Allow the transaction to run for up to 20 seconds
       });
   
+      return true;
     } catch (error) {
-      console.error('Error applying discount:', error);
+      console.error("Error applying discount:", error);
       return null;
     }
   }
+  
+  
   
   
 

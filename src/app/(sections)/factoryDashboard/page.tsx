@@ -67,6 +67,7 @@ async function getTotalCounts() {
 
 
 import { unstable_noStore as noStore } from "next/cache"
+import { Component } from "@/components/factoryDashboard/Chart"
 
 
 
@@ -199,6 +200,11 @@ const Page =  async () => {
 
       
     </section>
+
+    <div className='flex flex-col space-y-5'>
+    <Component />
+
+    </div>
 
 
   </div>

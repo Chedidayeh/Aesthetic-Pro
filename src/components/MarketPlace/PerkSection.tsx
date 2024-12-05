@@ -46,7 +46,7 @@ const PerkSection = ()=>{
       <div className='items-center flex justify-center my-4'>
         <section className='border rounded-2xl w-[80%] border-gray-200'>
         <MaxWidthWrapper className='py-4'>
-          <div className='grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 lg:gap-x-8 lg:gap-y-0'>
+          <div className='grid grid-cols-2 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 lg:gap-x-8 lg:gap-y-0'>
             {perks.map((perk) => (
               <div
                 key={perk.name}
@@ -67,6 +67,8 @@ const PerkSection = ()=>{
                 </div>
               </div>
             ))}
+          </div>
+          <div>
           </div>
         </MaxWidthWrapper>
       </section>

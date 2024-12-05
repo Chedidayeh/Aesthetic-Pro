@@ -35,7 +35,7 @@ import { Heart } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
 import { Store} from '@prisma/client'
-import { checkIfUserFollowsStore, checkUserLike, followStore, unfollowStore, updateStoreLikes } from "./actions"
+import { checkIfUserFollowsStore, followStore, unfollowStore } from "./actions"
 import { Slider } from "@/components/ui/slider"
 import { cn } from "@/lib/utils"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -48,23 +48,25 @@ import { Button } from '@/components/ui/button'
 import MaxWidthWrapper from '@/components/MaxWidthWrapper'
 import LoginModal from '@/components/LoginModal'
 
-interface StoreDetails extends Store {
-  products: Productswithstore[];
-}
-
 interface Productswithstore extends Product {
   store : Store
 }
 interface ProductReelProps {
-  store : StoreDetails
+  initialProducts : Productswithstore[]
+  totalCount : number
+  initialPage:number
+  limit:number
+  priceRanges : [number, number][]
+  store : Store
   user : User
+  storeProductsCount:number
   designs : SellerDesign[]
   categories : string[]
   collections : string[]
   followersCount : number
   follows:boolean
 }
-const StoreView = ({ store, user , designs , categories , collections , followersCount , follows }: ProductReelProps) => {
+const StoreView = ({ initialProducts,totalCount,initialPage, limit, priceRanges,store, user ,storeProductsCount, designs , categories , collections , followersCount , follows }: ProductReelProps) => {
   
   const { toast } = useToast()
   const router = useRouter()
@@ -168,7 +170,7 @@ const StoreView = ({ store, user , designs , categories , collections , follower
     onClick={handleFollowToggle}
     disabled={loading}
     >
-    {loading ? "Processing..." : isFollowing ? "Unfollow this store" : "Follow this store"}
+    {loading ? "Following..." : isFollowing ? "Unfollow this store" : "Follow this store"}
    </Button>    </div>
 
 </div>
@@ -189,13 +191,23 @@ const StoreView = ({ store, user , designs , categories , collections , follower
 
           {activeTab === 'Products' && (
             <div className='mt-2'>
-            <ProductsView store={store} user={user} categories={categories} collections={collections} />
+            <ProductsView 
+            initialProducts={initialProducts}
+            totalCount={totalCount}
+            initialPage={initialPage}
+            limit={limit}
+            priceRanges={priceRanges}
+            storeId={store.id} 
+            user={user} 
+            storeProductsCount={storeProductsCount}
+            categories={categories} 
+            collections={collections} />
             </div>
             )}
 
           {activeTab === 'Designs' && (
             <div className='mt-2'>
-            <DesignView store={store} user={user} designs={designs} />
+            <DesignView designs={designs} />
             </div>
             )}
 

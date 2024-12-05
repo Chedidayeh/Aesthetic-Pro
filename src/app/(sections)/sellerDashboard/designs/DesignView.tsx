@@ -304,7 +304,7 @@ const DesignView = ({
     ) : (
       <>
         <ScrollArea className="h-[984px] w-full ">
-        <div className='relative mt-5 grid grid-cols-1 mb-20 pb-20'>
+        <div className='relative mt-5 grid grid-cols-1 mb-20 pb-20 p-2'>
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 md:grid-cols-2">
             {/* designs Cards */}
             {filteredDesigns.map((design, index) => (

@@ -91,7 +91,7 @@ export function Component({storeId} : {storeId : string}) {
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
           <CardTitle>Your Products Stats</CardTitle>
           <CardDescription>
-            Showing total products views for the last 30 days
+            Showing total products views per month
           </CardDescription>
           <Popover >
       <PopoverTrigger asChild>

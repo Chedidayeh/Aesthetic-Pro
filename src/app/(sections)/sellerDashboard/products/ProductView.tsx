@@ -352,8 +352,8 @@ const ProductView = ({
     ) : (
       <>
         <ScrollArea className="h-[984px] w-full">
-        <div className="relative mt-5 grid grid-cols-1 mb-20 pb-20">
-           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-2">
+        <div className="relative mt-5 grid grid-cols-1 mb-20 pb-20 p-4">
+           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-2">
             {/* Product Cards */}
             {filteredProduct.map((product, index) => (
                     <div key={index} className="relative aspect-square">

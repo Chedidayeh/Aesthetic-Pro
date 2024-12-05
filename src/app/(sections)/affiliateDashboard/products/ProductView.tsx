@@ -34,7 +34,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import React from 'react';
-import {  CircleCheck, CircleDollarSign, CreditCard, DollarSign, Eye, EyeIcon, Heart, Loader, OctagonAlert, PenTool, SquarePen, Tags, Trash2 } from 'lucide-react';
+import {  CircleCheck, CircleDollarSign, CreditCard, DollarSign, Eye, EyeIcon, Heart, Loader, OctagonAlert, PenTool, Search, SquarePen, Tags, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import {
     AlertDialog,
@@ -77,13 +77,16 @@ import ImageSlider from "@/components/MarketPlace/ImageSlider";
 import LoadingState from "@/components/LoadingState";
 import { Separator } from "@/components/ui/separator"
 import axios from 'axios';
-import { generateShortAffiliateLink } from "./actions"
+import { fetchAllProducts, generateShortAffiliateLink } from "./actions"
 interface Productswithstore extends Product {
   store : Store
 }
 
 interface ProductReelProps {
-  products? : Productswithstore[]
+  initialProducts : Productswithstore[]
+  totalCount : number
+  initialPage:number
+  limit:number
   user : User
   affiliateId : string
   categories : string[]
@@ -92,27 +95,32 @@ interface ProductReelProps {
 
 }
 
-const ProductView = ({ products, user , affiliateId, categories , collections , platform }: ProductReelProps) => {
+const ProductView = ({ initialProducts,totalCount,initialPage, limit, user , affiliateId, categories , collections , platform }: ProductReelProps) => {
 
         const router = useRouter();
         const { toast } = useToast()
 
-          // Sorting function based on sortBy criteria
+        const [products, setProducts] = useState(initialProducts);
         const [sortBy, setSortBy] = useState<string>(''); // State for selected sort option
-        const [sortByCategory, setSortByCategory] = useState<string>("");
+        const [filterByCategory, setFilterByCategory] = useState<string>("");
         const [filterByCollection, setFilterByCollection] = useState<string>("");
-        
+        const [currentPage, setCurrentPage] = useState(initialPage);  
+        // totalCount state
+        const [totalCountState, setTotalCountState] = useState(totalCount);
+      
+        const [open, setOpen] = useState<boolean>(false);
+
         // serach and sort filter
         const [searchQuery, setSearchQuery] = useState('');
         // affiliateLink state
         const [selectedProductIndex, setSelectedProductIndex] = useState<number | null>(null);
         const [selectedProduct, setSelectedProduct] = useState<Productswithstore | null>();
-        const [open, setOpen] = useState<boolean>(false);
         const [openWindow, setOpenWindow] = useState(false);
         const [shortenedLink, setShortenedLink] = useState<string | null>(null);
 
 
   
+
 
         const handleGenerateAffiliateLink = async (product: Product) => {
           setOpen(true)
@@ -145,90 +153,18 @@ const ProductView = ({ products, user , affiliateId, categories , collections , 
 
 
 
+    const [productImgs , setproductImgs] = useState <string[]> ([])
+    const viewProduct = (product : Product) => {
+      let imgs = [] as string []
+      product.croppedFrontProduct.map((img : string) => {
+        imgs.push(img)
+      })
+      product.croppedBackProduct.map((img : string) => {
+        imgs.push(img)
+      })
+      setproductImgs(imgs)
+    }
 
-
-        const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-          setSearchQuery(e.target.value);
-          setCurrentPage(1); 
-        };
-
-        const handleSortChange = (e: string) => {
-          setSortBy(e);
-          setCurrentPage(1); 
-        };
-
-
-        const handleCategorySortChange = (event: string) => {
-          setSortByCategory(event);
-          setCurrentPage(1); 
-      
-        };
-        const handleCollectionSortChange = (event: string) => {
-          setFilterByCollection(event);
-          setCurrentPage(1); 
-
-        };
-
-
-        const filteredAndSortedProducts = useMemo(() => {
-          // Step 1: Filter products based on search query
-          let filteredProducts = products?.filter((design) => {
-            const lowerCaseQuery = searchQuery.toLowerCase();
-            const lowerCaseName = design.title.toLowerCase();
-            const tagsMatch = design.tags && design.tags.some(tag => tag.toLowerCase().includes(lowerCaseQuery));
-            return lowerCaseName.includes(lowerCaseQuery) || (design.tags && tagsMatch);
-          });
-        
-          // Step 2: Sort products based on the selected sort option
-          filteredProducts = [...(filteredProducts || [])].sort((a, b) => {
-            switch (sortBy) {
-              case 'low':
-                return a.price - b.price;
-              case 'high':
-                return b.price - a.price;
-              case 'sales':
-                return b.totalSales - a.totalSales;
-              case 'views':
-                return b.totalViews - a.totalViews;
-              default:
-                return 0;
-            }
-          });
-        
-          // Step 3: Apply category filter
-          if (sortByCategory) {
-            filteredProducts = filteredProducts.filter((product) =>
-              product.category.toLowerCase().includes(sortByCategory.toLowerCase())
-            );
-          }
-        
-        
-          // Step 5: Apply collection filter
-          if (filterByCollection) {
-            filteredProducts = filteredProducts.filter((product) =>
-              product.collectionName!.toLowerCase().includes(filterByCollection.toLowerCase())
-            );
-          }
-        
-          return filteredProducts;
-        }, [products, searchQuery, sortBy, sortByCategory, filterByCollection]);
-        
-        
-
-
-
-                const [productImgs , setproductImgs] = useState <string[]> ([])
-                const viewProduct = (product : Product) => {
-                  let imgs = [] as string []
-                  product.croppedFrontProduct.map((img : string) => {
-                    imgs.push(img)
-                  })
-                  product.croppedBackProduct.map((img : string) => {
-                    imgs.push(img)
-                  })
-                  setproductImgs(imgs)
-                }
-            
 
      // State variables
      const [isDownloadOpen, setIsDownloadOpen] = useState(false);
@@ -262,121 +198,9 @@ const ProductView = ({ products, user , affiliateId, categories , collections , 
          });
        }
      };
-     
 
 
 
-
-
-             // Pagination 
-    const [currentPage, setCurrentPage] = useState<number>(1);
-    const itemsPerPage = 3; // Display products per page
-
-    const paginatedProducts = useMemo(() => {
-      const start = (currentPage - 1) * itemsPerPage;
-      return filteredAndSortedProducts.slice(start, start + itemsPerPage);
-    }, [filteredAndSortedProducts, currentPage, itemsPerPage]);
-  
-    const totalPages = Math.ceil(filteredAndSortedProducts.length / itemsPerPage);
-  
-    const handlePageChange = (page: number) => {
-      if (page >= 1 && page <= totalPages) {
-        setCurrentPage(page);
-      }
-    };
-
-    const renderPaginationItems = () => {
-      const paginationItems = [];
-
-      // Less than or equal to 10 pages
-      if (totalPages <= 2) {
-        for (let i = 1; i <= totalPages; i++) {
-          paginationItems.push(
-            <PaginationItem key={i}>
-              <PaginationLink
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handlePageChange(i);
-                }}
-                isActive={currentPage === i}
-                style={{ cursor: 'pointer' }}
-              >
-                {i}
-              </PaginationLink>
-            </PaginationItem>
-          );
-        }
-      } 
-
-      // More than 10 pages:
-      else {
-
-          // Start ellipsis logic
-        if (currentPage > 3) {
-          paginationItems.push(
-            <PaginationItem key={1}>
-              <PaginationLink
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handlePageChange(1);
-                }}
-                style={{ cursor: 'pointer' }}
-              >
-                1
-              </PaginationLink>
-            </PaginationItem>,
-            <PaginationEllipsis key="start-ellipsis" />
-          );
-        }
-
-
-    // Middle pages logic
-        const startPage = Math.max(2, currentPage - 2);
-        const endPage = Math.min(totalPages - 1, currentPage + 2);
-  
-        for (let i = startPage; i <= endPage; i++) {
-          paginationItems.push(
-            <PaginationItem key={i}>
-              <PaginationLink
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handlePageChange(i);
-                }}
-                isActive={currentPage === i}
-                style={{ cursor: 'pointer' }}
-              >
-                {i}
-              </PaginationLink>
-            </PaginationItem>
-          );
-        }
-
-
-    // End ellipsis logic
-        if (currentPage < totalPages - 2) {
-          paginationItems.push(
-            <PaginationEllipsis key="end-ellipsis" />,
-            <PaginationItem key={totalPages}>
-              <PaginationLink
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handlePageChange(totalPages);
-                }}
-                style={{ cursor: 'pointer' }}
-              >
-                {totalPages}
-              </PaginationLink>
-            </PaginationItem>
-          );
-        }
-      }
-  
-      return paginationItems;
-    };
 
     const handleProductClick = (index: number) => {
       if (index === selectedProductIndex) {
@@ -384,7 +208,7 @@ const ProductView = ({ products, user , affiliateId, categories , collections , 
         setSelectedProduct(null);
       } else {
         setSelectedProductIndex(index);
-        setSelectedProduct(paginatedProducts[index] || null);
+        setSelectedProduct(products[index] || null);
       }
     };
 
@@ -401,6 +225,171 @@ const ProductView = ({ products, user , affiliateId, categories , collections , 
           console.error('Failed to copy the text: ', err);
         });
     };
+
+    const handleSearch = async () => {
+      setOpen(true)
+      setCurrentPage(1);
+      const { products , totalCount } = await fetchAllProducts(1, limit, sortBy, filterByCategory, filterByCollection , searchQuery);
+      setProducts(products);
+      setTotalCountState(totalCount)
+      setOpen(false)
+    }
+
+    const handleSearchChange = async (e: ChangeEvent<HTMLInputElement>) => {
+      setSearchQuery(e.target.value);
+    };
+
+
+
+    const handleSortChange = async (event: string) => {
+      setOpen(true)
+      setCurrentPage(1); // Reset to first page on sort change
+      setSortBy(event);
+      const { products , totalCount } = await fetchAllProducts(1, limit, event, filterByCategory, filterByCollection , searchQuery);
+      setProducts(products);
+      setTotalCountState(totalCount)
+      setOpen(false)
+    };
+    
+    const handleCategorySortChange = async (event: string) => {
+      setOpen(true)
+      setCurrentPage(1); // Reset to first page on category change
+      setFilterByCategory(event);
+      const { products , totalCount} = await fetchAllProducts(1, limit, sortBy, event, filterByCollection , searchQuery);
+      setProducts(products);
+      setTotalCountState(totalCount)
+      setOpen(false)
+  
+  
+    };
+    
+    const handleCollectionSortChange = async (event: string) => {
+      setOpen(true)
+      setCurrentPage(1); // Reset to first page on collection change
+      setFilterByCollection(event);
+      const { products , totalCount} = await fetchAllProducts(1, limit, sortBy, filterByCategory, event , searchQuery);
+      setProducts(products);
+      setTotalCountState(totalCount)
+      setOpen(false)
+  
+  
+    };
+    
+  
+  
+  
+  
+  
+    const handlePageChange = async (page: number) => {
+      setOpen(true)
+      if (page >= 1 && page <= totalPages) {
+        const { products , totalCount} = await fetchAllProducts(page, limit, sortBy, filterByCategory, filterByCollection , searchQuery);
+        setProducts(products);
+        setCurrentPage(page);
+        setTotalCountState(totalCount)
+        setOpen(false)
+  
+      }
+    };
+  
+    const totalPages = Math.ceil(totalCountState / limit)
+  
+  
+    const renderPaginationItems = () => {
+      const paginationItems = [];
+    
+      // If total pages are 10 or less, render all pages
+      if (totalPages <= 10) {
+        for (let i = 1; i <= totalPages; i++) {
+          paginationItems.push(
+            <PaginationItem key={i}>
+              <PaginationLink
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handlePageChange(i);
+                }}
+                isActive={currentPage === i} // Include isActive prop here
+                style={{ cursor: 'pointer' }}
+              >
+                {i}
+              </PaginationLink>
+            </PaginationItem>
+          );
+        }
+      } else {
+        // Always show the first page
+        paginationItems.push(
+          <PaginationItem key={1}>
+            <PaginationLink
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                handlePageChange(1);
+              }}
+              isActive={currentPage === 1} // Include isActive prop here
+              style={{ cursor: 'pointer' }}
+            >
+              1
+            </PaginationLink>
+          </PaginationItem>
+        );
+    
+        // Add start ellipsis if necessary
+        if (currentPage > 4) {
+          paginationItems.push(<PaginationEllipsis key="start-ellipsis" />);
+        }
+    
+        // Render middle pages
+        const startPage = Math.max(2, currentPage - 2);
+        const endPage = Math.min(totalPages - 1, currentPage + 2);
+    
+        for (let i = startPage; i <= endPage; i++) {
+          paginationItems.push(
+            <PaginationItem key={i}>
+              <PaginationLink
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handlePageChange(i);
+                }}
+                isActive={currentPage === i} // Include isActive prop here
+                style={{ cursor: 'pointer' }}
+              >
+                {i}
+              </PaginationLink>
+            </PaginationItem>
+          );
+        }
+    
+        // Add end ellipsis if necessary
+        if (currentPage < totalPages - 3) {
+          paginationItems.push(<PaginationEllipsis key="end-ellipsis" />);
+        }
+    
+        // Always show the last page
+        paginationItems.push(
+          <PaginationItem key={totalPages}>
+            <PaginationLink
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                handlePageChange(totalPages);
+              }}
+              isActive={currentPage === totalPages} // Include isActive prop here
+              style={{ cursor: 'pointer' }}
+            >
+              {totalPages}
+            </PaginationLink>
+          </PaginationItem>
+        );
+      }
+    
+      return paginationItems;
+    };
+  
+
+
 
 
 
@@ -508,7 +497,7 @@ const ProductView = ({ products, user , affiliateId, categories , collections , 
 
   <Card className="col-span-full my-4" x-chunk="dashboard-01-chunk-4">
   <CardHeader className="px-4 sm:px-7">
-  <CardDescription>Total Products: {products?.length}</CardDescription>
+  <CardDescription>Total Products: {totalCount}</CardDescription>
     <div className="ml-0 sm:ml-5 mt-2">
     <div className="flex flex-col gap-2 md:flex-row">
     <div className="mt-3 flex-1">
@@ -565,30 +554,42 @@ const ProductView = ({ products, user , affiliateId, categories , collections , 
                 </Select>
                 </div>
 
-       <div className="mt-3 flex-1">
-        <Input
-          type="search"
-          className="w-full "
-          placeholder="Search for your products..."
-          value={searchQuery}
-          onChange={handleSearchChange}
-        />
-        </div>
+                <div className="mt-3 flex items-center space-x-3">
+  <Input
+    type="search"
+    className="flex-1"
+    placeholder="Search for your products..."
+    value={searchQuery}
+    onChange={handleSearchChange}
+  />
+  <Button
+    disabled={searchQuery === ""}
+    onClick={handleSearch}
+    className="bg-blue-500 text-white px-4 py-2 rounded flex items-center"
+  >
+    Search
+    <Search size={14} className="ml-1" />
+  </Button>
+</div>
+
       </div>
       <p className="text-gray-600 mt-4 text-sm">
         <span className="text-blue-600 font-medium">Guide :</span> Select the product you want to affiliate !
+      </p>
+      <p className="text-gray-600 mt-4 text-sm">
+        Products Found : {totalCountState}
       </p>
     </div>
   </CardHeader>
   <hr className="border-t border-gray-300 mb-5" />
   <CardContent>
-    {products?.length === 0 && (
+    {totalCount === 0 && (
       <>
         <h1 className="text-center text-3xl font-bold col-span-full">There is No Products for now!</h1>
       </>
     )}
 
-    {filteredAndSortedProducts?.length === 0 && products?.length !== 0 ? (
+    {totalCountState === 0 ? (
       <>
         <h1 className="text-center text-3xl font-bold col-span-full">
           No Products found !
@@ -597,9 +598,9 @@ const ProductView = ({ products, user , affiliateId, categories , collections , 
     ) : (
       <>
         <div className="relative mt-5 grid grid-cols-1 mb-20 pb-20">
-           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-2">
+           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-2">
             {/* Product Cards */}
-            {paginatedProducts?.map((product, index) => (
+            {products?.map((product, index) => (
                         <div
                         key={index}
                         className={`relative cursor-pointer aspect-square border-2 rounded-xl ${
@@ -671,7 +672,7 @@ const ProductView = ({ products, user , affiliateId, categories , collections , 
           </div>
         </div>
         
-        {paginatedProducts?.length! >0 && (
+        {products?.length! >0 && (
         <div className="mt-8">
           <Pagination>
             <PaginationContent>

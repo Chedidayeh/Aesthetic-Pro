@@ -173,8 +173,6 @@ model Store {
 
   totalRejectedElements  Int      @default(0)
 
-  totalLikes      Int           @default(0)
-
   likes           Like[]
 
   followers      StoreFollow[] // New field to track the users following the store
