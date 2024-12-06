@@ -171,16 +171,24 @@ const CategoryView: React.FC<CatProps> = ({ categories }) => {
 
 
         // fucntion : resetPrice
-  const resetPrice = async () => {
+  const resetPrice = async (catId : string) => {
 
     try {
       setOpen(true)
-      await resetPricesByCategory(catId)
-      toast({
-        title: "Products Prices was reset",
-        variant: "default",
-      });
-      setOpen(false)
+      const res = await resetPricesByCategory(catId)
+      if(res) {
+        toast({
+          title: "Products Prices was reset",
+          variant: "default",
+        });
+        setOpen(false)
+      }else {
+        toast({
+          title: "Operation failed",
+          variant: "destructive",
+        }); 
+        setOpen(false)
+      }
 
 
     
@@ -394,8 +402,7 @@ const CategoryView: React.FC<CatProps> = ({ categories }) => {
                 setisDiscountOpen(true);
               }}>Apply Discount</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => {
-                setCatId(category.id);
-                resetPrice();
+                resetPrice(category.id);
               }}>Reset Prices</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

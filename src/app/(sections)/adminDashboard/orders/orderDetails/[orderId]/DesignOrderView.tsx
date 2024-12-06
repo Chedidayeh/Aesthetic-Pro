@@ -318,7 +318,7 @@ const handleUpdate = async (orderId : string , platformProfit : number) =>{
         <div className="grid gap-2">
             <CardTitle className="font-extrabold">Order Infos :</CardTitle>
             <CardDescription>
-                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-8 mt-2">
+                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 mt-2">
                       <div>
                             <p className="font-bold">Order Id:</p>
                             <p className="text-xs">{order?.id}</p>
@@ -412,7 +412,7 @@ const handleUpdate = async (orderId : string , platformProfit : number) =>{
               <div className="grid gap-2">
                 <CardTitle className="font-extrabold">Order Profit : <span className="text-sm text-gray-600">Designs</span></CardTitle>
                 <CardDescription>
-                        <div className="grid grid-cols-6 gap-10 mt-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-8 mt-2">
                         <div>
                             <p className="font-bold">Order Amount:</p>
                             <p>{order.amount} TND</p>
@@ -531,15 +531,15 @@ const handleUpdate = async (orderId : string , platformProfit : number) =>{
         </CardHeader>
         <Separator className="w-full"/>
         <CardContent>
-          <div className="mt-6">
-          <Button onClick={()=>{downloadMockup(selectedItem.capturedMockup)}} variant={"link"}>Download Product Mockup</Button>
+        <div className="mt-6 space-y-4">
+        <Button onClick={()=>{downloadMockup(selectedItem.capturedMockup)}} variant={"link"}>Download Product Mockup</Button>
 
             {/* client product */}
           {selectedItem.productTitle === "Client Product" && (
             <>
           <div className="text-sm">
-          <div className="flex space-x-10">
-            <div className="font-bold text-xs">Front Design Id : <span className="text-gray-600 font-semibold">
+          <div className="flex flex-col md:flex-row md:space-x-10 space-y-2 md:space-y-0">
+          <div className="font-bold text-xs">Front Design Id : <span className="text-gray-600 font-semibold">
                 {selectedItem.frontclientDesignId ?? selectedItem.frontsellerDesignId ?? "N/A"}
               </span>
             </div>
@@ -557,8 +557,8 @@ const handleUpdate = async (orderId : string , platformProfit : number) =>{
 
 
           <div className="text-sm">
-          <div className="flex space-x-10">
-            <div className="font-bold text-xs">Back Design Id : <span className="text-gray-600 font-semibold">
+          <div className="flex flex-col md:flex-row md:space-x-10 space-y-2 md:space-y-0">
+          <div className="font-bold text-xs">Back Design Id : <span className="text-gray-600 font-semibold">
                 {selectedItem.backclientDesignId ?? selectedItem.backsellerDesignId ?? "N/A"}
               </span>
             </div>

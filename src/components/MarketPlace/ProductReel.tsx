@@ -37,24 +37,8 @@ interface ProductReelProps {
 const ProductReel = (props: ProductReelProps) => {
   const { user,title, subtitle, href , products } = props
 
-
-  //slide products
-  // const [currentPage, setCurrentPage] = useState(1);
-  // const itemsPerPage = 2;
-  // const totalProducts = products?.length || 0;
-  // const totalPages = Math.ceil(totalProducts / itemsPerPage)
-
-  // const handlePrevPage = () => {
-  //   setCurrentPage(prev => Math.max(prev - 1, 1));
-  // };
-
-  // const handleNextPage = () => {
-  //   setCurrentPage(prev => Math.min(prev + 1, totalPages));
-  // };
-
-
   return (
-    <section className='py-8'>
+    <section className='py-4'>
       <div className='md:flex md:items-center md:justify-between mb-4'>
         <div className='max-w-2xl px-4 lg:max-w-4xl lg:px-0'>
           {title ? (
@@ -115,21 +99,6 @@ const ProductReel = (props: ProductReelProps) => {
             ))} 
 
           </div>
-
-
-          {/* <div className="mt-8">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious className="cursor-pointer" onClick={handlePrevPage} />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext className="cursor-pointer" onClick={handleNextPage} />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div> */}
-
         </>
             )}
 

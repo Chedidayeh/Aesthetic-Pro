@@ -252,8 +252,8 @@ const downloadMockup = async (imageUrls: string[]) => {
       <div className="grid gap-2">
             <CardTitle className="font-extrabold">Order Infos :</CardTitle>
             <CardDescription>
-            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 mt-2">
-                        <div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 mt-2">
+            <div>
                             <p className="font-bold">Order Id:</p>
                             <p className="text-xs">{order?.id}</p>
                         </div>

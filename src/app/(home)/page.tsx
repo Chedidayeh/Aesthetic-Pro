@@ -43,7 +43,7 @@ export default async function Page() {
 
 {/* Followed Stores Products section */}
 {filteredTrendingProducts.length > 0 && (
-    <section className='bg-muted/50 border-2 rounded-2xl border-slate-500 w-[90%] mx-auto my-8'>
+    <section className='bg-muted/50 border-2 rounded-2xl border-slate-500 w-[97%] mx-auto my-8'>
       <div className='w-[95%] mx-auto'>
         <ProductReel
           user={user!}
@@ -60,7 +60,7 @@ export default async function Page() {
 
 {/* Followed Stores Products section */}
 {filteredFollowedStoresProducts.length > 0 && (
-    <section className='bg-muted/50 border-2 rounded-2xl border-slate-500 w-[90%] mx-auto my-8'>
+    <section className='bg-muted/50 border-2 rounded-2xl border-slate-500 w-[97%] mx-auto my-8'>
       <div className='w-[95%] mx-auto'>
         <ProductReel
           user={user!}
@@ -76,7 +76,7 @@ export default async function Page() {
 
     {/* discountDeals section */}
     {filteredDiscountProductsDeals.length > 0  && (
-    <section className='bg-muted/50 border-2 rounded-2xl border-slate-500 w-[90%] mx-auto my-8'>
+    <section className='bg-muted/50 border-2 rounded-2xl border-slate-500 w-[97%] mx-auto my-8'>
       <div className='w-[95%] mx-auto'>
         <ProductReel
           user={user!}
@@ -91,7 +91,7 @@ export default async function Page() {
 
             {/* Top selled section */}
     {filteredBestSellingProducts.length > 0 && (
-  <section className='bg-muted/50 border-2 rounded-2xl border-slate-500 w-[90%] mx-auto my-8'>
+  <section className='bg-muted/50 border-2 rounded-2xl border-slate-500 w-[97%] mx-auto my-8'>
   <div className='w-[95%] mx-auto'>
   <ProductReel
         user={user!}
@@ -105,7 +105,7 @@ export default async function Page() {
 )}
             {/* Newly released section */}
   {filteredNewProducts.length > 0 && (
-  <section className='bg-muted/50 border-2 rounded-2xl border-slate-500 w-[90%] mx-auto my-8'>
+  <section className='bg-muted/50 border-2 rounded-2xl border-slate-500 w-[97%] mx-auto my-8'>
   <div className='w-[95%] mx-auto'>
   <ProductReel
         user={user!}
@@ -128,7 +128,7 @@ export default async function Page() {
           if (products.length < 1) return null;
 
           return (
-            <section key={collection} className='bg-muted/50 border-2 rounded-2xl border-slate-500 w-[90%] mx-auto my-8'>
+            <section key={collection} className='bg-muted/50 border-2 rounded-2xl border-slate-500 w-[97%] mx-auto my-8'>
               <div className='w-[95%] mx-auto'>
                 <ProductReel
                   user={user!}
@@ -143,7 +143,7 @@ export default async function Page() {
         })}
 
 
-      <div className='py-10 mt-2 mx-auto flex flex-col w-[80%]  rounded-2xl bg-center 
+      <div className='py-10 mt-2 mx-auto flex flex-col w-[95%]  rounded-2xl bg-center 
       bg-[url("/bgBanner.png")]'>
 
       <div className="text-center flex flex-col items-center">
@@ -179,7 +179,7 @@ export default async function Page() {
 
 
 
-      <div className='py-10 mb-4 mt-2 mx-auto flex flex-col w-[80%]  rounded-2xl bg-center 
+      <div className='py-10 mb-4 mt-2 mx-auto flex flex-col w-[95%]  rounded-2xl bg-center 
       bg-[url("/bgBanner.png")]'>
 
       <div className="text-center flex flex-col items-center">

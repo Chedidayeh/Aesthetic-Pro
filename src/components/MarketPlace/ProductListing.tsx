@@ -57,9 +57,6 @@ const ProductListing = ({
   const { toast } = useToast()
   const router = useRouter()
 
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const [imageFailed, setImageFailed] = useState(false);
-
   const alertDialogTriggerRef = useRef<HTMLButtonElement>(null)
 
     // Interleave the arrays
@@ -195,8 +192,8 @@ const ProductListing = ({
       
       
  <Card>
-      <div className="mx-2 my-2">
-      <div className="mb-2 mt-0 flex flex-wrap items-center">
+      <div className="mx-1 my-1">
+      <div className="mb-1 mt-0 flex flex-wrap items-center">
   <div className="flex-grow md:mb-0"> {/* Allows items to wrap */}
     <Badge variant="secondary">
       <Link
@@ -227,17 +224,7 @@ const ProductListing = ({
     {combinedUrls.length > 0 && 
      (
         <>
- <div className="relative w-full h-full">
- {!imageLoaded && !imageFailed && (
-        <NextImage
-          src="/Loading.png"
-          alt="Loading placeholder"
-          width={1000}
-          height={1000}
-          className="absolute inset-0 w-full h-full object-cover"
-          priority
-        />
-      )}
+ <div className="relative w-full h-full" style={{ backgroundImage: `url(/Loading.png)` }}>
     <NextImage
       src={combinedUrls[currentIndex]}
       alt="Product Image"
@@ -253,31 +240,32 @@ const ProductListing = ({
       style={{ transitionProperty: "opacity, transform" }}
       onContextMenu={(e) => e.preventDefault()}
       draggable={false}
-      onLoadingComplete={() => setImageLoaded(true)}
-      onError={() => setImageFailed(true)}
-      
     />
-  <div className="absolute top-0 right-0 m-2">
-  {product.NewProduct && (
-        <Badge variant="secondary" className="bg-blue-700 text-white">
+
+      {product.NewProduct && (
+  <div className="absolute top-0 right-0 m-1 text-xs lg:text-sm">
+        <Badge variant="secondary" className="bg-blue-700  text-white">
         New
       </Badge>
-      )}
   </div>
-  <div className="absolute top-0 left-0 m-2">
-  {product.topSales && (
+        )}
+
+          {product.topSales && (
+  <div className="absolute top-0 left-0 m-1 text-xs lg:text-sm">
         <Badge variant="secondary" className="bg-emerald-700 text-white">
           Best Sell
         </Badge>
-      )}
   </div>
+        )}
+
   {product.isDiscountEnabled && (
-      <div className="absolute bottom-0 right-0 m-2">
+      <div className="absolute bottom-0 right-0 m-1 text-xs lg:text-sm">
     <Badge variant="secondary" className="bg-red-700 text-white">
     {product.discount}% OFF
   </Badge>
   </div>
       )}
+
   </div>
         </>
       )
@@ -285,15 +273,15 @@ const ProductListing = ({
     </div>
         </Link>
 
-        <div className="flex mt-2 ml-3 items-center justify-between">
+        <div className="flex mt-1 ml-3 items-center justify-between">
     <div>
-        <Label className="text-sm">{product.title}</Label>
-        <p className="text-sm text-gray-600">{product.category}</p>
+        <Label className="text-xs lg:text-sm">{product.title}</Label>
+        <p className="text-xs lg:text-sm text-gray-600">{product.category}</p>
     </div>
         {/* add to fav list icon */}
-    <div onClick={saveToFavList} className="relative group rounded-full p-2  text-gray-600 cursor-pointer ">
-        <Heart className={`${isFavSaved ? 'text-red-600 fill-current' : 'text-gray-600 hover:text-red-600'}`} />
-        <span className="absolute bottom-12 left-1/2 transform -translate-x-1/2 w-max px-2 py-1 text-xs bg-black text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
+    <div onClick={saveToFavList} className="relative group rounded-full p-1  text-gray-600 cursor-pointer ">
+        <Heart className={`w-5 h-5 lg:w-6 lg:h-6  ${isFavSaved ? 'text-red-600 fill-current' : 'text-gray-600 hover:text-red-600'}`} />
+        <span className="absolute bottom-12 left-[2%] transform -translate-x-1/2 w-max px-1 py-1 text-xs bg-black text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
         {isFavSaved ? 'Saved!' : 'Save in fav list'}
         </span>
     </div>
@@ -305,24 +293,15 @@ const ProductListing = ({
         <div className="ml-2">
         <div className="flex space-x-4">
           {product.isDiscountEnabled && (
-          <div className="font-bold rounded-xl text-gray-400 text-md line-through">
+          <div className="font-bold rounded-xl text-gray-400 lg:text-sm text-xs line-through">
             {(product.oldPrice ?? product.price  ).toFixed(2)} TND
           </div>
              )}
-        <div className={`font-bold rounded-xl text-blue-600 text-md ${product.isDiscountEnabled ? 'animate-wiggle' : ''}`}>
+        <div className={`font-bold rounded-xl text-blue-600 lg:text-sm text-xs ${product.isDiscountEnabled ? 'animate-wiggle' : ''}`}>
         {(product.price).toFixed(2)} TND
           </div>
         </div>
         </div>
-        {/* add to cart list icon
-        <Link onClick={openDialog} href={`/MarketPlace/product/${product.id}`}>
-        <div className="relative group rounded-full p-2  text-gray-600 cursor-pointer ">
-          <ShoppingBag className='text-gray-600 hover:text-blue-600' />
-          <span className="absolute bottom-4 right-2 transform -translate-x-1/2 w-max px-2 py-1 text-xs bg-black text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
-            Add to cart
-          </span>
-          </div> 
-        </Link> */}
       </div>    
         </div>
     </Card>

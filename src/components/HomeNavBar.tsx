@@ -79,7 +79,7 @@ const Navbar = async () => {
             <span className="sr-only">Toggle navigation menu</span>
           </Button>            
           </SheetTrigger>
-            <SheetContent side="left" className='w-[40%] xs:[30%] mt-4'>
+            <SheetContent side="left" className='w-[40%] xs:[40%] mt-4'>
               {/* Middle Section for small devices */}
               <div className='flex justify-center items-start flex-col mt-16 space-y-2'>
                 <DialogClose>

@@ -166,7 +166,7 @@ const redirectToCart = () => {
     <MaxWidthWrapper>
 
 
-      <div className='py-10 mx-auto text-center flex flex-col items-center max-w-1xl'>
+      <div className='pb-4 mx-auto text-center flex flex-col items-center max-w-1xl'>
           <h1 className='text-3xl font-bold tracking-tight sm:text-4xl'>
                 Product{' '}
             <span className='text-blue-600'>
@@ -343,46 +343,8 @@ const redirectToCart = () => {
 
               <Separator className='mt-2 '/>
 
-              <div className='mt-6 flex items-center'>
-              <Label htmlFor="username" className="text-left">
-                Select Size :
-             </Label>
-             <div className='ml-3'>
-             <Select value={selectedSize} onValueChange={handleSizeChange}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select a size" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Select a size</SelectLabel>
-                {sizes && sizes.map((size, index) => (
-                  <SelectItem key={index} value={size}>{size}</SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-             </Select>
-
-             </div>
-
-            </div>
-
-              <div className="mt-6">
-              <p className="text-gray-400 text-sm">Scroll down to view product dimentions </p>
-              <ArrowDown className="text-gray-400 h-5 animate-bounce"/>
-             </div>
 
               <div className='mt-6 flex items-center'>
-              <Label htmlFor="username" className="text-left">
-                Select Quantity : <p className='text-xs text-gray-500 mt-1'>( max {platform.maxProductQuantity} ) </p>
-             </Label>
-             <div className='ml-3'>
-             <Input type='number'           
-              onChange={handleQuantityChange}  // Handle change
-              defaultValue={1} min={1} max={platform.maxProductQuantity}/>
-             </div>
-             </div>
-
-             <div className='mt-6 flex items-center'>
           <Label htmlFor="username" className="text-left">
             Select Color :
           </Label>
@@ -416,6 +378,48 @@ const redirectToCart = () => {
             </ToggleGroup>
           </div>
         </div>
+
+
+              <div className='mt-6 flex items-center'>
+              <Label htmlFor="username" className="text-left">
+                Select Quantity : <p className='text-xs text-gray-500 mt-1'>( max {platform.maxProductQuantity} ) </p>
+             </Label>
+             <div className='ml-3'>
+             <Input type='number'           
+              onChange={handleQuantityChange}  // Handle change
+              defaultValue={1} min={1} max={platform.maxProductQuantity}/>
+             </div>
+             </div>
+
+
+
+        <div className='mt-6 flex items-center'>
+              <Label htmlFor="username" className="text-left">
+                Select Size :
+             </Label>
+             <div className='ml-3'>
+             <Select value={selectedSize} onValueChange={handleSizeChange}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select a size" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Select a size</SelectLabel>
+                {sizes && sizes.map((size, index) => (
+                  <SelectItem key={index} value={size}>{size}</SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+             </Select>
+
+             </div>
+
+            </div>
+
+            <div className="mt-6">
+              <p className="text-gray-400 text-sm">Scroll down to view product dimentions </p>
+              <ArrowDown className="text-gray-400 h-5 animate-bounce"/>
+             </div>
 
 
              

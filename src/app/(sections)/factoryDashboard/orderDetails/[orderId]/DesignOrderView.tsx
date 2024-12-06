@@ -258,8 +258,8 @@ const handleChange = async () =>{
           <div className="grid gap-2">
             <CardTitle className="font-extrabold">Order Infos :</CardTitle>
             <CardDescription>
-                    <div className="grid grid-cols-5 gap-10 mt-2">
-                        <div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 mt-2">
+            <div>
                             <p className="font-bold">Order Id:</p>
                             <p>{order?.id}</p>
                         </div>
@@ -317,8 +317,8 @@ const handleChange = async () =>{
             <p className="text-red-600 text-sm">
         <span className="text-red-600 font-medium">Guide :</span> Click on the product!
       </p>
-                  <div className="grid grid-cols-3 gap-10 ml-10 mt-6">
-                    {order.orderItems.map((item, index) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 ml-2 md:ml-10 mt-6">
+      {order.orderItems.map((item, index) => (
                       <div
                         key={index}
                         className={cn("aspect-square rounded-xl cursor-pointer", {
@@ -345,8 +345,8 @@ const handleChange = async () =>{
           <div className="grid gap-2">
             <CardTitle className="font-extrabold">Order Item Infos :</CardTitle>
             <CardDescription>
-                    <div className="grid grid-cols-6 gap-10 mt-2">
-                        <div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-8 mt-2">
+            <div>
                             <p className="font-bold">Product Category:</p>
                             <p>{selectedItem.productCategory}</p>
                         </div>
@@ -374,14 +374,14 @@ const handleChange = async () =>{
         </CardHeader>
         <Separator className="w-full"/>
         <CardContent>
-          <div className="mt-6">
+        <div className="mt-6 space-y-4">
           <Button onClick={()=>{downloadMockup(selectedItem.capturedMockup)}} variant={"link"}>Download Product Mockup</Button>
 
             {/* client product */}
           {selectedItem.productTitle === "Client Product" && (
             <>
           <div className="text-sm">
-          <div className="flex space-x-10">
+          <div className="flex flex-col md:flex-row md:space-x-10 space-y-2 md:space-y-0">
             <div className="font-bold">Front Design Name : <span className="text-gray-600 font-semibold">
                 {selectedItem.frontclientDesign?.name ?? selectedItem.frontsellerDesign?.name ?? "N/A"}
               </span>
@@ -396,7 +396,7 @@ const handleChange = async () =>{
 
 
           <div className="text-sm">
-          <div className="flex space-x-10">
+          <div className="flex flex-col md:flex-row md:space-x-10 space-y-2 md:space-y-0">
             <div className="font-bold">Back Design Name : <span className="text-gray-600 font-semibold">
                 {selectedItem.backclientDesign?.name ?? selectedItem.backsellerDesign?.name ?? "N/A"}
               </span>

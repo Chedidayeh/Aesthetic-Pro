@@ -126,12 +126,16 @@ export async function getAllCategoriesWithDetails() {
         });
   
         // Delete the category itself
-        const deletedCategory = await prisma.category.delete({
+         await prisma.category.delete({
           where: {
             id: categoryId,
           },
         });
   
+      },
+      {
+        maxWait: 10000, // Wait for a connection for up to 10 seconds
+        timeout: 20000, // Allow the transaction to run for up to 20 seconds
       });
       return true
     } catch (error) {
@@ -201,42 +205,52 @@ export async function getAllCategoriesWithDetails() {
   
   
 
-
+  
   export async function resetPricesByCategory(catId: string) {
     try {
-      // Fetch the category to get the label
-      const category = await db.category.findUnique({
-        where: { id: catId },
-        select: { label: true },
-      });
-  
-  
-      // Fetch products that belong to the category
-      const products = await db.product.findMany({
-        where: { category: category!.label },
-        select: { id: true, basePrice: true, sellerProfit: true, price: true , oldPrice : true },
-      });
-  
-      if (products.length === 0) {
-        throw new Error('No products found for the category');
-      }
-  
-      // Update the price for each product to the initial price
-      const updatePromises = products.map(product => {
-        const initialPrice = product.oldPrice ?? product.price
-        return db.product.update({
-          where: { id: product.id },
-          data: { price: initialPrice , isDiscountEnabled : false , discount : 0},
+      await db.$transaction(async (tx) => {
+        // Fetch the category to get the label
+        const category = await tx.category.findUnique({
+          where: { id: catId },
+          select: { label: true },
         });
+  
+        if (!category) {
+          throw new Error(`Category with ID ${catId} not found`);
+        }
+  
+        // Fetch products that belong to the category
+        const products = await tx.product.findMany({
+          where: { category: category.label },
+          select: { id: true, basePrice: true, sellerProfit: true, price: true, oldPrice: true },
+        });
+  
+        if (products.length === 0) {
+          throw new Error('No products found for the category');
+        }
+  
+        // Update the price for each product to the initial price
+        const updatePromises = products.map((product) => {
+          const initialPrice = product.oldPrice ?? product.price;
+          return tx.product.update({
+            where: { id: product.id },
+            data: { price: initialPrice, isDiscountEnabled: false, discount: 0 },
+          });
+        });
+  
+        // Execute all updates within the transaction
+        await Promise.all(updatePromises);
+      },{
+        maxWait: 10000, // Wait for a connection for up to 10 seconds
+        timeout: 20000, // Allow the transaction to run for up to 20 seconds
       });
   
-      // Wait for all updates to complete
-      await Promise.all(updatePromises);
-  
-  
+      console.log(`Prices successfully reset for category ID: ${catId}`);
+      return true
     } catch (error) {
       console.error('Error resetting product prices by category:', error);
-      return null
+      return null;
     }
   }
+  
   
