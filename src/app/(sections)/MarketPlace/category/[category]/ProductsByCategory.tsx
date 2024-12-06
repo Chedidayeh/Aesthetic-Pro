@@ -353,13 +353,16 @@ const ProductsByCategory = ({ initialProducts,totalCount,initialPage, limit,pric
           <Pagination>
             <PaginationContent>
               <PaginationItem>
-                <PaginationPrevious
+              <PaginationPrevious
                   href="#"
                   onClick={(e) => {
-                    e.preventDefault();
+                    if (currentPage === 1) {
+                      e.preventDefault(); // Block interaction if disabled
+                      return;
+                    }
                     handlePageChange(currentPage - 1);
                   }}
-                  className={currentPage === 1 ? 'disabled' : ''}
+                  className={currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}
                   aria-disabled={currentPage === 1}
                   style={{ cursor: currentPage === 1 ? 'default' : 'pointer' }}
                 />
@@ -369,10 +372,13 @@ const ProductsByCategory = ({ initialProducts,totalCount,initialPage, limit,pric
                 <PaginationNext
                   href="#"
                   onClick={(e) => {
-                    e.preventDefault();
+                    if (currentPage === totalPages) {
+                      e.preventDefault(); // Block interaction if disabled
+                      return;
+                    }
                     handlePageChange(currentPage + 1);
                   }}
-                  className={currentPage === totalPages ? 'disabled' : ''}
+                  className={currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}
                   aria-disabled={currentPage === totalPages}
                   style={{ cursor: currentPage === totalPages ? 'default' : 'pointer' }}
                 />

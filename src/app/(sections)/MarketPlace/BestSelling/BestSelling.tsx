@@ -391,26 +391,32 @@ const BestSelling = ({ initialProducts,totalCount,initialPage, limit,priceRanges
           <Pagination>
             <PaginationContent>
               <PaginationItem>
-                <PaginationPrevious
+              <PaginationPrevious
                   href="#"
                   onClick={(e) => {
-                    e.preventDefault();
+                    if (currentPage === 1) {
+                      e.preventDefault(); // Block interaction if disabled
+                      return;
+                    }
                     handlePageChange(currentPage - 1);
                   }}
-                  className={currentPage === 1 ? 'disabled' : ''}
+                  className={currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}
                   aria-disabled={currentPage === 1}
                   style={{ cursor: currentPage === 1 ? 'default' : 'pointer' }}
                 />
               </PaginationItem>
               {renderPaginationItems()}
               <PaginationItem>
-                <PaginationNext
+              <PaginationNext
                   href="#"
                   onClick={(e) => {
-                    e.preventDefault();
+                    if (currentPage === totalPages) {
+                      e.preventDefault(); // Block interaction if disabled
+                      return;
+                    }
                     handlePageChange(currentPage + 1);
                   }}
-                  className={currentPage === totalPages ? 'disabled' : ''}
+                  className={currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}
                   aria-disabled={currentPage === totalPages}
                   style={{ cursor: currentPage === totalPages ? 'default' : 'pointer' }}
                 />
