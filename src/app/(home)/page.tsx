@@ -9,10 +9,6 @@ import ProductReel from "@/components/MarketPlace/ProductReel";
 import { ArrowRight, CircleDollarSign, Heart } from "lucide-react";
 import PerkSection from '@/components/PerkSection';
 
-
-
-
-
 export default async function Page() {
   const newProducts = await fetchNewProducts();
   const productsGroupedByCollection  = await getProductsGroupedByCollection()

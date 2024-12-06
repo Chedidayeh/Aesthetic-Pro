@@ -706,7 +706,7 @@ const viewProductData = (product : ExtraProduct) => {
                                                     <AlertDialogFooter>
                                                     </AlertDialogFooter>
                                                 </AlertDialogContent>
-                                  </AlertDialog>
+                                         </AlertDialog>
 
 
 
@@ -729,7 +729,9 @@ const viewProductData = (product : ExtraProduct) => {
                                                    </AlertDialogHeader>
                                                   <AlertDialogFooter>
                                               <AlertDialogCancel onClick={()=>setisDeleteOpen(false)}>Cancel</AlertDialogCancel>
-                                      <AlertDialogAction onClick={() => handleDelete()} 
+                                      <AlertDialogAction onClick={() => {setisDeleteOpen(false) 
+                                      handleDelete()
+                                       }}
                                      className='bg-red-500 hover:bg-red-500' >Delete</AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
@@ -760,30 +762,6 @@ const viewProductData = (product : ExtraProduct) => {
                                   </AlertDialog>
 
                                   <LoadingState isOpen={open} />
-
-                                  <AlertDialog open={isDeleteOpen}>
-                                    <AlertDialogTrigger asChild>
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent>
-                                      <AlertDialogHeader>
-                                        <AlertDialogTitle>Reason for rejecting</AlertDialogTitle>
-                                      </AlertDialogHeader>
-                                      <div className="grid gap-4 py-4">
-                                          <Input value={reasonForRejection}
-                                          onChange={(e) => setReasonForRejection(e.target.value)} 
-                                          type="text" 
-                                          placeholder='Type the reason' 
-                                          className="w-full bg-gray-100" />
-                                      </div>
-                                      <AlertDialogFooter>
-                                        <AlertDialogCancel onClick={()=>setisDialogOpen(false)}>Cancel</AlertDialogCancel>
-                                        <AlertDialogAction disabled={reasonForRejection === ""} className='bg-red-500 hover:bg-red-400' onClick={()=>{
-                                          setisDialogOpen(false)
-                                          handleRefuse(selectedProduct!.id)
-                                          }}>Delete Product</AlertDialogAction>
-                                      </AlertDialogFooter>
-                                    </AlertDialogContent>
-                                  </AlertDialog>
 
 {selectedDataProduct && (
 

@@ -693,8 +693,6 @@ const handleSwitchChange = () => {
 
                                               {/* downloading Loader  */}
                                               <AlertDialog open={isDownloadOpen} >
-                                       <AlertDialogTrigger asChild>
-                                        </AlertDialogTrigger>
                                           <AlertDialogContent className=" flex flex-col items-center justify-center">
                                               <AlertDialogHeader className="flex flex-col items-center justify-center">
                                               <Loader className="animate-spin text-blue-800 h-[35%] w-[35%]" />
@@ -711,8 +709,6 @@ const handleSwitchChange = () => {
 
 
                           <AlertDialog open={isDeleteOpen}>
-               <AlertDialogTrigger asChild>
-                         </AlertDialogTrigger>
                             <AlertDialogContent>
                                    <AlertDialogHeader className="flex flex-col items-center">
                                        <div className="text-red-500 mb-2">
@@ -728,15 +724,14 @@ const handleSwitchChange = () => {
                                                    </AlertDialogHeader>
                                                   <AlertDialogFooter>
                                               <AlertDialogCancel onClick={()=>setisDeleteOpen(false)}>Cancel</AlertDialogCancel>
-                                      <AlertDialogAction onClick={() => handleDelete()} 
+                                      <AlertDialogAction onClick={() => {setisDeleteOpen(false)
+                                        handleDelete()}} 
                                      className='bg-red-500 hover:bg-red-500' >Delete</AlertDialogAction>
                             </AlertDialogFooter>
                         </AlertDialogContent>
                      </AlertDialog> 
 
-    <AlertDialog open={isDialogOpen}>
-                                    <AlertDialogTrigger asChild>
-                                    </AlertDialogTrigger>
+                                  <AlertDialog open={isDialogOpen}>
                                     <AlertDialogContent>
                                       <AlertDialogHeader>
                                         <AlertDialogTitle>Reason for rejecting</AlertDialogTitle>

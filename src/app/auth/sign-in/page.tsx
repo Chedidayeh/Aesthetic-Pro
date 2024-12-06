@@ -4,15 +4,6 @@
 import NextImage from "next/image"
 import * as React from "react"
 import Link from 'next/link'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
 import { Button, buttonVariants } from "@/components/ui/button"
 
 import { Input } from "@/components/ui/input"
@@ -39,6 +30,13 @@ import { checkGoogleLoggedInUser, getUserByEmail } from "@/userData/user"
 import { useDispatch, useSelector } from "react-redux"
 import { RootState } from "@/store/reducers/reducers"
 import { saveRedirectUrl } from "@/store/actions/action"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 const emailSchema = z.string().email("Invalid email address");
 
 const Page = () => {
@@ -128,7 +126,7 @@ const Page = () => {
 
   return (
     <>
-                                  <AlertDialog open={isResetPassword}>
+                                  {/* <AlertDialog open={isResetPassword}>
                                        <AlertDialogTrigger asChild>
                                         </AlertDialogTrigger>
                                             <AlertDialogContent className=" flex flex-col items-center justify-center">
@@ -165,149 +163,118 @@ const Page = () => {
 
                                        </AlertDialogFooter>
                                         </AlertDialogContent>
-                                  </AlertDialog>
+                                  </AlertDialog> */}
 
 
-      <div className='container relative flex pt-20 pb-10 flex-col items-center justify-center lg:px-0 mb-32'>
-        <div className='mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]'>
-          <div className='flex flex-col items-center space-y-2 text-center'>
-          <div className='animate-pulse' style={{ width: '100px', height: '100px' }}>
-              <NextImage
-                  draggable={false}
-                  src={"/aestheticpro.png"}
-                  width={1000}
-                  height={1000}
-                  alt="logo"
-              />
-          </div>
-            <h1 className='text-xl font-semibold tracking-tight'>
-              Sign in to your {' '}
-              account
-            </h1>
-              {redirectUrl && redirectUrl === "/sellerDashboard" && (
-              <p className="text-xs text-green-500 animate-pulse">Sign In Again to get access to your Seller Dashboard !</p>
-              )}
-              {redirectUrl && redirectUrl === "/affiliateDashboard" && (
-              <p className="text-xs text-green-500 animate-pulse">Sign In Again to get access to your Affiliate Dashboard !</p>
-              )}
-          </div>
 
-          <div className="flex flex-col items-center space-y-2  text-center">
-          <Button onClick={handleClick} variant={"outline"} style={{ display: 'flex', alignItems: 'center' }}>
-                <NextImage 
-                  src="/google.png" 
-                  alt="google" 
-                  width={24} 
-                  height={24} 
-                  style={{ marginRight: '8px' }} 
-                />
-                Sign In with Google
-              </Button>
-          </div>
-
-          {/* <div className='relative'>
-              <div
-                aria-hidden='true'
-                className='absolute inset-0 flex items-center'>
-                <span className='w-full border-t' />
-              </div>
-              <div className='relative flex justify-center text-xs uppercase'>
-                <span className='bg-background px-2 text-muted-foreground'>
-                  or
-                </span>
-              
-              </div>
-            </div>
-
-          <div className='grid gap-6'>
-          <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-          <div className='grid gap-2 space-y-2'>
-              <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input disabled={isPending}
-                        placeholder="example@gmail.com"
-                         {...field} 
-                         type="email" 
-                         className=""/>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              <FormField
-                        control={form.control}
-                        name="password"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Password</FormLabel>
-                            <FormControl>
-                              <div className="relative w-full">
-
-                              <Input disabled={isPending}
-                              placeholder="********" 
-                              {...field} 
-                              type={showPassword ? "text" : "password"} // Toggle input type
-                              className="pr-10"/>
-                               <button
-                              type="button"
-                              onClick={togglePasswordVisibility}
-                              className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
-                            >
-                              {showPassword ? (
-                                <EyeOff className="h-5 w-5 text-gray-500" />
-                              ) : (
-                                <Eye className="h-5 w-5 text-gray-500" />
-                              )}
-                            </button>
-                            </div>
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-              </div>
-              <FormError message={error}  />
-              <FormSuccess message={success}  />
-              <Button 
-              disabled={isPending} 
-              loadingText="Logging You" 
-              isLoading={isPending} 
-              className="w-full" 
-              type="submit"
-              >
-                Login
-              </Button>
-
-            </form>
-            </Form>
-            <Button onClick={()=>setisResetPassword(true)} 
-              variant="link">
-                Forgot your password ?
-             </Button>
-             <div
-                aria-hidden='true'
-                className=' flex items-center'>
-                <span className='w-full border-t' />
-            </div>
-             <Link
-              className={buttonVariants({
-                variant: 'link',
-                className: 'gap-1.5',
-              })}
-              href='/auth/sign-up'>
-              Don&apos;t have an account?
-              <ArrowRight className='h-4 w-4' />
-            </Link>
-
-          </div> */}
-        </div>
+<div className='container relative flex mt-32 lg:mt-40 pb-10 flex-col items-center justify-center lg:px-0 lg:mb-36 mb-32'>
+  <Card className='mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[450px]'>
+    <CardHeader className="flex flex-col items-center space-y-2 text-center">
+      <div className='animate-pulse' style={{ width: '100px', height: '100px' }}>
+        <NextImage
+          draggable={false}
+          src={"/aestheticpro.png"}
+          width={1000}
+          height={1000}
+          alt="logo"
+        />
       </div>
+      <CardTitle className='text-xl font-semibold tracking-tight'>
+        Sign in to your {' '}
+        account
+      </CardTitle>
+      {redirectUrl && redirectUrl === "/sellerDashboard" && (
+        <p className="text-xs text-green-500 animate-pulse">Sign In Again to get access to your Seller Dashboard !</p>
+      )}
+      {redirectUrl && redirectUrl === "/affiliateDashboard" && (
+        <p className="text-xs text-green-500 animate-pulse">Sign In Again to get access to your Affiliate Dashboard !</p>
+      )}
+    </CardHeader>
+
+    <CardContent className="flex flex-col items-center space-y-2 text-center">
+      <Button onClick={handleClick} variant={"outline"} style={{ display: 'flex', alignItems: 'center' }}>
+        <NextImage 
+          src="/google.png" 
+          alt="google" 
+          width={24} 
+          height={24} 
+          style={{ marginRight: '8px' }} 
+        />
+        Sign In with Google
+      </Button>
+    </CardContent>
+
+    {/* Uncomment if you want the form section */}
+    {/* <CardContent>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+          <div className='grid gap-2 space-y-2'>
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input disabled={isPending} placeholder="example@gmail.com" {...field} type="email" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <div className="relative w-full">
+                      <Input disabled={isPending} placeholder="********" {...field} type={showPassword ? "text" : "password"} className="pr-10" />
+                      <button type="button" onClick={togglePasswordVisibility} className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5">
+                        {showPassword ? (
+                          <EyeOff className="h-5 w-5 text-gray-500" />
+                        ) : (
+                          <Eye className="h-5 w-5 text-gray-500" />
+                        )}
+                      </button>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <FormError message={error} />
+          <FormSuccess message={success} />
+          <Button disabled={isPending} loadingText="Logging You" isLoading={isPending} className="w-full" type="submit">
+            Login
+          </Button>
+        </form>
+      </Form>
+    </CardContent> */}
+
+    {/* Uncomment if you want the link section */}
+    {/* <CardContent>
+      <Button onClick={()=>setisResetPassword(true)} variant="link">
+        Forgot your password?
+      </Button>
+      <div aria-hidden='true' className=' flex items-center'>
+        <span className='w-full border-t' />
+      </div>
+      <Link
+        className={buttonVariants({
+          variant: 'link',
+          className: 'gap-1.5',
+        })}
+        href='/auth/sign-up'>
+        Don&apos;t have an account?
+        <ArrowRight className='h-4 w-4' />
+      </Link>
+    </CardContent> */}
+  </Card>
+</div>
+
 
       
     </>
