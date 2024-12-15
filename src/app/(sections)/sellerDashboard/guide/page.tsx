@@ -45,6 +45,7 @@ const Page = () => {
       prevIndex === 0 ? guideImages.length - 1 : prevIndex - 1
     );
   };
+  
 
   return (
     <>

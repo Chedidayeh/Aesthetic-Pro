@@ -17,7 +17,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Frown, Loader } from 'lucide-react';
-import { getPlatformForTheWebsite } from '@/actions/actions';
+import { getLevelByNumber, getPlatformForTheWebsite } from '@/actions/actions';
 
 
 
@@ -44,6 +44,7 @@ const Page = async () => {
 
   const platform = await getPlatformForTheWebsite()
  
+  const level = await getLevelByNumber(store!.level)
 
 
   return (
@@ -51,6 +52,9 @@ const Page = async () => {
    <DesignView
     SellerDesignsData={sellersDesigns}
     platform = {platform!}
+    level={level}
+    store={store!}
+
   />  );
   } catch (error) {
     console.error('Error fetching data:', error);

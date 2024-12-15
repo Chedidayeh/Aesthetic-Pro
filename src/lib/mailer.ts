@@ -1,4 +1,4 @@
-import { generateDesignRejectedEmailHTML, generateOrderEmailHTML, generateProductRejectedEmailHTML, generateResetPassEmailHTML, generateVerificationEmailHTML } from '@/components/EmailTemplate';
+import { generateDesignRejectedEmailHTML, generateLevelUpEmailHTML, generateOrderEmailHTML, generateProductRejectedEmailHTML, generateResetPassEmailHTML, generateVerificationEmailHTML } from '@/components/EmailTemplate';
 import { Order, OrderItem, User } from '@prisma/client';
 import nodemailer from 'nodemailer';
 
@@ -67,6 +67,33 @@ export const sendProductRejetedEmail = (receiverEmail : string, username: string
 
   return transporter.sendMail(mailOptions);
 };
+
+export const sendLevelUpEmail = async (
+  receiverEmail: string,
+  username: string,
+  storeName : string,
+  newLevel: number,
+  isHighestLevel: boolean
+): Promise<void> => {
+  try {
+    const mailOptions = {
+      from: email,
+      to: receiverEmail,
+      subject: isHighestLevel
+        ? 'Congratulations! You’ve unlocked unlimited creations!'
+        : `Congratulations on reaching Level ${newLevel}!`,
+      html: generateLevelUpEmailHTML(username,storeName, newLevel, isHighestLevel),
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    console.log(`Level-up email sent successfully to ${receiverEmail}`);
+  } catch (error) {
+    console.error(`Failed to send level-up email to ${receiverEmail}:`, error);
+    throw new Error('Failed to send email');
+  }
+};
+
 
 interface OrderWithItems extends Order {
   orderItems : OrderItem[]

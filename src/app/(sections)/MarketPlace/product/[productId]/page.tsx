@@ -70,7 +70,7 @@ const Page = async ({ params }: PageProps) => {
       include : {
         store : true
       }
-      });
+    });
 
       if (!product) return NoProductFound()
       

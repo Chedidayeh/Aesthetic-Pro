@@ -12,6 +12,7 @@ import {
   Package2,
   Search,
   Shirt,
+  Star,
   User,
   Users,
 } from "lucide-react"
@@ -24,19 +25,12 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
+
 
 import Link from "next/link";
 
 import { cn } from "@/lib/utils";
-import { getProductViewsChartData, getStoreByUserId, getStoreProductsViewsCount, getUnreadNotificationsForStore, getUser } from "@/actions/actions";
+import { getLevelByNumber, getProductViewsChartData, getStoreByUserId, getStoreProductsViewsCount, getStoreStats, getUnreadNotificationsForStore, getUser } from "@/actions/actions";
 import React from "react"
 import OrderedDesigns from "@/components/sellerDashboard/OrderedDesigns"
 import OrderedProducts from "@/components/sellerDashboard/OrderedProducts"
@@ -69,6 +63,8 @@ const Page =  async () => {
   const notifications = await getUnreadNotificationsForStore(store.id)
   const followersCount = await getStoreFollowersCount(store!.id);
   const productsViewsCount = await getStoreProductsViewsCount(store!.id);
+  const level = await getLevelByNumber(store.level)
+  const chartData = await getStoreStats();
 
   return (
     <>
@@ -79,6 +75,16 @@ const Page =  async () => {
 
   
          <h1 className="text-2xl font-semibold">Seller Dashboard</h1>
+         <div className="w-full flex-1">
+          <div className="relative ">
+            <Link href={"/sellerDashboard/storeLevel"}>
+            <Badge variant={"secondary"} className="text-white bg-yellow-400 hover:bg-yellow-300 ">
+            <Star className="mr-1 mb-1/2 w-4 h-4 text-white"/>
+            Store Level {level?.levelNumber}               
+            </Badge>
+            </Link>
+          </div>
+      </div>
          {notifications.length > 0 && (
          <Link href={"/sellerDashboard/notifications"}><Button variant={"link"}>You Have {notifications.length} unread notifications</Button></Link>
          )}
@@ -100,6 +106,8 @@ const Page =  async () => {
         <div className="text-center font-extrabold text-xl text-blue-500 mt-8">
           {store.storeName}
         </div>
+
+
       </div>
 
 
@@ -176,7 +184,7 @@ const Page =  async () => {
 
 
     </div>
-    <StoresTableStats storeId={store.id}/>
+    <StoresTableStats storeId={store.id} chartData={chartData} />
 
     </div>
 

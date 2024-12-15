@@ -27,7 +27,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import Link from "next/link";
-import { getOrderChartData, getPlatformForTheWebsite, getTotalCounts, getUser } from "@/actions/actions";
+import { getOrderChartData, getPlatformForTheWebsite, getStoreStats, getTotalCounts, getUser } from "@/actions/actions";
 import React from "react"
 import UsersTable from "@/components/adminDashboard/UsersTable"
 import { unstable_noStore as noStore } from "next/cache"
@@ -40,9 +40,8 @@ export default async function Page() {
     noStore()
     
     const count = await getTotalCounts()
-    const user = await getUser()
     const platform = await getPlatformForTheWebsite()
-    const chartData = await getOrderChartData(11 , 2024);
+    const chartData = await getStoreStats();
 
   return (
     <>
@@ -125,14 +124,8 @@ export default async function Page() {
     <div className='flex flex-col space-y-5'>
     <Component />
     <ProductsViewsChart/>
-    <StoresTableStats />
-
-    <div className='hidden xl:flex flex-col space-y-5'>
-
+    <StoresTableStats chartData= {chartData} />
     <UsersTable/>
-
-
-    </div>
 
     </div>
 

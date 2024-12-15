@@ -61,16 +61,19 @@ import {
 import { db } from '@/db';
 import { deleteProduct, updateProduct } from './actions';
 import { useRouter } from 'next/navigation';
-import { Collection, Product } from '@prisma/client';
+import { Collection, Level, Product, Store } from '@prisma/client';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from "@/components/ui/use-toast";
 import ImageSlider from "@/components/MarketPlace/ImageSlider";
 import LoadingState from "@/components/LoadingState";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { sendLevelUpEmail } from "@/lib/mailer";
 interface ProductViewProps {
   sellerProductsData: Product[];
   totalProductViews:number
   collections : ExtraCollection[]
+  level : Level
+  store : Store
   }
 
   interface ExtraCollection extends Collection {
@@ -82,9 +85,13 @@ const ProductView = ({
   sellerProductsData,
   totalProductViews,
   collections,
+  level,
+  store,
   }: ProductViewProps) => {
         const router = useRouter();
         const { toast } = useToast()
+
+
 
         
         // serach and sort filter
@@ -103,7 +110,6 @@ const ProductView = ({
           // Ensure the value is of type Collection
           setSelectedCollection(value);
         };
-
 
 
 
@@ -277,7 +283,8 @@ const ProductView = ({
 
   <Card className="col-span-full" x-chunk="dashboard-01-chunk-4">
   <CardHeader className="px-4 sm:px-7">
-  <CardDescription>Total Products: {sellerProductsData.length}</CardDescription>
+  <CardDescription>Total Products: {sellerProductsData.length} | <span className="text-blue-500">your store limit : {!store.unlimitedCreation ? level.productLimit  : "unlimited"} products</span></CardDescription>
+  
   <CardDescription className="text-blue-500">Total Products Views : {totalProductViews}</CardDescription>
     <div className="ml-0 sm:ml-5 mt-2">
       <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">

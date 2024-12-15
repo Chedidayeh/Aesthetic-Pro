@@ -654,7 +654,9 @@ const viewProductData = (product : ExtraProduct) => {
         <div className="mt-20">
          {!product.isProductAccepted && !product.isProductRefused && (
             <>
-               <Badge onClick={()=>setisDialogOpen(true)} className='hover:text-red-500 cursor-pointer' variant={`outline`}>
+               <Badge onClick={()=>{
+                setSelectedProduct(product)
+                setisDialogOpen(true)}} className='hover:text-red-500 cursor-pointer' variant={`outline`}>
                 <CircleX/>
                </Badge>
                  <Badge onClick={()=>handleAccept(product.id)} className='ml-2 hover:text-green-500 cursor-pointer' variant={`outline`}>
@@ -756,7 +758,7 @@ const viewProductData = (product : ExtraProduct) => {
                                         <AlertDialogAction disabled={reasonForRejection === ""} className='bg-red-500 hover:bg-red-400' onClick={()=>{
                                           setisDialogOpen(false)
                                           handleRefuse(selectedProduct!.id)
-                                          }}>Delete Product</AlertDialogAction>
+                                          }}>Refuse Product</AlertDialogAction>
                                       </AlertDialogFooter>
                                     </AlertDialogContent>
                                   </AlertDialog>

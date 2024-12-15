@@ -1,6 +1,7 @@
 'use server'
 
 import { db } from "@/db";
+import { sendLevelUpEmail } from "@/lib/mailer";
 import { Collection } from "@prisma/client";
 
 interface UpdateProductArgs {
@@ -10,6 +11,7 @@ interface UpdateProductArgs {
 
 
   }
+
 
 export const updateProduct = async ({ productId, newTitle , selectedCollection }: UpdateProductArgs) => {
     try {

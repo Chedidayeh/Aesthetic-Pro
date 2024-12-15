@@ -16,7 +16,6 @@ const ThankYouPage = async ({
     
   const order = await getOrder(orderId!)
 
-  const platform = await getPlatformForTheWebsite()
 
   return (
 

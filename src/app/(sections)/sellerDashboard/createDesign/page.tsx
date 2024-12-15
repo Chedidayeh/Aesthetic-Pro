@@ -1,7 +1,7 @@
 
   import React from 'react';
 
-  import { getAllCategories, getPlatformForTheWebsite, getStore, getUser } from "@/actions/actions"
+  import { getAllCategories, getLevelByNumber, getPlatformForTheWebsite, getStore, getUser } from "@/actions/actions"
 
   import CreateDesignView from "./CreateDesignView";
   
@@ -19,6 +19,7 @@
 import { OctagonAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { getStoreWithDesignsCount } from './actions';
   
   
 
@@ -28,7 +29,8 @@ import Link from 'next/link';
 
     const platform  = await getPlatformForTheWebsite()
     const user = await getUser()
-    const store = await getStore(user?.id!)
+    const store = await getStoreWithDesignsCount(user?.id!)
+    const level = await getLevelByNumber(store.level)
   
     if(platform?.closeCreation) {
       return (
@@ -44,6 +46,32 @@ import Link from 'next/link';
             <AlertDialogDescription>
                 We will send you a notification when Design creation is activated !
               </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <Link  href="/sellerDashboard" ><Button variant="link">
+              Return to Seller Dashboard
+                </Button>
+                </Link>
+            </AlertDialogFooter>
+        </AlertDialogContent>
+    </AlertDialog>
+      )
+    }
+
+    if ((store.designsCount === level.designLimit) && store.unlimitedCreation === false ) {
+      return (
+        <AlertDialog open={true} >
+        <AlertDialogContent>
+        <AlertDialogHeader className="flex flex-col items-center">
+            <div className="text-red-500 mb-2">
+                <OctagonAlert className=''/>
+            </div>
+            <AlertDialogTitle className="text-xl font-bold text-center">
+                Design Creation is Deactivated ! 
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+            You have reached your design upload limit.
+            </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <Link  href="/sellerDashboard" ><Button variant="link">

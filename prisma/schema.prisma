@@ -160,6 +160,9 @@ model Store {
   facebookLink    String?
   instagramLink   String?
 
+  level           Int  @default(1)
+  unlimitedCreation   Boolean  @default(false)
+
   revenue         Float         @default(0)
   receivedPayments  Float         @default(0)
   totalSales      Int           @default(0)
@@ -178,10 +181,20 @@ model Store {
   followers      StoreFollow[] // New field to track the users following the store
 
 
+
   paymentRequest  PaymentRequest[]
 
   createdAt       DateTime       @default(now())
   updatedAt      DateTime?      @updatedAt
+}
+
+model Level {
+  id            Int      @id @default(autoincrement())
+  levelNumber   Int      @unique
+  minSales      Int      @default(0)
+  productLimit  Int
+  designLimit   Int
+  benefits      String[]
 }
 
 

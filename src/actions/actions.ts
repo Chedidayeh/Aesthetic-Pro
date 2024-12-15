@@ -1058,86 +1058,59 @@ export async function checkProductInFavList(productId: string, userId: string) {
 
 
   // add product to a user fav list :
-  export async function addProductToFavList(productId: string, userId: string) {
+  export async function addProductToFavList(productId: string, userId: string): Promise<boolean | null> {
     try {
-      // Find or create a favorite list for the user
-      let favList = await db.favList.findFirst({
-        where: {
-          userId: userId,
-        },
+      // Upsert favorite list in one step
+      const favList = await db.favList.upsert({
+        where: { userId },
+        create: { userId },
+        update: {}, // No updates needed for existing records
       });
   
       if (!favList) {
-        favList = await db.favList.create({
-          data: {
-            userId: userId,
+        return false;
+      }
+  
+      // Add product to the user's favorite list
+      const result = await db.favList.update({
+        where: { id: favList.id },
+        data: {
+          products: {
+            connect: { id: productId }, // Connect product directly
           },
-        });
-      }
+        },
+      });
   
-      const product = await db.product.findUnique({ where: { id: productId } });
-      
-      if (product && favList) {
-        await db.favList.update({
-          where: { id: favList.id },
-          data: {
-            products: { connect: { id: productId } }
-          }
-        });
-
-        return true
-      }
-  
-      return false
+      return !!result;
     } catch (error) {
       console.error("Error adding product to favList:", error);
       return null;
     }
   }
+  
 
 
   // remove product from user's fav list
-export async function removeProductFromFavList(productId: string, userId: string) {
-  try {
-    // Find the user's favorite list including products
-    const favList = await db.favList.findUnique({
-      where: {
-        userId: userId,
-      },
-      include: {
-        products: true,
-      },
-    });
-
-    if (!favList || !favList.products) {
-      // If the favorite list doesn't exist or it has no products, nothing to remove
-      return false;
+  export async function removeProductFromFavList(productId: string, userId: string): Promise<boolean| null> {
+    try {
+      // Directly attempt to disconnect the product from the user's favorite list
+      const result = await db.favList.update({
+        where: { userId },
+        data: {
+          products: {
+            disconnect: { id: productId },
+          },
+        },
+      });
+  
+      // If no error is thrown, assume success
+      return !!result;
+    } catch (error) {
+      console.error("Error removing product from favList:", error);
+      return null
     }
-
-    // Check if the product exists in the favorite list items
-    const productIndex = favList.products.findIndex(product => product.id === productId);
-
-    if (productIndex === -1) {
-      // If the product is not found in the favorite list, return false
-      return false;
-    }
-
-    // Remove the product from the favorite list
-    await db.favList.update({
-      where: { id: favList.id },
-      data: {
-        products: {
-          disconnect: { id: productId }
-        }
-      }
-    });
-
-    return true;
-  } catch (error) {
-    console.error("Error removing product from favList:", error);
-    throw error; // Propagate the error for handling elsewhere
   }
-}
+  
 
 
 
@@ -1599,14 +1572,10 @@ export async function getAffiliateStats(userId: string) {
   }
 }
 
-// return all commissions :
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
 
 export async function getAllCommissionsByAffiliateId(affiliateId: string) {
   try {
-    const affiliateLinks = await prisma.affiliateLink.findMany({
+    const affiliateLinks = await db.affiliateLink.findMany({
       where: {
         affiliateId: affiliateId, // Filter by affiliate ID
       },
@@ -2018,7 +1987,8 @@ export async function getStoreStats() {
       revenue : true,
       totalSales : true,
       logoUrl : true,
-      id:true
+      id:true,
+      level : true
     },
   });
 
@@ -2036,6 +2006,7 @@ export async function getStoreStats() {
       totalFollowers: store.followers.length,
       totalViews: storeTotalViews,
       logo : store.logoUrl,
+      level : store.level
     };
   });
 
@@ -2084,5 +2055,28 @@ export async function getStoreProductsViewsCount(storeId: string): Promise<numbe
   } catch (error) {
     console.error("Error fetching store products views count:", error);
     throw new Error("Failed to retrieve store product views count.");
+  }
+}
+
+
+// levels : 
+
+
+export async function getLevelByNumber(levelNumber: number) {
+  try {
+    const level = await db.level.findUnique({
+      where: {
+        levelNumber: levelNumber,
+      },
+    });
+
+    if (!level) {
+      throw new Error(`Level with number ${levelNumber} not found`);
+    }
+
+    return level;
+  } catch (error) {
+    console.error(error);
+    throw new Error('An error occurred while fetching the level');
   }
 }

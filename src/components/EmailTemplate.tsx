@@ -215,7 +215,7 @@ export const generateDesignRejectedEmailHTML = (username: string, designName: st
       <body>
         <div class="container">
           <div class="logo">
-              <img src="https://firebasestorage.googleapis.com/v0/b/tactical-hydra-424919-a1.appspot.com/o/aestheticpro.png?alt=media&token=3d5c4c50-bc46-4e81-af42-4ab3763a9ed5" alt="AestheticPro Logo" style="max-width: 200px; margin-bottom: 1px;">
+              <img src="https://firebasestorage.googleapis.com/v0/b/tactical-hydra-424919-a1.appspot.com/o/aestheticpro.png?alt=media&token=3d5c4c50-bc46-4e81-af42-4ab3763a9ed5" alt="AestheticPro Logo" style="max-width: 100px; margin-bottom: 1px;">
           </div>
           <p class="message">Hi ${username},</p>
           <p class="message">We regret to inform you that your design "${designName}" has been rejected.</p>
@@ -240,12 +240,6 @@ export const generateProductRejectedEmailHTML = (username: string, productName: 
     <html>
       <head>
         <style>
-          body {
-            font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            padding: 20px;
-            margin: 0;
-          }
           .container {
             max-width: 600px;
             margin: 0 auto;
@@ -285,7 +279,7 @@ export const generateProductRejectedEmailHTML = (username: string, productName: 
       <body>
         <div class="container">
           <div class="logo">
-              <img src="https://firebasestorage.googleapis.com/v0/b/tactical-hydra-424919-a1.appspot.com/o/aestheticpro.png?alt=media&token=3d5c4c50-bc46-4e81-af42-4ab3763a9ed5" alt="AestheticPro Logo" style="max-width: 200px; margin-bottom: 1px;">
+              <img src="https://firebasestorage.googleapis.com/v0/b/tactical-hydra-424919-a1.appspot.com/o/aestheticpro.png?alt=media&token=3d5c4c50-bc46-4e81-af42-4ab3763a9ed5" alt="AestheticPro Logo" style="max-width: 100px; margin-bottom: 1px;">
           </div>
           <p class="message">Hi ${username},</p>
           <p class="message">We regret to inform you that your product "${productName}" has been rejected.</p>
@@ -399,7 +393,7 @@ export const generateOrderEmailHTML = (order: OrderWithItems) => {
       <div class="container">
         <div class="header">
           <div class="logo">
-              <img src="https://firebasestorage.googleapis.com/v0/b/tactical-hydra-424919-a1.appspot.com/o/aestheticpro.png?alt=media&token=3d5c4c50-bc46-4e81-af42-4ab3763a9ed5" alt="AestheticPro Logo" style="max-width: 200px; margin-bottom: 1px;">
+              <img src="https://firebasestorage.googleapis.com/v0/b/tactical-hydra-424919-a1.appspot.com/o/aestheticpro.png?alt=media&token=3d5c4c50-bc46-4e81-af42-4ab3763a9ed5" alt="AestheticPro Logo" style="max-width: 100px; margin-bottom: 1px;">
           </div>
         <h1 style="font-size: 28px; font-weight: bold; color: #333;">We Appreciate Your Order! 💖</h1>
         <p style="font-size: 16px; color: #555; margin-top: 8px;">Thank you for your trust.</p>
@@ -426,6 +420,54 @@ export const generateOrderEmailHTML = (order: OrderWithItems) => {
 
   return emailHTML;
 };
+
+
+export const generateLevelUpEmailHTML = (
+  username: string,
+  storeName: string,
+  newLevel: number,
+  isHighestLevel: boolean
+) => {
+  const emailHTML = `
+    <html>
+      <body style="font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 0; padding: 20px;">
+        <div style="max-width: 600px; margin: 0 auto; background-color: #fff; border: 1px solid #dcdcdc; border-radius: 8px; padding: 20px; text-align: center;">
+          <div style="margin-bottom: 10px;">
+            <img src="https://firebasestorage.googleapis.com/v0/b/tactical-hydra-424919-a1.appspot.com/o/aestheticpro.png?alt=media&token=3d5c4c50-bc46-4e81-af42-4ab3763a9ed5" 
+                 alt="Company Logo - AestheticPro" style="max-width: 100px; margin-bottom: 10px;">
+          </div>
+          <h1 style="font-size: 24px; font-weight: bold; color: #0070f3; margin-bottom: 20px;">Congratulations, ${username} 🎉 !</h1>
+          <p style="font-size: 16px; line-height: 1.6; color: #333;">
+            Your store <strong style="color: #0070f3;">${storeName}</strong> has reached <strong>Level ${newLevel}</strong> on our platform!
+          </p>
+          ${
+            isHighestLevel
+              ? `
+          <p style="font-size: 16px; line-height: 1.6; color: #333; margin-top: 20px;">
+            You've unlocked <strong style="color: #0070f3;">unlimited products and designs creation</strong> for your store!
+          </p>
+          <p style="font-size: 16px; line-height: 1.6; color: #333;">We are excited to see your store thrive with these new privileges. Keep up the fantastic work!</p>
+          `
+              : `
+          <p style="font-size: 16px; line-height: 1.6; color: #333;">
+            You're now one step closer to unlocking the highest level and all its exclusive benefits!
+          </p>
+          <p style="font-size: 16px; line-height: 1.6; color: #333;">
+            Continue striving for success to make your store even more remarkable.
+          </p>
+          `
+          }
+          <div style="margin-top: 20px; font-size: 12px; color: #777;">
+            <p>&copy; ${new Date().getFullYear()} AestheticPro.tn. All rights reserved.</p>
+            <p>Contact us: <a href="mailto:astheticprocontact@gmail.com" style="color: #0070f3;">astheticprocontact@gmail.com</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  `;
+  return emailHTML;
+};
+
 
 
 

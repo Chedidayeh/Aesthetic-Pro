@@ -55,7 +55,7 @@ import {
 import { db } from '@/db';
 import { deleteDesign, updateDesign } from './actions';
 import { useRouter } from 'next/navigation';
-import { Platform, SellerDesign } from '@prisma/client';
+import { Level, Platform, SellerDesign, Store } from '@prisma/client';
 import { Badge } from '@/components/ui/badge';
 import { useMutation } from '@tanstack/react-query';
 import LoadingState from '@/components/LoadingState';
@@ -63,12 +63,16 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 interface DesignViewProps {
     SellerDesignsData: SellerDesign[];
     platform : Platform
+    level:Level
+    store:Store
   }
 
 
 const DesignView = ({
     SellerDesignsData,
-    platform
+    platform,
+    level,
+    store,
   }: DesignViewProps) => {
         const router = useRouter();
         const { toast } = useToast()
@@ -235,7 +239,8 @@ const DesignView = ({
   <h1 className="text-2xl font-semibold mb-8">All Designs</h1>
   <Card className="col-span-full" x-chunk="dashboard-01-chunk-4">
   <CardHeader className="px-4 md:px-7">
-  <CardDescription>Total Designs: {SellerDesignsData.length}</CardDescription>
+  <CardDescription>Total Designs: {SellerDesignsData.length} | <span className="text-blue-500">your store limit : {!store.unlimitedCreation ?  level.designLimit : "unlimited"} designs</span></CardDescription>
+  
     <div className="ml-2 md:ml-5 mt-2">
       <div className="flex flex-wrap space-x-0 space-y-2 md:space-y-0 md:space-x-4"> {/* Flex container with space between items */}
         {/* Sorting select */}
@@ -366,7 +371,7 @@ const DesignView = ({
 
                         
                       </CardHeader>
-                      <CardContent className="relative flex items-center justify-center">
+                      <CardContent className="relative flex items-center justify-center p-10">
                         <NextImage
                           onContextMenu={(e) => e.preventDefault()}
                           src={design.imageUrl}

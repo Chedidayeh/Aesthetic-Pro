@@ -7,7 +7,7 @@ import {
     DropdownMenuLabel,
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu"
-import React from 'react'
+  import React ,{ ChangeEvent, KeyboardEvent } from "react";
 import Link from "next/link"
 import { CircleUser, Menu, MoreHorizontal, OctagonAlert, Package2, Search, Trash2 } from "lucide-react"
 import {
@@ -44,10 +44,12 @@ import LoadingState from "@/components/LoadingState"
 import { getStoreByUserId, getUser } from "@/actions/actions"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/components/ui/use-toast"
-import { addNewCollection, addTopBarContent, deleteTopBarCollection, deleteTopBarContent, updateCreation, updatePlatformData, updateStoreCreation } from "./actions"
-import { Collection, Platform, Product } from '@prisma/client';
+import { addNewCollection, addTopBarContent, createLevel, deleteLevel, deleteTopBarCollection, deleteTopBarContent, updateCreation, updatePlatformData, updateStoreCreation } from "./actions"
+import { Collection, Level, Platform, Product } from '@prisma/client';
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface ExtraCollection extends Collection {
   products : Product[]
@@ -55,10 +57,11 @@ interface ExtraCollection extends Collection {
 interface ViewProps {
     platform : Platform
     collections : ExtraCollection[]
+    levels : Level[]
 }
 
 
-const SettingsView = ({ platform , collections }: ViewProps ) => { 
+const SettingsView = ({ platform , collections , levels }: ViewProps ) => { 
 
 
 
@@ -73,6 +76,7 @@ const SettingsView = ({ platform , collections }: ViewProps ) => {
 
     const [isCreationEnabled, setIsCreationEnabled] = useState(!platform.closeCreation);
 
+    
 
     const [updatedPlatformData, setUpdatedPlatformData] = useState({
         maxProductSellerProfit: platform.maxProductSellerProfit,
@@ -85,6 +89,85 @@ const SettingsView = ({ platform , collections }: ViewProps ) => {
         affiliateUserProfit : platform.affiliateUserProfit,
         freeShippingFeeLimit : platform.freeShippingFeeLimit
       });
+
+      const [isCreateOpen, setIsCreateOpen] = useState(false)
+      const [newLevel, setNewLevel] = useState({
+        levelNumber: 0,
+        minSales: 0,
+        productLimit: 0,
+        designLimit: 0,
+        benefits : [""],
+        newBenefit: "",
+      });
+
+      const handleAddBenefit = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        const trimmedBenefit = newLevel.newBenefit.trim(); // Trim the input to remove leading/trailing spaces
+      
+        if (e.key === "Enter" && trimmedBenefit !== "") {
+          setNewLevel({
+            ...newLevel,
+            benefits: [...newLevel.benefits, trimmedBenefit], // Add the trimmed benefit to the list
+            newBenefit: "", // Clear the input after adding the benefit
+          });
+        }
+      };
+      
+
+      
+  
+      const handleAddLevel = async () => {
+        try {
+          setOpen(true);
+          setIsCreateOpen(false)
+          await createLevel(newLevel); // Assuming createLevel is defined elsewhere in your code
+      
+          // Success toast notification
+          toast({
+            title: 'Level Added Successfully',
+            variant: 'default',
+          });
+          setOpen(false)
+          router.refresh()
+        } catch (error) {
+          console.error('Error adding level:', error);
+          setOpen(false)
+          // Error toast notification
+          toast({
+            title: 'Failed to Add Level',
+            description: error instanceof Error ? error.message : 'Unknown error occurred',
+            variant: 'destructive',
+          });
+        }
+      };
+
+    
+      const handleDeleteLevel = async (levelId: number) => {
+        try {
+          setOpen(true);  // Assuming this controls the modal or loading indicator
+
+            await deleteLevel(levelId);
+
+            // Success toast notification
+            toast({
+              title: 'Level Deleted Successfully',
+              variant: 'default',
+            });
+            router.refresh()
+        } catch (error) {
+          console.error('Error deleting level:', error);
+      
+          // Error toast notification
+          toast({
+            title: 'Failed to Delete Level',
+            description: error instanceof Error ? error.message : 'Unknown error occurred',
+            variant: 'destructive',
+          });
+        } finally {
+          setOpen(false);  // Close the modal or loading indicator
+        }
+      };
+
+
 
       const handleAddCollection = async () => {
         try {
@@ -294,6 +377,9 @@ const SettingsView = ({ platform , collections }: ViewProps ) => {
                     <Link href="#" className={`font-semibold ${selectedSection === "data" ? "text-primary" : ""}`} onClick={() => setSelectedSection("data")}>
                         Platform Data
                     </Link>
+                    <Link href="#" className={`font-semibold ${selectedSection === "level" ? "text-primary" : ""}`} onClick={() => setSelectedSection("level")}>
+                        Levels
+                    </Link>
                 </nav>
                 <div className="grid gap-6">
                     {selectedSection === "general" && (
@@ -386,7 +472,7 @@ const SettingsView = ({ platform , collections }: ViewProps ) => {
                             </Card>
                     )}
 
-{selectedSection === "general" && (
+                    {selectedSection === "general" && (
                             <Card x-chunk="dashboard-04-chunk-1">
                             <CardHeader>
                                 <CardTitle>Collection</CardTitle>
@@ -622,6 +708,204 @@ const SettingsView = ({ platform , collections }: ViewProps ) => {
                   </CardFooter>
                         </Card>
 
+                    )}
+
+                    {selectedSection === "level" && (
+                      <>
+                            <Card x-chunk="dashboard-04-chunk-1">
+                            <CardHeader>
+                                <CardTitle>Level Data</CardTitle>
+                                <CardDescription>
+                                    Configure Level Data : 
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                            <Table>
+  <TableHeader>
+    <TableRow>
+      <TableHead>Level Number</TableHead>
+      <TableHead>Min Sales</TableHead>
+      <TableHead>Product Limit</TableHead>
+      <TableHead>Design Limit</TableHead>
+      <TableHead>Benefits</TableHead> {/* New column for Benefits */}
+      <TableHead className="text-right">Actions</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    {levels.map((level, index) => (
+      <TableRow key={index}>
+        <TableCell>{level.levelNumber}</TableCell>
+        <TableCell>{level.minSales}</TableCell>
+        <TableCell>{level.productLimit}</TableCell>
+        <TableCell>{level.designLimit}</TableCell>
+        <TableCell>
+          {/* Display benefits as a comma-separated list */}
+          {level.benefits && level.benefits.length > 0 ? (
+            <ul>
+              {level.benefits.map((benefit, i) => (
+                <li key={i} className="list-disc pl-5">{benefit}</li>
+              ))}
+            </ul>
+          ) : (
+            <span>No benefits added</span>
+          )}
+        </TableCell>
+        <TableCell className="text-right">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button aria-haspopup="true" size="icon" variant="ghost">
+                <MoreHorizontal className="h-4 w-4" />
+                <span className="sr-only">Toggle menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => handleDeleteLevel(level.id)}>
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </TableCell>
+      </TableRow>
+    ))}
+  </TableBody>
+</Table>
+
+
+                  </CardContent>
+                  <CardFooter className="border-t px-6 py-4">
+                  <Button onClick={()=> {
+                  setIsCreateOpen(true)
+                  }} size={"sm"}>Add New Level</Button>
+                  </CardFooter>
+                        </Card>
+
+                        <AlertDialog open={isCreateOpen}>
+  <AlertDialogContent>
+    <AlertDialogHeader className="flex flex-col items-center">
+      <h2 className="text-xl font-semibold mb-4">Add New Level</h2>
+    </AlertDialogHeader>
+    <ScrollArea className=" w-full h-72 p-2">
+
+    <div className="grid gap-4">
+      <div className="flex flex-col">
+        <label htmlFor="levelNumber" className="mb-1 text-sm font-medium text-gray-700">
+          Level Number
+        </label>
+        <Input
+          id="levelNumber"
+          type="number"
+          placeholder="Enter level number"
+          value={newLevel.levelNumber}
+          onChange={(e) =>
+            setNewLevel({ ...newLevel, levelNumber: parseInt(e.target.value) })
+          }
+          required
+        />
+      </div>
+
+      <div className="flex flex-col">
+        <label htmlFor="minSales" className="mb-1 text-sm font-medium text-gray-700">
+          Minimum Sales
+        </label>
+        <Input
+          id="minSales"
+          type="number"
+          placeholder="Enter minimum sales"
+          value={newLevel.minSales}
+          onChange={(e) =>
+            setNewLevel({ ...newLevel, minSales: parseInt(e.target.value) })
+          }
+          required
+        />
+      </div>
+
+      <div className="flex flex-col">
+        <label htmlFor="productLimit" className="mb-1 text-sm font-medium text-gray-700">
+          Product Limit
+        </label>
+        <Input
+          id="productLimit"
+          type="number"
+          placeholder="Enter product limit"
+          value={newLevel.productLimit}
+          onChange={(e) =>
+            setNewLevel({ ...newLevel, productLimit: parseInt(e.target.value) })
+          }
+          required
+        />
+      </div>
+
+      <div className="flex flex-col">
+        <label htmlFor="designLimit" className="mb-1 text-sm font-medium text-gray-700">
+          Design Limit
+        </label>
+        <Input
+          id="designLimit"
+          type="number"
+          placeholder="Enter design limit"
+          value={newLevel.designLimit}
+          onChange={(e) =>
+            setNewLevel({ ...newLevel, designLimit: parseInt(e.target.value) })
+          }
+          required
+        />
+      </div>
+
+      {/* Benefit Input */}
+      <div className="flex flex-col">
+              <label htmlFor="benefitInput" className="mb-1 text-sm font-medium text-gray-700">
+                Add Benefit
+              </label>
+              <Input
+                id="benefitInput"
+                placeholder="Enter benefit and press Enter"
+                value={newLevel.newBenefit}
+                onChange={(e) =>
+                  setNewLevel({ ...newLevel, newBenefit: e.target.value })
+                }
+                onKeyDown={handleAddBenefit}
+              />
+            </div>
+
+            {/* Display Benefits */}
+            <div className="mt-4">
+              <h3 className="text-lg font-semibold">Benefits:</h3>
+              <ul className="list-disc pl-5">
+                {newLevel.benefits.map((benefit, index) => (
+                  <li key={index} className="text-sm text-gray-700">{benefit}</li>
+                ))}
+              </ul>
+            </div>
+
+
+
+    </div>
+
+    </ScrollArea>
+
+
+
+    <div className="mt-6 flex justify-end space-x-3">
+      <Button
+        onClick={() => setIsCreateOpen(false)}
+        size="sm"
+        variant="secondary"
+      >
+        Cancel
+      </Button>
+      <Button
+        onClick={handleAddLevel}
+        size="sm"
+      >
+        Add New Level
+      </Button>
+    </div>
+  </AlertDialogContent>
+</AlertDialog>
+
+
+</>
                     )}
                     
                 </div>

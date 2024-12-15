@@ -6,6 +6,7 @@ import { db } from "@/db";
 import { OrderStatus, OrderType } from "@prisma/client";
 import { platform } from "os";
 import { createNotification } from "../../../notifications/action";
+import { sendLevelUpEmail } from "@/lib/mailer";
 
 
 export const getOrderWithItemsAndProducts = async (orderId : string) => {
@@ -77,6 +78,90 @@ export const getOrderWithItemsAndProducts = async (orderId : string) => {
   };
 
 
+
+// check total sales and update level
+export async function updateStoreLevel(storeId: string) {
+  try {
+    // Fetch the store by its ID
+    const store = await db.store.findUnique({
+      where: { id: storeId },
+    });
+
+    if (!store) {
+      throw new Error("Store not found");
+    }
+
+    // Fetch the highest level
+    const highestLevel = await db.level.findFirst({
+      orderBy: { levelNumber: 'desc' },
+    });
+
+    if (!highestLevel) {
+      throw new Error("No levels defined in the system.");
+    }
+
+    if(store.level != highestLevel.levelNumber) {
+      // Check if the store's total sales meet or exceed the highest level's minSales
+    if (store.totalSales >= highestLevel.minSales) {
+      // If the store has reached the highest level, enable unlimited creation
+      const store =await db.store.update({
+        where: { id: storeId },
+        data: {
+          level: highestLevel.levelNumber,
+          unlimitedCreation: true,
+        },
+        include : {user : true}
+      });
+
+      console.log(
+        `Store has reached the highest level (${highestLevel.levelNumber}). Unlimited creation enabled.`
+      );
+      const notificationContent = `Great News: Your Store has reached the highest level (${highestLevel.levelNumber}). Unlimited creation enabled`;
+
+      await createNotification(store.id,notificationContent , "Admin")
+      await sendLevelUpEmail(store.user.email , store.user.name! , store.storeName, highestLevel.levelNumber , true)
+
+      return;
+    }
+    }
+
+
+    // Get the next level based on the store's current level
+    const nextLevel = await db.level.findFirst({
+      where: { levelNumber: store.level + 1 },
+    });
+
+    if (!nextLevel) {
+      console.log("Store is already at the highest level.");
+      return;
+    }
+
+    // Check if the store's total sales meet the next level's minSales
+    if (store.totalSales >= nextLevel.minSales) {
+      // Update the store's level
+      const store = await db.store.update({
+        where: { id: storeId },
+        data: {
+          level: nextLevel.levelNumber,
+          unlimitedCreation: false, // Keep false for intermediate levels
+        },
+        include : {user : true}
+      });
+
+      console.log(`Store level updated to ${nextLevel.levelNumber}`);
+      const notificationContent = `Great News: Your Store have reached level ${nextLevel.levelNumber}`;
+
+      await createNotification(store.id,notificationContent , "Admin")
+      await sendLevelUpEmail(store.user.email , store.user.name! , store.storeName, nextLevel.levelNumber , false)
+
+    } else {
+      console.log("Store has not reached the next level sales threshold.");
+    }
+  } catch (error) {
+    console.error("Error updating store level:", error);
+    throw new Error("Failed to update store level");
+  }
+}
 
 
 
@@ -228,9 +313,11 @@ export const getOrderWithItemsAndProducts = async (orderId : string) => {
 
         await checkAndSetTopSales(item.productId!)
 
+        
+
         // Update store's revenue and total sales
         if (item.product.store) {
-          await db.store.update({
+          const store = await db.store.update({
             where: { id: item.product.store.id },
             data: {
               revenue: { increment: newRevenue },
@@ -240,6 +327,11 @@ export const getOrderWithItemsAndProducts = async (orderId : string) => {
           const notificationContent = `Great News: Your product "${item.product.title}" has been sold`;
 
           await createNotification(item.product.store.id,notificationContent , "Admin")
+
+          // to do send email 
+
+          await updateStoreLevel(store.id)
+
         } else {
           throw new Error(`Store not found for product ${item.product.id}`);
         }
@@ -247,6 +339,9 @@ export const getOrderWithItemsAndProducts = async (orderId : string) => {
   
       // Wait for all updates to complete
       await Promise.all(updatePromises);
+
+
+
   
       // Mark order as updated
       await db.order.update({
@@ -268,7 +363,7 @@ export const getOrderWithItemsAndProducts = async (orderId : string) => {
           },
         });
       } else {
-        throw new Error('User not found');
+        throw new Error('admin not found');
       }
   
       return {
@@ -279,12 +374,6 @@ export const getOrderWithItemsAndProducts = async (orderId : string) => {
       throw error;
     }
   }
-
-
-
-
-
-
 
 
 

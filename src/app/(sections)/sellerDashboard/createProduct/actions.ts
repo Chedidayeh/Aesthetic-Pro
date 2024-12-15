@@ -253,6 +253,36 @@ interface ExtraCollection extends Collection {
     };
 
 
+    export async function getStoreWithProductsCount(userId: string) {
+      try {
+        const store = await db.store.findUnique({
+          where: {
+            userId: userId,
+          },
+        });
+    
+        if (!store) {
+          throw new Error('Store not found for the given userId');
+        }
+    
+        const productCount = await db.product.count({
+          where: {
+            storeId: store.id, // Assuming there is a storeId field in the product table
+          },
+        });
+    
+        return {
+          ...store,
+          productCount,
+        };
+      } catch (error) {
+        console.error('Error fetching store:', error);
+        throw error;
+      }
+    }
+    
+
+
 
 
 

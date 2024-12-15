@@ -30,6 +30,7 @@ interface ChartData {
   totalFollowers: number;
   totalViews: number;
   logo: string;
+  level : number
 }
 
 const chartConfig = {
@@ -60,20 +61,20 @@ const chartConfig = {
 } satisfies Record<string, { label: string; color: string }>;
 
 // Accept storeId as a prop
-export function StoresTableStats() {
-  const [chartData, setChartData] = React.useState<ChartData[]>([]);
-  React.useEffect(() => {
-    const fetchChartData = async () => {
-      try {
-        const data = await getStoreStats();
-        setChartData(data);
-      } catch (err) {
-        console.error("Error fetching store stats:", err);
-      }
-    };
+export function StoresTableStats({chartData} : {chartData : ChartData[]}) {
+  // const [chartData, setChartData] = React.useState<ChartData[]>([]);
+  // React.useEffect(() => {
+  //   const fetchChartData = async () => {
+  //     try {
+  //       const data = await getStoreStats();
+  //       setChartData(data);
+  //     } catch (err) {
+  //       console.error("Error fetching store stats:", err);
+  //     }
+  //   };
 
-    fetchChartData();
-  }, []);
+  //   fetchChartData();
+  // }, []);
 
   const [activeChart, setActiveChart] = React.useState<keyof typeof chartConfig>(
     "totalRevenue"
@@ -140,6 +141,8 @@ export function StoresTableStats() {
              <TableHead className="px-4 py-2 text-left">Logo</TableHead>
               <TableHead className="px-4 py-2 text-left">Rank</TableHead>
               <TableHead className="px-4 py-2 text-left">Store</TableHead>
+              <TableHead className="px-4 py-2 text-left">Level</TableHead>
+
               <TableHead className="px-4 py-2 text-left">
                 {chartConfig[activeChart].label}
               </TableHead>
@@ -160,6 +163,7 @@ export function StoresTableStats() {
                 </TableCell>
                 <TableCell className="px-4 py-2">{item.rank}</TableCell>
                 <TableCell className="px-4 py-2">{item.store}</TableCell>
+                <TableCell className="px-4 py-2">{item.level}</TableCell>
                 <TableCell className="px-4 py-2">{item[activeChart]} {activeChart==="totalRevenue" ? "TND" : ""}</TableCell>
               </TableRow>
             ))}

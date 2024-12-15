@@ -1,7 +1,7 @@
  'use server'
 import { db } from '@/db';
 import ProductView from './ProductView';
-import { getUser } from '@/actions/actions';
+import { getLevelByNumber, getUser } from '@/actions/actions';
 import { getAllCollections } from '../../adminDashboard/settings/actions';
 
 const Page = async () => {
@@ -29,12 +29,15 @@ const Page = async () => {
 
     const sellerProducts = await db.product.findMany({ where: { storeId: store?.id } , orderBy : {createdAt : 'desc'} });
   
+    const level = await getLevelByNumber(store!.level)
   
     return (
      <ProductView
         sellerProductsData={sellerProducts}
         totalProductViews={totalProductViews}
         collections={collections}
+        level={level}
+        store={store!}
     />
     
     );

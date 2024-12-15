@@ -209,7 +209,6 @@ export async function refuseDesign(designId: string , reasonForRejection : strin
       throw new Error(`Design details for ID ${designId} not found.`);
     }
     // send notification:
-    await createNotification(designDetails.storeId, reasonForRejection, "Admin");
     await createNotification(
       designDetails.storeId,
       `We regret to inform you that your design ${design.name} has been rejected. Reason for rejection: ${reasonForRejection}`,

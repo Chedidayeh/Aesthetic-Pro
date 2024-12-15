@@ -24,6 +24,7 @@ import {
   ShoppingBasket,
   ShoppingCart,
   Sparkles,
+  Star,
   Store,
   TrendingUp,
   TriangleAlert,
@@ -54,8 +55,8 @@ import { usePathname, useRouter } from "next/navigation"
 import { Separator } from "../ui/separator"
 import { ScrollArea } from "../ui/scroll-area"
 import { useEffect, useState } from "react"
-import { getSideBarTotalCounts, getStoreByUserId, getUnreadNotificationsForStore, getUser } from "@/actions/actions"
-import { Notification, User } from "@prisma/client"
+import { getLevelByNumber, getSideBarTotalCounts, getStoreByUserId, getUnreadNotificationsForStore, getUser } from "@/actions/actions"
+import { Level, Notification, User } from "@prisma/client"
 import { ModeToggle } from "../ModeToggle"
 import React from "react"
 import SellerProfile from "./SellerProfile"
@@ -262,15 +263,16 @@ const [user, setUser] = useState<User>();
 
 
       <div className="w-full flex-1">
-        <form>
           <div className="relative">
           <Button variant={"secondary"} size={"sm"} onClick={handleButtonClick}>
       View your store               
       <ExternalLink className="ml-1 w-4 h-4"/>
     </Button>
           </div>
-        </form>
       </div>
+
+
+
       <DropdownMenu>
   <DropdownMenuTrigger asChild>
     <Button variant="secondary" size="icon" className="rounded-full">

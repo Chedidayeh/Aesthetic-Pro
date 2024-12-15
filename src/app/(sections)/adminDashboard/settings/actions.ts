@@ -196,3 +196,60 @@ export const updatePlatformData = async (
   }
 };
 
+
+// levels 
+export async function getAllLevels() {
+  try {
+    const levels = await db.level.findMany({
+      orderBy: {
+        levelNumber: 'asc', // Ensure levels are sorted by ascending level number
+      },
+    });
+    return levels;
+  } catch (error) {
+    console.error('Error fetching levels:', error);
+    throw new Error('Unable to fetch levels');
+  }
+}
+
+export async function createLevel(data: { levelNumber: number, minSales: number, productLimit: number, designLimit: number, benefits: string[] }) {
+  try {
+    // Filter out empty or whitespace-only benefits
+    const filteredBenefits = data.benefits.filter(benefit => benefit.trim() !== "");
+
+    const newLevel = await db.level.create({
+      data: {
+        levelNumber: data.levelNumber,
+        minSales: data.minSales,
+        productLimit: data.productLimit,
+        designLimit: data.designLimit,
+        benefits: filteredBenefits, // Use filtered benefits array
+      },
+    });
+
+    console.log('Level created successfully:', newLevel);
+    return newLevel;
+  } catch (error) {
+    console.error('Error creating level:', error);
+    throw new Error('Failed to create level');
+  }
+}
+
+
+
+// Function to delete a level by ID
+export async function deleteLevel(levelId: number) {
+  try {
+    const deletedLevel = await db.level.delete({
+      where: {
+        id: levelId, // You can also use levelNumber if that's more relevant
+      },
+    });
+    console.log('Level deleted successfully:', deletedLevel);
+    return deletedLevel;
+  } catch (error) {
+    console.error('Error deleting level:', error);
+    throw new Error('Failed to delete level');
+  }
+}
+

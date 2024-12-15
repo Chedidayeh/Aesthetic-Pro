@@ -147,7 +147,6 @@ const ProductListing = ({
           })
         }
       }
-      router.refresh()
     } catch (error) {
       console.error('Error saving product to Fav list:', error)
       toast({
@@ -156,7 +155,7 @@ const ProductListing = ({
         variant: 'destructive',
       })
     }
-  }, [isFavSaved, product.id,user, router, toast])
+  }, [isFavSaved, product.id,user, toast])
 
   const openDialog = useCallback(() => {
     alertDialogTriggerRef.current?.click()
@@ -322,17 +321,16 @@ const ProductPlaceholder = () => {
         <Skeleton className='h-4 w-20' />
       </div>
       <div className=' overflow-hidden rounded-2xl'>
-        <Skeleton className='h-[340px] w-[275px]' />
+      <Skeleton className='w-[320px] xl:h-[340px] h-[240px]' />
       </div>
       <div className='mx-3'>
         <Skeleton className='h-4 w-36 mt-3' />
         <Skeleton className='h-4 w-24 mt-2' />
       </div>
-      <div className='ml-2'>
-        <Skeleton className='h-6 w-20 mt-4' />
-      </div>
     </div>
   )
 }
+
+
 
 export default ProductListing

@@ -153,6 +153,7 @@ interface DesignViewProps {
   }, [searchTerm, filter, designs]);
 
   const handleDelete = async () =>{
+    setOpen(true)
     try {
       const res = await deleteDesign(designId)
       if(res){
@@ -161,6 +162,7 @@ interface DesignViewProps {
           title: 'Design Was Successfully Deleted',
           variant: 'default',
         });
+        setOpen(false)
         router.refresh()
       }
       else{
@@ -169,6 +171,7 @@ interface DesignViewProps {
           title: 'Design has associated order items and can not be deleted',
           variant: 'destructive',
         });
+        setOpen(false)
         router.refresh()
       }
     } catch (error) {
@@ -178,6 +181,7 @@ interface DesignViewProps {
             title: 'design Was Not Deleted',
             variant: 'destructive',
           });
+          setOpen(false)
     }
 }
 
@@ -654,7 +658,9 @@ const handleSwitchChange = () => {
         <div className="mt-4">
          {!design.isDesignAccepted && !design.isDesignRefused && (
             <>
-               <Badge onClick={()=>setisDialogOpen(true)} className='hover:text-red-500 cursor-pointer' variant={`outline`}>
+               <Badge onClick={()=>{
+                setSelectedDesign(design)
+                setisDialogOpen(true)}} className='hover:text-red-500 cursor-pointer' variant={`outline`}>
                 <CircleX/>
                </Badge>
                  <Badge onClick={()=>handleAccept(design.id)} className='ml-2 hover:text-green-500 cursor-pointer' variant={`outline`}>
@@ -741,14 +747,14 @@ const handleSwitchChange = () => {
                                           onChange={(e) => setReasonForRejection(e.target.value)} 
                                           type="text" 
                                           placeholder='Type the reason' 
-                                          className="w-full bg-gray-100" />
+                                          className="w-full" />
                                       </div>
                                       <AlertDialogFooter>
                                         <AlertDialogCancel onClick={()=>setisDialogOpen(false)}>Cancel</AlertDialogCancel>
                                         <AlertDialogAction disabled={reasonForRejection === ""} className='bg-red-500 hover:bg-red-400' onClick={()=>{
                                           setisDialogOpen(false)
                                           handleRefuse(selectedDesign!.id)
-                                          }}>Delete Design</AlertDialogAction>
+                                          }}>Refuse Design</AlertDialogAction>
                                       </AlertDialogFooter>
                                     </AlertDialogContent>
                                   </AlertDialog>
