@@ -328,7 +328,7 @@ const handleSwitchChange = () => {
         </CardHeader>
         <CardContent>
 
-        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mt-2">
+        <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-4 mt-2">
         <Input
           type="search"
           className="w-full sm:w-[50%] "
@@ -559,7 +559,7 @@ const handleSwitchChange = () => {
             <div className="grid gap-2">
               <CardTitle className="font-bold">All Designs :</CardTitle>
               <CardDescription>
-              <div className='mt-2 flex flex-col sm:flex-row items-center justify-center'>
+              <div className='mt-2 flex  space-y-2 flex-col sm:flex-row items-center justify-center'>
               <Input
                 type="search"
                 className="w-full sm:w-[50%] "

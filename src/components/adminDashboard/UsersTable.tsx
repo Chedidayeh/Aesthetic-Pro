@@ -165,7 +165,7 @@ const UsersTable = () => {
         <CardContent>
           {filteredUsers && (
             <ScrollArea className="w-full h-72 mt-4">
-              <Table>
+              <Table className="overflow-x-auto">
                 <TableHeader>
                   <TableRow>
                     <TableHead>User Id</TableHead>

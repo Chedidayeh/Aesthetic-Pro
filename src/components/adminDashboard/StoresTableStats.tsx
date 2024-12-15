@@ -62,19 +62,6 @@ const chartConfig = {
 
 // Accept storeId as a prop
 export function StoresTableStats({chartData} : {chartData : ChartData[]}) {
-  // const [chartData, setChartData] = React.useState<ChartData[]>([]);
-  // React.useEffect(() => {
-  //   const fetchChartData = async () => {
-  //     try {
-  //       const data = await getStoreStats();
-  //       setChartData(data);
-  //     } catch (err) {
-  //       console.error("Error fetching store stats:", err);
-  //     }
-  //   };
-
-  //   fetchChartData();
-  // }, []);
 
   const [activeChart, setActiveChart] = React.useState<keyof typeof chartConfig>(
     "totalRevenue"
@@ -156,7 +143,7 @@ export function StoresTableStats({chartData} : {chartData : ChartData[]}) {
                   <NextImage
                     src={item.logo}
                     alt={`${item.store} logo`}
-                    className="w-20 h-20 rounded-full bg-slate-50"
+                    className="md:w-16 md:h-16 xl:w-20 xl:h-20 w-8 h-8 rounded-full bg-slate-50 object-cover"
                     width={300}
                     height={300}
                   />

@@ -557,7 +557,7 @@ const viewProductData = (product : ExtraProduct) => {
             <div className="grid gap-2">
               <CardTitle className="font-bold">All Products :</CardTitle>
               <CardDescription>
-              <div className='mt-2 flex flex-col sm:flex-row items-center justify-center'>
+              <div className='mt-2  space-y-2 flex flex-col sm:flex-row items-center justify-center'>
               <Input
                 type="search"
                 className="w-full sm:w-[50%] "
