@@ -148,7 +148,7 @@ const Page =  async () => {
         <CardHeader className="flex flex-row items-center">
           <div className="grid gap-2">
             <CardTitle>Orders</CardTitle>
-            <CardDescription>Total: {orders ? orders.length : 0}</CardDescription>
+            <CardDescription>Orders Displayed: {orders ? orders.length : 0}</CardDescription>
           </div>
         </CardHeader>
         <CardContent>
@@ -183,7 +183,7 @@ const Page =  async () => {
                              {order.type}
                       </Badge>
                     </TableCell>
-                    <TableCell>{order.createdAt ? new Date(order.createdAt).toLocaleDateString() : ''}</TableCell>
+                    <TableCell>{order.createdAt ? new Date(order.createdAt).toLocaleString() : ''}</TableCell>
                     <TableCell className="hidden sm:table-cell">
                       <Badge className={`text-white ${order.printed ? 'bg-green-700' :  'bg-red-700'} hover:bg-gray-700`}>
                             {order.printed ? "Is Printed" : "Not Printed"}

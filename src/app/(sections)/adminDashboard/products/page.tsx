@@ -8,10 +8,10 @@ const Page = async () => {
   noStore();
   
   try {
-    const products = await getAllProductsWithDesigns();
+    const initialProducts = await getAllProductsWithDesigns(6);
 
     return (
-        <ProductView products={products} />
+        <ProductView initialProducts={initialProducts} />
     );
   } catch (error) {
     console.error("Failed to fetch products:", error);

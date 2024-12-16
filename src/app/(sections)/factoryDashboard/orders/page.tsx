@@ -13,12 +13,12 @@ const Page =  async () => {
 
   noStore()
 
-  const orders = await getAllOrders();
+  const orders = await getAllOrders(10,false);
 
   return (
     <>
 
-    <OrderView orders = {orders} />
+    <OrderView initialeOrders = {orders} />
 
   </>
   );

@@ -2,19 +2,19 @@
 
 import React from "react"
 import StoresView from "./StoresView"
-import { getAllStoresWithUsers } from "./actions"
 import { unstable_noStore as noStore } from "next/cache"
+import { getAllStoresWithUsersAndCounts } from "./actions"
 
 
 const Page =  async () => {
 
   noStore()
 
-  const stores = await getAllStoresWithUsers();
+  const initialeStores = await getAllStoresWithUsersAndCounts(10);
 
   return (
     <>
-    <StoresView stores = {stores} />
+    <StoresView initialeStores = {initialeStores} />
   </>
   );
 }

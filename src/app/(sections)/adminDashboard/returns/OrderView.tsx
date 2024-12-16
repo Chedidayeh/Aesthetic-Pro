@@ -280,8 +280,8 @@ interface OrderViewProps {
                      </AlertDialog> 
   
   
-  <p className="text-sm text-gray-700 mb-2">AdminDashboard/Orders</p>
-           <h1 className="text-2xl font-semibold">Manage Orders</h1>
+  <p className="text-sm text-gray-700 mb-2">AdminDashboard/returns</p>
+           <h1 className="text-2xl font-semibold">Manage Returned Orders</h1>
   
   
   
@@ -534,18 +534,29 @@ interface OrderViewProps {
             <p className="text-gray-600 font-extrabold mt-6">Order Items :</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 ml-2 md:ml-10 mt-6">
               {selectedOrder.orderItems.map((item, index) => (
-                <div
-                  key={index}
-                  className="aspect-square rounded-xl" >
-                  <ImageSlider urls={item.capturedMockup} />
-                  <div className="text-center">
-                    {selectedOrder.isClientMadeOrder ? (
-                  <Badge>{item.frontsellerDesign?.name ?? "No front design" } / {item.backsellerDesign?.name ?? "No back design"}</Badge>
-                    ) : (
-                  <Badge>{item.product?.title}</Badge>
-                    )}
-                  </div>
-                </div>
+               <div key={index} className="relative aspect-square rounded-xl">
+               <ImageSlider urls={item.capturedMockup} />
+               
+               {/* Fixing the position of the size badge */}
+               <div className="absolute top-2 left-2 z-10">
+                 <Badge className="text-white">size : {item.productSize}</Badge>
+               </div>
+
+               <div className="absolute top-2 right-2 z-10">
+                 <Badge className="text-white">quantity : {item.quantity}</Badge>
+               </div>
+               
+               <div className="text-center">
+                 {selectedOrder.isClientMadeOrder ? (
+                   <Badge className="text-white">
+                     {item.frontsellerDesign?.name ?? "No front design"} / {item.backsellerDesign?.name ?? "No back design"}
+                   </Badge>
+                 ) : (
+                   <Badge className="text-white">{item.product?.title}</Badge>
+                 )}
+               </div>
+             </div>
+             
               ))}
             </div>
       </CardContent>

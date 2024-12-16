@@ -92,7 +92,10 @@ import { useRouter } from "next/navigation"
 import { useToast } from "@/components/ui/use-toast"
 import { Input } from "@/components/ui/input"
 import { TooltipProvider } from "@/components/ui/tooltip"
-import { deleteOrderById } from "./actions"
+import { deleteOrderById, getAllOrders } from "./actions"
+import LoadingState from "@/components/LoadingState"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
   
   
 
@@ -106,68 +109,51 @@ interface ExtraOrders extends Order {
   
   
 interface OrderViewProps {
-    orders: ExtraOrders[]
+  initialeOrders: ExtraOrders[]
   }
   
-  const OrderView = ({ orders }: OrderViewProps ) => { 
+  const OrderView = ({ initialeOrders }: OrderViewProps ) => { 
+    const [orders, setOrders] = useState(initialeOrders)
     const router = useRouter();
     const { toast } = useToast()
+    const [filterBy1, setFilterBy1] = useState('')
+    const [filterBy2, setFilterBy2] = useState('')
+    const [open, setOpen] = useState<boolean>(false);
+    const [allOrders, setAllOrders] = useState(false)
 
+    const handleToggle = async () => {
+      setOpen(true)
+      setAllOrders(!allOrders); // Toggle the state
+      const orders = await getAllOrders(10, !allOrders, searchQuery , filterBy1 , filterBy2);
+      setOrders(orders);
+      setOpen(false)
+    };
 
     const [searchQuery, setSearchQuery] = useState('');
-    const [filterCriteria, setFilterCriteria] = useState('');
-    const [filteredOrders, setFilteredOrders] = useState(orders);
-  
-    useEffect(() => {
-      let updatedOrders = [...orders];
-  
-      if (searchQuery) {
-        const lowercasedQuery = searchQuery.toLowerCase();
-        updatedOrders = updatedOrders.filter(order =>
-          order.id.toLowerCase().includes(lowercasedQuery) ||
-          (order.clientName && order.clientName.toLowerCase().includes(lowercasedQuery)) ||
-          order.phoneNumber.includes(lowercasedQuery)
-        );
-      }
-  
-      if (filterCriteria) {
-        updatedOrders = updatedOrders.filter(order => {
-          if (filterCriteria === 'CONFIRMED') {
-            return order.type === 'CONFIRMED';
-          } else if (filterCriteria === 'NOT_CONFIRMED') {
-            return order.type === 'NOT_CONFIRMED';
-          } else if (filterCriteria === 'CANCELED') {
-            return order.type === 'CANCELED';
-          } else if (filterCriteria === 'DELIVERED') {
-            return order.status === 'DELIVERED';
-          } else if (filterCriteria === 'Paid') {
-            return order.isPaid === true;
-          } else if (filterCriteria === 'NOT_Paid') {
-            return order.isPaid === false;
-          } else if (filterCriteria === 'Sellerorder') {
-            return order.isSellerOrder === true;
-          } else if (filterCriteria === 'Clientorder') {
-            return order.isClientMadeOrder === true;
-          } else if (filterCriteria === 'Printed') {
-            return order.printed === true;
-          } else if (filterCriteria === 'NOT_Printed') {
-            return order.printed === false;
-          }
-          return true;
-        });
-      }
-  
-      setFilteredOrders(updatedOrders);
-    }, [searchQuery, filterCriteria, orders]);
-  
-    const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-      setSearchQuery(e.target.value);
-    };
-  
-    const handleFilterChange = (value: string) => {
-      setFilterCriteria(value);
-    };
 
+        const handleSearch = async () => {
+          setOpen(true)
+          const orders   = await getAllOrders(10, allOrders, searchQuery , filterBy1 , filterBy2);
+          setOrders(orders);
+          setOpen(false)
+        }
+
+            const handleFilterBy1 = async (event: string) => {
+              setOpen(true)
+              setFilterBy1(event)
+              const orders   = await getAllOrders(10, allOrders, searchQuery , event , filterBy2);
+              setOrders(orders);
+              setOpen(false)
+            }
+
+            const handleFilterBy2 = async (event: string) => {
+              setOpen(true)
+              setFilterBy2(event)
+              const orders   = await getAllOrders(10, allOrders, searchQuery , filterBy1 , event);
+              setOrders(orders);
+              setOpen(false)
+            }
+  
 
 
 
@@ -315,9 +301,17 @@ interface OrderViewProps {
     className="w-full sm:w-[50%] "
     placeholder="Enter the order Id, client Name, client Phone Number to make a search..."
     value={searchQuery}
-    onChange={handleSearchChange}
-  />
-  <Select onValueChange={handleFilterChange}>
+    onChange={(e) => setSearchQuery(e.target.value)}
+    />
+    <Button
+     disabled={searchQuery === ""}
+     onClick={handleSearch}
+     className="bg-blue-500 text-white px-4 py-2 rounded flex items-center"
+    >
+    Search
+    <Search size={14} className="ml-1" />
+  </Button>   
+  <Select onValueChange={handleFilterBy1}>
     <SelectTrigger className="w-full sm:w-[180px] ">
       <SelectValue placeholder="Filter By" />
     </SelectTrigger>
@@ -328,10 +322,12 @@ interface OrderViewProps {
         <SelectItem value="NOT_CONFIRMED">Not Confirmed</SelectItem>
         <SelectItem value="CANCELED">Canceled</SelectItem>
         <SelectItem value="DELIVERED">Delivered</SelectItem>
+        <SelectItem value="PROCESSING	">Processing</SelectItem>
+        
       </SelectGroup>
     </SelectContent>
   </Select>
-  <Select onValueChange={handleFilterChange}>
+  <Select onValueChange={handleFilterBy2}>
     <SelectTrigger className="w-full sm:w-[180px] ">
       <SelectValue placeholder="Filter By" />
     </SelectTrigger>
@@ -347,6 +343,16 @@ interface OrderViewProps {
       </SelectGroup>
     </SelectContent>
   </Select>
+
+    <div className="flex items-center space-x-2">
+      <Switch
+        id="orders"
+        defaultChecked={allOrders}
+        onClick={handleToggle} // Handle the state change on toggle
+      />
+      <Label htmlFor="orders">All Orders</Label>
+    </div>
+
 </div>
 
 
@@ -390,7 +396,7 @@ interface OrderViewProps {
     </TableRow>
   </TableHeader>
   <TableBody>
-    {filteredOrders.map((order, index) => (
+    {orders.map((order, index) => (
       <TableRow
         key={order.id}
         className={`cursor-pointer ${selectedIndex === index ? 'border-2 border-blue-500' : ''}`}
@@ -588,6 +594,9 @@ interface OrderViewProps {
   </section>
   
     </div>
+
+    <LoadingState isOpen={open} />
+
   
     </>
     );

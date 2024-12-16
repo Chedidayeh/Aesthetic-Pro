@@ -20,40 +20,60 @@ export async function deleteStoreById(storeId: string) {
   }
 
 
-export async function getAllStoresWithUsers() {
-  try {
-    const stores = await db.store.findMany({
-      include: {
-        user: true,
-        products :{
-          orderBy : {
-            createdAt : 'desc'
-          } , 
-          include : {
-            frontDesign : true,
-            backDesign : true ,
-          }
-        } ,
-        designs : {
-          where : {
-            isDesignForSale : true,
+  export async function getAllStoresWithUsersAndCounts(
+    limit: number,
+    searchQuery?: string,
+    sortBy?: string
+  ) {
+    try {
+      // Construct `where` filter object dynamically based on the filters provided
+      const where: any = {
+        ...(searchQuery && {
+          storeName: { contains: searchQuery, mode: "insensitive" }, // Search stores by name
+        }),
+      };
+  
+      // Determine pagination logic
+      const take = searchQuery ? undefined : limit;
+  
+      // Define sorting logic
+      const sortOptions: Record<string, object> = {
+        rejected: { totalRejectedElements: "desc" }, // Sort by total rejected elements
+        level: { level: "desc" }, // Sort by level
+      };
+  
+      const orderBy = sortBy ? sortOptions[sortBy] : { createdAt: "desc" }; // Default sort by creation date
+  
+      // Fetch stores with associated user and counts for products and designs
+      const stores = await db.store.findMany({
+        where,
+        include: {
+          user: true, // Include user information for the store
+          _count: {
+            select: {
+              products: true, // Count products associated with the store
+              designs: {
+                where: { isDesignForSale: true }, // Count only designs for sale
+              },
+            },
           },
-          orderBy: {
-            createdAt: 'desc',
-          },
-        } ,
-      },
-      orderBy : {
-        createdAt : 'desc'
-      } ,
-    });
-    return stores;
-  } catch (error) {
-    console.error('Error retrieving stores:', error);
-    throw error;
-  } 
-}
-
+        },
+        orderBy,
+        take,
+      });
+  
+      return stores.map((store) => ({
+        ...store,
+        productsCount: store._count.products,
+        designsCount: store._count.designs,
+      }));
+    } catch (error) {
+      console.error("Error retrieving stores with counts:", error);
+      throw error;
+    }
+  }
+  
+  
 export async function acceptProduct(productId: string): Promise<void> {
   try {
     const product = await db.product.update({
@@ -188,6 +208,9 @@ export async function refuseDesign(designId: string , reasonForRejection : strin
       where: { id: designId },
       data: {
         isDesignRefused: true
+      },
+      include : {
+        store : true
       }
     });
 
@@ -208,6 +231,15 @@ export async function refuseDesign(designId: string , reasonForRejection : strin
     if (!designDetails) {
       throw new Error(`Design details for ID ${designId} not found.`);
     }
+    await db.store.update({
+      where : { id : design.store.id },
+      data : {
+        totalRejectedElements : {
+          increment : 1
+        }
+      }
+    })
+
     // send notification:
     await createNotification(
       designDetails.storeId,

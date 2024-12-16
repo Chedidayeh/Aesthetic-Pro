@@ -79,39 +79,51 @@ import { OrderItem, Product, SellerDesign, Store, User } from "@prisma/client"
 import { tree } from "next/dist/build/templates/app-page"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/components/ui/use-toast"
-import { acceptDesign, deleteStoreById, refuseDesign } from "./actions"
+import { deleteStoreById, getAllStoresWithUsersAndCounts } from "./actions"
 import { Input } from '@/components/ui/input'
 import LoadingState from '@/components/LoadingState'
-import DesignView from './DesignView'
-import ProductView from './ProductView'
   
-interface ExtraProduct extends Product {
-  frontDesign : SellerDesign | null,
-  backDesign : SellerDesign | null ,
-}
+
 
 interface ExtraStore extends Store {
     user : User
-    products : ExtraProduct[]
-    designs  : SellerDesign[]
+    productsCount : number
+    designsCount : number
 }
   
   
   
 interface StoresViewProps {
-    stores: ExtraStore[];
+  initialeStores: ExtraStore[];
   }
   
-  const StoresView = ({ stores }: StoresViewProps ) => { 
+  const StoresView = ({ initialeStores }: StoresViewProps ) => { 
+    // stores state
+    const [stores, setStores] = useState(initialeStores)
     const router = useRouter();
     const { toast } = useToast()
     const [isDeleteOpen, setisDeleteOpen] = useState(false);
     const [ storeId , setStoreId] = useState("")
+    const [storeSearchQuery, setStoreSearchQuery] = useState("");
+    const [open, setOpen] = useState<boolean>(false);
+    const [sortBy, setSortBy] = useState<string>("");
 
 
-    const [filterBy, setFilterBy] = useState<string>('');
+        const handleStoreSearchChange = async () => {
+          setOpen(true)
+          const stores   = await getAllStoresWithUsersAndCounts(10, storeSearchQuery , sortBy);
+          setStores(stores);
+          setOpen(false)
+        }
 
-
+            const handleSortBy = async (event: string) => {
+              setOpen(true)
+              setSortBy(event)
+              const stores   = await getAllStoresWithUsersAndCounts(10, storeSearchQuery , event );
+              setStores(stores);
+              setOpen(false)
+            }
+    
 
     const handleDelete = async () =>{
         try {
@@ -138,62 +150,12 @@ interface StoresViewProps {
     }
 
 
-
     const calculateTotalIncome = () => {
       return stores.reduce((total, store) => total + store.revenue, 0).toFixed(2);
   }
 
 
-  const [selectedStore, setSelectedStore] = useState<ExtraStore | null>(null);
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
-  const handleRowClick = (store: ExtraStore, index: number) => {
-    if (selectedIndex === index) {
-      setSelectedStore(null);
-      setSelectedIndex(null);
-    } else {
-      setSelectedStore(store);
-      setSelectedIndex(index);
-    }
-  };
-
-
-
-
-
-
-
-        // search query for products
-
-
-    const [open, setOpen] = useState<boolean>(false);
-
-    
-
-
-
-  // Search query for stores
-  const [storeSearchQuery, setStoreSearchQuery] = useState("");
-  const handleStoreSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setStoreSearchQuery(event.target.value);
-  };
-
-  const filteredStores = stores
-  .filter(
-    (store) =>
-      store.id.toLowerCase().includes(storeSearchQuery.toLowerCase()) ||
-      store.storeName.toLowerCase().includes(storeSearchQuery.toLowerCase()) ||
-      store.user.email.toLowerCase().startsWith(storeSearchQuery.toLowerCase())
-  )
-  .filter((store) => {
-    if (filterBy === "action") {
-      return store.products.some(product => product.isProductAccepted === false && product.isProductRefused === false )
-    }
-    if (filterBy === "all") {
-      return true
-    }
-    return true
-  })
 
     return (
       <>
@@ -247,29 +209,37 @@ interface StoresViewProps {
           </div>
         </CardHeader>
         <CardDescription className='flex items-center justify-center'>
-        <div className='mt-2 flex flex-wrap items-center justify-center'>
+        <div className='mt-2 m-2 gap-4 flex flex-wrap items-center justify-center'>
         <Input
               type="search"
               className='w-full sm:w-auto mb-2 sm:mb-0'
               placeholder="Enter the Store Id, name to make a search..."
               value={storeSearchQuery}
-              onChange={handleStoreSearchChange}
-            /> 
-         <div className='w-full sm:w-auto sm:ml-2'>
-                <Select onValueChange={(value) => setFilterBy(value)}>
-                  <SelectTrigger className="w-full sm:w-[180px]">
-                    <SelectValue placeholder="Filter By" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Select</SelectLabel>
-                      <SelectItem value="all">All stores</SelectItem>
-                      <SelectItem value="action">store with Awaiting action items</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-          </div>
+              onChange={(e) => setStoreSearchQuery(e.target.value)}
+         /> 
+                <Button
+                  disabled={storeSearchQuery === ""}
+                  onClick={handleStoreSearchChange}
+                  className="bg-blue-500 text-white rounded"
+                  >
+                       Search
+                       <Search size={14} className="ml-1" />
+                 </Button>
+
+                             <Select onValueChange={handleSortBy}>
+                               <SelectTrigger className="w-full sm:w-[180px]">
+                                     <SelectValue placeholder="Sort By" />
+                                   </SelectTrigger>
+                                   <SelectContent>
+                                     <SelectGroup>
+                                       <SelectLabel>Select</SelectLabel>
+                                       <SelectItem value="rejected">Total rejected elements</SelectItem>
+                                       <SelectItem value="level">level</SelectItem>
+                                     </SelectGroup>
+                                   </SelectContent>
+                                 </Select>   
+         
+        </div>
         </CardDescription>
 
         <CardContent>
@@ -312,11 +282,9 @@ interface StoresViewProps {
     </TableRow>
   </TableHeader>
   <TableBody>
-    {filteredStores.map((store, index) => (
+    {stores.map((store, index) => (
       <TableRow
         key={store.id}
-        className={`${selectedIndex === index ? 'border-2 border-blue-500' : ''}`}
-        // onClick={() => handleRowClick(store, index)}
       >
         {/* Store Id cell */}
         <TableCell className="hidden sm:table-cell">{store.id}</TableCell>
@@ -334,10 +302,10 @@ interface StoresViewProps {
         <TableCell className="hidden lg:table-cell text-left">{store.user.userType === "SELLER" ? store.user.email   : "No User"}</TableCell>
 
         {/* Total Products cell */}
-        <TableCell className="hidden xl:table-cell text-left">{store.products.length}</TableCell>
+        <TableCell className="hidden xl:table-cell text-left">{store.productsCount}</TableCell>
 
         {/* Total Designs cell */}
-        <TableCell className="hidden xl:table-cell text-left">{store.designs.length}</TableCell>
+        <TableCell className="hidden xl:table-cell text-left">{store.designsCount}</TableCell>
 
         {/* Total Rejected Elements cell */}
         <TableCell className="text-left">{store.totalRejectedElements}</TableCell>
@@ -370,18 +338,9 @@ interface StoresViewProps {
 
 
 
-      {/* <ProductView selectedStore={selectedStore!}/>
-
-
-      <DesignView selectedStore={selectedStore!} /> */}
-
-
       </section>
   
-  
-  
-      <section className={cn(' grid grid-cols-1 p-11 gap-4 transition-all lg:grid-cols-4')}>
-  </section>
+
   
     </div>
   

@@ -4,12 +4,75 @@ import { db } from "@/db";
 
 
 
-export const getAllOrders = async () => {
+export const getAllOrders = async (
+  limit: number,
+  all : boolean,
+  searchQuery?: string,
+  filterBy1?: string,
+  filterBy2?: string,
+) => {
     try {
+
+          // Build `where` clause dynamically based on filters
+    const where: any = {};
+
+    // Search logic
+    if (searchQuery && searchQuery.trim() !== "") {
+      where.OR = [
+        {
+          id: {
+            contains: searchQuery,
+            mode: "insensitive",
+          },
+        },
+      ];
+    }
+
+    // Filter by Order Status (filterBy1)
+    if (filterBy1) {
+      switch (filterBy1) {
+        case "DELIVERED":
+          where.status = "DELIVERED";
+          break;
+        case "PROCESSING":
+          where.status = "PROCESSING";
+          break;
+        case "REFUSED":
+          where.status = "REFUSED";
+          break;
+        case "CANCELED":
+          where.status = "CANCELED";
+          break;
+        case "CONFIRMED":
+          where.type = "CONFIRMED";
+          break;
+        case "NOT_CONFIRMED":
+          where.type = "NOT_CONFIRMED";
+          break;
+      }
+    }
+
+    // Filter by Order Type (filterBy2) (e.g., Paid/Not Paid, Seller Order/Client Order)
+    if (filterBy2) {
+      switch (filterBy2) {
+        case "Printed":
+          where.printed = true;
+          break;
+        case "NOT_Printed":
+          where.printed = false;
+          break;
+      }
+    }
+
       const orders = await db.order.findMany({
+        where,
         include: {
           orderItems : true
-        }
+        },
+        orderBy: {
+          createdAt: "desc", // Sort by creation date
+        },
+        take : all ? undefined : limit,
       });
   
       return orders;

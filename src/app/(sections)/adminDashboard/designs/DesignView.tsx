@@ -101,12 +101,11 @@ import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import { deleteDesign } from '../../sellerDashboard/designs/actions'
 import LoadingState from '@/components/LoadingState'
+import { getAllDesignsWithProducts } from './actions'
   
   
 
 interface ExtraDesign extends SellerDesign {
-  frontProducts: Product[] | null;
-  backProducts: Product[] | null;
   store : Store;
   frontOrders :  OrderItem[]
   backOrders : OrderItem[]
@@ -115,12 +114,12 @@ interface ExtraDesign extends SellerDesign {
   
   
 interface DesignViewProps {
-    designs: ExtraDesign[];
+  initialDesigns: ExtraDesign[];
   }
   
-  const DesignView = ({ designs }: DesignViewProps ) => { 
+  const DesignView = ({ initialDesigns }: DesignViewProps ) => { 
    
-   
+    const [designs, setDesigns] = useState(initialDesigns)
     const router = useRouter();
     const { toast } = useToast()
     const [isDeleteOpen, setisDeleteOpen] = useState(false);
@@ -128,29 +127,36 @@ interface DesignViewProps {
 
 
     const [searchTerm, setSearchTerm] = useState("");
-    const [filter, setFilter] = useState<string | null>(null);
-    const [filteredDesigns, setFilteredDesign] = useState(designs);
+    const [filterBy, setFilterBy] = useState<string>("");
+    const [sortBy, setSortBy] = useState<string>("");
 
-  useEffect(() => {
-    const filtered = designs.filter((design) => {
-      const matchesSearch = searchTerm
-        ? design.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          design.store.storeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          design.id.includes(searchTerm)
-        : true;
 
-      const matchesFilter = filter
-        ? (filter === "accepted" && design.isDesignAccepted) ||
-          (filter === "refused" && design.isDesignRefused) ||
-          (filter === "action" && !design.isDesignAccepted && !design.isDesignRefused)  ||
-          (filter === "all" && design) 
-        : true;
+    
 
-      return matchesSearch && matchesFilter;
-    });
+        const handleSearch = async () => {
+          setOpen(true)
+          const designs   = await getAllDesignsWithProducts(6, searchTerm, filterBy , sortBy);
+          setDesigns(designs);
+          setOpen(false)
+        }
+    
+        const handleFilterBy = async (event: string) => {
+          setOpen(true)
+          setFilterBy(event)
+          const designs   = await getAllDesignsWithProducts(6, searchTerm, event , sortBy);
+          setDesigns(designs);
+          setOpen(false)
+        }
+    
+        const handleSortBy = async (event: string) => {
+          setOpen(true)
+          setSortBy(event)
+          const designs   = await getAllDesignsWithProducts(6, searchTerm, filterBy , event );
+          setDesigns(designs);
+          setOpen(false)
+        }
 
-    setFilteredDesign(filtered);
-  }, [searchTerm, filter, designs]);
+
 
   const handleDelete = async () =>{
     setOpen(true)
@@ -336,7 +342,16 @@ const handleSwitchChange = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
 
         />
-                <Select onValueChange={(value) => setFilter(value)}>
+                <Button
+                          disabled={searchTerm === ""}
+                          onClick={handleSearch}
+                          className="bg-blue-500 text-white px-4 py-2 rounded flex items-center"
+                      >
+                      Search
+                      <Search size={14} className="ml-1" />
+                </Button>  
+
+            <Select onValueChange={handleFilterBy}>
                 <SelectTrigger className="w-full sm:w-[180px] ">
             <SelectValue placeholder="Filter By" />
           </SelectTrigger>
@@ -350,6 +365,19 @@ const handleSwitchChange = () => {
             </SelectGroup>
           </SelectContent>
         </Select>
+
+                    <Select onValueChange={handleSortBy}>
+                      <SelectTrigger className="w-full sm:w-[180px]">
+                            <SelectValue placeholder="Sort By" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectGroup>
+                              <SelectLabel>Select</SelectLabel>
+                              <SelectItem value="sales">Total Sales</SelectItem>
+                            </SelectGroup>
+                          </SelectContent>
+                        </Select>
+
       </div>
 
         <ScrollArea className="mt-4 w-full h-full">
@@ -382,7 +410,7 @@ const handleSwitchChange = () => {
     </TableRow>
   </TableHeader>
   <TableBody>
-    {filteredDesigns.map((design) => (
+    {designs.map((design) => (
       <TableRow key={design.id}>
         {/* Design Id cell */}
         <TableCell className="hidden sm:table-cell">{design.id}</TableCell>
@@ -553,22 +581,30 @@ const handleSwitchChange = () => {
  ) : (
   // seconde view  : all designs
   <div className='mt-4'>
-      {filteredDesigns && (
+      {designs && (
         <Card className="col-span-full" x-chunk="dashboard-01-chunk-4">
           <CardHeader className="">
             <div className="grid gap-2">
               <CardTitle className="font-bold">All Designs :</CardTitle>
               <CardDescription>
-              <div className='mt-2 flex  space-y-2 flex-col sm:flex-row items-center justify-center'>
+              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mt-2">
               <Input
                 type="search"
                 className="w-full sm:w-[50%] "
                 placeholder="Enter the design Id, name, store Name to make a search..."
                 onChange={(e) => setSearchTerm(e.target.value)}
 
-              />            
-              <div className='w-full sm:w-auto sm:ml-2'>
-              <Select onValueChange={(value) => setFilter(value)}>
+              />  
+                            <Button
+                                disabled={searchTerm === ""}
+                                onClick={handleSearch}
+                                className="bg-blue-500 text-white px-4 py-2 ml-2 rounded flex items-center"
+                            >
+                            Search
+                            <Search size={14} className="ml-1" />
+                            </Button>   
+
+            <Select onValueChange={handleFilterBy}>
               <SelectTrigger className="w-full sm:w-[180px]">
                     <SelectValue placeholder="Filter By" />
                   </SelectTrigger>
@@ -582,7 +618,19 @@ const handleSwitchChange = () => {
                     </SelectGroup>
                   </SelectContent>
                 </Select>
-              </div>
+
+                          <Select onValueChange={handleSortBy}>
+                            <SelectTrigger className="w-full sm:w-[180px]">
+                                  <SelectValue placeholder="Sort By" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectGroup>
+                                    <SelectLabel>Select</SelectLabel>
+                                    <SelectItem value="sales">Total Sales</SelectItem>
+                                  </SelectGroup>
+                                </SelectContent>
+                              </Select>
+
             </div>
             <div className='flex items-center justify-center mt-4'>
             <Button variant="default" size="sm" className="w-full sm:w-[30%]" onClick={handleToggleMode}>
@@ -603,7 +651,7 @@ const handleSwitchChange = () => {
               md:gap-y-10
               lg:gap-x-4'>
 
-  {filteredDesigns.map((design, index) => {
+  {designs.map((design, index) => {
     return (
       <>
 

@@ -591,6 +591,10 @@ export async function getAllOrder(){
         user: true, // Include the user relation
         orderItems: true // Include the orderItems relation
       },
+      take:20,
+      orderBy : {
+        createdAt : "desc"
+      }
     });
       return order
       } catch (error) {

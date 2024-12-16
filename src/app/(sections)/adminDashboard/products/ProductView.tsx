@@ -100,6 +100,7 @@ import { acceptProduct, refuseProduct } from '../stores/actions'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import LoadingState from '@/components/LoadingState'
+import { getAllProductsWithDesigns } from './actions'
   
   
 
@@ -113,41 +114,45 @@ interface ExtraProduct extends Product {
   
   
 interface ProductViewProps {
-    products: ExtraProduct[];
+  initialProducts: ExtraProduct[];
   }
   
-  const ProductView = ({ products }: ProductViewProps ) => { 
+  const ProductView = ({ initialProducts }: ProductViewProps ) => { 
+    const [products, setProducts] = useState(initialProducts);
+    
     const router = useRouter();
     const { toast } = useToast()
     const [isDeleteOpen, setisDeleteOpen] = useState(false);
     const [ productId , setProductId] = useState("")
 
 
-    const [searchTerm, setSearchTerm] = useState("");
-    const [filter, setFilter] = useState<string | null>(null);
-    const [filteredProducts, setFilteredProducts] = useState(products);
+    const [searchTerm, setSearchTerm] = useState<string>("");
+    const [filterBy, setFilterBy] = useState<string>("");
+    const [sortBy, setSortBy] = useState<string>("");
 
-     // Filter products whenever the search term or filter changes
-  useEffect(() => {
-    const filtered = products.filter((product) => {
-      const matchesSearch = searchTerm
-        ? product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          product.store.storeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          product.id.includes(searchTerm)
-        : true;
+    const handleSearch = async () => {
+      setOpen(true)
+      const products   = await getAllProductsWithDesigns(6, searchTerm, filterBy , sortBy);
+      setProducts(products);
+      setOpen(false)
+    }
 
-      const matchesFilter = filter
-        ? (filter === "accepted" && product.isProductAccepted) ||
-          (filter === "refused" && product.isProductRefused) ||
-          (filter === "action" && !product.isProductAccepted && !product.isProductRefused)  ||
-          (filter === "all" && product) 
-        : true;
+    const handleFilterBy = async (event: string) => {
+      setOpen(true)
+      setFilterBy(event)
+      const products   = await getAllProductsWithDesigns(6, searchTerm, event , sortBy);
+      setProducts(products);
+      setOpen(false)
+    }
 
-      return matchesSearch && matchesFilter;
-    });
+    const handleSortBy = async (event: string) => {
+      setOpen(true)
+      setSortBy(event)
+      const products   = await getAllProductsWithDesigns(6, searchTerm, filterBy , event );
+      setProducts(products);
+      setOpen(false)
+    }
 
-    setFilteredProducts(filtered);
-  }, [searchTerm, filter, products]);
 
     const handleDelete = async () =>{
         try {
@@ -337,8 +342,19 @@ const viewProductData = (product : ExtraProduct) => {
           onChange={(e) => setSearchTerm(e.target.value)}
 
         />
-                <Select onValueChange={(value) => setFilter(value)}>
-                <SelectTrigger className="w-full sm:w-[180px] ">
+        
+        <Button
+                  disabled={searchTerm === ""}
+                  onClick={handleSearch}
+                  className="bg-blue-500 text-white px-4 py-2 rounded flex items-center"
+              >
+              Search
+              <Search size={14} className="ml-1" />
+        </Button>   
+
+
+            <Select onValueChange={handleFilterBy}>
+            <SelectTrigger className="w-full sm:w-[180px] ">
             <SelectValue placeholder="Filter By" />
           </SelectTrigger>
           <SelectContent>
@@ -351,6 +367,22 @@ const viewProductData = (product : ExtraProduct) => {
             </SelectGroup>
           </SelectContent>
         </Select>
+
+
+            <Select onValueChange={handleSortBy}>
+              <SelectTrigger className="w-full sm:w-[180px]">
+                    <SelectValue placeholder="Sort By" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Select</SelectLabel>
+                      <SelectItem value="sales">Total Sales</SelectItem>
+                      <SelectItem value="views">Total Views</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+
+
       </div>
 
         <ScrollArea className="mt-4 w-full h-full">
@@ -386,7 +418,7 @@ const viewProductData = (product : ExtraProduct) => {
     </TableRow>
   </TableHeader>
   <TableBody>
-    {filteredProducts.map((product) => (
+    {products.map((product) => (
       <TableRow key={product.id}>
         {/* Product Id cell */}
         <TableCell className="hidden sm:table-cell">{product.id}</TableCell>
@@ -475,6 +507,10 @@ const viewProductData = (product : ExtraProduct) => {
             <p >{selectedProduct.title}</p>
           </div>
 
+          <div>
+            <p className="font-bold">Product Views :</p>
+            <p >{selectedProduct.totalViews} views</p>
+          </div>
 
 
           {!selectedProduct.isProductAccepted && !selectedProduct.isProductRefused && (
@@ -551,22 +587,31 @@ const viewProductData = (product : ExtraProduct) => {
   // seconde view  : all products
   <div className='mt-4'>
       {/* store products view */}
-      {filteredProducts && (
+      {products && (
         <Card className="col-span-full" x-chunk="dashboard-01-chunk-4">
           <CardHeader className="">
             <div className="grid gap-2">
               <CardTitle className="font-bold">All Products :</CardTitle>
               <CardDescription>
-              <div className='mt-2  space-y-2 flex flex-col sm:flex-row items-center justify-center'>
+              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 mt-2">
+                
               <Input
                 type="search"
                 className="w-full sm:w-[50%] "
                 placeholder="Enter the product Id, title, store Name to make a search..."
                 onChange={(e) => setSearchTerm(e.target.value)}
 
-              />            
-              <div className='w-full sm:w-auto sm:ml-2'>
-              <Select onValueChange={(value) => setFilter(value)}>
+              />         
+              <Button
+                  disabled={searchTerm === ""}
+                  onClick={handleSearch}
+                  className="bg-blue-500 text-white px-4 py-2 ml-2 rounded flex items-center"
+              >
+              Search
+              <Search size={14} className="ml-1" />
+              </Button>   
+
+            <Select onValueChange={handleFilterBy}>
               <SelectTrigger className="w-full sm:w-[180px]">
                     <SelectValue placeholder="Filter By" />
                   </SelectTrigger>
@@ -580,7 +625,21 @@ const viewProductData = (product : ExtraProduct) => {
                     </SelectGroup>
                   </SelectContent>
                 </Select>
-              </div>
+
+
+            <Select onValueChange={handleSortBy}>
+              <SelectTrigger className="w-full sm:w-[180px]">
+                    <SelectValue placeholder="Sort By" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>Select</SelectLabel>
+                      <SelectItem value="sales">Total Sales</SelectItem>
+                      <SelectItem value="views">Total Views</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+
             </div>
 
 
@@ -597,7 +656,7 @@ const viewProductData = (product : ExtraProduct) => {
               md:gap-y-10
               lg:gap-x-4'>
 
-  {filteredProducts.map((product, index) => {
+  {products.map((product, index) => {
     // Combine front and back product URLs
     const combinedUrls = [
       ...product.croppedFrontProduct,
