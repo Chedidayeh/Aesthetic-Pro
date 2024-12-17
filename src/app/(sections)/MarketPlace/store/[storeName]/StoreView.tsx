@@ -14,6 +14,7 @@ import { FaFacebook, FaInstagram } from 'react-icons/fa'
 import { Button } from '@/components/ui/button'
 import MaxWidthWrapper from '@/components/MaxWidthWrapper'
 import LoginModal from '@/components/LoginModal'
+import { Badge } from '@/components/ui/badge'
 
 interface Productswithstore extends Product {
   store : Store
@@ -108,7 +109,7 @@ const StoreView = ({ initialProducts,totalCount,initialPage, limit, priceRanges,
 
      <div className="flex flex-col items-center text-center">
 
-     <div className="relative w-[200px] h-[200px] rounded-full bg-gray-100 border-2 shadow-xl shadow-blue-200 border-gray-500 overflow-hidden">
+     <div className="relative w-[200px] h-[200px] rounded-full bg-gray-100 border-2 shadow-xl  border-gray-500 overflow-hidden">
           <NextImage
             src={store.logoUrl}
             alt="store"
@@ -118,11 +119,10 @@ const StoreView = ({ initialProducts,totalCount,initialPage, limit, priceRanges,
           />
      </div>
   
-  <h1 className="text-xl mt-4 font-bold tracking-tight sm:text-xl">
-    <span className="text-blue-600">
-      {store?.storeName}{' '}
-    </span>
-  </h1>
+     <Badge className="text-center hover:bg-gray-200 bg-gray-300 font-extrabold text-sm text-black mt-4">
+          {store.storeName}
+        </Badge>
+        
   <p className="mt-2 text-sm text-muted-foreground">
     {store?.storeBio}
   </p>

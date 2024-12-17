@@ -13,10 +13,10 @@ const LevelsView = ({ levels, storeLevel }: { levels: Level[], storeLevel: Level
       {levels.map((level) => (
         <div key={level.levelNumber} className="w-full flex justify-center">
           <Card
-            className={`shadow-md rounded-lg border border-gray-200 w-full max-w-sm ${
+            className={`shadow-md rounded-lg   w-full max-w-sm border-2 ${
               level.levelNumber === storeLevel.levelNumber
-                ? 'bg-blue-50 text-black h-[620px]'
-                : 'h-[570px] mt-8'
+                ? 'bg-blue-50 border-blue-500 text-black h-[620px] animate-pulse '
+                : 'h-[570px] border-gray-200 mt-8'
             }`}
           >
             <CardHeader>
@@ -44,7 +44,7 @@ const LevelsView = ({ levels, storeLevel }: { levels: Level[], storeLevel: Level
                 </ul>
                 {level.levelNumber !== storeLevel.levelNumber &&
                   level.levelNumber > storeLevel.levelNumber && (
-                    <p className="text-sm text-blue-400">
+                    <p className="text-sm text-blue-400 animate-pulse">
                       Achieve {level.minSales} or more sales to unlock this level.
                     </p>
                   )}

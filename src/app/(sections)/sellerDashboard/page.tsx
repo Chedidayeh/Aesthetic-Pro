@@ -76,7 +76,7 @@ const Page =  async () => {
 
       <div className="flex flex-col items-center my-8">
       <div className="flex justify-center items-center">
-        <div className="relative w-[200px] h-[200px] rounded-full bg-gray-100 border-2 shadow-xl shadow-blue-200 border-gray-500 overflow-hidden">
+        <div className="relative w-[200px] h-[200px] rounded-full bg-gray-100 border-2 shadow-xl border-gray-500 overflow-hidden">
           <NextImage
             src={store.logoUrl}
             alt="store"
@@ -88,9 +88,9 @@ const Page =  async () => {
         </div>
       </div>
 
-        <div className="text-center font-extrabold text-xl text-blue-500 mt-8">
+      <Badge className="text-center bg-gray-300 hover:bg-gray-200 font-extrabold text-sm text-black mt-4">
           {store.storeName}
-        </div>
+        </Badge>
 
 
       </div>
