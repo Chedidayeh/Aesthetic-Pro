@@ -1,10 +1,7 @@
 'use server'
 
 
-import { getUser } from "@/actions/actions";
 import { db } from "@/db";
-import { OrderStatus, OrderType } from "@prisma/client";
-import { platform } from "os";
 
 
 export const getOrderWithItemsAndProducts = async (orderId : string) => {

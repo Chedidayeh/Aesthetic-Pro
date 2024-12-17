@@ -15,11 +15,9 @@ import {
 
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
-  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
@@ -32,7 +30,7 @@ import {
   CardHeader,
 } from "@/components/ui/card"
 import { useToast } from '@/components/ui/use-toast'
-import {  useEffect, useRef, useState } from 'react';
+import {  useRef, useState } from 'react';
 import { Rnd } from 'react-rnd';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
@@ -53,18 +51,12 @@ import {
 } from "@/components/ui/sheet"
 
 
-import { useDispatch } from 'react-redux';
-import { RootState } from '@/store/reducers/reducers';
-import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
-import { v4 as uuidv4 } from 'uuid';
-import { Check, CircleCheckBig, CircleDollarSign, FileText, FolderPen, Loader, MousePointerClick, Receipt, Smile, Tags } from 'lucide-react';
+import { Check, CircleCheckBig, CircleDollarSign, FileText, FolderPen, Loader, Tags } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { toPng } from 'html-to-image';
 import { SingleImageDropzone } from '@/components/sellerDashboard/SingleImageDropzone';
 import { addProductToDb, addProductToDbB, addProductToDbF } from './actions';
-import LoadingState from "@/components/LoadingState"
-import { getAllCategories, getStoreByUserId, getUser } from "@/actions/actions"
 import { Category, Color, Size, FrontBorder, BackBorder, Collection, Platform, Store, Product } from "@prisma/client"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"

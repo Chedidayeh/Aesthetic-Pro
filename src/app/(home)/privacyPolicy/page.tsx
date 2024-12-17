@@ -4,7 +4,6 @@
 'use client'
 
 import {  Shield } from 'lucide-react'
-import {  useState } from 'react'
 import { Separator } from "@/components/ui/separator"
 
 const Page = () => {

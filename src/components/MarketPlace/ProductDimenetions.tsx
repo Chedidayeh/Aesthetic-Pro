@@ -1,17 +1,6 @@
 'use client'
 
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import Link from 'next/link'
-import ProductListing from './ProductListing'
-import { Product } from '@prisma/client'
 
 interface ProductReelProps {
   title: string

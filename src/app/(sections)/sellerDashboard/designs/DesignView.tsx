@@ -11,14 +11,14 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card"
-import { toast, useToast } from '@/components/ui/use-toast'
-import {  ChangeEvent, Suspense, useRef, useState } from 'react';
+import { useToast } from '@/components/ui/use-toast'
+import {  ChangeEvent, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import React from 'react';
-import {  CircleDollarSign, CreditCard, Heart, Loader, OctagonAlert, SquarePen, Tags, Trash2 } from 'lucide-react';
+import {  CircleDollarSign, CreditCard, OctagonAlert, SquarePen, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import {
     AlertDialog,
@@ -40,19 +40,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { CalendarIcon } from "@radix-ui/react-icons"
  
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card"
-import { db } from '@/db';
 import { deleteDesign, updateDesign } from './actions';
 import { useRouter } from 'next/navigation';
 import { Level, Platform, SellerDesign, Store } from '@prisma/client';
@@ -87,6 +75,7 @@ const DesignView = ({
         const [newPrice, setNewPrice] = useState<number>(0);
         const [isClicked, setIsClicked] = useState(false);
 
+const [open, setOpen] = useState<boolean>(false);
 
 
               // mutation hook for updating:
@@ -112,6 +101,7 @@ const DesignView = ({
               })
 
               const handleDelete = async (designId : string) => {
+                setOpen(true)
                 try {
                     const res = await deleteDesign(designId)
                     if(res){
@@ -119,6 +109,7 @@ const DesignView = ({
                         title: 'Design Was Successfully Deleted',
                         variant: 'default',
                       });
+                      setOpen(false)
                       router.refresh()
                     }
                     else{
@@ -126,10 +117,13 @@ const DesignView = ({
                         title: 'Design has associated order items and can not be deleted',
                         variant: 'destructive',
                       });
+                      setOpen(false)
+
                       router.refresh()
                     }
                     
                 } catch (error) {
+                  setOpen(false)
                     console.error('Error updating Product:', error);
                     toast({
                         title: 'Something went wrong',
@@ -509,6 +503,7 @@ const DesignView = ({
                              
  
 <LoadingState isOpen={isDownloadOpen} />
+<LoadingState isOpen={open} />
 
                             
 

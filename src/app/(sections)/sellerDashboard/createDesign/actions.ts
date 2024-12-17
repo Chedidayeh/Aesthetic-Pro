@@ -1,12 +1,8 @@
 
 'use server'
 
-import { auth } from '@/auth';
 import { db } from '@/db';
-import { storage } from '@/firebase/firebaseConfig';
 import { Store } from '@prisma/client';
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import path from 'path';
 
 
 

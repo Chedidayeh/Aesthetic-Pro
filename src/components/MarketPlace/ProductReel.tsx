@@ -1,26 +1,8 @@
 'use client'
 
-import { Card, CardContent } from "@/components/ui/card"
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination"
 import Link from 'next/link'
 import ProductListing from './ProductListing'
 import { Product, Store, User } from '@prisma/client'
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
-import { useState } from "react"
 
 interface Productswithstore extends Product {
   store : Store

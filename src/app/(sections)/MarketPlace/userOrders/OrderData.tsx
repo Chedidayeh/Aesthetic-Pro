@@ -2,13 +2,6 @@
 'use client'
 import NextImage from 'next/image'
 import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -20,32 +13,10 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import * as React from "react"
-import Image from "next/image"
-import Link from "next/link"
 import {
-  ChevronLeft,
-  ChevronRight,
-  Copy,
-  CreditCard,
-  Eye,
-  File,
-  Home,
-  LineChart,
-  ListFilter,
-  Loader,
-  MoreVertical,
   OctagonAlert,
-  Package,
-  Package2,
-  PanelLeft,
-  Search,
-  Settings,
-  ShoppingCart,
-  SquareArrowDown,
-  SquarePen,
   Trash2,
   Truck,
-  Users2,
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
@@ -58,24 +29,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-} from "@/components/ui/pagination"
-import { Progress } from "@/components/ui/progress"
 import { Separator } from "@/components/ui/separator"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import {
   Table,
   TableBody,
@@ -86,22 +40,16 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs"
-import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { Order, OrderItem, OrderStatus, OrderType } from "@prisma/client"
-import { useEffect, useState } from "react"
+import { Order, OrderItem } from "@prisma/client"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/components/ui/use-toast"
-import { DeleteOrder, getItems } from "./actions"
+import { DeleteOrder } from "./actions"
 import { cn } from "@/lib/utils"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
 import ImageSlider from "@/components/MarketPlace/ImageSlider"

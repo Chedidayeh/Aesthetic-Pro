@@ -9,6 +9,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { ReactNode } from "react";
 import HomeNavBar from "@/components/HomeNavBar";
 import TopBar from "@/components/TopBar";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
 const recursive = Recursive({ subsets: ["latin-ext"] });
 
 export const dynamic = 'force-dynamic';
@@ -41,6 +43,8 @@ const Layout = ({ children }: { children: ReactNode }) => {
             <TopBar/>
            <HomeNavBar/>
             {children}
+            <SpeedInsights />
+            <Analytics />
             <Footer/>
             <Toaster/>
             </Providers>

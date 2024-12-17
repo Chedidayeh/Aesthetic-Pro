@@ -2,24 +2,18 @@
 "use client"
 import NextImage from "next/image"
 
-import { CircleUserRound, ShoppingBasket, UserRound, UserRoundCheck, UserRoundCog, UserRoundPlus, UserRoundX } from "lucide-react"
-import { Button, buttonVariants } from "@/components/ui/button"
+import { UserRound, UserRoundCheck, UserRoundPlus, UserRoundX } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Platform, User } from "@prisma/client"
-import Link from "next/link"
 import { createPlatform } from "@/actions/actions"
 import LoadingState from "./LoadingState"
 import { useState } from "react"

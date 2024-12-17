@@ -1,41 +1,27 @@
 'use client'
 import {
   AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
-  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import {
   Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card"
 import NextImage from 'next/image'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { Skeleton } from '../ui/skeleton'
-import { Product, Store, User, UserType } from '@prisma/client'
-import ImageSlider from './ImageSlider'
+import { Product, Store, User } from '@prisma/client'
 import { Badge } from "../ui/badge"
 import { Label } from "@radix-ui/react-label"
-import { Heart, Loader, ShoppingBag } from "lucide-react"
-import { buttonVariants } from "../ui/button"
-import { auth } from "@/auth"
+import { Heart, Loader } from "lucide-react"
 import { useToast } from "../ui/use-toast"
-import classNames from 'classnames';
-import session from "redux-persist/lib/storage/session"
 import { addProductToFavList, checkProductInFavList, removeProductFromFavList } from "@/actions/actions"
 import { useRouter } from "next/navigation"
-import LoginModal from "../LoginModal"
 import clsx from "clsx"
 
 interface Productswithstore extends Product {

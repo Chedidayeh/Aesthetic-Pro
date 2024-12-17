@@ -1,6 +1,5 @@
 'use server'
 
-import { getUser } from "@/actions/actions";
 import { db } from "@/db";
 import { User } from "@prisma/client"
 

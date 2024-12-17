@@ -1,5 +1,5 @@
 'use client'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   Select,
   SelectContent,
@@ -9,54 +9,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import Image from "next/image";
-import { MoreHorizontal } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {  AffiliatePaymentRequest, PaymentRequest } from "@prisma/client";
-import { ChangeEvent, useEffect, useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-  } from "@/components/ui/alert-dialog"
-import { useRouter } from "next/navigation";
-import { useToast } from "@/components/ui/use-toast";
-import LoadingState from "@/components/LoadingState";
-import { deletePaymentRequestById } from "./actions";
+import {  AffiliatePaymentRequest } from "@prisma/client";
+import { useEffect, useState } from "react";
 import D17 from "./D17";
-import { Input } from "@/components/ui/input";
 import Flouci from "./Flouci";
 import BankDeposit from "./BankDeposit";
 interface ViewProps {

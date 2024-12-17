@@ -12,13 +12,6 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
-import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -32,35 +25,17 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogTrigger,
   } from "@/components/ui/alert-dialog"
 import {
-    Activity,
-    ArrowUpRight,
     CircleCheck,
-    CircleUser,
     CircleX,
-    CloudDownload,
-    CreditCard,
-    DollarSign,
     Eye,
-    Heart,
     Loader,
-    Menu,
     OctagonAlert,
-    Package2,
-    Palette,
     Search,
-    Shirt,
     Trash2,
-    Users,
   } from "lucide-react"
   
-  import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
-  } from "@/components/ui/avatar"
   import { Badge } from "@/components/ui/badge"
   import { Button } from "@/components/ui/button"
   import {
@@ -80,22 +55,16 @@ import {
     TableRow,
   } from "@/components/ui/table"
   
-  import Link from "next/link";
   
   import { cn } from "@/lib/utils";
-  import React, { ChangeEvent, useEffect, useState } from "react"
-  import OrderedDesigns from "@/components/sellerDashboard/OrderedDesigns"
-  import { db } from "@/db"
-  import UsersTable from "@/components/adminDashboard/UsersTable"
+  import React, { useState } from "react"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { OrderItem, Product, SellerDesign, Store } from "@prisma/client"
-import { tree } from "next/dist/build/templates/app-page"
+import { OrderItem, SellerDesign, Store } from "@prisma/client"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/components/ui/use-toast"
 import { Input } from "@/components/ui/input"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { Separator } from '@/components/ui/separator'
-import ImageSlider from '@/components/MarketPlace/ImageSlider'
 import { acceptDesign, refuseDesign,  } from '../stores/actions'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
@@ -159,11 +128,11 @@ interface DesignViewProps {
 
 
   const handleDelete = async () =>{
+    setisDeleteOpen(false)
     setOpen(true)
     try {
       const res = await deleteDesign(designId)
       if(res){
-        setisDeleteOpen(false)
         toast({
           title: 'Design Was Successfully Deleted',
           variant: 'default',
@@ -172,7 +141,6 @@ interface DesignViewProps {
         router.refresh()
       }
       else{
-        setisDeleteOpen(false)
         toast({
           title: 'Design has associated order items and can not be deleted',
           variant: 'destructive',
@@ -181,7 +149,6 @@ interface DesignViewProps {
         router.refresh()
       }
     } catch (error) {
-        setisDeleteOpen(false)
         console.log(error)
         toast({
             title: 'design Was Not Deleted',

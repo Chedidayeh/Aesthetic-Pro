@@ -5,18 +5,13 @@ import Link from 'next/link'
 import {  getAllProductsCategories, getAllProductCollectionNames, getUser } from '@/actions/actions'
 import FollowedStores from './FollowedStores'
 
-import { error } from 'console';
-import { auth } from '@/auth';
 import {
   AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import {  OctagonAlert } from 'lucide-react';
 import { fetchPriceRanges, getFollowedStoreProductsFirst } from './actions'

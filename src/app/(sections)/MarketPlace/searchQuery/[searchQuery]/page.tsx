@@ -1,8 +1,6 @@
 'use server';
 
 import { getAllProductCollectionNames, getAllProductsCategories, getUser } from "@/actions/actions";
-import MaxWidthWrapper from "@/components/MaxWidthWrapper";
-import { ArrowDownToLine, CheckCircle, Leaf } from "lucide-react";
 import SearchedProducts from "./SearchedProducts";
 import { fetchPriceRanges, searchProducts } from "./actions";
 

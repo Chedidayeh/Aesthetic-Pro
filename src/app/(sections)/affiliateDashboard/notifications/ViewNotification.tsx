@@ -1,15 +1,12 @@
 'use client'
 
-import Image from "next/image";
 import { MoreHorizontal } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -28,19 +25,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { AffiliateNotification, Notification } from "@prisma/client";
+import { AffiliateNotification } from "@prisma/client";
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import {
     AlertDialog,
-    AlertDialogAction,
     AlertDialogCancel,
     AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogTrigger,
   } from "@/components/ui/alert-dialog"
 import { deleteNotificationById, markAllNotificationsAsViewed, markNotificationAsViewed } from "./actions";
 import { useRouter } from "next/navigation";

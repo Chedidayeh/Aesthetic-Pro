@@ -6,7 +6,6 @@ import NextImage from 'next/image'
 import {
   Card,
   CardContent,
-  CardFooter,
   CardHeader,
 } from "@/components/ui/card"
 import { useToast } from '@/components/ui/use-toast'
@@ -18,7 +17,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import React from 'react';
 
-import {  MousePointerClick } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { SingleImageDropzone } from '@/components/sellerDashboard/SingleImageDropzone';
 

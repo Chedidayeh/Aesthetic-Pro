@@ -1,4 +1,4 @@
-import type { GetServerSideProps, GetServerSidePropsContext, Metadata } from "next";
+import type { Metadata } from "next";
 import { Recursive } from "next/font/google";
 import "../globals.css";
 import Footer from "@/components/Footer";
@@ -10,9 +10,9 @@ import { ThemeProvider } from "@/components/theme-provider";
 import TopBar from "@/components/TopBar";
 import { ReactNode } from "react";
 import SearchBar from "@/components/MarketPlace/SearchBar";
-import { Platform, User } from "@prisma/client";
+import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { SessionProvider } from "next-auth/react";
-import { Session } from "next-auth";
 const recursive = Recursive({ subsets: ["latin-ext"] });
 export const dynamic = 'force-dynamic';
 
@@ -48,6 +48,8 @@ const Layout = ({ children }: LayoutProps) => {
     <HomeNavBar/>
     <SearchBar/>
     {children}
+    <SpeedInsights />
+    <Analytics />
          <Footer />
            <Toaster/>
             </Providers>

@@ -1,27 +1,13 @@
 /* eslint-disable react/no-unescaped-entities */
 import NextImage from 'next/image';
 import {
-  Activity,
-  ArrowUpRight,
-  CircleUser,
   CreditCard,
   DollarSign,
   Eye,
-  Heart,
-  Menu,
-  Package2,
-  Search,
-  Shirt,
   Star,
   User,
-  Users,
 } from "lucide-react"
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 
@@ -29,8 +15,7 @@ import { Button } from "@/components/ui/button"
 
 import Link from "next/link";
 
-import { cn } from "@/lib/utils";
-import { getLevelByNumber, getProductViewsChartData, getStoreByUserId, getStoreProductsViewsCount, getStoreStats, getUnreadNotificationsForStore, getUser } from "@/actions/actions";
+import { getLevelByNumber, getStoreByUserId, getStoreProductsViewsCount, getStoreStats, getUnreadNotificationsForStore, getUser } from "@/actions/actions";
 import React from "react"
 import OrderedDesigns from "@/components/sellerDashboard/OrderedDesigns"
 import OrderedProducts from "@/components/sellerDashboard/OrderedProducts"

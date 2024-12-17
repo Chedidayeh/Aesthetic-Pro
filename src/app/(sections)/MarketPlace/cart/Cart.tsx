@@ -11,8 +11,8 @@ import {
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 import { cn } from '@/lib/utils'
-import { CartProduct, Platform, User } from '@prisma/client'
-import { Check, Loader, TriangleAlert, X } from 'lucide-react'
+import { Platform, User } from '@prisma/client'
+import { Check, Loader, X } from 'lucide-react'
 import NextImage from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -31,7 +31,6 @@ import {
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { createOrderInDb, emptyUserCart, removeProductFromCart } from './actions'
-import ImageSlider from '@/components/MarketPlace/ImageSlider'
 import { RootState } from '@/store/reducers/reducers'
 import { useSelector } from 'react-redux'
 import { Badge } from "@/components/ui/badge"

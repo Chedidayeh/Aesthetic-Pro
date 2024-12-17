@@ -1,12 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 'use client'
 import React, { useState } from "react";
-import MaxWidthWrapper from '@/components/MaxWidthWrapper'
 import NextImage from 'next/image'
-import {
-  CircleArrowLeft,
-  CircleArrowRight,
-} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils";
 import Link from "next/link";

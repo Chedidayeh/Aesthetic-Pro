@@ -2,7 +2,6 @@
 
 import { calculatePriceRanges } from "@/actions/actions";
 import { db } from "@/db";
-import { Store } from "@prisma/client";
 
 
   export async function fetchDiscountProductsDeals(

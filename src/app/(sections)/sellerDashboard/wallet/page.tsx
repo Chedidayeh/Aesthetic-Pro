@@ -1,51 +1,21 @@
 /* eslint-disable react/no-unescaped-entities */
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
-  Activity,
-  ArrowUpRight,
-  CircleUser,
   CreditCard,
   DollarSign,
   HandCoins,
-  Heart,
-  Menu,
-  Package2,
   Receipt,
-  Search,
-  Shirt,
-  Users,
 } from "lucide-react"
 
 import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 
-import Link from "next/link";
 
-import { cn } from "@/lib/utils";
 import React from "react"
-import OrderedDesigns from "@/components/sellerDashboard/OrderedDesigns"
-import OrderedProducts from "@/components/sellerDashboard/OrderedProducts"
 import Payment from "./Payment"
 import { getUser } from "@/actions/actions"
 import { getStoreByUserId } from "./actions"

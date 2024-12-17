@@ -1,7 +1,6 @@
 'use client'
 import {
     Card,
-    CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
@@ -26,11 +25,11 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { Affiliate, AffiliatePaymentRequest, PaymentRequest, Store, User } from "@prisma/client";
+import { Affiliate, AffiliatePaymentRequest, User } from "@prisma/client";
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { OctagonAlert, Trash2 } from 'lucide-react';
-import { approveAffiliateRequest, approveStoreRequest, deleteAffiliatePaymentRequestById, deletePaymentRequestById } from "./actions";
+import { approveAffiliateRequest, deleteAffiliatePaymentRequestById } from "./actions";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import LoadingState from "@/components/LoadingState";

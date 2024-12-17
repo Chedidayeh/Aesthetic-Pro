@@ -1,26 +1,20 @@
 'use server'
 
 import { db } from "@/db";
-import { Product } from "@prisma/client";
-import { notFound } from "next/navigation";
 import ViewProduct from "./viewProduct"
 import {
   AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { OctagonAlert } from "lucide-react";
 import {  getPlatformForTheWebsite, getUser } from "@/actions/actions";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { fetchDesignById, fetchProductsByCategory, getCategory, getSizes } from "./actions";
-import { cookies } from "next/headers";
 interface PageProps {
   params: {
     productId: string

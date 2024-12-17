@@ -3,28 +3,19 @@
 // Indicates this file is a client-side component in Next.js
 
 "use client"
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
 import NextImage from 'next/image'
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
 } from "@/components/ui/card"
-import {  ChangeEvent, useEffect, useState } from 'react';
-import { cn } from '@/lib/utils';
+import {  ChangeEvent, useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import React from 'react';
-import {  CircleDollarSign, CreditCard, Eye, EyeIcon, Heart, Loader, OctagonAlert, PenTool, SquarePen, Tags, Trash2 } from 'lucide-react';
+import {  CircleDollarSign, CreditCard, Eye, Loader, OctagonAlert, PenTool, SquarePen, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import {
     AlertDialog,
@@ -46,19 +37,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { CalendarIcon } from "@radix-ui/react-icons"
  
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card"
-import { db } from '@/db';
 import { deleteProduct, updateProduct } from './actions';
 import { useRouter } from 'next/navigation';
 import { Collection, Level, Product, Store } from '@prisma/client';
@@ -67,7 +46,6 @@ import { useToast } from "@/components/ui/use-toast";
 import ImageSlider from "@/components/MarketPlace/ImageSlider";
 import LoadingState from "@/components/LoadingState";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { sendLevelUpEmail } from "@/lib/mailer";
 interface ProductViewProps {
   sellerProductsData: Product[];
   totalProductViews:number

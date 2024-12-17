@@ -1,8 +1,8 @@
 'use server'
 
 import { db } from "@/db";
-import { sendLevelUpEmail } from "@/lib/mailer";
-import { Collection } from "@prisma/client";
+import { storage } from "@/firebase/firebaseConfig";
+import { deleteObject, ref } from "firebase/storage";
 
 interface UpdateProductArgs {
   productId: string;
@@ -38,13 +38,39 @@ export const updateProduct = async ({ productId, newTitle , selectedCollection }
     }
   };
 
+
+  
+  // Function to delete files from Firebase Storage
+  export const deleteFiles = async (filePaths: string[]) => {
+    for (const filePath of filePaths) {
+      try {
+        const fileRef = ref(storage, filePath);
+        await deleteObject(fileRef);
+        console.log(`Deleted: ${filePath}`);
+      } catch (error) {
+        console.error(`Failed to delete ${filePath}:`, error);
+      }
+    }
+  };
+  
+  // Function to delete a product
   export const deleteProduct = async (productId: string) => {
     try {
       // Start a transaction to ensure atomicity
       const result = await db.$transaction(async (transaction) => {
+        // Fetch the product to get file paths
+        const product = await transaction.product.findUnique({
+          where: { id: productId },
+          select: { croppedFrontProduct: true, croppedBackProduct: true },
+        });
+  
+        if (!product) {
+          throw new Error("Product not found");
+        }
+  
         // Check if the product has any order items
         const orderItemCount = await transaction.orderItem.count({
-          where: { productId: productId },
+          where: { productId },
         });
   
         if (orderItemCount > 0) {
@@ -57,17 +83,22 @@ export const updateProduct = async ({ productId, newTitle , selectedCollection }
           where: { id: productId },
         });
   
-        return true;
+        // Return file paths to delete after the transaction
+        return [...product.croppedFrontProduct, ...product.croppedBackProduct];
       });
   
+      // If result is false, it means the product was not deleted
       if (!result) {
-        return false
+        return false;
       }
   
-      return true
+      // Delete files from Firebase Storage
+      await deleteFiles(result);
+  
+      return true;
     } catch (error) {
-      console.error('Error deleting product:', error);
-      throw new Error('Failed to delete product from the database');
+      console.error("Error deleting product:", error);
+      throw new Error("Failed to delete product");
     }
   };
   

@@ -19,7 +19,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { AffiliatePaymentRequest, PaymentRequest } from "@prisma/client";
+import { AffiliatePaymentRequest } from "@prisma/client";
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { OctagonAlert, Trash2 } from 'lucide-react';

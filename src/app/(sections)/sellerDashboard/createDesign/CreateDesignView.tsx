@@ -3,11 +3,9 @@
 import Pica from 'pica';
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
-  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
@@ -21,39 +19,16 @@ import {
 } from "@/components/ui/card"
 import { useToast } from '@/components/ui/use-toast'
 import {  useRef, useState } from 'react';
-import { Rnd } from 'react-rnd';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
-import { RadioGroup } from '@headlessui/react';
 import { Input } from '@/components/ui/input';
 import React from 'react';
-import { Badge } from "@/components/ui/badge";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet"
 
 
-import { useDispatch } from 'react-redux';
-import { RootState } from '@/store/reducers/reducers';
-import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
-import { v4 as uuidv4 } from 'uuid';
-import { CircleCheckBig, CircleDollarSign, FileText, FolderPen, Loader, Receipt, SquareArrowOutUpRight, Tags } from 'lucide-react';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Switch } from '@/components/ui/switch';
-import { toPng } from 'html-to-image';
-import { tree } from 'next/dist/build/templates/app-page';
+import { CircleCheckBig, CircleDollarSign, FolderPen, Loader, Tags } from 'lucide-react';
 import { SingleImageDropzone } from '@/components/sellerDashboard/SingleImageDropzone';
-import { Separator } from '@radix-ui/react-dropdown-menu';
-import Link from 'next/link';
 import { addDesignToDb } from './actions';
 import { Platform, Store } from "@prisma/client"
 import path from "path"

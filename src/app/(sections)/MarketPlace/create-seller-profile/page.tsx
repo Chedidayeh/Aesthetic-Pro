@@ -4,11 +4,9 @@
 'use client'
 import {
   Avatar,
-  AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar"
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useRouter } from 'next/navigation'
 import { Loader, MousePointerClick, RocketIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import Confetti from 'react-dom-confetti'
@@ -20,16 +18,12 @@ import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
 import { addStore, fetchName } from "./actions"
 import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
-import { Label } from "@/components/ui/label"
 import { useDispatch } from "react-redux"
-import { saveRedirectUrl } from "@/store/actions/action"
 import React from "react"
 import { getPlatformForTheWebsite, getUser } from "@/actions/actions"
 import { User } from "@prisma/client"
-import path from "path"
 import { storage } from "@/firebase/firebaseConfig"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
-import { auth } from "@/auth"
 import { useSession } from "next-auth/react"
 
 const arabicInfos = [

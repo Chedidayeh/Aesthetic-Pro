@@ -1,12 +1,7 @@
 
-import { useRouter } from "next/navigation";
 import NotFound from "../[...not-found]/page";
 import {  getAffiliateLinkByCode } from "./actions";
-import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription } from '@/components/ui/alert-dialog';
 import RedirectPage from './RedirectPage';
-import { auth } from '@/auth';
-import { getUser } from '@/actions/actions';
-import { serialize } from 'cookie';
 
 interface RedirectPageProps {
     params: { code: string };

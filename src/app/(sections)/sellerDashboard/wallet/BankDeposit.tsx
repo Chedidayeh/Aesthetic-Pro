@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import NextImage from 'next/image';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -9,7 +9,7 @@ import { Store  , PaymentRequest } from '@prisma/client';
 import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
 import LoadingState from '@/components/LoadingState';
-import { proceedBankDepositRequest, proceedD17Request, proceedFlouciRequest } from './actions';
+import { proceedBankDepositRequest } from './actions';
 
 interface ExtraStore extends Store {
   paymentRequest  : PaymentRequest[]

@@ -1,7 +1,5 @@
  'use server'
-import { db } from '@/db';
 import ProductView from './ProductView';
-import { auth } from '@/auth';
 import { getAllProductsCategories, getAllProductCollectionNames, getPlatformForTheWebsite, getUser } from '@/actions/actions';
 import { fetchAllProducts, getAffiliateIdByUserId } from './actions';
 

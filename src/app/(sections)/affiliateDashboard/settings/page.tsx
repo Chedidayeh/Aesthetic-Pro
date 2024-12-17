@@ -1,36 +1,19 @@
 'use client'
 import Link from "next/link"
-import { CircleUser, Menu, OctagonAlert, Package2, Search } from "lucide-react"
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import {
     Card,
-    CardContent,
     CardDescription,
     CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
 import { useState } from "react"
 import LoadingState from "@/components/LoadingState"
 import {  deleteAccount, getAffiliateAccountByUserId } from "./actions"
-import { getStoreByUserId, getUser } from "@/actions/actions"
+import { getUser } from "@/actions/actions"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/components/ui/use-toast"
-import { SingleImageDropzone } from "@/components/sellerDashboard/SingleImageDropzone"
-import { storage } from "@/firebase/firebaseConfig"
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 export default function Page() {
 
     const router = useRouter();

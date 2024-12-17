@@ -3,7 +3,6 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Level } from "@prisma/client";
-import { Badge } from "@/components/ui/badge";
 
 const LevelsView = ({ levels, storeLevel }: { levels: Level[], storeLevel: Level }) => {
   return (

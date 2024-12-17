@@ -1,6 +1,5 @@
 'use client'
 
-import Image from "next/image"
 import { MoreHorizontal, OctagonAlert } from "lucide-react"
 import {
   AlertDialog,

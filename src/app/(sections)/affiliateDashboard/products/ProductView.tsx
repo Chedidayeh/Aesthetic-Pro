@@ -13,33 +13,20 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination"
 import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
-import NextImage from 'next/image'
-import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {  ChangeEvent, useEffect, useMemo, useState } from 'react';
-import { cn } from '@/lib/utils';
-import { Label } from '@/components/ui/label';
+import {  ChangeEvent, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import React from 'react';
-import {  CircleCheck, CircleDollarSign, CreditCard, DollarSign, Eye, EyeIcon, Heart, Loader, OctagonAlert, PenTool, Search, SquarePen, Tags, Trash2 } from 'lucide-react';
-import Link from 'next/link';
+import {  CircleCheck, CircleDollarSign, CreditCard, Eye, Loader, Search } from 'lucide-react';
 import {
     AlertDialog,
     AlertDialogAction,
-    AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
     AlertDialogFooter,
@@ -56,27 +43,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { CalendarIcon } from "@radix-ui/react-icons"
  
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card"
-import { db } from '@/db';
 import { useRouter } from 'next/navigation';
-import { Collection, Platform, Product, Store, User } from '@prisma/client';
+import { Platform, Product, Store, User } from '@prisma/client';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from "@/components/ui/use-toast";
 import ImageSlider from "@/components/MarketPlace/ImageSlider";
 import LoadingState from "@/components/LoadingState";
 import { Separator } from "@/components/ui/separator"
-import axios from 'axios';
 import { fetchAllProducts, generateShortAffiliateLink } from "./actions"
 interface Productswithstore extends Product {
   store : Store

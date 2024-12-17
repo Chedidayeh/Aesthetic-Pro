@@ -2,19 +2,10 @@
 'use server'
 
 import {
-  Activity,
-  ArrowUpRight,
-  CircleUser,
-  CreditCard,
   DollarSign,
-  Heart,
-  Menu,
-  Package2,
   Palette,
-  Search,
   Shirt,
   Store,
-  Users,
 } from "lucide-react"
 
 
@@ -22,12 +13,11 @@ import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
 import Link from "next/link";
-import { getOrderChartData, getPlatformForTheWebsite, getStoreStats, getTotalCounts, getUser } from "@/actions/actions";
+import { getPlatformForTheWebsite, getStoreStats, getTotalCounts } from "@/actions/actions";
 import React from "react"
 import UsersTable from "@/components/adminDashboard/UsersTable"
 import { unstable_noStore as noStore } from "next/cache"

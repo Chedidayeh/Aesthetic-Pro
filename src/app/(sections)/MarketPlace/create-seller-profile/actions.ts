@@ -1,7 +1,6 @@
 'use server'
 
 import { getUser } from "@/actions/actions"
-import { auth, signOut } from "@/auth"
 import { db } from "@/db"
 
 

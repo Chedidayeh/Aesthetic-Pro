@@ -5,6 +5,8 @@ import Providers from "@/components/Providers";
 import { StoreProvider } from "@/store/StoreProvider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ReactNode } from "react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/react";
 const recursive = Recursive({ subsets: ["latin-ext"] });
 
 
@@ -29,6 +31,8 @@ const Layout = ({ children }: { children: ReactNode }) => {
         <div className='flex-1 flex flex-col h-full'>
            <Providers>
            {children}
+           <SpeedInsights />
+           <Analytics />
             <Toaster/>
             </Providers>
           </div>

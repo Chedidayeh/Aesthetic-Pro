@@ -28,8 +28,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-import { getProductViewsChartData, getViewsChartData } from "@/actions/actions"
-import LoadingState from "../LoadingState"
+import { getViewsChartData } from "@/actions/actions"
 
 const chartConfig = {
   totalViews: {

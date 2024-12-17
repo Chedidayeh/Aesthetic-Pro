@@ -2,7 +2,6 @@
 
 import { calculatePriceRanges, updateNewProductStatus } from "@/actions/actions";
 import { db } from "@/db";
-import { Product } from "@prisma/client";
 
   // for the new released products
   export async function fetchNewProducts(

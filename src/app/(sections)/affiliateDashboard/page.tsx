@@ -1,57 +1,25 @@
 /* eslint-disable react/no-unescaped-entities */
-import NextImage from 'next/image';
 import {
-  Activity,
-  ArrowUpRight,
-  CircleUser,
-  CreditCard,
   DollarSign,
-  Heart,
   Link2,
-  Menu,
   MousePointerClick,
-  Package2,
   Receipt,
-  Search,
-  Shirt,
-  User,
-  Users,
 } from "lucide-react"
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 
 import Link from "next/link";
 
-import { cn } from "@/lib/utils";
-import { getAffiliateChartData, getAffiliateLinksAndCommissions, getAffiliateStats, getAllCommissionsByAffiliateId, getStoreByUserId, getUnreadNotificationsForStore, getUser } from "@/actions/actions";
+import { getAffiliateLinksAndCommissions, getAffiliateStats, getAllCommissionsByAffiliateId, getUser } from "@/actions/actions";
 import React from "react"
-import OrderedDesigns from "@/components/sellerDashboard/OrderedDesigns"
-import OrderedProducts from "@/components/sellerDashboard/OrderedProducts"
 import BanUser from '@/components/BanUser';
-import { getStoreFollowersCount } from '../MarketPlace/store/[storeName]/actions';
-import { getAffiliateIdByUserId } from './products/actions';
 import CommissionsTable from '@/components/affiliateDashboard/CommissionsTable';
 import { getAffiliateNotification } from './notifications/actions';
 import { Component } from '@/components/affiliateDashboard/AffiliateChart';

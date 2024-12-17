@@ -5,18 +5,6 @@ import { db } from '@/db';
 import { error } from 'console';
 import DesignView from './DesignView';
 import { auth } from '@/auth';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Frown, Loader } from 'lucide-react';
 import { getLevelByNumber, getPlatformForTheWebsite } from '@/actions/actions';
 
 

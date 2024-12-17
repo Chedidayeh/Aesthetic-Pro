@@ -3,27 +3,14 @@
 'use client'
 import NextImage from "next/image"
 import * as React from "react"
-import Link from 'next/link'
-import { Button, buttonVariants } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 
-import { Input } from "@/components/ui/input"
 import {  useState, useTransition } from "react"
 import {useForm} from "react-hook-form"
 import {zodResolver} from "@hookform/resolvers/zod"
 import * as z from "zod"
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
 import { LoginSchema } from "../schemas"
-import { FormError } from "@/components/form-error"
-import { FormSuccess } from "@/components/form-success"
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes"
-import { ArrowRight, Eye, EyeOff, Loader } from "lucide-react"
 import { GoogleLogin, login, resetPassword } from "./actions"
 import { useRouter } from "next/navigation"
 import { checkGoogleLoggedInUser, getUserByEmail } from "@/userData/user"
@@ -33,7 +20,6 @@ import { saveRedirectUrl } from "@/store/actions/action"
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"

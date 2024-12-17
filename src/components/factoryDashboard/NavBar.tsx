@@ -1,45 +1,13 @@
 'use client'
-import Link from "next/link"
 import {
-  Bell,
-  CircleUser,
   Home,
-  Layers3,
   LayoutDashboard,
-  LayoutGrid,
-  LineChart,
   Menu,
-  Package,
-  Package2,
-  Palette,
-  Search,
-  Settings,
-  Shirt,
   ShoppingBasket,
-  ShoppingCart,
-  Sparkles,
-  Store,
-  Users,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { usePathname, useRouter } from "next/navigation"
 import { Separator } from "../ui/separator"

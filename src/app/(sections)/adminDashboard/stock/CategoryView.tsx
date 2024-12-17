@@ -3,7 +3,6 @@
 import NextImage from 'next/image'
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 import { storage } from "@/firebase/firebaseConfig"
-import path from "path"
 import Pica from 'pica';
 
 import {
@@ -11,7 +10,6 @@ import {
     AlertDialogAction,
     AlertDialogCancel,
     AlertDialogContent,
-    AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
@@ -26,17 +24,14 @@ import {
   } from "@/components/ui/table";
 import * as React from "react";
 import { cn } from '@/lib/utils';
-import { Button, buttonVariants } from "@/components/ui/button";
-import { ArrowRight, OctagonAlert, PlusCircle, X } from "lucide-react";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Button } from "@/components/ui/button";
+import { OctagonAlert, PlusCircle, X } from "lucide-react";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
-import { useDispatch } from "react-redux";
 import { useToast } from "@/components/ui/use-toast";
 import { BackBorder, Category, Color, FrontBorder, Size } from "@prisma/client";
 import LoadingState from "@/components/LoadingState";
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { Table } from '@/components/ui/table';
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';

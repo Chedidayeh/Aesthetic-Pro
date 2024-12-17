@@ -4,7 +4,6 @@ import Link from 'next/link'
 import MaxWidthWrapper from './MaxWidthWrapper'
 import { FaFacebook, FaInstagram } from 'react-icons/fa'
 import { getPlatformForTheWebsite, getUser } from '@/actions/actions'
-import { User } from '@prisma/client'
 
 const Footer = async () => {
 
@@ -35,10 +34,10 @@ const Footer = async () => {
 
     <div className="flex gap-6 my-3 pb-5">
       <Link href={"https://www.facebook.com/profile.php?id=61564936846426"}>
-      <FaFacebook className="text-2xl cursor-pointer hover:text-blue-600" />
+      <FaFacebook className="text-2xl cursor-pointer hover:text-blue-600 text-blue-600" />
       </Link>
       <Link href={"https://www.instagram.com/aestheticpro.tn/"}>
-      <FaInstagram className="text-2xl cursor-pointer hover:text-red-600" />
+      <FaInstagram className="text-2xl cursor-pointer hover:text-red-600 text-red-600" />
       </Link>
     </div>
   </ul>

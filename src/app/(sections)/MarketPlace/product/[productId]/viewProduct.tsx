@@ -1,33 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 "use client"
 import NextImage from 'next/image'
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import AddToCartButton from '@/components/MarketPlace/AddToCartButton'
 import ProductReel from '@/components/MarketPlace/ProductReel'
 import MaxWidthWrapper from '@/components/MaxWidthWrapper'
-import { db } from '@/db'
-import { Category, Platform, Product, SellerDesign, Store, User } from '@prisma/client'
+import { Category, Platform, Product, Store, User } from '@prisma/client'
 import { ArrowDown, Check, Shield } from 'lucide-react'
 import Link from 'next/link'
-import { notFound, useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import {
   Select,
   SelectContent,
@@ -46,11 +26,10 @@ import ProductDimenetions from "@/components/MarketPlace/ProductDimenetions"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import LoadingState from "@/components/LoadingState"
-import { getSizes, trackProductView } from "./actions"
+import { trackProductView } from "./actions"
 import ViewCategoryQuality from "@/components/MarketPlace/ViewCategoryQuality"
 import clsx from 'clsx'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import { revalidatePath } from 'next/cache'
 
   
 

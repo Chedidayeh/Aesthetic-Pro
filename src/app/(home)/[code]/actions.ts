@@ -1,10 +1,7 @@
 'use server'
 
-import { auth } from "@/auth";
 import { db } from "@/db";
-import { AffiliateLink, User } from "@prisma/client";
-import { Session } from "next-auth";
-import { headers } from "next/headers";
+import { AffiliateLink } from "@prisma/client";
 
 export async function getAffiliateLinkByCode(code: string) {
     try {

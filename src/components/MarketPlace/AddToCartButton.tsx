@@ -4,14 +4,12 @@ import { useEffect, useRef, useState } from 'react'
 import { Button } from '../ui/button'
 import { Platform, Product, User } from '@prisma/client'
 import { useToast } from '../ui/use-toast'
-import { addProductToCart, checkProductInCart, getUser } from '@/actions/actions'
+import { addProductToCart } from '@/actions/actions'
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
-  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,

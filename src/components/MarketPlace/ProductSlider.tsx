@@ -1,7 +1,5 @@
 'use client'
 import React, { useRef, useState } from 'react';
-import Marquee from 'react-fast-marquee';
-import NextImage from 'next/image';
 import ProductListing from './ProductListing';
 import { Product, Store, User } from '@prisma/client';
 

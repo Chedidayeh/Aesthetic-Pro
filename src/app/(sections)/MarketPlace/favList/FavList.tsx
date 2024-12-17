@@ -3,15 +3,6 @@
 import NextImage from 'next/image'
 
 import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination"
-import {
     Select,
     SelectContent,
     SelectGroup,
@@ -22,17 +13,8 @@ import {
   } from "@/components/ui/select"
 import Link from 'next/link'
 import { Product, Store, User } from '@prisma/client'
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
 import ProductListing from "@/components/MarketPlace/ProductListing"
 import { useMemo, useState } from "react"
-import { cn } from "@/lib/utils"
-import { Slider } from "@/components/ui/slider"
 
 interface Productswithstore extends Product {
   store : Store

@@ -1,18 +1,11 @@
 import MaxWidthWrapper from '@/components/MaxWidthWrapper'
 import {
   Button,
-  buttonVariants,
 } from '@/components/ui/button'
-import { Product } from '@prisma/client'
 import {
-  ArrowDownToLine,
-  CheckCircle,
   DollarSign,
   HandCoins,
   Headset,
-  Leaf,
-  Pencil,
-  Search,
   Truck,
 } from 'lucide-react'
 import Link from 'next/link'

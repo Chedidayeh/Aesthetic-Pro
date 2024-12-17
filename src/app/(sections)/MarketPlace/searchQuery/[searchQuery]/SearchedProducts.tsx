@@ -12,7 +12,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
-import { Card, CardContent } from "@/components/ui/card"
 import {
     Select,
     SelectContent,
@@ -22,18 +21,9 @@ import {
     SelectTrigger,
     SelectValue,
   } from "@/components/ui/select"
-import Link from 'next/link'
 import { Product, Store, User } from '@prisma/client'
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
 import ProductListing from "@/components/MarketPlace/ProductListing"
-import { useMemo, useState } from "react"
-import { Slider } from "@/components/ui/slider"
+import { useState } from "react"
 import { searchProducts } from './actions'
 import LoadingState from '@/components/LoadingState'
 

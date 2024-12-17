@@ -1,8 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 'use server'
 import NextImage from 'next/image'
-import {  CircleDollarSign, Heart, RocketIcon } from 'lucide-react'
-import { Separator } from "@/components/ui/separator"
+import {  CircleDollarSign, Heart } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import RedirectToCreateAffiliateAccount from '@/components/RedirectToCreateAffiliateAccount'

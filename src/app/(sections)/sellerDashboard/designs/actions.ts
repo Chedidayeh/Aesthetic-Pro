@@ -1,6 +1,7 @@
 'use server'
 
 import { db } from "@/db";
+import { deleteFiles } from "../products/actions";
 
 interface UpdateDesignArgs {
     designId: string;
@@ -25,7 +26,7 @@ export const updateDesign = async ({ designId, newName,newPrice }: UpdateDesignA
     }
   };
 
-  export const deleteDesign = async (designId: string) => {
+  export const deleteDesignn = async (designId: string) => {
     try {
       // Start a transaction to ensure atomicity
       const result = await db.$transaction(async (transaction) => {
@@ -61,6 +62,58 @@ export const updateDesign = async ({ designId, newName,newPrice }: UpdateDesignA
       throw new Error('Failed to delete design from the database');
     }
   };
+
+  // Function to delete a design
+export const deleteDesign = async (designId: string) => {
+  try {
+    // Start a transaction to ensure atomicity
+    const result = await db.$transaction(async (transaction) => {
+      // Retrieve the design and its image URL
+      const design = await transaction.sellerDesign.findUnique({
+        where: { id: designId },
+        select: { imageUrl: true }, // Get the imageUrl of the design
+      });
+
+      if (!design) {
+        throw new Error("Design not found");
+      }
+
+      // Check if the design has any order items as front or back design
+      const frontOrderItemCount = await transaction.orderItem.count({
+        where: { frontsellerDesignId: designId },
+      });
+
+      const backOrderItemCount = await transaction.orderItem.count({
+        where: { backsellerDesignId: designId },
+      });
+
+      // If the design has order items, do not delete
+      if (frontOrderItemCount > 0 || backOrderItemCount > 0) {
+        return false;
+      }
+
+      // Delete the seller design from the database
+      await transaction.sellerDesign.delete({
+        where: { id: designId },
+      });
+
+      // Return the image URL(s) to delete from Firebase
+      return design.imageUrl ? [design.imageUrl] : [];
+    });
+
+    if (!result) {
+      return false;
+    }
+
+    // Delete files from Firebase Storage
+    await deleteFiles(result);
+
+    return true;
+  } catch (error) {
+    console.error("Error deleting design:", error);
+    throw new Error("Failed to delete design from the database");
+  }
+};
 
 
 

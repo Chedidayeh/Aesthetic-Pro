@@ -1,6 +1,6 @@
 'use server'
 
-import {  getPlatformForTheWebsite, getUser } from "@/actions/actions"
+import {  getPlatformForTheWebsite } from "@/actions/actions"
 import SettingsView from "./SettingsView"
 import { unstable_noStore as noStore } from "next/cache"
 import { getAllCollections, getAllLevels } from "./actions"

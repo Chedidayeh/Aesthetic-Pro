@@ -27,12 +27,11 @@ import {
   } from "@/components/ui/card"
 import { Order, OrderItem } from '@prisma/client';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, CircleCheck, CircleX, OctagonAlert, Palette, Truck } from 'lucide-react';
+import { CircleCheck, CircleX, OctagonAlert, Palette, Truck } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { DeleteOrder } from "./actions";
 import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
-import Link from "next/link"
 import { cn } from "@/lib/utils"
 import ImageSlider from "@/components/MarketPlace/ImageSlider"
 

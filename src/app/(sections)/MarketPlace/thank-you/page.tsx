@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import NextImage from 'next/image'
 import Link from 'next/link'
-import { getOrder, getPlatformForTheWebsite, getUser } from '@/actions/actions'
+import { getOrder } from '@/actions/actions'
 
 interface PageProps {
   searchParams: {

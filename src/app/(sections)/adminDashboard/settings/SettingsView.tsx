@@ -7,9 +7,9 @@ import {
     DropdownMenuLabel,
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu"
-  import React ,{ ChangeEvent, KeyboardEvent } from "react";
+  import React ,{  } from "react";
 import Link from "next/link"
-import { CircleUser, Menu, MoreHorizontal, OctagonAlert, Package2, Search, Trash2 } from "lucide-react"
+import { MoreHorizontal } from "lucide-react"
 import {
     Table,
     TableBody,
@@ -20,14 +20,8 @@ import {
 } from "@/components/ui/table";
 import {
     AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
     AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
     AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import {
@@ -41,14 +35,12 @@ import {
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
 import LoadingState from "@/components/LoadingState"
-import { getStoreByUserId, getUser } from "@/actions/actions"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/components/ui/use-toast"
 import { addNewCollection, addTopBarContent, createLevel, deleteLevel, deleteTopBarCollection, deleteTopBarContent, updateCreation, updatePlatformData, updateStoreCreation } from "./actions"
 import { Collection, Level, Platform, Product } from '@prisma/client';
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface ExtraCollection extends Collection {

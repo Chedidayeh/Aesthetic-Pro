@@ -1,30 +1,19 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable @next/next/no-img-element */
 'use client'
-import NextImage from 'next/image'
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
-  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation' // Import useRouter from next/router
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, ArrowRight, Check, Loader, TriangleAlert, X } from 'lucide-react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { ArrowRight, Loader, TriangleAlert, X } from 'lucide-react'
 import {
   Card,
   CardContent,
@@ -39,7 +28,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import {  useToast } from '@/components/ui/use-toast'
 import { Platform, PreOrderPreview, User } from '@prisma/client'
 import Link from 'next/link'
-import { deletePreOrder, saveOrder } from "./actions"
+import { deletePreOrder, deletePreOrderWithImages, saveOrder } from "./actions"
 import ImageSlider from "@/components/MarketPlace/ImageSlider"
 import LoadingState from "@/components/LoadingState"
 
@@ -160,7 +149,7 @@ const OrderPreview =  ({preOrder , user , platform} : {preOrder?: PreOrderPrevie
 
     try {
       setOpen(true)
-      const result = await deletePreOrder(user.id)
+      const result = await deletePreOrderWithImages(user.id)
       if(result){
         toast({
           title: 'Your PreOrder was successfully deleted !',

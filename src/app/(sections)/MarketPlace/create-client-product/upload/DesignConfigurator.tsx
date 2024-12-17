@@ -2,16 +2,13 @@
 'use client' 
  
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
 import Pica from 'pica';
 
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
-  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
@@ -24,7 +21,7 @@ import {
   CardHeader,
 } from "@/components/ui/card"
 import { useToast } from '@/components/ui/use-toast'
-import {  ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
+import {  ChangeEvent, useMemo, useRef, useState } from 'react';
 import { Rnd } from 'react-rnd';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
@@ -45,10 +42,8 @@ import {
 } from "@/components/ui/sheet"
 
 
-import { RootState } from '@/store/reducers/reducers';
-import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, Check, ChevronsUpDown, CircleCheckBig, CircleDollarSign, FileText, FolderPen, Loader, MousePointerClick, Receipt, Smile, Tags } from 'lucide-react';
+import { ArrowRight, Check, ChevronsUpDown, Loader } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { toPng } from 'html-to-image';
 import { SingleImageDropzone } from '@/components/sellerDashboard/SingleImageDropzone';

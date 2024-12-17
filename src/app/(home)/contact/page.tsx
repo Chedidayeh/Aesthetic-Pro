@@ -3,9 +3,7 @@
 /* eslint-disable react/no-unescaped-entities */
 'use client'
 import {  RocketIcon } from 'lucide-react'
-import {  useState } from 'react'
 import { Separator } from "@/components/ui/separator"
-import Link from 'next/link'
 
 
 const Page = () => {

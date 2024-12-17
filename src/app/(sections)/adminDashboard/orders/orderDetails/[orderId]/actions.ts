@@ -4,7 +4,6 @@
 import { createAffiliateNotification, getUser } from "@/actions/actions";
 import { db } from "@/db";
 import { OrderStatus, OrderType } from "@prisma/client";
-import { platform } from "os";
 import { createNotification } from "../../../notifications/action";
 import { sendLevelUpEmail } from "@/lib/mailer";
 

@@ -1,65 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-  } from "@/components/ui/select"
-  import {
-    Carousel,
-    CarouselContent,
-    CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
-  } from "@/components/ui/carousel"
-  import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-  } from "@/components/ui/tooltip"
-  import {
-      AlertDialog,
-      AlertDialogAction,
-      AlertDialogCancel,
-      AlertDialogContent,
-      AlertDialogDescription,
-      AlertDialogFooter,
-      AlertDialogHeader,
-      AlertDialogTitle,
-      AlertDialogTrigger,
-    } from "@/components/ui/alert-dialog"
-  import {
-      Activity,
-      ArrowUpRight,
-      CircleCheck,
-      CircleUser,
-      CloudDownload,
-      CreditCard,
-      DatabaseBackup,
-      DollarSign,
-      Eye,
-      FileType,
-      Heart,
-      Loader,
-      Menu,
-      OctagonAlert,
-      Package2,
-      Palette,
-      Search,
-      Shirt,
-      Trash2,
-      Users,
-    } from "lucide-react"
     
-    import {
-      Avatar,
-      AvatarFallback,
-      AvatarImage,
-    } from "@/components/ui/avatar"
     import { Badge } from "@/components/ui/badge"
     import { Button } from "@/components/ui/button"
     import {
@@ -70,32 +11,14 @@ import {
       CardTitle,
     } from "@/components/ui/card"
     
-    import {
-      Table,
-      TableBody,
-      TableCell,
-      TableHead,
-      TableHeader,
-      TableRow,
-    } from "@/components/ui/table"
     
-    import Link from "next/link";
     
     import { cn } from "@/lib/utils";
-    import React, { ChangeEvent, useEffect, useState } from "react"
-    import OrderedDesigns from "@/components/sellerDashboard/OrderedDesigns"
-    import OrderedProducts from "@/components/sellerDashboard/OrderedProducts"
-    import { db } from "@/db"
-    import UsersTable from "@/components/adminDashboard/UsersTable"
-  import { ScrollArea } from "@/components/ui/scroll-area"
-  import { ClientDesign, Order, OrderItem, OrderStatus, OrderType, Product, SellerDesign, Store, User } from "@prisma/client"
-  import { tree } from "next/dist/build/templates/app-page"
+    import React, { useState } from "react"
+  import { ClientDesign, Order, OrderItem, Product, SellerDesign, User } from "@prisma/client"
   import { useRouter } from "next/navigation"
   import { useToast } from "@/components/ui/use-toast"
-  import { Input } from "@/components/ui/input"
-  import { TooltipProvider } from "@/components/ui/tooltip"
 import { Separator } from "@/components/ui/separator"
-import { Item } from "@radix-ui/react-dropdown-menu"
 import { togglePrinted } from "./actions"
 import LoadingState from "@/components/LoadingState"
 import ImageSlider from "@/components/MarketPlace/ImageSlider"

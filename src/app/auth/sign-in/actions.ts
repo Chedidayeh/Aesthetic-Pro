@@ -9,7 +9,6 @@ import { checkGoogleLoggedInUser, comparePassword, getUserByEmail } from "@/user
 import { User } from "@prisma/client"
 import crypto from 'crypto';
 import { sendResetPassEmail } from "@/lib/mailer"
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes"
 
 
 

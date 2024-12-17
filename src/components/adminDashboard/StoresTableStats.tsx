@@ -2,8 +2,6 @@
 import NextImage from 'next/image';
 import React from "react";
 import { Button } from "../ui/button";
-import { getStoreStats } from "@/actions/actions";
-import LoadingState from "../LoadingState";
 import {
   Card,
   CardContent,

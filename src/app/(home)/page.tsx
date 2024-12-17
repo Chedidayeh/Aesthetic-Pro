@@ -1,12 +1,11 @@
 import {
-  Button,
   buttonVariants,
 } from '@/components/ui/button'
 
 import Link from 'next/link'
 import { fetchBestSellingProducts, fetchDiscountProductsDeals, fetchNewProducts, fetchTrendingProducts, getFollowedStoreProductsFirst, getProductsGroupedByCollection, getUser } from "@/actions/actions";
 import ProductReel from "@/components/MarketPlace/ProductReel";
-import { ArrowRight, CircleDollarSign, Heart } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import PerkSection from '@/components/PerkSection';
 
 export default async function Page() {

@@ -2,20 +2,16 @@
 'use server'
 import {
   AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 
 import { db } from '@/db';
 import { error } from 'console';
 import DesignConfigurator from './DesignConfigurator';
-import { BackBorder, Category, Color, FrontBorder, Size } from '@prisma/client';
 import { getAllCategories } from '../select-category/actions';
 import { OctagonAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";

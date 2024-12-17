@@ -1,9 +1,6 @@
 'use server'
 
-import { cookies, headers } from 'next/headers'; // for working with cookies
-
 import { db } from "@/db";
-import { auth } from '@/auth';
 
 
 export async function getCategory(categoryLabel: string) {

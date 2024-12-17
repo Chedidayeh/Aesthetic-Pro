@@ -1,11 +1,7 @@
 'use client'
-import NextImage from 'next/image'
 import React, { useState } from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Store, PaymentRequest, AffiliatePaymentRequest, Affiliate } from '@prisma/client'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Button } from '@/components/ui/button'
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { AffiliatePaymentRequest, Affiliate } from '@prisma/client'
 import D17 from './D17'
 import Flouci from './Flouci'
 import BankDeposit from './BankDeposit'

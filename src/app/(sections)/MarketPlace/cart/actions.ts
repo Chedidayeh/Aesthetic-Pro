@@ -3,8 +3,6 @@
 import { getPlatformForTheWebsite } from "@/actions/actions";
 import { db } from "@/db";
 import { sendOrderEmail } from "@/lib/mailer";
-import { Order } from "@prisma/client";
-import { log } from "console";
 
 // Define the interface for cart products
 interface FormattedCartProduct {

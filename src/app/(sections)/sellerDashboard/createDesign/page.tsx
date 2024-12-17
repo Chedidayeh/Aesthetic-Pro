@@ -1,20 +1,17 @@
 
   import React from 'react';
 
-  import { getAllCategories, getLevelByNumber, getPlatformForTheWebsite, getStore, getUser } from "@/actions/actions"
+  import { getLevelByNumber, getPlatformForTheWebsite, getUser } from "@/actions/actions"
 
   import CreateDesignView from "./CreateDesignView";
   
   import {
     AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogTrigger,
   } from "@/components/ui/alert-dialog"
 import { OctagonAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';

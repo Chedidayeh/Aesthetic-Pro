@@ -2,7 +2,6 @@
 
 import { calculatePriceRanges } from "@/actions/actions";
 import { db } from "@/db";
-import { Collection } from "@prisma/client";
 
 
   // fetch products by collection

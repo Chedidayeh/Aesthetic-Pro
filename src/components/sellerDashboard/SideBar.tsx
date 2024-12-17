@@ -1,55 +1,21 @@
 'use client'
 import NextImage from 'next/image'
-import Link from "next/link"
 import {
-  BadgeDollarSign,
   Bell,
   BookOpenCheck,
-  Box,
-  CircleUser,
   Home,
-  Layers3,
   LayoutDashboard,
-  LayoutGrid,
-  LineChart,
-  Menu,
-  Package,
-  Package2,
   Palette,
   Receipt,
-  Search,
   Settings,
   Shirt,
   ShoppingBasket,
-  ShoppingCart,
-  Sparkles,
   Star,
-  Store,
-  TrendingUp,
-  TriangleAlert,
-  Users,
   Wallet,
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
 import { usePathname, useRouter } from "next/navigation"
 import { Separator } from "../ui/separator"

@@ -2,33 +2,20 @@
 /* eslint-disable @next/next/no-img-element */
 import {
   AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import MaxWidthWrapper from '@/components/MaxWidthWrapper'
 import {
   Button,
-  buttonVariants,
 } from '@/components/ui/button'
-import { Product } from '@prisma/client'
 import {
-  ArrowDownToLine,
-  CheckCircle,
-  Leaf,
   OctagonAlert,
 } from 'lucide-react'
 import Link from 'next/link'
-import { db } from '@/db'
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
-import { cn } from '@/lib/utils'
 import {  getAllProductsCategories, getAllProductCollectionNames, getUser } from '@/actions/actions'
-import ProductsByCategory from './StoreView'
 import StoreView from './StoreView'
 import {  checkIfUserFollowsStore, fetchPriceRanges, getDesignsByStoreId, getStoreByStoreName, getStoreFollowersCount, getStoreProducts, getStoreProductsCount } from './actions'
 

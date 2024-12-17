@@ -1,10 +1,7 @@
 'use server'
 
 import { db } from '@/db';
-import { storage } from '@/firebase/firebaseConfig';
 import { PreOrderPreview } from '@prisma/client';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import sharp from 'sharp';
 
 
 

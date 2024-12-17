@@ -1,41 +1,21 @@
 import NextImage from 'next/image'
 import Link from 'next/link'
 import { Dialog, DialogClose } from '@/components/ui/dialog'
-import { SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import MaxWidthWrapper from './MaxWidthWrapper'
 import { buttonVariants } from './ui/button'
-import { ArrowRight, BookOpenText, Box, CircleDollarSign, GraduationCap, Heart, Home, LayoutPanelTop, Menu, Palette, School, Shirt, ShoppingBasket, ShoppingCart, Store, UserRoundCog } from 'lucide-react'
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
+import { CircleDollarSign, Heart, Home, Menu, Shirt, ShoppingBasket, ShoppingCart, Store } from 'lucide-react'
 import { Button } from "@/components/ui/button"
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card"
 import { fetchCartProductCount, getAllProductsCategories, getUser, getUserOrders } from '@/actions/actions'
-import { HamburgerMenuIcon } from '@radix-ui/react-icons'
 import UserProfile from './UserProfile'
 import { ModeToggle } from './ModeToggle'
 import { db } from '@/db'
-import { fetchCartProducts } from '@/app/(sections)/MarketPlace/cart/actions'
 import { getUserFavoriteList } from '@/app/(sections)/MarketPlace/favList/actions'
 import { countBestSellingProducts } from '@/app/(sections)/MarketPlace/BestSelling/actions'
 

@@ -4,23 +4,17 @@ import NextImage from 'next/image'
 
 import * as React from "react";
 import { cn } from '@/lib/utils';
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
-import { useDispatch } from "react-redux";
 import { getUser } from "@/actions/actions";
 import { useToast } from "@/components/ui/use-toast";
 import { BackBorder, Category, Color, FrontBorder, Size } from "@prisma/client";
 import LoadingState from "@/components/LoadingState";
 import LoginModal from '@/components/LoginModal';
 import { useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from '@/firebase/firebaseConfig';
-import sharp from 'sharp';
 
 interface fetchedCat extends Category {
   colors : Color[]

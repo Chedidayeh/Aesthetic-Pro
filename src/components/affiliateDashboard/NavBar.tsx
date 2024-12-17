@@ -2,44 +2,19 @@
 'use client'
 import Link from "next/link"
 import {
-  BadgeDollarSign,
   Bell,
-  BookOpenCheck,
-  Box,
-  CircleUser,
-  ExternalLink,
   Home,
-  Layers3,
   LayoutDashboard,
-  LayoutGrid,
-  LineChart,
   Menu,
-  Package,
-  Package2,
-  Palette,
   Receipt,
-  Search,
   Settings,
   Shirt,
   ShoppingBasket,
-  ShoppingCart,
-  Sparkles,
-  Store,
-  TrendingUp,
-  TriangleAlert,
-  Users,
   Wallet,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -48,14 +23,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { usePathname, useRouter } from "next/navigation"
 import { Separator } from "../ui/separator"
 import { ScrollArea } from "../ui/scroll-area"
 import { useEffect, useState } from "react"
-import { getSideBarTotalCounts, getStoreByUserId , getUnreadAffiliateNotifications, getUnreadNotificationsForStore, getUser } from "@/actions/actions"
-import { AffiliateNotification, Notification, User } from "@prisma/client"
+import { getUnreadAffiliateNotifications, getUser } from "@/actions/actions"
+import { AffiliateNotification, User } from "@prisma/client"
 import { ModeToggle } from "../ModeToggle"
 import React from "react"
 import { getAffiliateIdByUserId } from "@/app/(sections)/affiliateDashboard/products/actions"

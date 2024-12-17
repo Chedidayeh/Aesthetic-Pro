@@ -3,35 +3,12 @@
 // Indicates this file is a client-side component in Next.js
 
 "use client"
-import { v4 as uuidv4 } from 'uuid';
 
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -40,41 +17,15 @@ import {
 
  
 import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
-import NextImage from 'next/image'
-import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { toast, useToast } from '@/components/ui/use-toast'
-import {  ChangeEvent, useEffect, useRef, useState } from 'react';
-import { cn } from '@/lib/utils';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
+import {  ChangeEvent, useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import React from 'react';
-import {  CircleDollarSign, CreditCard, EllipsisVertical, Eye, Heart, Loader, OctagonAlert, PenTool, SquareArrowDown, SquarePen, Tags, Trash2 } from 'lucide-react';
-import Link from 'next/link';
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-  } from "@/components/ui/alert-dialog"
 import {
   Select,
   SelectContent,
@@ -84,23 +35,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { CalendarIcon } from "@radix-ui/react-icons"
  
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card"
-import { db } from '@/db';
-import {   DeleteOrder } from './actions';
-import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
-import { Order, OrderItem } from '@prisma/client';
+import { Order } from '@prisma/client';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 

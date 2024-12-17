@@ -11,77 +11,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-  } from "@/components/ui/alert-dialog"
-import {
-    Activity,
-    ArrowUpRight,
-    CircleCheck,
-    CircleUser,
-    CircleX,
-    CreditCard,
-    DollarSign,
-    Heart,
-    Menu,
-    OctagonAlert,
-    Package2,
-    Palette,
-    Search,
-    Shirt,
-    Trash2,
-    Users,
-    X,
-  } from "lucide-react"
   
-  import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
-  } from "@/components/ui/avatar"
   import { Badge } from "@/components/ui/badge"
   import { Button } from "@/components/ui/button"
-  import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-  } from "@/components/ui/card"
   
-  import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-  } from "@/components/ui/table"
   
   import Link from "next/link";
   
   import { cn } from "@/lib/utils";
-  import React, { ChangeEvent, useEffect, useMemo, useState } from "react"
-  import OrderedDesigns from "@/components/sellerDashboard/OrderedDesigns"
-  import OrderedProducts from "@/components/sellerDashboard/OrderedProducts"
-  import { db } from "@/db"
-  import UsersTable from "@/components/adminDashboard/UsersTable"
+  import React, { ChangeEvent, useMemo, useState } from "react"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { OrderItem, Product, SellerDesign, Store, User } from "@prisma/client"
-import { tree } from "next/dist/build/templates/app-page"
-import { useRouter } from "next/navigation"
+import { SellerDesign } from "@prisma/client"
 import { useToast } from "@/components/ui/use-toast"
 import { Input } from '@/components/ui/input'
-import LoadingState from '@/components/LoadingState'
-import { Label } from '@/components/ui/label'
   
 
 

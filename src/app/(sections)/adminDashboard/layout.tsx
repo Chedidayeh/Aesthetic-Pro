@@ -1,6 +1,5 @@
 
 import { ReactNode } from "react";
-import { Toaster } from "@/components/ui/toaster";
 import "@/app/globals.css";
 import SideBar from "@/components/adminDashboard/SideBar";
 import NavBar from "@/components/adminDashboard/NavBar";

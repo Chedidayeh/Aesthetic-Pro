@@ -1,5 +1,4 @@
 'use client'
-import { db } from "@/db";
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogAction, AlertDialogCancel } from '@/components/ui/alert-dialog';
 import { User, UserType } from "@prisma/client";
 import {
@@ -28,12 +27,11 @@ import {
 } from "@/components/ui/card";
 import { ScrollArea } from "../ui/scroll-area";
 import { Input } from "../ui/input";
-import { Ban, CircleX, X } from "lucide-react";
+import { Ban, CircleX } from "lucide-react";
 import { banUser, deleteUserById, getUsersByType, updateUserRole } from "@/actions/actions";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "../ui/use-toast";
-import LoadingState from "../LoadingState";
 
 const UsersTable = () => {
   const router = useRouter();
@@ -132,7 +130,7 @@ const UsersTable = () => {
 
   return (
     <>
-      <Card className="col-span-4">
+      <Card className="col-span-full" x-chunk="dashboard-01-chunk-4">
         <CardHeader className="flex flex-row items-center">
           <div className="grid gap-2">
             <CardTitle>Users</CardTitle>
@@ -165,7 +163,7 @@ const UsersTable = () => {
         <CardContent>
           {filteredUsers && (
             <ScrollArea className="w-full h-72 mt-4">
-              <Table className="overflow-x-auto">
+              <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>User Id</TableHead>

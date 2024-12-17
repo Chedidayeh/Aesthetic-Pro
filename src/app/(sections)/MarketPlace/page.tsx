@@ -3,7 +3,6 @@
 
 
 
-import { revalidatePath } from 'next/cache';
 import View from './View'
 import {  getAllProductsCategories, getAllProductCollectionNames, getUser, fetchPriceRanges, fetchProducts } from '@/actions/actions'
 

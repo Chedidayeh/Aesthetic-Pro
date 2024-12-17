@@ -1,46 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 import NextImage from 'next/image'
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination"
-import { Card, CardContent } from "@/components/ui/card"
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-  } from "@/components/ui/select"
-import Link from 'next/link'
 import { Product, SellerDesign, User } from '@prisma/client'
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
-import { useEffect, useMemo, useState } from "react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Heart } from "lucide-react"
+import { useState } from "react"
 import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
 import { Store} from '@prisma/client'
-import { checkIfUserFollowsStore, followStore, unfollowStore } from "./actions"
-import { Slider } from "@/components/ui/slider"
-import { cn } from "@/lib/utils"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Badge } from '@/components/ui/badge'
+import { followStore, unfollowStore } from "./actions"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import ProductsView from './ProductsView'
 import DesignView from './DesignView'
 import { FaFacebook, FaInstagram } from 'react-icons/fa'

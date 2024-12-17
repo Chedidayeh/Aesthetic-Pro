@@ -24,23 +24,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer"
 import NextImage from 'next/image'
 import {
   Card,
@@ -48,24 +31,15 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card"
-import { toast, useToast } from '@/components/ui/use-toast'
-import {  ChangeEvent, useEffect, useRef, useState } from 'react';
+import { useToast } from '@/components/ui/use-toast'
+import {  ChangeEvent, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import React from 'react';
-import {  CircleDollarSign, CreditCard, Eye, Heart, Loader, OctagonAlert, PenTool, SquarePen, Tags, Trash2 } from 'lucide-react';
+import {  CircleDollarSign, CreditCard, Loader, PenTool } from 'lucide-react';
 import Link from 'next/link';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
 import {
   Select,
   SelectContent,
@@ -75,19 +49,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { CalendarIcon } from "@radix-ui/react-icons"
  
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
-import { db } from '@/db';
 import { useRouter } from 'next/navigation';
 import { Platform, Product } from '@prisma/client';
 import { Badge } from '@/components/ui/badge';

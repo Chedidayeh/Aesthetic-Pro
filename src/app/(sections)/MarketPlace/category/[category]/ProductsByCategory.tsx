@@ -11,7 +11,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
-import { Card, CardContent } from "@/components/ui/card"
 import {
     Select,
     SelectContent,
@@ -21,23 +20,10 @@ import {
     SelectTrigger,
     SelectValue,
   } from "@/components/ui/select"
-import Link from 'next/link'
 import { Product, Store, User } from '@prisma/client'
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
 import ProductListing from "@/components/MarketPlace/ProductListing"
-import { useEffect, useMemo, useState } from "react"
-import { Slider } from "@/components/ui/slider"
-import { cn } from "@/lib/utils"
-import { useInView } from 'react-intersection-observer'
+import { useState } from "react"
 import { fetchProductsByCategory } from './actions'
-import { Loader } from 'lucide-react'
-import { Label } from '@/components/ui/label'
 import LoadingState from '@/components/LoadingState'
 
 interface Productswithstore extends Product {
