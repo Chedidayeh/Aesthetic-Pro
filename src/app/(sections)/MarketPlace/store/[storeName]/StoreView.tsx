@@ -137,7 +137,7 @@ const StoreView = ({ initialProducts,totalCount,initialPage, limit, priceRanges,
     onClick={handleFollowToggle}
     disabled={loading}
     >
-    {loading ? "Following..." : isFollowing ? "Unfollow this store" : "Follow this store"}
+    {loading ? "Loading..." : isFollowing ? "Unfollow this store" : "Follow this store"}
    </Button>    </div>
 
 </div>
@@ -181,41 +181,43 @@ const StoreView = ({ initialProducts,totalCount,initialPage, limit, priceRanges,
     </section>
 
 
-
-    <div className='flex justify-center my-4'>
-  <section className='border rounded-2xl w-[50%] bg-muted/50 border-gray-200'>
-    <MaxWidthWrapper className='py-4 text-center'>
-      <div className='my-2'>
-        <p className='text-sm'>Contact the seller</p>
-      </div>
-      {store.facebookLink && store.instagramLink && (
-        <>
-          <div className="flex justify-center gap-6 my-2">
-            {store.facebookLink && (
-              <FaFacebook
-                className="text-2xl cursor-pointer hover:text-blue-600"
-                onClick={handleFacebookIconClick}
-              />
-            )}
-            {store.instagramLink && (
-              <FaInstagram
-                className="text-2xl cursor-pointer hover:text-red-600"
-                onClick={handleInstagramIconClick}
-              />
-            )}
-          </div>
+    {store.displayContact && (
+        <div className='flex justify-center my-4'>
+      <section className='border rounded-2xl w-[50%] bg-muted/50 border-gray-200'>
+        <MaxWidthWrapper className='py-4 text-center'>
           <div className='my-2'>
-            <p className='text-sm'>or</p>
+            <p className='text-sm'>Contact the seller</p>
           </div>
-        </>
-      )}
-      <div className='my-2'>
-        <p className='text-sm'>+216 {store.userPhoneNumber}</p>
-      </div>
-    </MaxWidthWrapper>
-  </section>
-</div>
-
+              <div className="flex justify-center gap-6 my-2">
+                {store.facebookLink && (
+                  <div className='border-1 rounded-full bg-white'>
+                  <FaFacebook
+                    className="text-2xl cursor-pointer text-blue-600"
+                    onClick={handleFacebookIconClick}
+                  />       
+                  </div>
+                )}
+                {store.instagramLink && (
+                  <div className='border-1 rounded-lg bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600'>
+                  <FaInstagram
+                    className="text-2xl cursor-pointer text-white"
+                    onClick={handleInstagramIconClick}
+                  />
+                </div>
+                )}
+              </div>
+              {(store.instagramLink || store.facebookLink) && (
+              <div className='my-2'>
+                <p className='text-sm'>or</p>
+              </div>
+                 )}
+          <div className='my-2'>
+            <p className='text-sm'>+216 {store.userPhoneNumber}</p>
+          </div>
+        </MaxWidthWrapper>
+      </section>
+    </div>
+    )}
 
 <LoginModal isOpen={isLoginModalOpen} setIsOpen={setIsLoginModalOpen} />
 

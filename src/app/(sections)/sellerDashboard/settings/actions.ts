@@ -63,18 +63,19 @@ export async function deleteStore(storeId : string, userId: string) {
 
 
 interface SocialLinks {
-  facebook?: string;
-  instagram?: string;
+  facebook: string | null;
+  instagram: string | null;
 }
 
 export async function updateSocialLinks(storeId: string, socialLinks: SocialLinks) {
   try {
+      // Only update the fields that are not undefined or null
       const updatedStore = await db.store.update({
           where: { id: storeId },
           data: {
-              facebookLink : socialLinks.facebook,
-              instagramLink : socialLinks.instagram
-          },
+            facebookLink : socialLinks.facebook,
+            instagramLink : socialLinks.instagram
+          }
       });
 
       return updatedStore;
@@ -84,7 +85,8 @@ export async function updateSocialLinks(storeId: string, socialLinks: SocialLink
   }
 }
 
-export async function updateStoreBio(storeId: string, bio: string) {
+
+export async function updateStoreBio(storeId: string, bio: string | null) {
   try {
       const updatedStore = await db.store.update({
           where: { id: storeId },
@@ -114,5 +116,39 @@ export async function updateStoreLogo(storeId: string, logoPath: string) {
   } catch (error) {
       console.error("Failed to update store logo:", error);
       return null;
+  }
+}
+
+export const toggleDisplayContact = async (storeId: string, currentState: boolean) => {
+  try {
+      const updatedStore = await db.store.update({
+          where: { id: storeId },
+          data: {
+              displayContact: currentState, // Toggle the state
+          },
+      });
+
+      return updatedStore;
+  } catch (error) {
+      console.error("Error toggling display contact:", error);
+      throw error;
+  }
+};
+
+// Function to change the phone number for the store
+export async function changeNumber(storeId: string, phoneNumber: string) {
+  try {
+      // Update the store's phone number in the database
+      const updatedStore = await db.store.update({
+          where: { id: storeId },
+          data: {
+              userPhoneNumber: phoneNumber, // Update the phone number field
+          },
+      });
+
+      return updatedStore;
+  } catch (error) {
+      console.error('Failed to change phone number:', error);
+      throw error; // Rethrow the error so it can be handled where the function is called
   }
 }

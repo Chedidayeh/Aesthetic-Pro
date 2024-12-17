@@ -33,11 +33,11 @@ const Footer = async () => {
 </div>
 
     <div className="flex gap-6 my-3 pb-5">
-      <Link href={"https://www.facebook.com/profile.php?id=61564936846426"}>
+      <Link href={"https://www.facebook.com/profile.php?id=61564936846426"} className='border-1 rounded-full bg-white'>
       <FaFacebook className="text-2xl cursor-pointer hover:text-blue-600 text-blue-600" />
       </Link>
-      <Link href={"https://www.instagram.com/aestheticpro.tn/"}>
-      <FaInstagram className="text-2xl cursor-pointer hover:text-red-600 text-red-600" />
+      <Link href={"https://www.instagram.com/aestheticpro.tn/"}  className='border-1 rounded-lg bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600'>
+      <FaInstagram className="text-2xl cursor-pointer text-white" />
       </Link>
     </div>
   </ul>

@@ -151,7 +151,7 @@ model Store {
   userId          String   @unique
   user            User     @relation(fields: [userId], references: [id] , onDelete: Cascade)
 
-  userPhoneNumber String?
+  userPhoneNumber String
 
 
   storeName       String @unique
@@ -159,6 +159,7 @@ model Store {
   storeBio        String?
   facebookLink    String?
   instagramLink   String?
+  displayContact  Boolean @default(false)
 
   level           Int  @default(1)
   unlimitedCreation   Boolean  @default(false)
