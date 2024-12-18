@@ -376,9 +376,6 @@ const handleUpdate = async (orderId : string , platformProfit : number) =>{
                             Update profit after Sale
                           </Button>
                           )}
-
-
-      
                             
                         </div>
                     </CardDescription>
@@ -415,10 +412,7 @@ const handleUpdate = async (orderId : string , platformProfit : number) =>{
                   </TableBody>
                 </Table>
 
-              </div>
-              
-
-                
+              </div>        
             </CardContent>
 
           </Card>
@@ -457,6 +451,10 @@ const handleUpdate = async (orderId : string , platformProfit : number) =>{
                         <div>
                             <p className="font-bold">Product Price:</p>
                             <p>{selectedItem.productPrice} TND</p>
+                        </div>
+                        <div>
+                            <p className="font-bold">Product Base Price:</p>
+                            <p>{selectedItem.product?.basePrice} TND</p>
                         </div>
                         
                     </div>
@@ -529,9 +527,6 @@ const handleUpdate = async (orderId : string , platformProfit : number) =>{
 
       </section>
   
-  
-  
-  
     </div>
 
             </>
@@ -542,7 +537,6 @@ const handleUpdate = async (orderId : string , platformProfit : number) =>{
         </>
         
     )
-
 
   }
 

@@ -34,8 +34,8 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
   
 
 const BREADCRUMBS = [
-  { id: 1, name: 'Home', href: '/MarketPlace' },
-  { id: 2, name: 'Products', href: '/MarketPlace' },
+  { id: 1, name: 'Home', href: '/' },
+  { id: 2, name: 'MarketPlace', href: '/MarketPlace' },
 ]
 
 interface Productswithstore extends Product {

@@ -35,7 +35,7 @@ const SearchBar = () => {
     }
     try {
       const searchData = await searchProducts(value);
-      setData(searchData.slice(0, 8));
+      setData(searchData);
       setIsSearching(false);
     } catch (error) {
       console.error('Error fetching search results:', error);

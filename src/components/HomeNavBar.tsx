@@ -56,16 +56,15 @@ const Navbar = async () => {
             <SheetTrigger className="flex xl:hidden">
             <Button variant="outline" size="icon" className="shrink-0">
             <Menu className="h-5 w-5" />
-            <span className="sr-only">Toggle navigation menu</span>
           </Button>            
           </SheetTrigger>
-            <SheetContent side="left" className='w-[40%] xs:[40%] mt-4'>
+            <SheetContent side="bottom" className='w-full mt-2'>
               {/* Middle Section for small devices */}
-              <div className='flex justify-center items-start flex-col mt-16 space-y-2'>
+              <div className='flex justify-center items-center flex-col space-y-4'>
                 <DialogClose>
                 <Link href="/" className={buttonVariants({
                   size: 'sm',
-                  variant: 'ghost',
+                  variant: 'outline',
                   className: "hover:text-blue-500"
                 })}>
                   <Home size={15} className='mr-1' />
@@ -76,7 +75,7 @@ const Navbar = async () => {
                 <DialogClose>
                 <Link href="/MarketPlace" className={buttonVariants({
               size: 'sm',
-              variant: 'ghost',
+              variant: 'outline',
               className: "hover:text-yellow-500"
             })}>
               <Store size={15} className='mr-1' />
@@ -88,7 +87,7 @@ const Navbar = async () => {
                 <DialogClose>
                 <Link href="/MarketPlace/BestSelling" className={buttonVariants({
               size: 'sm',
-              variant: 'ghost',
+              variant: 'outline',
               className: "hover:text-green-500"
             })}>
               <CircleDollarSign size={15} className='mr-1' />
@@ -100,12 +99,12 @@ const Navbar = async () => {
           <DialogClose>
                 <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button size="sm" variant="ghost" className="hover:text-purple-500">
+                  <Button size="sm" variant="outline" className="hover:text-purple-500">
                     <Shirt size={15} className="mr-1" />
                     Categories
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-40 mt-3 flex flex-col">
+                <DropdownMenuContent className="w-40 mt-1 ml-4 flex flex-col">
                 {categories && categories.length > 0 ? (
                     categories.map((category) => (
                       <Link key={String(category)}

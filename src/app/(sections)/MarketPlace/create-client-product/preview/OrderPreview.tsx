@@ -50,6 +50,7 @@ const OrderPreview =  ({preOrder , user , platform} : {preOrder?: PreOrderPrevie
   const [fee, setFee] = useState(platform.shippingFee)
   const orderTotal = preOrder?.amount! + fee
   const [open, setOpen] = useState<boolean>(false);
+  const [isDelete, setIsDelete] = useState(false);
 
 
 
@@ -357,7 +358,10 @@ const closeDialog = () => {
 
       <div className="flex justify-center">
         <Button
-          onClick={handleDelete}
+          onClick={()=>{
+            setIsDelete(true)
+            handleDelete()
+          }}
           variant="outline"
           className="flex ml-3 px-1 hover:text-red-500 sm:px-6 lg:px-8"
         >
@@ -366,7 +370,7 @@ const closeDialog = () => {
         </Button>
         <Button
           onClick={handleOrder}
-          disabled={!isCheckoutEnabled}
+          disabled={!isCheckoutEnabled || isDelete}
           loadingText="Loading..."
           className="px-4 sm:px-6 lg:px-8 ml-12 text-white"
         >

@@ -59,6 +59,7 @@ import { getAllCategories } from "../select-category/actions"
 import path from "path"
 import { storage } from "@/firebase/firebaseConfig"
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
+import { Slider } from "@/components/ui/slider";
 
 
 
@@ -144,6 +145,17 @@ const DesignConfigurator: React.FC<DesignConfiguratorProps> = ({ SellersDesignsD
   const [Backwidth, setBackwidth] = React.useState<number>(3000);
   const [Backheight, setBackheight] = React.useState<number>(3000);
 
+  // slider : setSliderValue
+  const [frontSliderValue, setFrontSliderValue] = useState(50)
+  const handleFrontSliderChange = (value: number[]) => {
+    setFrontSliderValue(value[0]);
+  };
+
+    // slider : setSliderValue
+    const [backSliderValue, setBackSliderValue] = useState(50)
+    const handleBackSliderChange = (value: number[]) => {
+      setBackSliderValue(value[0]);
+    };
 
   const [selectedFrontDesignId, setselectedFrontDesignId] = useState<string>("");
   const [selectedBackDesignId, setselectedBackDesignId] = useState<string>("");
@@ -236,6 +248,7 @@ const handleFileChange = (file : File) => {
         description: 'Please choose a file equal or smaller than 5MB.',
         variant: 'destructive',
       });
+      return
 
     } else {
 
@@ -249,13 +262,30 @@ const handleFileChange = (file : File) => {
 
           image.onload = () => {
             const { width, height } = image;
-            setFrontwidth(width);
-            setFrontheight(height);
-            setIsBorderHidden(false);
-            setselectedFrontDesign(dataUrl);
-            setFrontDesignPrice(0)
-            setclientFrontDesignPrice(platform.clientDesignPrice)
-            setSelectedFrontIndex(null);
+
+            if (width >= 1000 && width <= 4000 && height >= 1000 && height <= 4000) {
+              setFrontwidth(width);
+              setFrontheight(height);
+              setIsBorderHidden(false);
+              setselectedFrontDesign(dataUrl);
+              setFrontDesignPrice(0)
+              setclientFrontDesignPrice(platform.clientDesignPrice)
+              setSelectedFrontIndex(null);
+            }else {
+              setFrontDesignPrice(0);
+              setclientFrontDesignPrice(0);
+              setIsBorderHidden(true);
+              setselectedFrontDesign("");
+              setSelectedFrontIndex(null);
+              setFrontDesignFile(undefined)
+              toast({
+                title: 'Invalid front design dimensions.',
+                description: 'Please upload a design with width and height between 1000px and 4000px.',
+                variant: 'destructive',
+              });
+              return
+            }
+
 
           };
 
@@ -271,49 +301,62 @@ const handleFileChange = (file : File) => {
   
 };
 
-  // Function to handle Back file upload
-  const handleBackFileChange = (file : File) => {
-    if (file) {
-      if (file.size > MAX_FILE_SIZE) {
-        setBackDesignFile(undefined)
-        setclientBackDesignPrice(0)
-        toast({
-          title: 'File size exceeds the limit.',
-          description: 'Please choose a file equal or smaller than 5MB.',
-          variant: 'destructive',
-        });
-  
-      } else {
-  
-        const reader = new FileReader();
-  
-        reader.onload = (e) => {
-          if (e.target) { 
-  
-            const dataUrl = e.target.result as string;
-            const image = new Image();
-  
-            image.onload = () => {
-              const { width, height } = image;
+// Function to handle Back file upload
+const handleBackFileChange = (file: File) => {
+  if (file) {
+    if (file.size > MAX_FILE_SIZE) {
+      setBackDesignFile(undefined);
+      setclientBackDesignPrice(0);
+      toast({
+        title: 'File size exceeds the limit.',
+        description: 'Please choose a file equal or smaller than 5MB.',
+        variant: 'destructive',
+      });
+      return;
+    } else {
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        if (e.target) {
+          const dataUrl = e.target.result as string;
+          const image = new Image();
+
+          image.onload = () => {
+            const { width, height } = image;
+
+            // Check if width and height are within the valid range
+            if (width >= 1000 && width <= 4000 && height >= 1000 && height <= 4000) {
               setBackwidth(width);
               setBackheight(height);
               setisBackBorderHidden(false);
               setselectedBackDesign(dataUrl);
-              setBackDesignPrice(0)
-              setclientBackDesignPrice(platform.clientDesignPrice)
-              setSelectedBackIndex(null)
-            };
-  
-            image.src = dataUrl;
-          }
-        };
-        reader.readAsDataURL(file);
-  
-        
-  
-      }
+              setBackDesignPrice(0);
+              setclientBackDesignPrice(platform.clientDesignPrice);
+              setSelectedBackIndex(null);
+            } else {
+              setBackDesignPrice(0);
+              setclientBackDesignPrice(0);
+              setisBackBorderHidden(true);
+              setselectedBackDesign("");
+              setSelectedBackIndex(null);
+              setBackDesignFile(undefined);
+              toast({
+                title: 'Invalid back design dimensions.',
+                description: 'Please upload a design with width and height between 1000px and 4000px.',
+                variant: 'destructive',
+              });
+              return
+            }
+          };
+
+          image.src = dataUrl;
+        }
+      };
+      reader.readAsDataURL(file);
     }
-  };
+  }
+};
+
 
 
       // change color
@@ -908,6 +951,7 @@ const handleSortChange = (event: string) => {
                                 <h3>Upload a Design:</h3>
                                 <p className='text-xs text-zinc-500 ml-5'>PNG, JPG, JPEG max (5MB)</p>
                                 <p className="text-xs text-zinc-500 ml-5">recommended (3000px*3000px)</p>
+                                <p className="text-xs text-zinc-500 ml-5">Acceptable range (1000px - 4000px)</p>
                                 <p className='text-xs text-zinc-500 ml-5'>One Design will cost {platform.clientDesignPrice} TND !</p>  
                               <div className="flex flex-col lg:flex-row justify-center lg:space-x-4 space-y-4 lg:space-y-0">
                                 {/* front design input */}
@@ -1291,43 +1335,76 @@ const handleSortChange = (event: string) => {
                       </div>
                       <div className='w-full h-px bg-zinc-200 my-5' />
 
-                      <div ref={FrontcontainerRef}  className="relative">
-                            <NextImage
-                              src={selectedCatColor?.frontImageUrl || "" }
-                              alt="Product"
-                              width={3000}
-                              height={3000}
-                              className="rounded-2xl front-product"
-                            />
-                            <div className="absolute inset-0 rounded-2xl border-2">
-                            <div 
-                            style={{ top: frontBorderTop , bottom : frontBorderBottom , right : frontBorderRight , left: frontBorderLeft }} 
-                            className={cn(`absolute  overflow-hidden ${!isBorderHidden ? 'rounded-md border-2 border-dashed border-gray-400' : ''}`)}>
-                            <Rnd
-                            default={{
-                              x: 5,
-                              y: 40,
-                              height: Frontwidth /15,
-                              width: Frontheight / 15,
-                            }}
-                            lockAspectRatio       
-                            className={cn("absolute z-50", { 'border-[3px] border-primary': !isBorderHidden })}
-                          >
-                            <div className='relative w-full h-full'>
-                              {selectedFrontDesign && (
-                                <NextImage
-                                  src={selectedFrontDesign}
-                                  fill
-                                  alt='your image'
-                                  className='pointer-events-none object-contain front-design cursor-grab'
-                                />
-                              )}
-                            </div>
-                          </Rnd>
-                            </div>
-                            </div>
+                      <div ref={FrontcontainerRef} className="relative">
+      <NextImage
+        src={selectedCatColor?.frontImageUrl || ""}
+        alt="Product"
+        width={3000}
+        height={3000}
+        className="rounded-2xl front-product"
+      />
+      <div className="absolute inset-0 rounded-2xl border-2">
+        <div
+          style={{
+            top: frontBorderTop,
+            bottom: frontBorderBottom,
+            right: frontBorderRight,
+            left: frontBorderLeft,
+          }}
+          className={cn(
+            `absolute overflow-hidden ${!isBorderHidden ? 'rounded-md border-2 border-dashed border-gray-400' : ''}`
+          )}
+        >
+          <Rnd
+            size={{
+              width: Frontwidth * (frontSliderValue / 1000),
+              height: Frontheight * (frontSliderValue / 1000),
+            }}
+            default={{
+              x: 50,
+              y: 40,
+              height: Frontwidth / 15,
+              width: Frontheight / 15,
+            }}
+            lockAspectRatio
+            className={cn("absolute z-50", { 'border-[3px] border-primary': !isBorderHidden })}
+          >
+            <div className="relative w-full h-full">
+              {selectedFrontDesign && (
+                <NextImage
+                  src={selectedFrontDesign || "/Loading.png"}
+                  fill
+                  alt="your image"
+                  className="pointer-events-none object-contain front-design cursor-grab"
+                />
+              )}
+            </div>
+          </Rnd>
+        </div>
+      </div>
+    </div>
 
+                  {selectedFrontDesign && (
+                          <div className="">
+                          <div className="flex items-center justify-center text-xs mt-4">
+                            Use the slider to control the design size
                           </div>
+
+                          <div className="flex items-center justify-center mt-2">
+                            <Slider
+                              defaultValue={[50]}
+                              max={200}
+                              min={10}
+                              step={1}
+                              className={cn("w-[60%]")}
+                              onValueChange={handleFrontSliderChange}
+                              />
+                          </div>
+                        </div>
+                  )}
+
+
+                          
 
                                 <div className="text-center">
                                   <Button
@@ -1354,7 +1431,7 @@ const handleSortChange = (event: string) => {
 
                       <div ref={BackcontainerRef} className="relative">
                                 <NextImage
-                                  src={selectedCatColor?.backImageUrl || ""}
+                                  src={selectedCatColor?.backImageUrl}
                                   alt="Product"
                                   width={3000}
                                   height={3000}
@@ -1365,8 +1442,12 @@ const handleSortChange = (event: string) => {
                                 style={{ top: backBorderTop , bottom : backBorderBottom , right : backBorderRight , left: backBorderLeft }} 
                                 className={cn(`absolute  overflow-hidden ${!isBackBorderHidden ? 'rounded-md border-2 border-dashed border-gray-400' : ''}`)}>
                                 <Rnd
+                                size={{
+                                  width: Backwidth * (backSliderValue / 1000),
+                                  height: Backheight * (backSliderValue / 1000),
+                                    }}
                                 default={{
-                                  x: 5,
+                                  x: 50,
                                   y: 40,
                                   height: Backwidth /15,
                                   width: Backheight / 15,
@@ -1377,7 +1458,7 @@ const handleSortChange = (event: string) => {
                                 <div className='relative w-full h-full'>
                                   {selectedBackDesign && (
                                     <NextImage
-                                      src={selectedBackDesign}
+                                      src={selectedBackDesign || "/Loading.png"}
                                       fill
                                       alt='your image'
                                       className='pointer-events-none object-contain cursor-grab back-design'
@@ -1385,10 +1466,29 @@ const handleSortChange = (event: string) => {
                                   )}
                                 </div>
                               </Rnd>
-                                </div>
-                                </div>
 
+                                </div>
+                                </div>
                           </div>
+
+                          {selectedBackDesign && (
+                          <div className="">
+                          <div className="flex items-center justify-center text-xs mt-4">
+                            Use the slider to control the design size
+                          </div>
+
+                          <div className="flex items-center justify-center mt-2">
+                            <Slider
+                              defaultValue={[50]}
+                              max={200}
+                              min={10}
+                              step={1}
+                              className={cn("w-[60%]")}
+                              onValueChange={handleBackSliderChange}
+                              />
+                          </div>
+                        </div>
+                  )}
 
                                 <div className="text-center">
                                       <Button
@@ -1404,9 +1504,9 @@ const handleSortChange = (event: string) => {
 
                     </CardContent>
                     <CardFooter className='relative flex flex-col items-center justify-center'>
-                                <div className="text-center text-2xl">
-                                  <Label className='text-lg'>
-                                    <span className="text-blue-600 ">Guide</span>: Hold one of the blue edges and drag to resize
+                                <div className="text-center">
+                                  <Label className='text-sm'>
+                                    <span className="text-blue-600 ">Guide</span>: Hold Desgin to drag !
                                   </Label>
                                 </div>
                     </CardFooter>

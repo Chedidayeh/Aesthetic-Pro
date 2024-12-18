@@ -1454,6 +1454,7 @@ export async function searchProducts(query: string) {
               store : true,
               collection : true
           },
+          take:8
       });
 
       // Filter products where category, title, or tags start with the query (case insensitive)

@@ -63,6 +63,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
 import { storage } from "@/firebase/firebaseConfig"
 import path from "path"
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { Slider } from "@/components/ui/slider";
 
 
 type SelectedColorsState = {
@@ -141,6 +142,18 @@ const CreateProductView = ({categories , platform , store ,  collections}: Produ
   const [Backwidth, setBackwidth] = React.useState<number>(3000);
   const [Backheight, setBackheight] = React.useState<number>(3000);
 
+  
+    // slider : setSliderValue
+    const [frontSliderValue, setFrontSliderValue] = useState(50)
+    const handleFrontSliderChange = (value: number[]) => {
+      setFrontSliderValue(value[0]);
+    };
+  
+      // slider : setSliderValue
+      const [backSliderValue, setBackSliderValue] = useState(50)
+      const handleBackSliderChange = (value: number[]) => {
+        setBackSliderValue(value[0]);
+      };
 
   const [selectedFrontDesign, setselectedFrontDesign] = useState<string>("");
   const [selectedBackDesign, setselectedBackDesign] = useState<string>("");
@@ -279,10 +292,24 @@ const handleFileChange = (file : File) => {
 
           image.onload = () => {
             const { width, height } = image;
-            setFrontwidth(width);
-            setFrontheight(height);
-            setIsBorderHidden(false);
-            setselectedFrontDesign(dataUrl);
+            if (width >= 1000 && width <= 4000 && height >= 1000 && height <= 4000) {
+              setFrontwidth(width);
+              setFrontheight(height);
+              setIsBorderHidden(false);
+              setselectedFrontDesign(dataUrl);
+            }else {
+              setIsBorderHidden(true);
+              setselectedFrontDesign("");
+              setFrontDesignFile(undefined)
+              toast({
+                title: 'Invalid front design dimensions.',
+                description: 'Please upload a design with width and height between 1000px and 4000px.',
+                variant: 'destructive',
+              });
+              return
+
+            }
+
           };
 
           image.src = dataUrl;
@@ -321,10 +348,24 @@ const handleFileChange = (file : File) => {
   
             image.onload = () => {
               const { width, height } = image;
+
+            // Check if width and height are within the valid range
+            if (width >= 1000 && width <= 4000 && height >= 1000 && height <= 4000) {
               setBackwidth(width);
               setBackheight(height);
               setisBackBorderHidden(false);
               setselectedBackDesign(dataUrl);
+            } else {
+              setisBackBorderHidden(true);
+              setselectedBackDesign("");
+              setBackDesignFile(undefined);
+              toast({
+                title: 'Invalid back design dimensions.',
+                description: 'Please upload a design with width and height between 1000px and 4000px.',
+                variant: 'destructive',
+              });
+              return
+            }
             };
   
             image.src = dataUrl;
@@ -1045,6 +1086,7 @@ const handleFileChange = (file : File) => {
                                 <h3>2-Upload a Design:</h3>
                                 <p className="text-xs text-zinc-500 ml-5">PNG, JPG, JPEG max (5MB)</p>
                                 <p className="text-xs text-zinc-500 ml-5">Recommended (3000px*3000px)</p>
+                                <p className="text-xs text-zinc-500 ml-5">Acceptable range (1000px - 4000px)</p>
                                 <div className="flex flex-wrap justify-center space-x-0 md:space-x-4 space-y-4 md:space-y-0">
 
                                   {/* front design input */}
@@ -1460,8 +1502,12 @@ const handleFileChange = (file : File) => {
                           style={{ top: frontBorderTop , bottom : frontBorderBottom , right : frontBorderRight , left: frontBorderLeft }} 
                           className={cn(`absolute  overflow-hidden ${!isBorderHidden ? 'rounded-md border-2 border-dashed border-gray-400' : ''}`)}>
                           <Rnd
+                            size={{
+                            width: Frontwidth * (frontSliderValue / 1000),
+                            height: Frontheight * (frontSliderValue / 1000),
+                           }}
                           default={{
-                            x: 5,
+                            x: 50,
                             y: 40,
                             height: Frontwidth /15,
                             width: Frontheight / 15,
@@ -1472,7 +1518,7 @@ const handleFileChange = (file : File) => {
                           <div className='relative w-full h-full'>
                             {selectedFrontDesign && (
                               <NextImage
-                                src={selectedFrontDesign}
+                                src={selectedFrontDesign || "/Loading.png"}
                                 fill
                                 alt='your image'
                                 className='pointer-events-none object-contain cursor-grab'
@@ -1485,12 +1531,31 @@ const handleFileChange = (file : File) => {
 
                         </div>
 
+                                          {selectedFrontDesign && (
+                                                  <div className="">
+                                                  <div className="flex items-center justify-center text-xs mt-4">
+                                                    Use the slider to control the design size
+                                                  </div>
+                        
+                                                  <div className="flex items-center justify-center mt-2">
+                                                    <Slider
+                                                      defaultValue={[50]}
+                                                      max={200}
+                                                      min={10}
+                                                      step={1}
+                                                      className={cn("w-[60%]")}
+                                                      onValueChange={handleFrontSliderChange}
+                                                      />
+                                                  </div>
+                                                </div>
+                                          )}
+
               </CardContent>
               <CardFooter className='relative flex flex-col items-center justify-center'>
                               <div className="text-center text-2xl">
-                                <Label className='text-lg'>
-                                  <span className="text-blue-600 ">Guide</span>: Hold one of the blue edges and drag to resize
-                                </Label>
+                                  <Label className='text-sm'>
+                                    <span className="text-blue-600 ">Guide</span>: Hold Desgin to drag !
+                                  </Label>
                               </div>
                   </CardFooter>
                   </Card>
@@ -1562,7 +1627,7 @@ const handleFileChange = (file : File) => {
                               )}
                             </CardHeader>
 
-                            <CardContent className="relative flex items-center justify-center">
+                            <CardContent>
 
                             <div ref={BackcontainerRef} className="relative">
                               <NextImage
@@ -1577,6 +1642,9 @@ const handleFileChange = (file : File) => {
                               style={{ top: backBorderTop , bottom : backBorderBottom , right : backBorderRight , left: backBorderLeft }} 
                               className={cn(`absolute  overflow-hidden ${!isBackBorderHidden ? 'rounded-md border-2 border-dashed border-gray-400' : ''}`)}>
                               <Rnd
+                               size={{
+                               width: Backwidth * (backSliderValue / 1000),                                  height: Backheight * (backSliderValue / 1000),
+                                }}
                               default={{
                                 x: 5,
                                 y: 40,
@@ -1601,12 +1669,33 @@ const handleFileChange = (file : File) => {
                               </div>
 
                             </div>
+
+                            {selectedBackDesign && (
+                                                      <div className="">
+                                                      <div className="flex items-center justify-center text-xs mt-4">
+                                                        Use the slider to control the design size
+                                                      </div>
+                            
+                                                      <div className="flex items-center justify-center mt-2">
+                                                        <Slider
+                                                          defaultValue={[50]}
+                                                          max={200}
+                                                          min={10}
+                                                          step={1}
+                                                          className={cn("w-[60%]")}
+                                                          onValueChange={handleBackSliderChange}
+                                                          />
+                                                      </div>
+                                                    </div>
+                                              )}
+
                   </CardContent>
-                  <CardFooter className='relative flex flex-col items-center justify-center'>
+
+                  <CardFooter className=' flex flex-col items-center justify-center'>
                                   <div className="text-center text-2xl">
-                                    <Label className='text-lg'>
-                                      <span className="text-blue-600 ">Guide</span>: Hold one of the blue edges and drag to resize
-                                    </Label>
+                                  <Label className='text-sm'>
+                                    <span className="text-blue-600 ">Guide</span>: Hold Desgin to drag !
+                                  </Label>
                                   </div>
                       </CardFooter>
                           </Card>
