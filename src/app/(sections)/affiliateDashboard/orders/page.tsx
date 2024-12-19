@@ -7,11 +7,11 @@ import ViewOrders from "./ViewOrders"
 export default async function Page() {
     noStore()
     const user = await getUser()
-    const orders = await getAffiliateOrdersWithCommission(user!.id)
+    const orderItems = await getAffiliateOrdersWithCommission(user!.id)
 
   return (
     <>
-    <ViewOrders orders={orders} />
+    <ViewOrders orderItems={orderItems} />
 
     </>
   )

@@ -39,11 +39,11 @@ const OrderPreview =  ({preOrder , user , platform} : {preOrder?: PreOrderPrevie
 
 
   const router = useRouter(); // Ensure this is placed within the component where the router is available
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber ?? "");
   const [phoneNumberError, setPhoneNumberError] = useState('');
   const inputClassName = phoneNumberError ? 'border-red-500' : (phoneNumber ? 'border-green-500' : '');
-  const [address, setAddress] = useState('');
-  const [clientName, setclientName] = useState('');
+  const [address, setAddress] = useState(user.address ?? "");
+  const [clientName, setclientName] = useState(user.name);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const isCheckoutEnabled = phoneNumber.length === 8 && address.trim() !== '' && termsAccepted && clientName.trim() !== '';
   const { toast } = useToast()
@@ -279,7 +279,7 @@ const closeDialog = () => {
             <CardContent className="space-y-2">
               <div className="space-y-1">
                 <Label htmlFor="name">Your Name</Label>
-                <Input onChange={handleNameChange} id="name" placeholder="Enter your name" />
+                <Input defaultValue={clientName} onChange={handleNameChange} id="name" placeholder="Enter your name" />
               </div>
 
               <div className="space-y-1">
@@ -288,6 +288,7 @@ const closeDialog = () => {
                   id="phoneNumber"
                   type="number"
                   pattern="\d{8}"
+                  defaultValue={phoneNumber}
                   onBlur={handlePhoneNumberBlur}
                   placeholder="99 999 999"
                   onChange={handlePhoneNumberChange}
@@ -307,6 +308,7 @@ const closeDialog = () => {
                   <p className="text-xs text-zinc-500 mb-4">Region And City</p>
                 </Label>
                 <Input
+                  defaultValue={address}
                   onChange={handleAddressChange}
                   id="address"
                   placeholder="where you can pick up your order"

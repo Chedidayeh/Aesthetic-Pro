@@ -119,7 +119,7 @@ const StoreView = ({ initialProducts,totalCount,initialPage, limit, priceRanges,
           />
      </div>
   
-     <Badge className="text-center hover:bg-gray-200 bg-gray-300 font-extrabold text-sm text-black mt-4">
+     <Badge className="text-center hover:bg-gray-200 bg-gray-200 font-semibold text-sm text-black mt-4">
           {store.storeName}
         </Badge>
         
@@ -132,13 +132,19 @@ const StoreView = ({ initialProducts,totalCount,initialPage, limit, priceRanges,
     </div>
 
     <div className={`mt-4 ${isFollowing ? '' : 'animate-wiggle'}`}>
-    <Button 
+  <Button 
     variant={"outline"} 
     onClick={handleFollowToggle}
     disabled={loading}
-    >
+    className={`relative border-2 ${
+      loading ? 'animate-borderPulse' : ''
+    }`}
+  >
     {loading ? "Loading..." : isFollowing ? "Unfollow this store" : "Follow this store"}
-   </Button>    </div>
+  </Button>    
+</div>
+
+
 
 </div>
 

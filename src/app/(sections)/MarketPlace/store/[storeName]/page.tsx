@@ -16,6 +16,7 @@ import {
   getAllProductsCategories,
   getAllProductCollectionNames,
   getUser,
+  getPlatformForTheWebsite,
 } from "@/actions/actions";
 import StoreView from "./StoreView";
 import {
@@ -35,8 +36,10 @@ interface PageProps {
 }
 
 export default async function Page({ params }: PageProps) {
+  
   const { storeName } = params;
-  const limit = 4; // Number of products per page
+  const platform = await getPlatformForTheWebsite()
+  const limit = platform!.productsLimitPerPage;
   const page = 1; // Initial page
   const decodedStoreName = decodeURIComponent(storeName);
 

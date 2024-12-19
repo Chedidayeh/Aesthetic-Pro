@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
 
-import {  getAllProductCollectionNames, getUser } from '@/actions/actions'
+import {  getAllProductCollectionNames, getPlatformForTheWebsite, getUser } from '@/actions/actions'
 import ProductsByCategory from './ProductsByCategory'
 import { fetchPriceRanges, fetchProductsByCategory } from './actions'
 
@@ -15,7 +15,8 @@ interface PageProps {
 
 export default async function Page({ params }: PageProps) {
   const { category } = params  
-  const limit = 4; // Number of products per page
+  const platform = await getPlatformForTheWebsite()
+  const limit = platform!.productsLimitPerPage;
   const page = 1; // Initial page
   const decodedCategory = decodeURIComponent(category)
   const data = await fetchProductsByCategory(decodedCategory , page , limit);

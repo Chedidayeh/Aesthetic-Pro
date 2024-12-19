@@ -24,10 +24,22 @@ export const getOrderWithItemsAndProducts = async (orderId : string) => {
               backsellerDesign : true,
               frontclientDesign : true,
               backclientDesign :true,
+              commission : {
+                include : {
+                  affiliateLink : {
+                    include : {
+                      affiliate : {
+                        include : {
+                          user : true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
             },
           },
           user : true,
-          commission : true
         },
       });
   
@@ -164,70 +176,95 @@ export async function updateStoreLevel(storeId: string) {
 
 
 
-
-
-    // profit for products
- export async function calculateTotalSellerProfiForProducts(orderId : string) {
-    try {
-      // Fetch the order with its items and related products
-      const order = await db.order.findUnique({
-        where: { id: orderId },
-        include: {
-          orderItems: {
-            include: {
-              product: {
-                include : {
-                  store : true
+export async function calculateTotalSellerProfitForProducts(orderId: string) {
+  try {
+    // Fetch the order with its items and related products
+    const order = await db.order.findUnique({
+      where: { id: orderId },
+      include: {
+        orderItems: {
+          include: {
+            product: {
+              include: {
+                store: true,
+              },
+            },
+            commission: {
+              include : {
+                affiliateLink : {
+                  include : {
+                    affiliate : {
+                      include : {
+                        user : true
+                      }
+                    }
+                  }
                 }
               }
-            }
-          }
-        }
-      });
-  
-      if (!order) {
-        throw new Error('Order not found');
-      }
-  
-      // Initialize total profit for the order
+            }, // Include commission to check for affiliate commissions
+          },
+        },
+      },
+    });
+
+    if (!order) {
+      throw new Error('Order not found');
+    }
+
+    // Initialize total profit for the order
     let totalOrderProfit = 0;
+    let totalAffiliateProfit = 0; // Initialize total affiliate profit
 
     // Calculate total seller profit for each product in each order item
     const orderItemProfits = order.orderItems.map(item => {
+      let totalProfit = 0;
+      let affiliateProfit = 0;
+
       if (item.product) {
-      const totalProfit = item.product.sellerProfit * item.quantity;
-      totalOrderProfit += totalProfit;
-      return {
-        productId: item.productId,
-        storeName : item.product.store.storeName,
-        productQuantity : item.quantity,
-        productTitle: item.productTitle,
-        totalProfit
-      };
-      }
-      else {
+        totalProfit = item.product.sellerProfit * item.quantity;
+        totalOrderProfit += totalProfit;
+
+        // Check if the item has an associated affiliate commission
+        if (item.commission) {
+          affiliateProfit = item.commission.profit;
+          totalAffiliateProfit += affiliateProfit;
+        }
+
+        return {
+          productId: item.productId,
+          storeName: item.product.store?.storeName ?? 'Unknown Store',
+          productQuantity: item.quantity,
+          productTitle: item.productTitle,
+          totalProfit,
+          affiliateProfit,
+          affiliateUser : item.commission?.affiliateLink.affiliate.user.email
+        };
+      } else {
         return {
           productId: null,
-          storeName : "Not found",
+          storeName: 'Not found',
           productQuantity: item.quantity,
           productTitle: 'Product not found',
-          totalProfit: 0
-        }
+          totalProfit: 0,
+          affiliateProfit: 0,
+          affiliateUser : "No affiliate user",
+        };
       }
-      
     });
 
-    // Return the result including the total order profit
+    // Return the result including the total order profit and total affiliate profit
     return {
       orderId,
       orderItemProfits,
-      totalOrderProfit
+      totalOrderProfit,
+      totalAffiliateProfit, // Include total affiliate profit in the result
     };
-    } catch (error) {
-      console.error('Error calculating total seller profit:', error);
-      throw error;
-    }
+  } catch (error) {
+    console.error('Error calculating total seller profit:', error);
+    throw error;
   }
+}
+
 
     // update for products
   export async function updateRevenueAndSalesForProducts(orderId: string, platformProfit: number , totalIncome : number) {
@@ -243,9 +280,9 @@ export async function updateStoreLevel(storeId: string) {
                   store: true, // Include store information for each product
                 },
               },
+              commission : true
             },
           },
-          commission : true
         },
       });
   
@@ -253,40 +290,45 @@ export async function updateStoreLevel(storeId: string) {
         throw new Error('Order not found');
       }
 
-      if (order.commission) {
-        // Fetch the affiliate link
-        const affiliateLink = await db.affiliateLink.findUnique({
-          where: { id: order.commission.affiliateLinkId },
-          include: { affiliate: true }, // Include the affiliate relation to access totalIncome
-        });
-      
-        if (affiliateLink) {
-          // Update total sales for the affiliate link
-          await db.affiliateLink.update({
-            where: { id: affiliateLink.id },
-            data: {
-              totalSales: { increment: 1 }, // Increment total sales
-            },
-          });
-      
-          // Update total income for the affiliate
-          await db.affiliate.update({
-            where: { id: affiliateLink.affiliateId }, // Ensure this field exists in your AffiliateLink
-            data: {
-              totalIncome: { increment: order.commission.profit }, // Increment total income
-            },
-          });
+        // Step 1: Handle commissions for each order item
 
-          const product = await db.product.findFirst({
-            where: { id: affiliateLink.productId },
-          })
+        for (const orderItem of order.orderItems) {
+          if (orderItem.commission) {
+            // Fetch the affiliate link related to this order item
+            const affiliateLink = await db.affiliateLink.findUnique({
+              where: { id: orderItem.commission.affiliateLinkId },
+              include: { affiliate: true }, // Include the affiliate relation to access totalIncome
+            });
 
-          const notificationContent = `Great News: Your affiliate product "${product!.title}" has been sold`;
+            if (affiliateLink) {
+              // Update total sales for the affiliate link
+              await db.affiliateLink.update({
+                where: { id: affiliateLink.id },
+                data: {
+                  totalSales: { increment: 1 }, // Increment total sales
+                },
+              });
 
-          await createAffiliateNotification(affiliateLink.affiliateId,notificationContent , "Admin")
+              // Update total income for the affiliate
+              await db.affiliate.update({
+                where: { id: affiliateLink.affiliateId }, // Ensure this field exists in your AffiliateLink
+                data: {
+                  totalIncome: { increment: orderItem.commission.profit }, // Increment total income
+                },
+              });
 
+              const product = await db.product.findFirst({
+                where: { id: affiliateLink.productId },
+              });
+
+              if (product) {
+                const notificationContent = `Great News: Your affiliate product "${product.title}" has been sold`;
+                await createAffiliateNotification(affiliateLink.affiliateId, notificationContent, 'Admin');
+                // send email
+              }
+            }
+          }
         }
-      }
       
 
   

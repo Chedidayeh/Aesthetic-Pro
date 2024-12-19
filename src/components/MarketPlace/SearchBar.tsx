@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
 import { Loader, Search } from "lucide-react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { ChangeEvent, KeyboardEvent, useState } from "react";
+import { ChangeEvent, KeyboardEvent, useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import MaxWidthWrapper from "../MaxWidthWrapper";
@@ -15,6 +15,7 @@ const SearchBar = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [data, setData] = useState<string[]>([]);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleSearch = () => {
     setIsPending(true);
@@ -54,8 +55,8 @@ const SearchBar = () => {
 
   const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      if(searchQuery===""){
-        return
+      if (searchQuery === "") {
+        return;
       }
       setData([]);
       setSearchQuery("");
@@ -63,10 +64,22 @@ const SearchBar = () => {
     }
   };
 
+  const handleClickOutside = (event: MouseEvent) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      setData([]);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <nav className='sticky z-[50] h-14 inset-x-0 top-0 w-full  backdrop-blur-lg transition-all'>
       <MaxWidthWrapper>
-
         <>
           <AlertDialog open={isPending}>
             <AlertDialogTrigger asChild />
@@ -92,7 +105,7 @@ const SearchBar = () => {
               onChange={handleChange}
               onKeyPress={handleKeyPress}
             />
-            <Button disabled={searchQuery === ""} onClick={handleSearch} className="bg-blue-500 text-white px-4 py-2 rounded">
+            <Button disabled={searchQuery === ""} onClick={handleSearch} className="bg-blue-600 text-white px-4 py-2 rounded">
               Search
               <Search size={14} className='ml-1' />
             </Button>
@@ -100,32 +113,30 @@ const SearchBar = () => {
 
           {isSearching && searchQuery !== '' && data.length === 0 && (
             <div className="flex items-center justify-center">
-            <ul className="bg-gray-50 text-gray-800 border w-[60%] h-[10%] border-gray-300 mt-2 rounded-md shadow-lg">              <li
-                className="px-4 py-2 justify-center items-center flex text-blue-500">
-                <Loader className="animate-spin"/>
-              </li>
-            </ul>
+              <ul className="bg-gray-50 text-gray-800 border w-[100%] md:w-[80%] lg:w-[58%] xl:w-[55%] h-[10%] border-gray-300 mt-2 rounded-md shadow-lg">
+                <li className="px-4 py-2 justify-center items-center flex text-blue-500">
+                  <Loader className="animate-spin" />
+                </li>
+              </ul>
             </div>
           )}
 
           {searchQuery !== '' && data.length > 0 && (
-            <div className="flex items-center justify-center">
-            <ul className="bg-gray-50 border text-gray-800 w-[60%] border-gray-300 mt-2 rounded-md shadow-lg">
-              {data.map((option, index) => (
-                <li
-                  key={index}
-                  className="px-4 py-2 hover:bg-blue-500 hover:text-white cursor-pointer"
-                  onClick={() => handleOptionSelect(option)}
-                >
-                  {option.toLowerCase()}
-                </li>
-              ))}
-            </ul>
+            <div ref={dropdownRef} className="flex items-center justify-center">
+              <ul className="bg-gray-50 border text-gray-800 w-[100%] md:w-[80%] lg:w-[58%] xl:w-[55%] border-gray-300 mt-2 rounded-2xl shadow-lg">
+                {data.map((option, index) => (
+                  <li
+                    key={index}
+                    className="px-4 py-2 hover:bg-blue-600 hover:text-white cursor-pointer rounded-2xl"
+                    onClick={() => handleOptionSelect(option)}
+                  >
+                    {option.toLowerCase()}
+                  </li>
+                ))}
+              </ul>
             </div>
-
           )}
         </>
-
       </MaxWidthWrapper>
     </nav>
   );

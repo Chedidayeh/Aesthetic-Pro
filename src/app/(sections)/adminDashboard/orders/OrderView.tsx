@@ -74,7 +74,6 @@ import { Label } from "@/components/ui/label"
 interface ExtraOrders extends Order {
     orderItems : OrderItem[]
     user : User
-    commission : Commission | null
 }
   
   
@@ -356,8 +355,6 @@ interface OrderViewProps {
       {/* Total Items column */}
       <TableHead className="hidden xl:table-cell">Total Items</TableHead>
 
-      <TableHead className="hidden xl:table-cell">Commission?</TableHead>
-
       {/* Order Amount column */}
       <TableHead className="hidden xl:table-cell">Order Amount</TableHead>
 
@@ -423,8 +420,6 @@ interface OrderViewProps {
         {/* Total Items cell */}
         <TableCell className="hidden xl:table-cell">{order.orderItems?.length || 0} items</TableCell>
 
-        <TableCell className="hidden xl:table-cell">  {order.commission ? `Yes (${(order.commission.profit).toFixed(2)} TND)` : "No"}
-        </TableCell>
 
         {/* Order Amount cell */}
         <TableCell className="hidden xl:table-cell">{order.amount.toFixed(2)} TND</TableCell>
@@ -542,10 +537,13 @@ interface OrderViewProps {
                              <p className="font-bold">Shipping Address:</p>
                              <p>{selectedOrder.shippingAddress}</p>
                          </div>
+
                          <div>
                              <p className="font-bold">order Amount:</p>
                              <p>{selectedOrder.amount} TND</p>
                          </div>
+
+
                      </div>
                  </CardDescription>
  

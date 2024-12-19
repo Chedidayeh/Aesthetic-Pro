@@ -2,7 +2,7 @@ import {
   Button,
 } from '@/components/ui/button'
 import Link from 'next/link'
-import {  getAllProductsCategories, getAllProductCollectionNames, getUser } from '@/actions/actions'
+import {  getAllProductsCategories, getAllProductCollectionNames, getUser, getPlatformForTheWebsite } from '@/actions/actions'
 import FollowedStores from './FollowedStores'
 
 import {
@@ -21,7 +21,8 @@ import { fetchPriceRanges, getFollowedStoreProductsFirst } from './actions'
 
 export default async function Page() {
   const user = await getUser()
-  const limit = 4; // Number of products per page
+    const platform = await getPlatformForTheWebsite()
+    const limit = platform!.productsLimitPerPage;
   const page = 1; // Initial page
   const priceRanges = await fetchPriceRanges(user?.id ?? "")
   const { products, totalCount }  = await getFollowedStoreProductsFirst(user!.id , page ,limit);

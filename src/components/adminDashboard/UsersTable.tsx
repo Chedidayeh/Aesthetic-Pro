@@ -206,7 +206,7 @@ const UsersTable = () => {
                           </SelectContent>
                         </Select>
                       </TableCell>
-                      <TableCell>{new Date(user.createdAt).toLocaleDateString()}</TableCell>
+                      <TableCell>{new Date(user.createdAt).toLocaleString()}</TableCell>
                       <TableCell>
                         <div className="flex space-x-2">
                           <CircleX

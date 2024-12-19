@@ -45,21 +45,18 @@ export const generateShortAffiliateLink = async (platform : Platform , originalA
       // Generate a cryptographically secure random 6-byte string (12 characters in hex)
       const code = randomBytes(6).toString('hex');
 
-        const shortLink = `${process.env.NEXT_PUBLIC_BASE_URL}/${code}`;
+      const shortLink = `${process.env.NEXT_PUBLIC_BASE_URL}/${code}`;
 
               // fetch the product price :
       const product = await prisma.product.findUnique({
         where: {
           id: productId
           },
-    })
+      })
       // calculate amount based on product price
       // Calculate commission amount based on platform.affiliateUserProfit
       const commissionAmount = product?.price! * (platform.affiliateUserProfit / 100);
-
-      // Extract the integer part
-      const integerPart = Math.floor(commissionAmount);
-
+      console.log(commissionAmount)
       // Create a new affiliate link
       const affiliateLink = await prisma.affiliateLink.create({
         data: {
@@ -68,7 +65,7 @@ export const generateShortAffiliateLink = async (platform : Platform , originalA
           link: shortLink,
           originalLink : originalAffiliateLink,
           code,
-          probableProfit : integerPart
+          probableProfit : commissionAmount
         }
       });
 
@@ -76,6 +73,9 @@ export const generateShortAffiliateLink = async (platform : Platform , originalA
 
 
       return shortLink;
+    },{
+      maxWait: 10000, // Wait for a connection for up to 10 seconds
+      timeout: 20000, // Allow the transaction to run for up to 20 seconds
     });
 
     return result;

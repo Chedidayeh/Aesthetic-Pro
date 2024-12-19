@@ -1727,6 +1727,11 @@ export async function getProductViewsChartData(storeId: string , month: number, 
         views: view._count.productId,
       });
     }
+      // Limit linkDetails to the top 4 most-viewed links
+      dailyData[date].productDetails = dailyData[date].productDetails
+      .sort((a, b) => b.views - a.views) // Sort by views descending
+      .slice(0, 4); // Take the top 4
+
   });
 
   // Generate chart data for all dates in the range
@@ -1887,6 +1892,10 @@ export async function getAffiliateChartData(affiliateId: string , month: number,
         views: click._count.affiliateLinkId,
       });
     }
+      // Limit linkDetails to the top 4 most-viewed links
+      dailyData[date].linkDetails = dailyData[date].linkDetails
+      .sort((a, b) => b.views - a.views) // Sort by views descending
+      .slice(0, 3); // Take the top 4
   });
 
   // Generate chart data for all dates in the range

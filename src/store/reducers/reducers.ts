@@ -4,7 +4,6 @@ import {  SAVE_REDIRECT_URL, SAVE_SESSION_ID } from "../actions/action";
 const initialState = {
   url: null,
   id : null,
-  affiliateId : null
 };
 
 export type RootState = ReturnType<typeof rootReducer>;

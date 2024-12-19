@@ -151,6 +151,7 @@ const OrderData = ({ordersData}: DesignViewProps) => {
                                           setSelectedIndex(index);
                                         }
                                       };
+                                      
 
 
 
@@ -164,33 +165,10 @@ const OrderData = ({ordersData}: DesignViewProps) => {
 
 
     
-    {/* The AlertDialog delete order component  */}
-    <AlertDialog open={isDeleteOpen}>
-               <AlertDialogTrigger asChild>
-                         </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                   <AlertDialogHeader className="flex flex-col items-center">
-                                       <div className="text-red-500 mb-2">
-                                           <OctagonAlert className=''/>
-                                               </div>
-                                              <AlertDialogTitle className="text-xl font-bold text-center">
-                                                 Are you absolutely sure you want to delete your Order ?
-                                               </AlertDialogTitle>
-                                                <AlertDialogDescription>
-                                                   This action cannot be undone. 
-                                                   It will permanently remove your order from our server.<br/><br/>
-                                                    </AlertDialogDescription>
-                                                   </AlertDialogHeader>
-                                                  <AlertDialogFooter>
-                                              <AlertDialogCancel onClick={()=>setisDeleteOpen(false)}>Cancel</AlertDialogCancel>
-                                      <AlertDialogAction onClick={() => handleDelete()} 
-                                     className='bg-red-500 hover:bg-red-500' >Delete</AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                     </AlertDialog> 
+
 
                            {/* title */}
-                           <div className="flex flex-col items-center justify-center my-10">
+                           <div className="flex flex-col items-center justify-center my-4">
                           <div className="mb-4">
                             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
                               Your{' '}
@@ -224,38 +202,43 @@ const OrderData = ({ordersData}: DesignViewProps) => {
           {ordersData.length > 0 && (
 
         <>
-          <div className="hidden sm:block">
-        <div className="grid grid-cols-2 gap-4 my-4 mx-10">
-
-
+          <div className="hidden lg:block">
+        <div className="grid grid-cols-2 gap-4 mx-10">
           {/* orders table */}
           <div className="col-span-full">
+                <Card x-chunk="dashboard-05-chunk-3">
+                  <CardHeader className="px-7 bg-muted/50">
+                    <CardTitle>Orders</CardTitle>
+                    <CardDescription>
+                      total : {ordersData.length} <br/>
+                      {ordersData.length>0 && (
+                        <>
+                      <span className="text-blue-600">We'll call you very soon to confirm your orders !</span><br/>
+                      </>
+                      )}
 
-              {/* Filters Section */}
-              <div className="col-span-full">
-                <div className="flex items-start my-4 flex-col sm:flex-row sm:items-center sm:justify-between">
-                  <div className="flex items-center space-x-2 mb-4 sm:mb-0 sm:mr-4">
+                                    {/* Filters Section */}
+                <div className="flex items-start justify-start gap-4 my-4">
                     {/* First Select */}
                     <Select onValueChange={handleFilterChange}>
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Filter By" />
+                      <SelectTrigger className="w-[280px]">
+                        <SelectValue placeholder="Filter By CONFIRMED / CANCELED " />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
                           <SelectLabel>Select</SelectLabel>
                           <SelectItem value="CONFIRMED">CONFIRMED</SelectItem>
+                          <SelectItem value="NOT_CONFIRMED">NOT CONFIRMED</SelectItem>
                           <SelectItem value="CANCELED">CANCELED</SelectItem>
                           <SelectItem value="DELIVERED">DELIVERED</SelectItem>
                           <SelectItem value="PROCESSING">PROCESSING</SelectItem>
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-                  </div>
-                  <div className="flex items-center space-x-2">
                     {/* Second Select */}
                     <Select onValueChange={handleFilterChange}>
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Filter By" />
+                      <SelectTrigger className="w-[280px]">
+                        <SelectValue placeholder="Filter By Paid / Printed" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
@@ -267,23 +250,10 @@ const OrderData = ({ordersData}: DesignViewProps) => {
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-                  </div>
                 </div>
-              </div>
 
+                <span className="text-blue-600">Click on the order row to view its details !</span>
 
-
-                <Card x-chunk="dashboard-05-chunk-3">
-                  <CardHeader className="px-7 bg-muted/50">
-                    <CardTitle>Orders</CardTitle>
-                    <CardDescription>
-                      total : {ordersData.length} <br/>
-                      {ordersData.length>0 && (
-                        <>
-                      <span className="text-red-600">We'll call you very soon to confirm your orders !</span><br/>
-                      <span className="text-blue-600">Click on the order row to view its details !</span>
-                      </>
-                      )}
 
                     </CardDescription>
                   </CardHeader>
@@ -346,7 +316,7 @@ const OrderData = ({ordersData}: DesignViewProps) => {
                             <TableCell className="text-left">{(order.amount).toFixed(2)} TND</TableCell>
                             <TableCell className="flex items-center justify-center">
                                     <TooltipProvider>
-                                    {(order.status !== 'CANCELED' && order.type !== 'CANCELED') && (
+                                    {(order.status !== 'CANCELED' && order.type !== 'CANCELED' && order.type !== 'CONFIRMED' && !order.printed) && (
                                       <Tooltip>
                                     <TooltipTrigger asChild>
                                         <Trash2 onClick={()=>{
@@ -358,7 +328,7 @@ const OrderData = ({ordersData}: DesignViewProps) => {
                                         <p>Delete</p>
                                     </TooltipContent>
                                     </Tooltip>
-                                    ) }
+                                    )}
                                     
                                 </TooltipProvider>           
                         </TableCell>
@@ -374,8 +344,8 @@ const OrderData = ({ordersData}: DesignViewProps) => {
 
 
           {/* order details */}
-          <div className=" ">
           {selectedOrder && (
+            <>
             <Card key={selectedOrder.id} className="overflow-hidden" x-chunk="dashboard-05-chunk-4">
               <CardHeader className="flex flex-row items-start bg-muted/50">
                 <div className="grid gap-0.5">
@@ -383,14 +353,26 @@ const OrderData = ({ordersData}: DesignViewProps) => {
                     Order Id: <p className="text-xs text-gray-600">{selectedOrder.id}</p>
                   </CardTitle>
                   <CardDescription>Creation Date <time dateTime={selectedOrder.createdAt ? selectedOrder.createdAt.toISOString() : undefined}>
-                    {selectedOrder.updatedAt ? new Date(selectedOrder.updatedAt).toLocaleDateString() : ''}
+                    {selectedOrder.updatedAt ? new Date(selectedOrder.updatedAt).toLocaleString() : ''}
                   </time></CardDescription>
                 </div>
                 <div className="ml-auto hidden items-center gap-1 sm:flex">
-                  <Button size="sm" variant="outline" className="h-8 gap-1">
-                    <Truck className="h-3.5 w-3.5" />
-                      {selectedOrder.status}
-                  </Button>
+                <Badge
+                  variant="outline"
+                  className={`h-8 gap-1 ${
+                    selectedOrder?.status === 'CANCELED'
+                      ? 'text-red-500'
+                      : selectedOrder?.status === 'PROCESSING'
+                      ? 'text-blue-500'
+                      : selectedOrder?.status === 'DELIVERED'
+                      ? 'text-green-500'
+                      : ''
+                  }`}
+                >
+                  <Truck className="h-3.5 w-3.5" />
+                  {selectedOrder?.status}
+                </Badge>
+
                 </div>
               </CardHeader>
               <CardContent className="p-6 text-sm">
@@ -453,21 +435,18 @@ const OrderData = ({ordersData}: DesignViewProps) => {
                   </dl>
                 </div>
               </CardContent>
-              <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
-                <div className="text-xs text-muted-foreground">
-                  Updated <time dateTime={selectedOrder.updatedAt ? selectedOrder.updatedAt.toISOString() : undefined}>
-                    {selectedOrder.updatedAt ? new Date(selectedOrder.updatedAt).toLocaleDateString() : ''}
-                  </time>
-                </div>
-              </CardFooter>
-            </Card>
-      )}
-          </div>
+              <CardFooter className="flex flex-row items-end justify-between border-t bg-muted/50 px-6 py-3">
+            <div className="text-xs text-muted-foreground">
+              Updated{" "}
+              <time dateTime={selectedOrder.updatedAt ? selectedOrder.updatedAt.toISOString() : undefined}>
+                {selectedOrder.updatedAt ? new Date(selectedOrder.updatedAt).toLocaleString() : ""}
+              </time>
+            </div>
+          </CardFooter>
 
-        {/* order items */}
-        <div className="">
-          {selectedOrder && (
-            <Card key={selectedOrder.id} className="overflow-hidden" x-chunk="dashboard-05-chunk-4">
+            </Card>
+
+            <Card key={selectedIndex} className="overflow-hidden" x-chunk="dashboard-05-chunk-4">
               <CardHeader className="flex flex-row items-start bg-muted/50">
                 <div className="grid gap-0.5">
                   <CardTitle className="group gap-2 text-lg">
@@ -477,12 +456,7 @@ const OrderData = ({ordersData}: DesignViewProps) => {
                 </div>
               </CardHeader>
               <CardContent className="p-6 flex items-center justify-center text-sm">
-
-              <ul
-                  className={cn({
-                    'divide-y divide-gray-200 border-b border-t border-gray-200':
-                    selectedOrder.orderItems.length > 1,
-                  })}>
+              <ul>
                   {selectedOrder.orderItems.map((item) => {
 
                       return (
@@ -505,19 +479,45 @@ const OrderData = ({ordersData}: DesignViewProps) => {
                 </div>
               </CardFooter>
             </Card>
+
+            </>
       )}
-    </div>
 
     </div>
            </div>
 
 
-    <div className=" block sm:hidden mx-10 my-4">
+    <div className=" block lg:hidden mx-2">
         <MobileView ordersData={ordersData} />
-        </div>
-        </>
+    </div>
+    </>
 
           )}
+
+    {/* The AlertDialog delete order component  */}
+    <AlertDialog open={isDeleteOpen}>
+               <AlertDialogTrigger asChild>
+                         </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                   <AlertDialogHeader className="flex flex-col items-center">
+                                       <div className="text-red-500 mb-2">
+                                           <OctagonAlert className=''/>
+                                               </div>
+                                              <AlertDialogTitle className="text-xl font-bold text-center">
+                                                 Are you absolutely sure you want to delete your Order ?
+                                               </AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                   This action cannot be undone. 
+                                                   It will permanently remove your order from our server.<br/><br/>
+                                                    </AlertDialogDescription>
+                                                   </AlertDialogHeader>
+                                                  <AlertDialogFooter>
+                                              <AlertDialogCancel onClick={()=>setisDeleteOpen(false)}>Cancel</AlertDialogCancel>
+                                      <AlertDialogAction onClick={() => handleDelete()} 
+                                     className='bg-red-500 hover:bg-red-500' >Delete</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                     </AlertDialog> 
 
     </>
 

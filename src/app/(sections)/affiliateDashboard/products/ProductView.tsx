@@ -19,11 +19,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {  ChangeEvent, useState } from 'react';
+import {  ChangeEvent, useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import React from 'react';
-import {  CircleCheck, CircleDollarSign, CreditCard, Eye, Loader, Search } from 'lucide-react';
+import {  CircleCheck, CircleDollarSign, CreditCard, Eye, Loader, Search, Shirt } from 'lucide-react';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -83,7 +83,7 @@ const ProductView = ({ initialProducts,totalCount,initialPage, limit, user , aff
         const [totalCountState, setTotalCountState] = useState(totalCount);
       
         const [open, setOpen] = useState<boolean>(false);
-
+        
         // serach and sort filter
         const [searchQuery, setSearchQuery] = useState('');
         // affiliateLink state
@@ -93,32 +93,56 @@ const ProductView = ({ initialProducts,totalCount,initialPage, limit, user , aff
         const [shortenedLink, setShortenedLink] = useState<string | null>(null);
 
 
-  
+        const productDetailsRef = useRef<HTMLDivElement | null>(null);
+
+        useEffect(() => {
+          if (selectedProduct && productDetailsRef.current) {
+              productDetailsRef.current!.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center', // Try 'start' or 'center' depending on your needs
+                inline: 'nearest', // Try 'center', 'start', or 'nearest' depending on your needs
+              });
+          }
+        }, [selectedProduct , productDetailsRef]);
+
 
 
         const handleGenerateAffiliateLink = async (product: Product) => {
-          setOpen(true)
-          const originalAffiliateLink = generateAffiliateLink(product.id);
-          const shortLink = await generateShortAffiliateLink(platform,originalAffiliateLink,product.id, affiliateId);
-          if(shortLink){
-            setShortenedLink(shortLink)
-            // Display the affiliate link to the user
-            setOpen(false)
-            toast({
-              title: "Affiliate Link Generated",
-              variant: "default",
-            });
-            setOpenWindow(true)
-          }else {
-            setOpen(false)
-            toast({
-              title: "You already created a link for that product !",
-              description : "View Manage Links Page",
-              variant: "destructive",
+          try {
+            setOpen(true);
+            
+            const originalAffiliateLink = generateAffiliateLink(product.id);
+            
+            const shortLink = await generateShortAffiliateLink(platform, originalAffiliateLink, product.id, affiliateId);
+            
+            if (shortLink) {
+              setShortenedLink(shortLink);
+              // Display the affiliate link to the user
+              setOpen(false);
+              toast({
+                title: "Affiliate Link Generated",
+                variant: "default",
               });
+              setOpenWindow(true);
+            } else {
+              setOpen(false);
+              toast({
+                title: "You already created a link for that product!",
+                description: "View Manage Links Page",
+                variant: "destructive",
+              });
+            }
+          } catch (error) {
+            setOpen(false);
+            console.error("Error generating affiliate link:", error);
+            toast({
+              title: "Error generating affiliate link",
+              description: "Please try again later.",
+              variant: "destructive",
+            });
           }
-
         };
+        
 
 
         const generateAffiliateLink = (productId: string ): string => {
@@ -395,13 +419,13 @@ const ProductView = ({ initialProducts,totalCount,initialPage, limit, user , aff
 
   {selectedProduct && (
         <>
-
-<Card className="col-span-full mt-4" x-chunk="dashboard-01-chunk-4">
-  <CardHeader className="flex flex-col md:flex-row items-center">
+<Card   ref={productDetailsRef}  // Add the ref to the element you want to scroll to
+ className="col-span-full mt-4" x-chunk="dashboard-01-chunk-4">
+  <CardHeader className="">
     <div className="grid gap-2">
       <CardTitle className="font-bold">Product Infos :</CardTitle>
       <CardDescription>
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 mt-2">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2 mt-2">
           <div>
             <p className="font-bold">Product Title :</p>
             <p >{selectedProduct.title}</p>
@@ -430,14 +454,24 @@ const ProductView = ({ initialProducts,totalCount,initialPage, limit, user , aff
             <p>{(selectedProduct.price * platform.affiliateUserProfit) / 100} TND  ( on every sale )</p>
           </div>
 
-          <div className="col-span-2 md:col-span-1">
+                      <div className="px-2 py-1 z-10 rounded">
+                      <Badge 
+                       onClick={() => {
+                       setIsDownloadOpen(true);
+                       viewProduct(selectedProduct);
+                       downloadMockup(productImgs);
+                      }}
+                      className="bg-purple-500 hover:bg-purple-400 cursor-pointer text-white px-2 py-1 rounded">
+                            Download Product
+                      </Badge>
+                      </div>
+
           <Button 
            onClick={() => handleGenerateAffiliateLink(selectedProduct)}
-            variant="link" className="text-green-500 flex items-center animate-wiggle">
+            variant="link" className="text-green-500 animate-wiggle">
           Generate Affiliate Link
             <CircleDollarSign size={16} className="ml-1 mt-[2px]" />
           </Button>
-          </div>
 
 
 
@@ -448,8 +482,8 @@ const ProductView = ({ initialProducts,totalCount,initialPage, limit, user , aff
   <Separator className="w-full" />
   <CardContent className="p-4 md:p-6 lg:p-8 max-w-full">
   <p className=" flex items-center justify-center font-bold my-4">View Product :</p>
-  <div className="flex items-center justify-center w-full p-4">
-    <div className="w-full max-w-lg"
+  <div className="flex items-center justify-center p-4">
+    <div className="w-full max-w-xs md:max-w-lg"
         >
       <ImageSlider
         urls={[
@@ -461,10 +495,8 @@ const ProductView = ({ initialProducts,totalCount,initialPage, limit, user , aff
   </div>
 </CardContent>
 
-</Card>
-        
-        </>
-     
+</Card> 
+        </>   
         )}
 
 
@@ -553,6 +585,11 @@ const ProductView = ({ initialProducts,totalCount,initialPage, limit, user , aff
       <p className="text-gray-600 mt-4 text-sm">
         Products Found : {totalCountState}
       </p>
+
+      <div className="mt-3 text-gray-500 text-sm">
+    Current Page : {currentPage}
+  </div>
+
     </div>
   </CardHeader>
   <hr className="border-t border-gray-300 mb-5" />
@@ -600,18 +637,7 @@ const ProductView = ({ initialProducts,totalCount,initialPage, limit, user , aff
                             Select this Product
                       </Badge>
                       </div>
-                      
-                      <div className="absolute top-10 right-2 px-2 py-1 z-10 rounded">
-                      <Badge 
-                       onClick={() => {
-                       setIsDownloadOpen(true);
-                       viewProduct(product);
-                       downloadMockup(productImgs);
-                      }}
-                      className="bg-purple-500 hover:bg-purple-400 cursor-pointer text-white px-2 py-1 rounded">
-                            Download Product
-                      </Badge>
-                      </div>
+                    
 
 
                       <div className="absolute top-2 left-2 px-2 py-1 z-10 rounded">
@@ -693,8 +719,6 @@ const ProductView = ({ initialProducts,totalCount,initialPage, limit, user , aff
 
 
 
-
-
 <AlertDialog open={openWindow}>
           <AlertDialogContent>
             <AlertDialogHeader className="flex flex-col items-center">
@@ -706,18 +730,18 @@ const ProductView = ({ initialProducts,totalCount,initialPage, limit, user , aff
               </AlertDialogTitle>
               <AlertDialogDescription>
                 Share this link and gain profits through every sale made :
-                <p className="text-xs">
+                <p className="text-xs mt-4">
                   click to copy the link !
                 </p>
-            <div 
+            <Badge 
               onClick={copyToClipboard} 
-              className="mt-2 text-blue-500 font-bold cursor-pointer hover:text-blue-300 transition-colors"
+              className="my-6 text-white text-sm animate-pulse font-bold cursor-pointer transition-colors"
               aria-label="Click to copy affiliate link"
             >                  
             {shortenedLink}
-                </div>
+                </Badge>
                 {isCopied && (
-              <p className="text-xs text-green-500 mt-2">Link copied to clipboard!</p>
+              <p className="text-xs text-green-500">Link copied to clipboard!</p>
             )}
               </AlertDialogDescription>
             </AlertDialogHeader>

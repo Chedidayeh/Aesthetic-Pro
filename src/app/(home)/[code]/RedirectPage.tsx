@@ -33,7 +33,6 @@ const RedirectPage = ({  affiliateLink }: PageProps) => {
     } else {
       // Check if sessionId is stored in localStorage
       const storedSessionId = localStorage.getItem(SESSION_ID_KEY);
-
       if (storedSessionId) {
         sessionIdRef.current = storedSessionId;
         dispatch(saveSessionId(storedSessionId)); // Save the sessionId to Redux

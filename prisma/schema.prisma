@@ -64,13 +64,17 @@ model Account {
 
 model User {
   id              String  @id @default(cuid())
-  name            String?
+  name            String
   image           String?
   email           String @unique
   emailVerified   Boolean? @default(false)
   password        String?
   verificationToken String? @unique
   resetPassToken    String? @unique
+
+  phoneNumber       String?
+
+  address             String?
 
 
   userType        UserType @default(USER)
@@ -109,10 +113,10 @@ model User {
 model Platform {
   id              String  @id @default(cuid())
   userId          String  @unique
-  profit          Int     @default(0)
+  profit          Float     @default(0)
 
   topBarContent   String[] 
-  totalIncome     Int     @default(0)
+  totalIncome     Float     @default(0)
 
   closeStoreCreation Boolean     @default(false)
   closeCreation      Boolean      @default(false)
@@ -126,6 +130,8 @@ model Platform {
   maxProductQuantity          Int     @default(5)
   affiliateUserProfit         Int   @default(10)
   freeShippingFeeLimit        Int     @default(150)
+
+  productsLimitPerPage        Int     @default(4)
   
 }
 
@@ -237,10 +243,10 @@ model Product {
   title           String
   description     String
   tags            String[]
-  oldPrice        Int?
-  price           Int
-  basePrice       Int           @default(0)
-  sellerProfit    Int           @default(0)
+  oldPrice        Float?
+  price           Float
+  basePrice       Float           @default(0)
+  sellerProfit    Float           @default(0)
 
   isDiscountEnabled   Boolean        @default(false)
   discount        Float?         
@@ -324,7 +330,7 @@ model CartProduct {
   productId       String?
   product         Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
 
-  price           Int?
+  price           Float?
   quantity        Int?
   color           String?
   size            String?
@@ -364,8 +370,8 @@ model SellerDesign {
   height          Int
   imageUrl        String
   tags            String[]
-  price           Int           @default(3)
-  sellerProfit    Int           @default(1)
+  price           Float           @default(3)
+  sellerProfit    Float           @default(1)
 
 
   isDesignForSale Boolean      @default(false)
@@ -441,7 +447,6 @@ model Order {
   createdAt       DateTime @default(now())
   updatedAt       DateTime? @updatedAt
 
-  commission      Commission?
 }
 
 model OrderItem {
@@ -465,7 +470,10 @@ model OrderItem {
   productId             String? 
   product               Product? @relation(fields: [productId], references: [id] , onDelete: Cascade)
 
-  productPrice          Int
+  commission            Commission?
+
+
+  productPrice          Float
   productTitle          String?
   quantity              Int
   productColor          String
@@ -491,7 +499,7 @@ model PreOrderPreview {
     backclientDesign    String?
  
     amount                Int
-    productPrice          Int
+    productPrice          Float
     quantity              Int
     productColor          String
     productSize           String
@@ -517,7 +525,7 @@ model Affiliate {
   userId        String      @unique // A user can have one affiliate account
   user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  totalIncome    Int         @default(0)
+  totalIncome    Float         @default(0)
   receivedPayments  Float         @default(0)
 
 
@@ -542,10 +550,11 @@ model AffiliateLink {
 
   totalSales    Int         @default(0)
 
-  probableProfit Int         @default(0)
+  probableProfit Float         @default(0)
 
   productId     String
   product       Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
   originalLink  String
   code          String         @unique
   link          String    
@@ -571,8 +580,8 @@ model Commission {
   affiliateLinkId String         
   affiliateLink   AffiliateLink   @relation(fields: [affiliateLinkId], references: [id], onDelete: Cascade)
 
-  orderId         String?        @unique
-  order           Order?         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderItemId         String         @unique
+  orderItem          OrderItem       @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
 
   profit          Float           @default(0)
 

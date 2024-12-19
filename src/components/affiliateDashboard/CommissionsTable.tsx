@@ -91,7 +91,7 @@ const CommissionsTable: React.FC<CommissionsTableProps> = ({ commissions, affili
 
   return (
     <>
-      <Card className="xl:col-span-4 md:col-span-2 hidden sm:block">
+      <Card x-chunk="dashboard-05-chunk-3">
         <CardHeader className="flex flex-row items-center">
           <div className="grid gap-2">
             <CardTitle>Commissions</CardTitle>
@@ -111,7 +111,7 @@ const CommissionsTable: React.FC<CommissionsTableProps> = ({ commissions, affili
             /> 
             
           <Select onValueChange={handleSortChange}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="md:w-[180px] w-full">
               <SelectValue placeholder="Sort By" />
             </SelectTrigger>
             <SelectContent>
@@ -130,8 +130,8 @@ const CommissionsTable: React.FC<CommissionsTableProps> = ({ commissions, affili
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Commission Id</TableHead>
-                    <TableHead>Affiliate Link Id</TableHead>
+                    <TableHead className="hidden md:table-cell">Commission Id</TableHead>
+                    <TableHead className="hidden md:table-cell">Affiliate Link Id</TableHead>
                     <TableHead>Product Title</TableHead>
                     <TableHead>Profit</TableHead>
                     <TableHead>Created At</TableHead>
@@ -140,8 +140,8 @@ const CommissionsTable: React.FC<CommissionsTableProps> = ({ commissions, affili
                 <TableBody>
                   {sortedCommissions.map((commission) => (
                     <TableRow key={commission.commissionId}>
-                      <TableCell>{commission.commissionId}</TableCell>
-                      <TableCell>{commission.affiliateLinkId}</TableCell>
+                      <TableCell className="hidden md:table-cell">{commission.commissionId}</TableCell>
+                      <TableCell className="hidden md:table-cell">{commission.affiliateLinkId}</TableCell>
                       <TableCell>{commission.productTitle}</TableCell>
                       <TableCell>{commission.profit.toFixed(2)} TND</TableCell>
                       <TableCell>

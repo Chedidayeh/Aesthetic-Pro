@@ -34,6 +34,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 import ImageSlider from "@/components/MarketPlace/ImageSlider"
+import { Badge } from "@/components/ui/badge"
 
   
 interface OrderWithItems extends Order {
@@ -92,49 +93,24 @@ const MobileView = ({ordersData}: ViewProps) => {
 
   return (
     <>
-       {/* The AlertDialog delete order component  */}
-       <AlertDialog open={isDeleteOpen}>
-               <AlertDialogTrigger asChild>
-                         </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                   <AlertDialogHeader className="flex flex-col items-center">
-                                       <div className="text-red-500 mb-2">
-                                           <OctagonAlert className=''/>
-                                               </div>
-                                              <AlertDialogTitle className="text-xl font-bold text-center">
-                                                 Are you absolutely sure you want to delete your Order ?
-                                               </AlertDialogTitle>
-                                                <AlertDialogDescription>
-                                                   This action cannot be undone. 
-                                                   It will permanently remove your order from our server.<br/><br/>
-                                                    </AlertDialogDescription>
-                                                   </AlertDialogHeader>
-                                                  <AlertDialogFooter>
-                                              <AlertDialogCancel onClick={()=>setisDeleteOpen(false)}>Cancel</AlertDialogCancel>
-                                      <AlertDialogAction onClick={() => handleDelete()} 
-                                     className='bg-red-500 hover:bg-red-500' >Delete</AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                     </AlertDialog> 
-    <div>
+
     {currentOrder && (
   <Card key={currentOrder.id} className="overflow-hidden" x-chunk="dashboard-05-chunk-4">
-    <CardHeader className="flex flex-row items-start bg-muted/50">
-      <div className="grid gap-0.5">
-        <CardTitle className="group flex items-center gap-2 text-lg">
+    <CardHeader className=" bg-muted/50">
+      <div className="grid gap-0.5 ">
+        <CardTitle className="group flex items-center gap-2 text-sm">
           Id: <p className="text-xs text-gray-600">{currentOrder.id}</p>
         </CardTitle>
         <CardDescription>
-        <span className="text-red-600 text-xs">We'll call you very soon to confirm your orders !</span><br/>
+        <span className="text-blue-600 text-xs">We'll call you very soon to confirm your orders !</span><br/>
         Creation Date <time dateTime={currentOrder.createdAt ? currentOrder.createdAt.toISOString() : undefined}>
-          {currentOrder.updatedAt ? new Date(currentOrder.updatedAt).toLocaleDateString() : ''}
+          {currentOrder.updatedAt ? new Date(currentOrder.updatedAt).toLocaleString() : ''}
         </time></CardDescription>
-        <CardDescription className="mt-2 flex flex-wrap items-center gap-4"> 
+        <CardDescription className="my-4 space-x-2"> 
 
-        <Button
-  size="sm"
+<Badge
   variant="outline"
-  className={`h-8 text-white gap-1 ${currentOrder.type  === "NOT_CONFIRMED" ? 'bg-red-500' : currentOrder.type === 'CANCELED' ? 'bg-red-500' : currentOrder.type === 'CONFIRMED' ? 'bg-green-500' : ''}`}
+  className={`h-8 gap-1 ${currentOrder.type  === "NOT_CONFIRMED" ? 'text-red-500' : currentOrder.type === 'CANCELED' ? 'text-red-500' : currentOrder.type === 'CONFIRMED' ? 'text-green-500' : ''}`}
 > 
   {currentOrder.type === "CONFIRMED" ? (
     <CircleCheck className="h-3.5 w-3.5" />
@@ -145,49 +121,53 @@ const MobileView = ({ordersData}: ViewProps) => {
   <span className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap">
   {currentOrder.type}
   </span>
-</Button>
+</Badge>
 
-  <Button
-    size="sm"
+  <Badge
     variant="outline"
-    className={`h-8 text-white gap-1 ${!currentOrder.printed ? 'bg-red-500' :  'bg-green-500'}`}
+    className={`h-8 gap-1 ${!currentOrder.printed ? 'text-red-500' :  'text-green-500'}`}
   >
     <Palette className="h-3.5 w-3.5" />
     <span className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap">
       {currentOrder.printed ? "Printed" : "Not Printed"}
     </span>
-  </Button>
-  <Button
-    size="sm"
+  </Badge>
+
+
+  <Badge
     variant="outline"
-    className={`h-8 text-white gap-1 ${currentOrder.status === 'CANCELED' ? 'bg-red-500' : currentOrder.status === 'PROCESSING' ? 'bg-blue-500' : currentOrder.status === 'DELIVERED' ? 'bg-green-500' : ''}`}
+    className={`h-8 gap-1 ${currentOrder.status === 'CANCELED' ? 'text-red-500' : currentOrder.status === 'PROCESSING' ? 'text-blue-500' : currentOrder.status === 'DELIVERED' ? 'text-green-500' : ''}`}
   >
     <Truck className="h-3.5 w-3.5" />
     <span className="lg:sr-only xl:not-sr-only xl:whitespace-nowrap">
       {currentOrder.status}
     </span>
-  </Button>
-  {currentOrder.status !== "CANCELED"  && (
+  </Badge>
+
+
+</CardDescription>
+      </div>
+
+      {currentOrder.status !== "CANCELED" && !currentOrder.printed && currentOrder.type !== "CONFIRMED"  && (
     <>
-  <div className="w-full"></div>
+  <div className="flex items-end justify-end">
   <Button
     onClick={() => {
       setisDeleteOpen(true);
       setselectedOrderId(currentOrder.id);
     }}
-    className="bg-red-500 hover:bg-red-300"
+    className="bg-red-500 text-white hover:bg-red-300"
   >
     Cancel Order
   </Button>
+  </div>
+
   </>
     )}
-</CardDescription>
 
 
-      </div>
-      <div className="ml-auto flex items-center gap-1">
-      </div>
     </CardHeader>
+    
     <CardContent className="p-6 text-sm">
       <div className="grid gap-3">
         <div className="font-semibold">Order Details</div>
@@ -275,14 +255,15 @@ const MobileView = ({ordersData}: ViewProps) => {
                 </div>
         
     </CardContent>
-    <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
+    <CardFooter className="flex flex-row border-t bg-muted/50 px-6 py-3">
       <div className="text-xs text-muted-foreground">
         Total Orders: {ordersData.length}
       </div>
+      <div className="">
       {ordersData.length > 1 && (
-            <Pagination className="ml-2 mr-0 w-auto">
-      <PaginationContent className="flex flex-col sm:flex-row">
-        <PaginationItem className="mb-2 sm:mb-0 sm:mr-2">
+            <Pagination>
+      <PaginationContent className="ml-6 mr-0 w-auto flex items-end justify-end">
+        <PaginationItem>
           <Button variant="outline" onClick={showPreviousOrder}>
             Previous Order
           </Button>
@@ -296,10 +277,36 @@ const MobileView = ({ordersData}: ViewProps) => {
     </Pagination>
 
              )}
+       </div>
+
     </CardFooter>
   </Card>
 )}
-</div>
+
+       {/* The AlertDialog delete order component  */}
+       <AlertDialog open={isDeleteOpen}>
+               <AlertDialogTrigger asChild>
+                         </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                   <AlertDialogHeader className="flex flex-col items-center">
+                                       <div className="text-red-500 mb-2">
+                                           <OctagonAlert className=''/>
+                                               </div>
+                                              <AlertDialogTitle className="text-xl font-bold text-center">
+                                                 Are you absolutely sure you want to cancel your Order ?
+                                               </AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                   This action cannot be undone. 
+                                                   It will permanently remove your order from our server.<br/><br/>
+                                                    </AlertDialogDescription>
+                                                   </AlertDialogHeader>
+                                                  <AlertDialogFooter>
+                                              <AlertDialogCancel onClick={()=>setisDeleteOpen(false)}>Cancel</AlertDialogCancel>
+                                      <AlertDialogAction onClick={() => handleDelete()} 
+                                     className='bg-red-500 hover:bg-red-500 text-white' >Cancel</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                     </AlertDialog> 
 
 </>
   )

@@ -96,7 +96,7 @@ const ThankYouPage = async ({
                 </Link>
               </div>
               <div className='mt-2'>
-              <span className=' text-red-500 text-sm'>We'll call you very soon to confirm your order !</span>
+              <span className=' text-blue-500 text-sm'>We'll call you very soon to confirm your order !</span>
               </div>
 
             <div className='mt-16 text-sm font-medium'>

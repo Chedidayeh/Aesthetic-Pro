@@ -50,6 +50,9 @@ export const updateDesign = async ({ designId, newName,newPrice }: UpdateDesignA
         });
   
         return true;
+      },{
+        maxWait: 10000, // Wait for a connection for up to 10 seconds
+        timeout: 20000, // Allow the transaction to run for up to 20 seconds
       });
   
       if (!result) {

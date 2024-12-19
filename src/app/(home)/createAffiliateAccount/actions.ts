@@ -39,6 +39,9 @@ export const createAccount = async (user: User) => {
 
       // Step 3: Return the new affiliate instance or confirmation message
       return updatedUser;
+    },{
+      maxWait: 10000, // Wait for a connection for up to 10 seconds
+      timeout: 20000, // Allow the transaction to run for up to 20 seconds
     });
 
     // Transaction successful, return true or the result

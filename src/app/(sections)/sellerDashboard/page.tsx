@@ -88,8 +88,8 @@ const Page =  async () => {
         </div>
       </div>
 
-      <Badge className="text-center bg-gray-300 hover:bg-gray-200 font-extrabold text-sm text-black mt-4">
-          {store.storeName}
+      <Badge className="text-center hover:bg-gray-200 bg-gray-200 font-semibold text-sm text-black mt-4">
+      {store.storeName}
         </Badge>
 
 

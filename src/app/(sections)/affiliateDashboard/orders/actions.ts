@@ -12,11 +12,12 @@ export async function getAffiliateOrdersWithCommission(userId: string) {
           include: {
             commission: {
               include: {
-                order: {
+                orderItem : {
                   include : {
-                    commission : true
+                    commission : true,
+                    order : true
                   }
-                } // Include order details
+                }
               }
             }
           }
@@ -29,15 +30,15 @@ export async function getAffiliateOrdersWithCommission(userId: string) {
     }
 
     // Extract all the orders along with their commission profits
-    const ordersWithCommission = affiliate.links
+    const ordersItemsWithCommission = affiliate.links
       .flatMap((link) => link.commission)
-      .filter((commission) => commission.order !== null) // Ensure orders are not null
+      .filter((commission) => commission.orderItem !== null) // Ensure orders are not null
       .map((commission) => ({
-        order: commission.order,
+        orderItem: commission.orderItem,
         commissionProfit: commission.profit,
       }));
 
-    return ordersWithCommission;
+    return ordersItemsWithCommission;
   } catch (error) {
     console.error(error);
     throw new Error("Error fetching affiliate orders and commissions.");

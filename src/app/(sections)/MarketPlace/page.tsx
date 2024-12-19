@@ -4,7 +4,7 @@
 
 
 import View from './View'
-import {  getAllProductsCategories, getAllProductCollectionNames, getUser, fetchPriceRanges, fetchProducts } from '@/actions/actions'
+import {  getAllProductsCategories, getAllProductCollectionNames, getUser, fetchPriceRanges, fetchProducts, getPlatformForTheWebsite } from '@/actions/actions'
 
 
 
@@ -14,7 +14,8 @@ const Page = async () => {
   const categories = await getAllProductsCategories()
   const collections = await getAllProductCollectionNames()
 
-  const limit = 4; // Number of products per page
+  const platform = await getPlatformForTheWebsite()
+  const limit = platform!.productsLimitPerPage;
   const page = 1; // Initial page
   const priceRanges = await fetchPriceRanges()
 

@@ -85,6 +85,9 @@ export const updateProduct = async ({ productId, newTitle , selectedCollection }
   
         // Return file paths to delete after the transaction
         return [...product.croppedFrontProduct, ...product.croppedBackProduct];
+      },{
+        maxWait: 10000, // Wait for a connection for up to 10 seconds
+        timeout: 20000, // Allow the transaction to run for up to 20 seconds
       });
   
       // If result is false, it means the product was not deleted

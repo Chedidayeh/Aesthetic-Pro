@@ -3,7 +3,7 @@
 
 import DesignOrderView from "./DesignOrderView";
 import ProductOrderView from "./ProductOrderView";
-import { calculateTotalSellerProfiForProducts, calculateTotalSellerProfitForDesigns, getOrderWithItemsAndProducts } from "./actions";
+import {calculateTotalSellerProfitForDesigns, calculateTotalSellerProfitForProducts, getOrderWithItemsAndProducts } from "./actions";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,10 +26,11 @@ interface PageProps {
 const Page = async ({ params }: PageProps) => {
   const { orderId } = params;
   try {
-    const productOrderProfit = await calculateTotalSellerProfiForProducts(orderId);
+    const productOrderProfit = await calculateTotalSellerProfitForProducts(orderId);
     const designOrderProfit = await calculateTotalSellerProfitForDesigns(orderId);
 
     const order = await getOrderWithItemsAndProducts(orderId);
+
     if(!order) {
       return (
         <AlertDialog>
@@ -52,6 +53,7 @@ const Page = async ({ params }: PageProps) => {
       </AlertDialog>
       )
     }
+
     if (!order?.isClientMadeOrder) {
       return <ProductOrderView order={order} profit={productOrderProfit} />;
     } else {
@@ -60,10 +62,7 @@ const Page = async ({ params }: PageProps) => {
   } catch (error) {
     console.error('Error fetching order:', error);
     return (
-      <AlertDialog>
-        <AlertDialogTrigger asChild>
-          <button>View Error</button>
-        </AlertDialogTrigger>
+      <AlertDialog open={true}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>No Order Found</AlertDialogTitle>
@@ -73,7 +72,7 @@ const Page = async ({ params }: PageProps) => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <Link href="/adminDashboard">
-              <AlertDialogAction>Go to Dashboard</AlertDialogAction>
+              <AlertDialogAction className="text-xs">Go to Dashboard</AlertDialogAction>
             </Link>
           </AlertDialogFooter>
         </AlertDialogContent>

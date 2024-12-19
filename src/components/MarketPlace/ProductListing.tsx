@@ -183,7 +183,7 @@ const ProductListing = ({
     <Badge variant="secondary">
       <Link
         href={`/MarketPlace/store/${product.store.storeName}`}
-        className="animate-pulse font-bold group text-xs hover:text-blue-500 cursor-pointer relative block"
+        className="animate-pulse font-bold group text-xs  hover:text-blue-500 cursor-pointer relative block"
       >
         {product.store.storeName}
         <span className="absolute font-normal bottom-5 left-1/2 transform -translate-x-1/2 w-max px-2 py-1 text-xs bg-black text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">

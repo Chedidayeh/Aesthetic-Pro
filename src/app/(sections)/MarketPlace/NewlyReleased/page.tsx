@@ -2,7 +2,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 import NewReleased from './NewReleased'
-import { getAllProductsCategories, getAllProductCollectionNames, getUser } from '@/actions/actions'
+import { getAllProductsCategories, getAllProductCollectionNames, getUser, getPlatformForTheWebsite } from '@/actions/actions'
 import { fetchNewProducts, fetchPriceRanges } from './actions'
 
 
@@ -10,7 +10,8 @@ import { fetchNewProducts, fetchPriceRanges } from './actions'
 
 
 export default async function Page() {
-  const limit = 4; // Number of products per page
+    const platform = await getPlatformForTheWebsite()
+    const limit = platform!.productsLimitPerPage;
   const page = 1; // Initial page
   const priceRanges = await fetchPriceRanges()
   const { products, totalCount } = await fetchNewProducts(page,limit);

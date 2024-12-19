@@ -122,14 +122,14 @@ const ManageLinks = ({ Links , platform }: ViewProps) => {
             <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 items-center mt-2">
         <Input
               type="search"
-              className='w-full'
+              className='w-full sm:w-[50%]'
               placeholder="Search by Product title..."
               onChange={handleSearchChange}
               value={searchTerm}
             /> 
 
           <Select onValueChange={handleSortChange}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="sm:w-[180px] w-full">
               <SelectValue placeholder="Sort By" />
             </SelectTrigger>
             <SelectContent>
@@ -143,7 +143,7 @@ const ManageLinks = ({ Links , platform }: ViewProps) => {
           </div>
 
           <p className="text-gray-600 text-sm">
-        <span className="text-blue-600 font-medium">Guide :</span> Your profit depends on the order quantity !
+        <span className="text-blue-600 font-medium">Note :</span> Your profit depends on the order quantity !
           </p>
 
         </CardHeader>
@@ -155,7 +155,7 @@ const ManageLinks = ({ Links , platform }: ViewProps) => {
                         <TableHead className="hidden md:table-cell">Link Id</TableHead>
                         <TableHead className="">Product Title</TableHead>
                         <TableHead className="">Product Price</TableHead>
-                        <TableHead className="">Your Profit ( {platform.affiliateUserProfit}% on every sale made)</TableHead>
+                        <TableHead className="">Your Profit {platform.affiliateUserProfit}%</TableHead>
                         <TableHead>Total clicks</TableHead>
                         <TableHead>Total Link sales</TableHead>
                         <TableHead className="">Actions</TableHead>

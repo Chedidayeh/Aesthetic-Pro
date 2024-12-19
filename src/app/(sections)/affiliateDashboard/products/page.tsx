@@ -7,11 +7,9 @@ const Page = async () => {
 
   try {
 
-    const limit = 4; // Number of products per page
-    const page = 1; // Initial page
+
   
   
-    const { products, totalCount } = await fetchAllProducts(page, limit);
   
   
 
@@ -21,7 +19,10 @@ const Page = async () => {
     const categories = await getAllProductsCategories()
     const collections = await getAllProductCollectionNames()
     const platform = await getPlatformForTheWebsite()
-  
+    const limit = platform!.productsLimitPerPage;
+    const page = 1; // Initial page
+    const { products, totalCount } = await fetchAllProducts(page, limit);
+
     return (
      <ProductView
      initialProducts={products}

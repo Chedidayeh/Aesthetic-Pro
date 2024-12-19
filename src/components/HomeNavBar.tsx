@@ -194,8 +194,8 @@ const Navbar = async () => {
               className: "relative hover:text-red-500"
             })}>
               <Heart size={15} className='mr-1' />
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
-                  {favListProducts?.length ?? 0}
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full text-xs w-5 h-4 flex items-center justify-center">
+                {favListProducts?.length > 9 ? '9+' : favListProducts?.length ?? 0}
                 </span>
               Fav List
             </Link>
@@ -206,8 +206,9 @@ const Navbar = async () => {
               className: "relative hover:text-blue-500"
             })}>
               <ShoppingCart size={15} className='mr-1' />
-                <span className="absolute -top-1 -right-1 bg-blue-500 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
-                  {cartProductList ?? 0}
+                <span className="absolute -top-1 -right-1 bg-blue-500 text-white rounded-full text-xs w-5 h-4 flex items-center justify-center">
+                  {cartProductList > 9 ? '9+' : cartProductList ?? 0}
+
                 </span>
               Cart
             </Link>
@@ -218,8 +219,8 @@ const Navbar = async () => {
               className: "relative hover:text-green-500"
             })}>
               <ShoppingBasket size={15} className='mr-1' />
-                <span className="absolute -top-1 -right-1 bg-green-500 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
-                  {orders.length ?? 0}
+                <span className="absolute -top-1 -right-1 bg-green-500 text-white rounded-full text-xs w-5 h-4 flex items-center justify-center">
+                  {orders?.length > 9 ? '9+' : orders?.length ?? 0}
                 </span>
               Your Orders
             </Link>
@@ -262,8 +263,8 @@ const Navbar = async () => {
               className: "relative hover:text-red-500"
             })}>
               <Heart size={22} className='mr-1' />
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
-                  {favListProducts?.length ?? 0}
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full text-xs w-5 h-4 flex items-center justify-center">
+              {favListProducts?.length > 9 ? '9+' : favListProducts?.length ?? 0}
                 </span>
             </Link>
             <Link href="/MarketPlace/cart" className={buttonVariants({
@@ -272,8 +273,8 @@ const Navbar = async () => {
               className: "relative hover:text-blue-500"
             })}>
               <ShoppingCart size={22} className='mr-1' />
-                <span className="absolute -top-1 -right-1 bg-blue-500 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
-                  {cartProductList ?? 0}
+                <span className="absolute -top-1 -right-1 bg-blue-500 text-white rounded-full text-xs w-5 h-4 flex items-center justify-center">
+                {cartProductList > 9 ? '9+' : cartProductList ?? 0}
                 </span>
             </Link>
             <Link href="/MarketPlace/userOrders" className={buttonVariants({
@@ -282,8 +283,8 @@ const Navbar = async () => {
               className: "relative hover:text-green-500"
             })}>
               <ShoppingBasket size={22} className='mr-1' />
-                <span className="absolute -top-1 -right-1 bg-green-500 text-white rounded-full text-xs w-4 h-4 flex items-center justify-center">
-                  {orders.length ?? 0}
+              <span className="absolute -top-1 -right-1 bg-green-500 text-white rounded-full text-xs w-5 h-4 flex items-center justify-center">
+              {orders?.length > 9 ? '9+' : orders?.length ?? 0}
                 </span>
             </Link>
             <UserProfile user={user!} platform={platform!} />

@@ -18,7 +18,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import {  Commission, Order } from "@prisma/client";
+import {  Commission, Order, OrderItem } from "@prisma/client";
 import { ChangeEvent, useEffect, useState } from "react";
 
 import {
@@ -33,59 +33,56 @@ import { useToast } from "@/components/ui/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 
-interface ExtraOrder extends Order {
+interface ExtraOrderItem extends OrderItem {
+  order : Order
   commission : Commission | null
 }
 
 
-interface OrderWithCommission {
-  order : ExtraOrder | null
+interface OrderItemsWithCommission {
+  orderItem : ExtraOrderItem | null
   commissionProfit : number
 }
 
 
 interface ViewProps {
-  orders: OrderWithCommission[];
+  orderItems: OrderItemsWithCommission[];
 }
 
-const ViewOrders = ({ orders }: ViewProps) => {
+const ViewOrders = ({ orderItems }: ViewProps) => {
 
   const { toast } = useToast()
 
     const [filterCriteria, setFilterCriteria] = useState('');
-    const [filteredOrders, setFilteredOrders] = useState(orders);
+    const [filteredOrders, setFilteredOrders] = useState(orderItems);
     const [searchTerm, setSearchTerm] = useState(""); // For searching by commission ID
 
     useEffect(() => {
-      let updatedOrders = [...orders];
+      let updatedOrders = [...orderItems];
   
       // Filter orders based on filter criteria
       if (filterCriteria) {
         updatedOrders = updatedOrders.filter((orderWithCommission) => {
-          const { order } = orderWithCommission;
-          if (!order) return false;
+          const { orderItem } = orderWithCommission;
+          if (!orderItem) return false;
   
           switch (filterCriteria) {
             case "CONFIRMED":
-              return order.type === "CONFIRMED";
+              return orderItem.order.type === "CONFIRMED";
             case "NOT_CONFIRMED":
-              return order.type === "NOT_CONFIRMED";
+              return orderItem.order.type === "NOT_CONFIRMED";
             case "CANCELED":
-              return order.type === "CANCELED";
+              return orderItem.order.type === "CANCELED";
             case "DELIVERED":
-              return order.status === "DELIVERED";
+              return orderItem.order.status === "DELIVERED";
             case "Paid":
-              return order.isPaid === true;
+              return orderItem.order.isPaid === true;
             case "NOT_Paid":
-              return order.isPaid === false;
-            case "Sellerorder":
-              return order.isSellerOrder === true;
-            case "Clientorder":
-              return order.isClientMadeOrder === true;
+              return orderItem.order.isPaid === false;
             case "Printed":
-              return order.printed === true;
+              return orderItem.order.printed === true;
             case "NOT_Printed":
-              return order.printed === false;
+              return orderItem.order.printed === false;
             default:
               return true;
           }
@@ -96,14 +93,14 @@ const ViewOrders = ({ orders }: ViewProps) => {
       if (searchTerm) {
         updatedOrders = updatedOrders.filter(
           (orderWithCommission) =>
-            orderWithCommission.order?.commission?.id
+            orderWithCommission.orderItem?.commission?.id
               .toLowerCase()
               .includes(searchTerm.toLowerCase()) // Match Commission ID
         );
       }
   
       setFilteredOrders(updatedOrders);
-    }, [filterCriteria, searchTerm, orders]);
+    }, [filterCriteria, searchTerm, orderItems]);
     
     // Handle search term input
     const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -118,7 +115,7 @@ const ViewOrders = ({ orders }: ViewProps) => {
     <>
 
 <p className="text-sm text-gray-700 mb-2">AffiliateDashboard/Orders</p>
-           <h1 className="text-2xl font-semibold">All Orders</h1>
+           <h1 className="text-2xl font-semibold">All Orders Items</h1>
   
   
   
@@ -134,8 +131,8 @@ const ViewOrders = ({ orders }: ViewProps) => {
       <Card className="xl:col-span-4" x-chunk="dashboard-01-chunk-4">
         <CardHeader className="flex flex-row items-center bg-muted/50">
           <div className="grid gap-2">
-            <CardTitle>Orders</CardTitle>
-            <CardDescription>Total: {orders.length}</CardDescription>
+            <CardTitle>Orders Items</CardTitle>
+            <CardDescription>Total: {orderItems.length}</CardDescription>
           </div>
         </CardHeader>
         <CardContent>
@@ -201,54 +198,54 @@ const ViewOrders = ({ orders }: ViewProps) => {
 
       <TableHead className="">Commission Id</TableHead>
 
-      <TableHead className="">Your Profit</TableHead>
+      <TableHead className="hidden md:table-cell">Your Profit</TableHead>
 
 
     </TableRow>
   </TableHeader>
   <TableBody>
   {filteredOrders.map((orderWithCommission, index) => {
-    const { order, commissionProfit } = orderWithCommission;
-    if (!order) return null; // Skip rendering if order is null
+    const { orderItem, commissionProfit } = orderWithCommission;
+    if (!orderItem) return null; // Skip rendering if order is null
 
     return (
-      <TableRow key={order.id}>
+      <TableRow key={orderItem.id}>
         <TableCell className="">
           <Badge className={{
-            'PROCESSING': 'bg-blue-700',
-            'DELIVERED': 'bg-green-700',
-            'REFUSED': 'bg-red-700',
-            'CANCELED': 'bg-red-700'
-          }[order.status] || 'bg-gray-700'}>
-            {order.status}
+            'PROCESSING': 'bg-blue-700 text-white',
+            'DELIVERED': 'bg-green-700 text-white',
+            'REFUSED': 'bg-red-700 text-white',
+            'CANCELED': 'bg-red-700 text-white'
+          }[orderItem.order.status] || 'bg-gray-700 text-white'}>
+            {orderItem.order.status}
           </Badge>
         </TableCell>
 
         <TableCell className="">
-          <Badge className={order.type === 'CONFIRMED' ? 'bg-green-700' : order.type === 'NOT_CONFIRMED' ? 'bg-orange-400' : order.type === 'CANCELED' ? 'bg-red-700' : 'bg-gray-700'}>
-            {order.type}
+          <Badge className={orderItem.order.type === 'CONFIRMED' ? 'bg-green-700 text-white' : orderItem.order.type === 'NOT_CONFIRMED' ? 'bg-orange-400 text-white' : orderItem.order.type === 'CANCELED' ? 'bg-red-700 text-white' : 'bg-gray-700 text-white'}>
+            {orderItem.order.type}
           </Badge>
         </TableCell>
 
-        <TableCell className="hidden lg:table-cell">{new Date(order.createdAt).toLocaleString()}</TableCell>
+        <TableCell className="hidden lg:table-cell">{new Date(orderItem.createdAt).toLocaleString()}</TableCell>
 
         <TableCell className="hidden md:table-cell">
-          <Badge className={order.printed ? 'bg-green-700' : 'bg-red-700'}>
-            {order.printed ? "Printed" : "Not Printed"}
+          <Badge className={orderItem.order.printed ? 'bg-green-700 text-white' : 'text-white bg-red-700'}>
+            {orderItem.order.printed ? "Printed" : "Not Printed"}
           </Badge>
         </TableCell>
 
         <TableCell className="hidden lg:table-cell">
-          <Badge className={order.isPaid ? 'bg-green-700' : 'bg-red-700'}>
-            {order.isPaid ? "Is Paid" : "Not Paid"}
+          <Badge className={orderItem.order.isPaid ? 'bg-green-700 text-white' : 'bg-red-700 text-white'}>
+            {orderItem.order.isPaid ? "Is Paid" : "Not Paid"}
           </Badge>
         </TableCell>
 
-        <TableCell className="">
-          {order.commission!.id}
+        <TableCell className="text-xs">
+          {orderItem.commission!.id}
         </TableCell>
 
-        <TableCell className="">
+        <TableCell className="hidden md:table-cell">
           {commissionProfit.toFixed(2)} TND
         </TableCell>
       </TableRow>

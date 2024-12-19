@@ -94,7 +94,6 @@ export async function getAllOrders(
       include: {
         orderItems: true,
         user: true,
-        commission: true,
       },
       orderBy: {
         createdAt: "desc", // Sort by creation date
@@ -125,6 +124,9 @@ export async function getAllOrders(
         await transaction.order.delete({
           where: { id: orderId },
         });
+      },{
+        maxWait: 10000, // Wait for a connection for up to 10 seconds
+        timeout: 20000, // Allow the transaction to run for up to 20 seconds
       });
   
       return { message: 'Order and associated items deleted successfully' };

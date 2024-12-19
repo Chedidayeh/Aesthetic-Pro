@@ -34,8 +34,6 @@ const Steps = () => {
         const isCompleted = STEPS.slice(i + 1).some((step) =>
           pathname.endsWith(step.url)
         )
-        const imgPath = `/aestheticpro.png`
-
         return (
           <li key={step.name} className='relative overflow-hidden lg:flex-1'>
             <div>
@@ -55,27 +53,12 @@ const Steps = () => {
                   i !== 0 ? 'lg:pl-9' : '',
                   'flex items-center px-6 py-4 text-sm font-medium'
                 )}>
-                <span className='flex-shrink-0 animate-pulse'>
-                  <NextImage
-                    src={imgPath}
-                    alt={`Step ${i + 1}`}
-                    width={80}
-                    height={80}
-                    className={cn(
-                      'flex h-20 w-20 object-contain items-center justify-center',
-                      {
-                        'border-none': isCompleted,
-                        'border-blue-700': isCurrent,
-                      }
-                    )}
-                  />
-                </span>
 
                 <span className='ml-4 h-full mt-0.5 flex min-w-0 flex-col justify-center'>
                   <span
                     className={cn('text-sm font-semibold', {
                       'text-primary': isCompleted,
-                      'text-blue-700': isCurrent,
+                      'text-blue-700 animate-pulse': isCurrent,
                     })}>
                     {step.name}
                   </span>

@@ -185,7 +185,9 @@ export const updatePlatformData = async (
         clientDesignPrice:updatedData.clientDesignPrice,
         ExtraDesignForProductPrice : updatedData.ExtraDesignForProductPrice,
         affiliateUserProfit : updatedData.affiliateUserProfit,
-        freeShippingFeeLimit : updatedData.freeShippingFeeLimit
+        freeShippingFeeLimit : updatedData.freeShippingFeeLimit,
+        productsLimitPerPage : updatedData.productsLimitPerPage,
+        
       },
     });
 

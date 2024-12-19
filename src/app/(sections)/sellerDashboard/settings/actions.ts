@@ -43,17 +43,21 @@ export async function deleteStore(storeId : string, userId: string) {
           return false
       }
 
-      await db.$transaction([
+      await db.$transaction(async (transaction) => {
           // Delete the store
-          db.store.delete({
+          await transaction.store.delete({
               where: { id: storeId },
           }),
           // Update the user type
-          db.user.update({
+          await transaction.user.update({
               where: { id: userId },
               data: { userType: "USER" },
-          }),
-      ]);
+          })
+        },{
+          maxWait: 10000, // Wait for a connection for up to 10 seconds
+          timeout: 20000, // Allow the transaction to run for up to 20 seconds
+        });
+
     return true
   } catch (error) {
     console.error('Error updating user type:', error);

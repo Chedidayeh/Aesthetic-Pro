@@ -225,88 +225,89 @@ const View = ({ initialProducts,totalCount,initialPage, limit, priceRanges, user
   return (
     <section className='py-4'>
      
-     <div className='bg-muted/50 rounded-xl py-10 mx-auto text-center flex flex-col items-center max-w-1xl'>
+     <div className='bg-muted/50 rounded-xl py-8 mx-auto text-center flex flex-col items-center max-w-1xl'>
           <h1 className='text-4xl font-bold tracking-tight sm:text-5xl'>
             Market
             <span className='text-yellow-400'>
             Place
             </span>
-          </h1>
-          <p className='mt-2 text-sm text-muted-foreground'>
-              Discover our products collection
-            </p>    
+          </h1>  
             <div className="flex flex-col">
-            <div className="flex flex-col gap-2 md:flex-row">
-            <div className="mt-3 flex-1">
-        <Select onValueChange={handleSortChange}>
-            <SelectTrigger className="w-[180px] ">
-                <SelectValue placeholder="Sort By" />
-            </SelectTrigger>
-            <SelectContent>
-                <SelectGroup>
-                    <SelectLabel>Select</SelectLabel>
-                    <SelectItem value="high">Highest Price</SelectItem>
-                    <SelectItem value="low">Lowest Price</SelectItem>
-                    <SelectItem value="sales">Most Selled</SelectItem>
-                </SelectGroup>
-            </SelectContent>
-        </Select> 
-    </div>
-    <div className="mt-3 flex-1">
-            <Select onValueChange={handleCategorySortChange}>
-            <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Filter By Category" />
-            </SelectTrigger>
-            <SelectContent>
-            <SelectGroup>
-                    <SelectLabel>Select</SelectLabel>
-                    {categories.map((category, index) => (
-                    <SelectItem key={index} value={category}>
-                      {category}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-            </SelectContent>
-        </Select> 
-    </div>
-    <div className="mt-3 flex-1">
-                <Select onValueChange={handleCollectionSortChange}>
-                    <SelectTrigger className="w-[180px] ">
-                    <SelectValue placeholder="Filter By Collection" />
-                    </SelectTrigger>
-                    <SelectContent>
-                    <SelectGroup>
-                    <SelectLabel>Select</SelectLabel>
-                    {collections.map((collection, index) => (
-                    <SelectItem key={index} value={collection}>
-                      {collection}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-                    </SelectContent>
-                </Select>
-                </div>
-    <div className="mt-3 flex-1">
-    <Select onValueChange={handlePriceRangeChange}>
-    <SelectTrigger className="w-[180px]">
-      <SelectValue placeholder="Select Price Range" />
-    </SelectTrigger>
-    <SelectContent>
-    <SelectGroup>
-       <SelectLabel>Select Price Range</SelectLabel>
-      {priceRanges.map((range, index) => (
-       <SelectItem key={index} value={index.toString()}>
-        {range[0]} TND - {range[1]} TND
-       </SelectItem>
-        ))}
-      </SelectGroup>
-    </SelectContent>
-  </Select>
-    </div>
+            <div className="grid gap-2 mt-4 grid-cols-2">
+  <div className="flex-1">
+    <Select onValueChange={handleSortChange}>
+      <SelectTrigger className="w-[180px]">
+        <SelectValue placeholder="Sort By" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          <SelectLabel>Select</SelectLabel>
+          <SelectItem value="high">Highest Price</SelectItem>
+          <SelectItem value="low">Lowest Price</SelectItem>
+          <SelectItem value="sales">Most Selled</SelectItem>
+        </SelectGroup>
+      </SelectContent>
+    </Select>
   </div>
 
-  <div className="mt-4 text-gray-500 text-sm flex-1">
-    <div className="mt-4"> {priceRange[0] === 0 && priceRange[1] === 0
+  <div className="flex-1">
+    <Select onValueChange={handleCategorySortChange}>
+      <SelectTrigger className="w-[180px]">
+        <SelectValue placeholder="Filter By Category" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          <SelectLabel>Select</SelectLabel>
+          {categories.map((category, index) => (
+            <SelectItem key={index} value={category}>
+              {category}
+            </SelectItem>
+          ))}
+        </SelectGroup>
+      </SelectContent>
+    </Select>
+  </div>
+
+  <div className="flex-1">
+    <Select onValueChange={handleCollectionSortChange}>
+      <SelectTrigger className="w-[180px]">
+        <SelectValue placeholder="Filter By Collection" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          <SelectLabel>Select</SelectLabel>
+          {collections.map((collection, index) => (
+            <SelectItem key={index} value={collection}>
+              {collection}
+            </SelectItem>
+          ))}
+        </SelectGroup>
+      </SelectContent>
+    </Select>
+  </div>
+
+  <div className="flex-1">
+    <Select onValueChange={handlePriceRangeChange}>
+      <SelectTrigger className="w-[180px]">
+        <SelectValue placeholder="Select Price Range" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          <SelectLabel>Select Price Range</SelectLabel>
+          {priceRanges.map((range, index) => (
+            <SelectItem key={index} value={index.toString()}>
+              {range[0]} TND - {range[1]} TND
+            </SelectItem>
+          ))}
+        </SelectGroup>
+      </SelectContent>
+    </Select>
+  </div>
+</div>
+
+
+  <div className="mt-1 text-gray-500 text-sm flex-1">
+  <div className="mt-1"> {priceRange[0] === 0 && priceRange[1] === 0
       ? 'Select a price range'
       : `${priceRange[0]} TND - ${priceRange[1]} TND`}</div>
     </div>
@@ -322,7 +323,7 @@ const View = ({ initialProducts,totalCount,initialPage, limit, priceRanges, user
 </div>
             </div>
 
-            <div className='relative my-4'>
+            <div className='relative'>
             {products.length === 0 ? (
               <div className='flex h-full flex-col items-center justify-center space-y-1'>
               <div

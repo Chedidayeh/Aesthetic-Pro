@@ -33,10 +33,17 @@ interface FormattedCartProduct {
     sessionId: any,
   ) {
     try {
-      let order; // Declare order variable outside for later use
-      
+      let order;
+  
       // Start a transaction for atomicity
       await db.$transaction(async (tx) => {
+        await tx.user.update({
+          where: { id: userId },
+          data: {
+            phoneNumber,
+            address : shippingAddress,
+          }
+        })
         // Step 1: Create the order
         order = await tx.order.create({
           data: {
@@ -67,54 +74,74 @@ interface FormattedCartProduct {
           },
         });
   
-        // Step 2: Only after order is created, proceed to check for affiliate session and create commission
+        // Step 2: Check for affiliate clicks and create commissions
         if (sessionId) {
-          const affiliateClick = await tx.affiliateClick.findFirst({
+          const affiliateClicks = await tx.affiliateClick.findMany({
             where: { sessionId },
           });
   
-          if (affiliateClick?.affiliateLinkId) {
-            const affiliateLink = await tx.affiliateLink.findUnique({
-              where: { id: affiliateClick?.affiliateLinkId },
-              select: { product: true },
-            });
+          // Track processed order item IDs
+          const processedOrderItems = new Set<string>();
   
-            const product = cartProducts.find(
-              (product) => product.productId === affiliateLink?.product?.id
-            );
-  
-            if (product) {
-              const platform = await getPlatformForTheWebsite();
-              const commissionAmount = product.price! * product.quantity! * (platform!.affiliateUserProfit / 100);
-              const integerPart = Math.floor(commissionAmount);
-  
-              // Create commission after ensuring order is fully created
-              await tx.commission.create({
-                data: {
-                  affiliateLinkId: affiliateClick.affiliateLinkId!,
-                  orderId: order.id,
-                  profit: integerPart,
-                },
+          for (const affiliateClick of affiliateClicks) {
+            if (affiliateClick.affiliateLinkId) {
+              const affiliateLink = await tx.affiliateLink.findUnique({
+                where: { id: affiliateClick.affiliateLinkId },
+                select: { product: true },
               });
+  
+              const productMatch = cartProducts.find(
+                (product) => product.productId === affiliateLink?.product?.id
+              );
+  
+              if (productMatch) {
+                const matchingOrderItems = order.orderItems.filter(
+                  (item) => item.productId === productMatch.productId
+                );
+  
+                for (const orderItem of matchingOrderItems) {
+                  // Skip if this order item has already been processed
+                  if (processedOrderItems.has(orderItem.id)) {
+                    continue;
+                  }
+  
+                  const platform = await getPlatformForTheWebsite();
+                  const commissionAmount =
+                    orderItem.productPrice * orderItem.quantity * (platform!.affiliateUserProfit / 100);
+  
+                  // Create a commission for the matching order item
+                  await tx.commission.create({
+                    data: {
+                      affiliateLinkId: affiliateClick.affiliateLinkId,
+                      orderItemId: orderItem.id,
+                      profit: commissionAmount,
+                    },
+                  });
+  
+                  // Mark the order item as processed
+                  processedOrderItems.add(orderItem.id);
+                }
+              }
             }
           }
         }
   
-        // Step 3: Send order email after order creation and commission handling
+        // Step 3: Send the order email after order creation and commission handling
         await sendOrderEmail(order);
-  
-      }, {
-        timeout: 20000, // Set the timeout for the transaction (20 seconds)
+      },{
+        maxWait: 10000, // Wait for a connection for up to 10 seconds
+        timeout: 20000, // Allow the transaction to run for up to 20 seconds
       });
   
-      // Return success only after transaction completes
+      // Return success after transaction completion
       return { orderId: order!.id as string, success: true };
-      
     } catch (error) {
       console.error('Error creating order:', error);
       return { orderId: null, success: false };
     }
   }
+  
+  
   
   
 

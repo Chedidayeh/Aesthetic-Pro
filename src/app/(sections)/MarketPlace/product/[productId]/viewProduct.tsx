@@ -54,10 +54,6 @@ interface ViewProductProps {
 const ViewProduct: React.FC<ViewProductProps> = ({ product , frontdesign , backdesign , user ,categoryProducts , category , sizes , platform }) => {
 
   const router = useRouter()
-  let designs = [
-    frontdesign,
-    backdesign
-  ].filter(url => url != null);
 
 
   function interleaveArrays(arr1 : string[], arr2 : string[]) {
@@ -95,7 +91,7 @@ const combinedUrls = interleaveArrays(product.croppedFrontProduct, product.cropp
     };
     
 
-  const [selectedSize, setSelectedSize] = useState<string>("");
+  const [selectedSize, setSelectedSize] = useState<string>(sizes[0]);
 
 
 
@@ -146,8 +142,8 @@ const redirectToCart = () => {
 
 
       <div className='pb-4 mx-auto text-center flex flex-col items-center max-w-1xl'>
-          <h1 className='text-3xl font-bold tracking-tight sm:text-4xl'>
-                Product{' '}
+      <h1 className='text-4xl font-bold tracking-tight md:text-5xl'>
+      Product{' '}
             <span className='text-blue-600'>
               Details
             </span>

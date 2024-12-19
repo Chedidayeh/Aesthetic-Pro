@@ -254,8 +254,8 @@ const [user, setUser] = useState<User>();
 
 
       <div className="w-full flex-1">
-          <div className="relative">
-          <Button variant={"secondary"} size={"sm"} onClick={handleButtonClick}>
+          <div className="relative  ">
+          <Button className="animate-borderPulse" variant={"outline"} size={"sm"} onClick={handleButtonClick}>
       View your store               
       <ExternalLink className="ml-1 w-4 h-4"/>
     </Button>

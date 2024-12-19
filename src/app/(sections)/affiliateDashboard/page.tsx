@@ -121,9 +121,7 @@ const Page =  async () => {
 
     <div className='flex flex-col space-y-5'>
     <Component affiliateId={affiliate!.id} />
-    <div className='hidden xl:flex flex-col space-y-5'>
     <CommissionsTable commissions={commissions} affiliateStats={affiliateStats} />
-    </div>
     </div>
 
 

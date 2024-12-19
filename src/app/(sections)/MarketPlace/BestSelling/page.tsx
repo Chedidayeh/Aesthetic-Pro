@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
 
-import { getAllProductsCategories, getAllProductCollectionNames, getUser } from '@/actions/actions'
+import { getAllProductsCategories, getAllProductCollectionNames, getUser, getPlatformForTheWebsite } from '@/actions/actions'
 import BestSelling from './BestSelling'
 import { fetchBestSellingProducts, fetchPriceRanges } from './actions'
 
@@ -13,8 +13,9 @@ export default async function Page() {
   const user = await getUser()
   const categories = await getAllProductsCategories()
   const collections = await getAllProductCollectionNames()
-
-  const limit = 4; // Number of products per page
+  const platform  = await getPlatformForTheWebsite()
+  const limit = platform!.productsLimitPerPage; // Number of products per page
+  
   const page = 1; // Initial page
 
   const data = await fetchBestSellingProducts(page, limit);

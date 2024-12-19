@@ -130,9 +130,9 @@ const FavList = ({ products, user , categories , collections }: ProductReelProps
   return (
     <section className='py-4'>
      
-     <div className='bg-muted/50 rounded-xl py-10 mx-auto text-center flex flex-col items-center max-w-1xl'>
-          <h1 className='text-4xl font-bold tracking-tight  sm:text-5xl'>
-            Your{' '}
+     <div className='bg-muted/50 rounded-xl py-8 mx-auto text-center flex flex-col items-center max-w-1xl'>
+     <h1 className='text-4xl font-bold tracking-tight md:text-5xl'>
+     Your{' '}
             <span className='text-red-500'>
             FavList
             </span>
@@ -143,8 +143,8 @@ const FavList = ({ products, user , categories , collections }: ProductReelProps
 
 
             <div className="flex flex-col">
-            <div className="flex flex-col gap-2 md:flex-row">
-            <div className="mt-3 flex-1">
+            <div className="grid gap-2 mt-4 grid-cols-2">
+            <div className="flex-1">
         <Select onValueChange={handleSortChange}>
             <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Sort By" />
@@ -159,7 +159,7 @@ const FavList = ({ products, user , categories , collections }: ProductReelProps
             </SelectContent>
         </Select> 
     </div>
-    <div className="mt-3 flex-1">
+    <div className="flex-1">
             <Select onValueChange={handleCategorySortChange}>
             <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Filter By Category" />
@@ -176,7 +176,7 @@ const FavList = ({ products, user , categories , collections }: ProductReelProps
             </SelectContent>
         </Select> 
     </div>
-    <div className="mt-3 flex-1">
+    <div className=" flex-1">
                 <Select onValueChange={handleCollectionSortChange}>
                     <SelectTrigger className="w-[180px] ">
                     <SelectValue placeholder="Filter By Collection" />
@@ -193,7 +193,7 @@ const FavList = ({ products, user , categories , collections }: ProductReelProps
                     </SelectContent>
                 </Select>
                 </div>
-    <div className="mt-3 flex-1">
+    <div className="flex-1">
     <Select onValueChange={handlePriceRangeChange}>
     <SelectTrigger className="w-[180px]">
       <SelectValue placeholder="Select Price Range" />
@@ -212,8 +212,8 @@ const FavList = ({ products, user , categories , collections }: ProductReelProps
     </div>
   </div>
 
-  <div className="mt-4 text-gray-600 text-sm flex-1">
-    <div className="mt-4"> {priceRange[0] === 0 && priceRange[1] === 0
+  <div className="mt-1 text-gray-600 text-sm flex-1">
+    <div className="mt-1"> {priceRange[0] === 0 && priceRange[1] === 0
       ? 'Select a price range'
       : `${priceRange[0]} TND - ${priceRange[1]} TND`}</div>
     </div>
@@ -226,7 +226,7 @@ const FavList = ({ products, user , categories , collections }: ProductReelProps
               
             </div>
 
-            <div className='relative my-4'>
+            <div className='relative'>
 
             {filteredProducts.length === 0 ? (
               <div className='flex h-full flex-col items-center justify-center space-y-1'>

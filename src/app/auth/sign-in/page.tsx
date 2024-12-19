@@ -165,7 +165,7 @@ const Page = () => {
           alt="logo"
         />
       </div>
-      <CardTitle className='text-xl font-semibold tracking-tight'>
+      <CardTitle className='text-lg font-semibold tracking-tight'>
         Sign in to your {' '}
         account
       </CardTitle>

@@ -1,6 +1,6 @@
 'use server';
 
-import { getAllProductCollectionNames, getAllProductsCategories, getUser } from "@/actions/actions";
+import { getAllProductCollectionNames, getAllProductsCategories, getPlatformForTheWebsite, getUser } from "@/actions/actions";
 import SearchedProducts from "./SearchedProducts";
 import { fetchPriceRanges, searchProducts } from "./actions";
 
@@ -16,7 +16,9 @@ const Page = async ({ params }: PageProps) => {
 
   try {
 
-    const limit = 4; // Number of products per page
+      const platform = await getPlatformForTheWebsite()
+      const limit = platform!.productsLimitPerPage;
+
     const page = 1; // Initial page
     const priceRanges = await fetchPriceRanges(searchQuery)
     

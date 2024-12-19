@@ -29,7 +29,7 @@
     
     import { cn } from "@/lib/utils";
     import React, { useState } from "react"
-  import { ClientDesign, Commission, Order, OrderItem, OrderStatus, OrderType, Product, SellerDesign, Store, User } from "@prisma/client"
+  import { Affiliate, AffiliateLink, ClientDesign, Commission, Order, OrderItem, OrderStatus, OrderType, Product, SellerDesign, Store, User } from "@prisma/client"
   import { useRouter } from "next/navigation"
   import { useToast } from "@/components/ui/use-toast"
 
@@ -43,18 +43,30 @@ interface ExtraProduct extends Product{
   store : Store
 }
 
+interface ExtarAffiliate extends Affiliate {
+  user : User
+}
+
+interface ExtraLink extends AffiliateLink {
+  affiliate : ExtarAffiliate
+}
+
+interface ExtraCommission extends Commission {
+  affiliateLink : ExtraLink
+}
+
 interface ExtraOrderItem extends OrderItem {
     product: ExtraProduct | null 
     frontsellerDesign : SellerDesign | null
     backsellerDesign : SellerDesign | null
     frontclientDesign : ClientDesign | null
     backclientDesign: ClientDesign | null
+    commission : ExtraCommission | null
 }
 
 interface ExtraOrder extends Order {
     orderItems : ExtraOrderItem[]
     user : User
-    commission : Commission | null
 }
 
 interface itemProfit {
@@ -63,12 +75,16 @@ interface itemProfit {
   productQuantity: number;
   productTitle: string | null;
   totalProfit: number;
+  affiliateProfit: number;
+  affiliateUser : string
 }
 
 interface Profit {
   orderId : string
   orderItemProfits : itemProfit[];
   totalOrderProfit : number
+  totalAffiliateProfit: number;
+
 }
   
   
@@ -328,7 +344,7 @@ const handleUpdate = async (orderId : string , platformProfit : number) =>{
           </div>
           <div>
             <p className="font-bold">Order Amount:</p>
-            <p>{order.amount} TND</p>
+            <p>{(order.amount).toFixed(2)} TND</p>
           </div>
           <div className="col-span-2 md:col-span-1">
             <Button onClick={handleChange} variant="link" className="block mb-2 md:mb-0">Change Status <DatabaseBackup className="ml-1"/></Button>
@@ -376,16 +392,16 @@ const handleUpdate = async (orderId : string , platformProfit : number) =>{
                             <p className="font-bold">Order Amount:</p>
                             <p>{(order.amount).toFixed(2)} TND</p>
                         </div>
+                        
                         <div>
-                            <p className="font-bold">Total Seller Profit:</p>
+                            <p className="font-bold">Total Sellers Profit:</p>
                             <p>{(profit.totalOrderProfit).toFixed(2)} TND</p>
                         </div>
-                        {order.commission && (
+
                         <div>
-                            <p className="font-bold">Affiliate User Profit:</p>
-                            <p>{(order.commission.profit).toFixed(2)} TND</p>
+                            <p className="font-bold">Total Affiliate users Profit:</p>
+                            <p>{(profit.totalAffiliateProfit).toFixed(2)} TND</p>
                         </div>
-                          )}
 
                           <div>
                             <p className="font-bold">Total Platform Profit:</p>
@@ -393,7 +409,7 @@ const handleUpdate = async (orderId : string , platformProfit : number) =>{
                               {(
                                 order.amount - 
                                 profit.totalOrderProfit - 
-                                (order.commission ? order.commission.profit : 0)
+                                profit.totalAffiliateProfit
                               ).toFixed(2)} TND
                             </p>
                           </div>
@@ -412,7 +428,7 @@ const handleUpdate = async (orderId : string , platformProfit : number) =>{
                           onClick={() => 
                             handleUpdate(
                               order.id, 
-                              order.amount - profit.totalOrderProfit - (order.commission ? order.commission.profit : 0)
+                              order.amount - profit.totalOrderProfit - profit.totalAffiliateProfit
                             )
                           }
                           variant="link"
@@ -441,6 +457,8 @@ const handleUpdate = async (orderId : string , platformProfit : number) =>{
                       <TableHead>Item Quantiy</TableHead>
                       <TableHead>Seller Profit</TableHead>
                       <TableHead>Store Name</TableHead>
+                      <TableHead>Affiliate Profit</TableHead>
+                      <TableHead>Affiliate User</TableHead>
 
                     </TableRow>
                   </TableHeader>
@@ -450,9 +468,10 @@ const handleUpdate = async (orderId : string , platformProfit : number) =>{
                         <TableCell>{item.productId}</TableCell>
                         <TableCell>{item.productTitle}</TableCell>
                         <TableCell>{item.productQuantity}</TableCell>
-                        <TableCell>{item.totalProfit} TND</TableCell>
+                        <TableCell>{(item.totalProfit).toFixed(2)} TND</TableCell>
                         <TableCell>{item.storeName}</TableCell>
-
+                        <TableCell>{(item.affiliateProfit).toFixed(2)} TND</TableCell>
+                        <TableCell>{item.affiliateUser ?? "No affiliate user"}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -499,20 +518,35 @@ const handleUpdate = async (orderId : string , platformProfit : number) =>{
          </div>
          <div>
            <p className="font-bold">Product Base Price:</p>
-           <p>{selectedItem.product.basePrice} TND</p>
+           <p>{(selectedItem.product.basePrice).toFixed(2)} TND</p>
          </div>
          <div>
            <p className="font-bold">Product Price:</p>
-           <p>{selectedItem.productPrice} TND</p>
+           <p>{(selectedItem.productPrice).toFixed(2)} TND</p>
          </div>
          <div>
            <p className="font-bold">Seller Profit:</p>
-           <p>{selectedItem.product.sellerProfit} TND</p>
+           <p>{(selectedItem.product.sellerProfit).toFixed(2)} TND</p>
          </div>
          <div>
            <p className="font-bold">Store Name:</p>
            <p>{selectedItem.product.store.storeName}</p>
          </div>
+         {selectedItem.commission && (
+          <div>
+              <p className="font-bold">Affiliate User Profit:</p>
+              <p>{(selectedItem.commission.profit).toFixed(2)} TND</p>
+          </div>
+          )}
+
+        {selectedItem.commission && (
+          <div>
+              <p className="font-bold">Affiliate User:</p>
+              <p>{selectedItem.commission.affiliateLink.affiliate.user.name}</p>
+              <p>{selectedItem.commission.affiliateLink.affiliate.user.email}</p>
+
+          </div>
+          )}
        </div>
      </CardDescription>
    </div>

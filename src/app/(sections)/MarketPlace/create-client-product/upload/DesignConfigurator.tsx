@@ -1050,18 +1050,15 @@ const handleSortChange = (event: string) => {
                               {/* designs scroll area */}
                               <ScrollArea 
                               className={cn(
-                                'relative h-96 flex-1 my-16 w-full rounded-xl p-2 ring-1 ring-inset ring-gray-900 lg:rounded-2xl flex justify-center flex-col items-center',
-                                isDarkMode ? 'bg-gray-900' : 'bg-gray-100'
-                              )}
-                              >
-                      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 p-2">
-                          {filteredAndSortedDesigns.map((design, index) => (
-                                  <div key={index} className="flex flex-col items-center">
+                                'relative h-96 flex-1 my-16 w-full rounded-xl p-2 ring-1 ring-inset ring-gray-900 lg:rounded-2xl flex justify-center flex-col items-center')}>
+                              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 p-2">
+                                {filteredAndSortedDesigns.map((design, index) => (
+                                  <div key={index} className="flex flex-col items-center ">
                                     <div
-                                      className={`border rounded-md p-1 cursor-pointer ${selectedFrontIndex === index ? 'border-blue-500' : ''}`}
-                                      onClick={() => handleFrontClick(design,index)}
+                                      className={`border rounded-md p-1 cursor-pointer ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'} ${selectedFrontIndex === index ? 'border-blue-500' : ''}`}
+                                      onClick={() => handleFrontClick(design, index)}
                                     >
-                                      <Badge variant={`${selectedFrontIndex === index ? 'default' : 'secondary' }`}>
+                                      <Badge className="" variant={`${selectedFrontIndex === index ? 'default' : 'secondary' }`}>
                                         {design.price}TND
                                       </Badge>
                                       <NextImage
@@ -1077,7 +1074,7 @@ const handleSortChange = (event: string) => {
                                         draggable={false}
                                       />
                                     </div>
-                                    <Badge variant={`${selectedFrontIndex === index ? 'default' : 'secondary' }`}>{design.name}</Badge>
+                                    <Badge className="" variant={`${selectedFrontIndex === index ? 'default' : 'secondary' }`}>{design.name}</Badge>
                                   </div>
                                 ))}
                               </div>
@@ -1098,18 +1095,15 @@ const handleSortChange = (event: string) => {
                               {/* designs scroll area */}
                               <ScrollArea 
                               className={cn(
-                                'relative h-96 flex-1 my-16 w-full rounded-xl p-2 ring-1 ring-inset ring-gray-900 lg:rounded-2xl flex justify-center flex-col items-center',
-                                isDarkMode ? 'bg-gray-900' : 'bg-gray-100'
-                              )}
-                              >
-                       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 p-2">
-                          {filteredAndSortedDesigns.map((design, index) => (
+                                'relative h-96 flex-1 my-16 w-full rounded-xl p-2 ring-1 ring-inset ring-gray-900 lg:rounded-2xl flex justify-center flex-col items-center')}>
+                      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 p-2">
+                      {filteredAndSortedDesigns.map((design, index) => (
                                   <div key={index} className="flex flex-col items-center">
                                     <div
-                                      className={`border rounded-md p-1 cursor-pointer ${selectedBackIndex === index ? 'border-blue-500' : ''}`}
+                                      className={`border rounded-md p-1 cursor-pointer ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'} ${selectedBackIndex === index ? 'border-blue-500' : ''}`}
                                       onClick={() => handleBackClick(design,index)}
                                     >
-                                       <Badge variant={`${selectedBackIndex === index ? 'default' : 'secondary' }`}>
+                                       <Badge className=" " variant={`${selectedBackIndex === index ? 'default' : 'secondary' }`}>
                                         {design.price}TND
                                       </Badge>
                                       <NextImage
@@ -1124,7 +1118,7 @@ const handleSortChange = (event: string) => {
                                         onContextMenu={(e) => e.preventDefault()}
                                         draggable={false}                                      />
                                     </div>
-                                    <Badge variant={`${selectedBackIndex === index ? 'default' : 'secondary' }`}>{design.name}</Badge>
+                                    <Badge className="" variant={`${selectedBackIndex === index ? 'default' : 'secondary' }`}>{design.name}</Badge>
                                   </div>
                                 ))}
                               </div>
@@ -1253,7 +1247,7 @@ const handleSortChange = (event: string) => {
                                     </Button>
                                     
                                     <div className="mt-4">
-                                      <Badge variant="outline" className="text-base">
+                                      <Badge variant="outline" className="text-base animate-borderPulse">
                                         <span className="animate-pulse">Total: {totalPrice.toFixed(2)} TND</span> 
                                       </Badge>
                                     </div>
@@ -1367,7 +1361,6 @@ const handleSortChange = (event: string) => {
               width: Frontheight / 15,
             }}
             lockAspectRatio
-            className={cn("absolute z-50", { 'border-[3px] border-primary': !isBorderHidden })}
           >
             <div className="relative w-full h-full">
               {selectedFrontDesign && (
@@ -1452,9 +1445,8 @@ const handleSortChange = (event: string) => {
                                   height: Backwidth /15,
                                   width: Backheight / 15,
                                 }}
-                                lockAspectRatio       
-                                className={cn("absolute z-50", { 'border-[3px] border-primary': !isBackBorderHidden })}
-                              >
+                                  lockAspectRatio    
+                                  >
                                 <div className='relative w-full h-full'>
                                   {selectedBackDesign && (
                                     <NextImage

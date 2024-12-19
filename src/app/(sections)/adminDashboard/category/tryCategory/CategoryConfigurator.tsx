@@ -528,7 +528,6 @@ const [backImage, setBackImage] = useState("/Loading.png"); // Default back imag
                               width: Frontheight / 15,
                             }}
                             lockAspectRatio       
-                            className={cn("absolute z-50", { 'border-[3px] border-primary': !isBorderHidden })}
                           >
                             <div className='relative w-full h-full'>
                               {selectedFrontDesign && (
@@ -588,7 +587,6 @@ const [backImage, setBackImage] = useState("/Loading.png"); // Default back imag
                                   width: Backheight / 15,
                                 }}
                                 lockAspectRatio       
-                                className={cn("absolute z-50", { 'border-[3px] border-primary': !isBackBorderHidden })}
                               >
                                 <div className='relative w-full h-full'>
                                   {selectedBackDesign && (

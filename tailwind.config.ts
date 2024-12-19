@@ -93,8 +93,18 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        borderAnimation: {
+          '0%': { borderColor: '#3b82f6 #3b82f6 #3b82f6 #3b82f6' }, // Blue
+          '25%': { borderColor: '#38bdf8 #38bdf8 #38bdf8 #38bdf8' }, // Light Blue
+          '50%': { borderColor: '#60a5fa #60a5fa #60a5fa #60a5fa' }, // Sky Blue
+          '75%': { borderColor: '#0ea5e9 #0ea5e9 #0ea5e9 #0ea5e9' }, // Cyan Blue
+          '100%': { borderColor: '#3b82f6 #3b82f6 #3b82f6 #3b82f6' }, // Blue
+        },
+        
+        
       },
       animation: {
+        borderPulse: 'borderAnimation 2s ease-in-out infinite', // Slightly slower and smooth transition
         wiggle: 'wiggle 0.5s ease-in-out infinite',
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",

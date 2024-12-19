@@ -129,8 +129,15 @@ const Page =  async () => {
             </CardContent>
           </Card>
 
+      
+    </section>
 
-          <Card className="col-span-full" x-chunk="dashboard-01-chunk-4">
+    <div className='flex flex-col space-y-5'>
+    <Component />
+    </div>
+
+
+    <Card className="col-span-full" x-chunk="dashboard-01-chunk-4">
         <CardHeader className="flex flex-row items-center">
           <div className="grid gap-2">
             <CardTitle>Orders</CardTitle>
@@ -183,14 +190,6 @@ const Page =  async () => {
           </ScrollArea>
         </CardContent>
       </Card>  
-
-      
-    </section>
-
-    <div className='flex flex-col space-y-5'>
-    <Component />
-
-    </div>
 
 
   </div>

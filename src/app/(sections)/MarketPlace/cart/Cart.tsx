@@ -32,8 +32,9 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { createOrderInDb, emptyUserCart, removeProductFromCart } from './actions'
 import { RootState } from '@/store/reducers/reducers'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Badge } from "@/components/ui/badge"
+import { saveSessionId } from "@/store/actions/action"
 interface FormattedCartProduct {
   cartProductId: string;
   productId: string;
@@ -61,15 +62,16 @@ const Cart: React.FC<CartProps> = ({ products , user  , platform}) => {
   const router = useRouter();
 
   const sessionId = useSelector((state: RootState) => state.id);
+  const dispatch = useDispatch();
 
   const [cartProducts, setCartProducts] = useState(products? products : [])
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
   const [fee, setFee] = useState(platform.shippingFee)
 
   const { toast } = useToast()
-  const [name, setName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [address, setAddress] = useState("");
+  const [name, setName] = useState(user.name);
+  const [phoneNumber, setPhoneNumber] = useState(user.phoneNumber ?? "");
+  const [address, setAddress] = useState(user.address ?? "");
   const isValid = name.trim() !== "" && phoneNumber.length===8 && address.trim() !== ""
 
 
@@ -107,6 +109,7 @@ const Cart: React.FC<CartProps> = ({ products , user  , platform}) => {
 
                       if(result.orderId && result.success){
                         await emptyUserCart(user.id)
+                        dispatch(saveSessionId(null));
                         toast({
                           title: 'Order Was Successfully Created',
                           variant: 'default',
@@ -120,6 +123,7 @@ const Cart: React.FC<CartProps> = ({ products , user  , platform}) => {
                           description: 'There was an error on our end. Please try again.',
                           variant: 'destructive',
                       });
+                      router.refresh()
                       }
                       
 
@@ -132,6 +136,7 @@ const Cart: React.FC<CartProps> = ({ products , user  , platform}) => {
                           description: 'There was an error on our end. Please try again.',
                           variant: 'destructive',
                       });
+                      router.refresh()
                     }
 
                     };
@@ -498,6 +503,7 @@ useEffect(() => {
                 id="phoneNumber" 
                 type="number" 
                 pattern="\d{8}"
+                defaultValue={phoneNumber}
                 onBlur={handlePhoneNumberBlur}
                 placeholder="99 999 999" 
                 onChange={handlePhoneNumberChange}

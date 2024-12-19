@@ -79,7 +79,8 @@ const SettingsView = ({ platform , collections , levels }: ViewProps ) => {
         shippingFee: platform.shippingFee,
         maxProductQuantity: platform.maxProductQuantity,
         affiliateUserProfit : platform.affiliateUserProfit,
-        freeShippingFeeLimit : platform.freeShippingFeeLimit
+        freeShippingFeeLimit : platform.freeShippingFeeLimit,
+        productsLimitPerPage : platform.productsLimitPerPage
       });
 
       const [isCreateOpen, setIsCreateOpen] = useState(false)
@@ -688,6 +689,20 @@ const SettingsView = ({ platform , collections , levels }: ViewProps ) => {
                             setUpdatedPlatformData({
                               ...updatedPlatformData,
                               freeShippingFeeLimit: parseInt(e.target.value),
+                            })
+                          }
+                        />
+                      </div>
+
+                      <div>
+                        <Label>Products Limit Per Page</Label>
+                        <Input
+                          type="number"
+                          value={updatedPlatformData.productsLimitPerPage}
+                          onChange={(e) =>
+                            setUpdatedPlatformData({
+                              ...updatedPlatformData,
+                              productsLimitPerPage: parseInt(e.target.value),
                             })
                           }
                         />

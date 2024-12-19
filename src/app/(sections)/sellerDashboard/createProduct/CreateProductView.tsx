@@ -1513,7 +1513,6 @@ const handleFileChange = (file : File) => {
                             width: Frontheight / 15,
                           }}
                           lockAspectRatio       
-                          className={cn("absolute z-50", { 'border-[3px] border-primary': !isBorderHidden })}
                         >
                           <div className='relative w-full h-full'>
                             {selectedFrontDesign && (
@@ -1652,8 +1651,7 @@ const handleFileChange = (file : File) => {
                                 width: Backheight / 15,
                               }}
                               lockAspectRatio       
-                              className={cn("absolute z-50", { 'border-[3px] border-primary': !isBackBorderHidden })}
-                            >
+                                >
                               <div className='relative w-full h-full'>
                                 {selectedBackDesign && (
                                   <NextImage
