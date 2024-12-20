@@ -94,48 +94,62 @@ const handleToggle = async () => {
 
     const [searchQuery, setSearchQuery] = useState('');
 
-        const handleSearch = async () => {
-          setOpen(true)
-          const orders   = await getAllOrders(10, allOrders, searchQuery , filterBy1 , filterBy2);
-          setOrders(orders);
-          setOpen(false)
-        }
+    const handleSearch = async () => {
+      try {
+        setOpen(true);
+        const orders = await getAllOrders(10, allOrders, searchQuery, filterBy1, filterBy2);
+        setOrders(orders);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+        toast({
+          title: "Something went wrong!",
+          variant: "destructive",
+        });
+      } finally {
+        setOpen(false);
+      }
+    };
+    
 
-            const handleFilterBy1 = async (event: string) => {
-              setOpen(true)
-              setFilterBy1(event)
-              const orders   = await getAllOrders(10, allOrders, searchQuery , event , filterBy2);
-              setOrders(orders);
-              setOpen(false)
-            }
+    const handleFilterBy1 = async (event: string) => {
+      try {
+        setOpen(true);
+        setFilterBy1(event);
+        const orders = await getAllOrders(10, allOrders, searchQuery, event, filterBy2);
+        setOrders(orders);
+      } catch (error) {
+        console.error("Error filtering orders by filter1:", error);
+        toast({
+          title: "Something went wrong!",
+          variant: "destructive",
+        });
+      } finally {
+        setOpen(false);
+      }
+    };
+    
 
-            const handleFilterBy2 = async (event: string) => {
-              setOpen(true)
-              setFilterBy2(event)
-              const orders   = await getAllOrders(10, allOrders, searchQuery , filterBy1 , event);
-              setOrders(orders);
-              setOpen(false)
-            }
+    const handleFilterBy2 = async (event: string) => {
+      try {
+        setOpen(true);
+        setFilterBy2(event);
+        const orders = await getAllOrders(10, allOrders, searchQuery, filterBy1, event);
+        setOrders(orders);
+      } catch (error) {
+        console.error("Error filtering orders by filter2:", error);
+        toast({
+          title: "Something went wrong!",
+          variant: "destructive",
+        });
+      } finally {
+        setOpen(false);
+      }
+    };
+    
   
 
 
 
-
-
-
-
-    const [selectedOrder, setSelectedOrder] = useState<ExtraOrders | null>(null);
-    const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-
-    const handleRowClick = (order: ExtraOrders, index: number) => {
-      if (selectedIndex === index) {
-        setSelectedOrder(null);
-        setSelectedIndex(null);
-      } else {
-        setSelectedOrder(order);
-        setSelectedIndex(index);
-      }
-    };
 
 
 
@@ -178,7 +192,7 @@ const handleToggle = async () => {
                               </AlertDialogTitle>
                               <AlertDialogDescription className="flex flex-col items-center">
                                 This will take a moment.
-                                <Loader className="text-blue-700 h-[35%] w-[35%] animate-spin mt-3" />
+          <Loader className="text-blue-700 h-[30%] w-[30%] animate-spin mt-3" />
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogCancel className="hidden" ref={alertDialogCancelRef}>Cancel</AlertDialogCancel>
@@ -323,7 +337,7 @@ const handleToggle = async () => {
                       </TableCell>
                     <TableCell>{order.createdAt ? new Date(order.createdAt).toLocaleString() : ''}</TableCell>
                     <TableCell>{order.orderItems?.length || 0} items</TableCell>
-                    <TableCell className="hidden sm:table-cell">{order.amount} TND</TableCell>
+                    <TableCell className="hidden sm:table-cell">{order.amount.toFixed(2)} TND</TableCell>
                     <TableCell>
                     <TooltipProvider>
                     {/* View Icon */}

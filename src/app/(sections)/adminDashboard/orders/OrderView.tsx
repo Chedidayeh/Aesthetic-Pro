@@ -90,39 +90,75 @@ interface OrderViewProps {
     const [open, setOpen] = useState<boolean>(false);
     const [allOrders, setAllOrders] = useState(false)
 
-    const handleToggle = async () => {
-      setOpen(true)
-      setAllOrders(!allOrders); // Toggle the state
-      const orders = await getAllOrders(10, !allOrders, searchQuery , filterBy1 , filterBy2);
-      setOrders(orders);
-      setOpen(false)
-    };
-
     const [searchQuery, setSearchQuery] = useState('');
 
-        const handleSearch = async () => {
-          setOpen(true)
-          const orders   = await getAllOrders(10, allOrders, searchQuery , filterBy1 , filterBy2);
-          setOrders(orders);
-          setOpen(false)
-        }
+    const handleSearch = async () => {
+      try {
+        setOpen(true);
+        const orders = await getAllOrders(10, allOrders, searchQuery, filterBy1, filterBy2);
+        setOrders(orders);
+      } catch (error) {
+        console.error("Error searching orders:", error);
+        toast({
+          title: "Something went wrong!",
+          variant: "destructive",
+        });
+      } finally {
+        setOpen(false);
+      }
+    };
 
-            const handleFilterBy1 = async (event: string) => {
-              setOpen(true)
-              setFilterBy1(event)
-              const orders   = await getAllOrders(10, allOrders, searchQuery , event , filterBy2);
-              setOrders(orders);
-              setOpen(false)
-            }
+    const handleFilterBy1 = async (event: string) => {
+      try {
+        setOpen(true);
+        setFilterBy1(event);
+        const orders = await getAllOrders(10, allOrders, searchQuery, event, filterBy2);
+        setOrders(orders);
+      } catch (error) {
+        console.error("Error filtering orders by filter 1:", error);
+        toast({
+          title: "Something went wrong!",
+          variant: "destructive",
+        });
+      } finally {
+        setOpen(false);
+      }
+    };
 
-            const handleFilterBy2 = async (event: string) => {
-              setOpen(true)
-              setFilterBy2(event)
-              const orders   = await getAllOrders(10, allOrders, searchQuery , filterBy1 , event);
-              setOrders(orders);
-              setOpen(false)
-            }
-  
+    const handleFilterBy2 = async (event: string) => {
+      try {
+        setOpen(true);
+        setFilterBy2(event);
+        const orders = await getAllOrders(10, allOrders, searchQuery, filterBy1, event);
+        setOrders(orders);
+      } catch (error) {
+        console.error("Error filtering orders by filter 2:", error);
+        toast({
+          title: "Something went wrong!",
+          variant: "destructive",
+        });
+      } finally {
+        setOpen(false);
+      }
+    };
+
+    const handleToggle = async () => {
+      try {
+        setOpen(true);
+        setAllOrders(!allOrders); // Toggle the state
+        const orders = await getAllOrders(10, !allOrders, searchQuery, filterBy1, filterBy2);
+        setOrders(orders);
+      } catch (error) {
+        console.error("Error toggling order visibility:", error);
+        toast({
+          title: "Something went wrong!",
+          variant: "destructive",
+        });
+      } finally {
+        setOpen(false);
+      }
+    };
+    
 
 
 
@@ -192,53 +228,7 @@ interface OrderViewProps {
       <>
 
 
-                      {/* The AlertDialog component */}
-                      <AlertDialog>
-                          <AlertDialogTrigger asChild ref={alertDialogTriggerRef}>
-                            <button className="hidden">Hidden Trigger</button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader className="flex flex-col items-center">
-                              <div></div>
-                              <AlertDialogTitle className="text-2xl text-blue-700 font-bold text-center">
-                                Loading the order items!
-                              </AlertDialogTitle>
-                              <AlertDialogDescription className="flex flex-col items-center">
-                                This will take a moment.
-                                <Loader className="text-blue-700h-[35%] w-[35%] animate-spin mt-3" />
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogCancel className="hidden" ref={alertDialogCancelRef}>Cancel</AlertDialogCancel>
-                          </AlertDialogContent>
-                        </AlertDialog>  
 
-
-
-
-                          {/* The AlertDialog delete design component  */}
-                          <AlertDialog open={isDeleteOpen}>
-               <AlertDialogTrigger asChild>
-                         </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                   <AlertDialogHeader className="flex flex-col items-center">
-                                       <div className="text-red-500 mb-2">
-                                           <OctagonAlert className=''/>
-                                               </div>
-                                              <AlertDialogTitle className="text-xl font-bold text-center">
-                                                 Are you absolutely sure you want to delete this order ?
-                                               </AlertDialogTitle>
-                                                <AlertDialogDescription>
-                                                   This action cannot be undone. 
-                                                   It will permanently remove the order from our server.<br/><br/>
-                                                    </AlertDialogDescription>
-                                                   </AlertDialogHeader>
-                                                  <AlertDialogFooter>
-                                              <AlertDialogCancel onClick={()=>setisDeleteOpen(false)}>Cancel</AlertDialogCancel>
-                                      <AlertDialogAction onClick={() => handleDelete()} 
-                                     className='bg-red-500 hover:bg-red-500' >Delete</AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                     </AlertDialog> 
   
   
   <p className="text-sm text-gray-700 mb-2">AdminDashboard/Orders</p>
@@ -540,7 +530,7 @@ interface OrderViewProps {
 
                          <div>
                              <p className="font-bold">order Amount:</p>
-                             <p>{selectedOrder.amount} TND</p>
+                             <p>{(selectedOrder.amount).toFixed(2)} TND</p>
                          </div>
 
 
@@ -564,6 +554,54 @@ interface OrderViewProps {
     </div>
 
     <LoadingState isOpen={open} />
+
+                          {/* The AlertDialog component */}
+                          <AlertDialog>
+                          <AlertDialogTrigger asChild ref={alertDialogTriggerRef}>
+                            <button className="hidden">Hidden Trigger</button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader className="flex flex-col items-center">
+                              <div></div>
+                              <AlertDialogTitle className="text-2xl text-blue-700 font-bold text-center">
+                                Loading the order items!
+                              </AlertDialogTitle>
+                              <AlertDialogDescription className="flex flex-col items-center">
+                                This will take a moment.
+                                <Loader className="text-blue-700 h-[30%] w-[30%] animate-spin mt-3" />
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogCancel className="hidden" ref={alertDialogCancelRef}>Cancel</AlertDialogCancel>
+                          </AlertDialogContent>
+                        </AlertDialog>  
+
+
+
+
+                          {/* The AlertDialog delete design component  */}
+                          <AlertDialog open={isDeleteOpen}>
+               <AlertDialogTrigger asChild>
+                         </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                   <AlertDialogHeader className="flex flex-col items-center">
+                                       <div className="text-red-500 mb-2">
+                                           <OctagonAlert className=''/>
+                                               </div>
+                                              <AlertDialogTitle className="text-xl font-bold text-center">
+                                                 Are you absolutely sure you want to delete this order ?
+                                               </AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                   This action cannot be undone. 
+                                                   It will permanently remove the order from our server.<br/><br/>
+                                                    </AlertDialogDescription>
+                                                   </AlertDialogHeader>
+                                                  <AlertDialogFooter>
+                                              <AlertDialogCancel onClick={()=>setisDeleteOpen(false)}>Cancel</AlertDialogCancel>
+                                      <AlertDialogAction onClick={() => handleDelete()} 
+                                     className='bg-red-500 hover:bg-red-500' >Delete</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                     </AlertDialog> 
 
   
     </>

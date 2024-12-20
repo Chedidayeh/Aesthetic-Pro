@@ -242,7 +242,7 @@ const ProductView = ({
                                         </AlertDialogTrigger>
                                           <AlertDialogContent className=" flex flex-col items-center justify-center">
                                               <AlertDialogHeader className="flex flex-col items-center justify-center">
-                                              <Loader className="animate-spin text-blue-800 h-[35%] w-[35%]" />
+          <Loader className="text-blue-700 h-[30%] w-[30%] animate-spin mt-3" />
                                               <AlertDialogTitle className="flex flex-col items-center justify-center">Loading</AlertDialogTitle>
                                             </AlertDialogHeader>
                                             <AlertDialogDescription className="flex flex-col items-center justify-center">
@@ -384,7 +384,7 @@ const ProductView = ({
                       <div className="absolute top-2 left-2 px-2 py-1 z-10 rounded">
                         <Badge variant="secondary" className="bg-gray-200">
                           <CircleDollarSign className="mr-2 h-4 w-4 text-green-800 opacity-70" />
-                          <span className="text-xs text-gray-600">{product.price} TND</span>
+                          <span className="text-xs text-gray-600">{product.price.toFixed(2)} TND</span>
                         </Badge>
                       </div>
 
@@ -466,13 +466,13 @@ const ProductView = ({
                   Collection: <span className='text-gray-700 font-semibold'>{selectedProduct.collectionName}</span>
                 </div>
                 <div>
-                  Product Base Price: <span className='text-gray-700 font-semibold'>{selectedProduct.basePrice} TND</span>
+                  Product Base Price: <span className='text-gray-700 font-semibold'>{selectedProduct.basePrice.toFixed(2)} TND</span>
                 </div>
                 <div>
-                  Price: <span className='text-gray-700 font-semibold'>{selectedProduct.price} TND</span>
+                  Price: <span className='text-gray-700 font-semibold'>{selectedProduct.price.toFixed(2)} TND</span>
                 </div>
                 <div>
-                  Your Profit: <span className='text-gray-700 font-semibold'>{selectedProduct.sellerProfit} TND</span>
+                  Your Profit: <span className='text-gray-700 font-semibold'>{selectedProduct.sellerProfit.toFixed(2)} TND</span>
                 </div>
                 {selectedProduct.frontDesignId && selectedProduct.backDesignId && (
                 <div>

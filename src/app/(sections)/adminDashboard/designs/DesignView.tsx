@@ -102,29 +102,57 @@ interface DesignViewProps {
 
     
 
-        const handleSearch = async () => {
-          setOpen(true)
-          const designs   = await getAllDesignsWithProducts(6, searchTerm, filterBy , sortBy);
-          setDesigns(designs);
-          setOpen(false)
-        }
-    
-        const handleFilterBy = async (event: string) => {
-          setOpen(true)
-          setFilterBy(event)
-          const designs   = await getAllDesignsWithProducts(6, searchTerm, event , sortBy);
-          setDesigns(designs);
-          setOpen(false)
-        }
-    
-        const handleSortBy = async (event: string) => {
-          setOpen(true)
-          setSortBy(event)
-          const designs   = await getAllDesignsWithProducts(6, searchTerm, filterBy , event );
-          setDesigns(designs);
-          setOpen(false)
-        }
+    const handleSearch = async () => {
+      try {
+        setOpen(true);
+        const designs = await getAllDesignsWithProducts(6, searchTerm, filterBy, sortBy);
+        setDesigns(designs);
+      } catch (error) {
+        console.error("Error searching designs:", error);
+        toast({
+          title: "Something went wrong!",
+          variant: "destructive",
+        });
+      } finally {
+        setOpen(false);
+      }
+    };
 
+    const handleFilterBy = async (event: string) => {
+      try {
+        setOpen(true);
+        setFilterBy(event);
+        const designs = await getAllDesignsWithProducts(6, searchTerm, event, sortBy);
+        setDesigns(designs);
+      } catch (error) {
+        console.error("Error filtering designs:", error);
+        toast({
+          title: "Something went wrong!",
+          variant: "destructive",
+        });
+      } finally {
+        setOpen(false);
+      }
+    };
+    
+    const handleSortBy = async (event: string) => {
+      try {
+        setOpen(true);
+        setSortBy(event);
+        const designs = await getAllDesignsWithProducts(6, searchTerm, filterBy, event);
+        setDesigns(designs);
+      } catch (error) {
+        console.error("Error sorting designs:", error);
+        toast({
+          title: "Something went wrong!",
+          variant: "destructive",
+        });
+      } finally {
+        setOpen(false);
+      }
+    };
+    
+    
 
 
   const handleDelete = async () =>{
@@ -386,7 +414,7 @@ const handleSwitchChange = () => {
         <TableCell>{design.name}</TableCell>
 
         {/* Design price cell */}
-        <TableCell className="hidden sm:table-cell">{design.price} TND</TableCell>
+        <TableCell className="hidden sm:table-cell">{(design.price).toFixed(2)} TND</TableCell>
 
         {/* Design Store cell */}
         <TableCell className="hidden md:table-cell">{design.store.storeName}</TableCell>
@@ -716,7 +744,7 @@ const handleSwitchChange = () => {
                                               <AlertDialog open={isDownloadOpen} >
                                           <AlertDialogContent className=" flex flex-col items-center justify-center">
                                               <AlertDialogHeader className="flex flex-col items-center justify-center">
-                                              <Loader className="animate-spin text-blue-800 h-[35%] w-[35%]" />
+                                              <Loader className="text-blue-700 h-[30%] w-[30%] animate-spin mt-3" />
                                               <AlertDialogTitle className="flex flex-col items-center justify-center">Loading</AlertDialogTitle>
                                             </AlertDialogHeader>
                                             <AlertDialogDescription className="flex flex-col items-center justify-center">

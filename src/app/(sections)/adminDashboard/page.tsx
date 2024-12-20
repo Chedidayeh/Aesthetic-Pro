@@ -19,7 +19,6 @@ import {
 import Link from "next/link";
 import { getPlatformForTheWebsite, getStoreStats, getTotalCounts } from "@/actions/actions";
 import React from "react"
-import UsersTable from "@/components/adminDashboard/UsersTable"
 import { unstable_noStore as noStore } from "next/cache"
 import { Component } from "@/components/adminDashboard/Chart";
 import { StoresTableStats } from "@/components/adminDashboard/StoresTableStats";
@@ -115,7 +114,6 @@ export default async function Page() {
     <Component />
     <ProductsViewsChart/>
     <StoresTableStats chartData= {chartData} />
-    <UsersTable/>
 
     </div>
 

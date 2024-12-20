@@ -1,4 +1,4 @@
-import { generateDesignRejectedEmailHTML, generateLevelUpEmailHTML, generateOrderEmailHTML, generateProductRejectedEmailHTML, generateResetPassEmailHTML, generateVerificationEmailHTML } from '@/components/EmailTemplate';
+import { generateAffiliateProductSoldEmailHTML, generateDesignRejectedEmailHTML, generateDesignSoldEmailHTML, generateLevelUpEmailHTML, generateOrderEmailHTML, generateProductRejectedEmailHTML, generateProductSoldEmailHTML, generateResetPassEmailHTML, generateVerificationEmailHTML } from '@/components/EmailTemplate';
 import { Order, OrderItem, User } from '@prisma/client';
 import nodemailer from 'nodemailer';
 
@@ -112,4 +112,78 @@ export const sendOrderEmail = (
   };
 
   return transporter.sendMail(mailOptions);
+};
+
+
+export const sendProductSoldEmail = async (
+  receiverEmail: string,
+  username: string,
+  storeName: string,
+  productName: string,
+  profit: number,
+): Promise<void> => {
+  try {
+    const mailOptions = {
+      from: email,
+      to: receiverEmail,
+      subject: `Great news! Your product ${productName} was sold!`,
+      html: generateProductSoldEmailHTML(username, storeName, productName, profit),
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    console.log(`Product sold email sent successfully to ${receiverEmail}`);
+  } catch (error) {
+    console.error(`Failed to send product sold email to ${receiverEmail}:`, error);
+    throw new Error('Failed to send email');
+  }
+};
+
+
+export const sendDesignSoldEmail = async (
+  receiverEmail: string,
+  username: string,
+  storeName: string,
+  designName: string,
+  designProfit: number,
+): Promise<void> => {
+  try {
+    const mailOptions = {
+      from: email,
+      to: receiverEmail,
+      subject: `Great news! Your design ${designName} was sold!`,
+      html: generateDesignSoldEmailHTML(username, storeName, designName, designProfit),
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    console.log(`Design sold email sent successfully to ${receiverEmail}`);
+  } catch (error) {
+    console.error(`Failed to send design sold email to ${receiverEmail}:`, error);
+    throw new Error('Failed to send email');
+  }
+};
+
+
+export const sendAffiliateProductSoldEmail = async (
+  receiverEmail: string,
+  username: string,
+  productName: string,
+  affiliateCommission: number,
+): Promise<void> => {
+  try {
+    const mailOptions = {
+      from: email,
+      to: receiverEmail,
+      subject: `Great News! You earned a commission from a sale!`,
+      html: generateAffiliateProductSoldEmailHTML(username, productName, affiliateCommission),
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    console.log(`Affiliate product sold email sent successfully to ${receiverEmail}`);
+  } catch (error) {
+    console.error(`Failed to send affiliate product sold email to ${receiverEmail}:`, error);
+    throw new Error('Failed to send email');
+  }
 };

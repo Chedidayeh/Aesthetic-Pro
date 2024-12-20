@@ -176,7 +176,7 @@ const handleSortChange = (event: string) => {
               {filteredAndSortedDesigns.map((design, index) => (
                 <div key={index} className="flex flex-col items-center">
                   <div onClick={() => copyToClipboard(design.name)} className={cn(`border-2 rounded-xl p-1 cursor-pointer `, isDarkMode ? 'bg-gray-900' : 'bg-gray-100' )}>
-                    <Badge variant={'default'} className="text-white">{design.price} TND</Badge>
+                    <Badge variant={'default'} className="text-white">{design.price.toFixed(2)} TND</Badge>
                     <NextImage
                       alt={`Product image ${index + 1}`}
                       className="aspect-square w-full rounded-md object-contain"

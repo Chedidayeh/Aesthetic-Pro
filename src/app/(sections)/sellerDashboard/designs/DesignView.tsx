@@ -348,7 +348,7 @@ const [open, setOpen] = useState<boolean>(false);
                       <div className="absolute top-8 left-0 z-10 text-center">
                       <Badge variant="secondary" className="bg-gray-200">
                           <CircleDollarSign className="mr-2 h-4 w-4 text-green-800 opacity-70" />
-                          <span className="text-xs text-gray-600">{design.price} TND</span>
+                          <span className="text-xs text-gray-600">{design.price.toFixed(2)} TND</span>
                       </Badge>
                       </div>
 
@@ -393,10 +393,10 @@ const [open, setOpen] = useState<boolean>(false);
                                   Older Name: <span className='text-blue-700 font-semibold ml-4'>{design.name}</span>
                                 </div>
                                 <div>
-                                  Older Price: <span className='text-blue-700 font-semibold ml-6'>{design.price} TND</span>
+                                  Older Price: <span className='text-blue-700 font-semibold ml-6'>{design.price.toFixed(2)} TND</span>
                                 </div>
                                 <div>
-                                  Older seller Profit: <span className='text-blue-700 font-semibold ml-6'>{design.sellerProfit} TND</span>
+                                  Older seller Profit: <span className='text-blue-700 font-semibold ml-6'>{design.sellerProfit.toFixed(2)} TND</span>
                                 </div>
                               </AlertDialogDescription>
                             </AlertDialogHeader>
@@ -440,7 +440,7 @@ const [open, setOpen] = useState<boolean>(false);
                               <div className='flex'>
                                 <Label className='mr-10'>
                                   <span className="text-green-700 font-bold">
-                                    Your New Profit : {newPrice - platform.platformDesignProfit} TND
+                                    Your New Profit : {(newPrice - platform.platformDesignProfit).toFixed(2)} TND
                                   </span>
                                 </Label>
                               </div>

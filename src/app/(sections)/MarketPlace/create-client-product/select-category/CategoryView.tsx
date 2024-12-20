@@ -139,7 +139,7 @@ const CategoryView: React.FC<CategoryViewProps> = ({ categories  }) => {
                     <Badge variant="secondary">{category.label}</Badge>
                   </div>
                   <div className="absolute top-2 right-2">
-                    <Badge variant="secondary">{category.price} TND</Badge>
+                    <Badge variant="secondary">{category.price.toFixed(2)} TND</Badge>
                   </div>
                 </CardContent>
               </Card>

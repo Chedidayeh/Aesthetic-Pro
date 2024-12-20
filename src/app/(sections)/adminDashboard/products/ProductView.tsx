@@ -101,27 +101,57 @@ interface ProductViewProps {
     const [sortBy, setSortBy] = useState<string>("");
 
     const handleSearch = async () => {
-      setOpen(true)
-      const products   = await getAllProductsWithDesigns(6, searchTerm, filterBy , sortBy);
-      setProducts(products);
-      setOpen(false)
-    }
+      try {
+        setOpen(true);
+        const products = await getAllProductsWithDesigns(6, searchTerm, filterBy, sortBy);
+        setProducts(products);
+      } catch (error) {
+        console.error("Error searching products:", error);
+        toast({
+          title: "Something went wrong!",
+          variant: "destructive",
+        });
+      } finally {
+        setOpen(false);
+      }
+    };
 
     const handleFilterBy = async (event: string) => {
-      setOpen(true)
-      setFilterBy(event)
-      const products   = await getAllProductsWithDesigns(6, searchTerm, event , sortBy);
-      setProducts(products);
-      setOpen(false)
-    }
+      try {
+        setOpen(true);
+        setFilterBy(event);
+        const products = await getAllProductsWithDesigns(6, searchTerm, event, sortBy);
+        setProducts(products);
+      } catch (error) {
+        console.error("Error filtering products:", error);
+        toast({
+          title: "Something went wrong!",
+          variant: "destructive",
+        });
+      } finally {
+        setOpen(false);
+      }
+    };
 
     const handleSortBy = async (event: string) => {
-      setOpen(true)
-      setSortBy(event)
-      const products   = await getAllProductsWithDesigns(6, searchTerm, filterBy , event );
-      setProducts(products);
-      setOpen(false)
-    }
+      try {
+        setOpen(true);
+        setSortBy(event);
+        const products = await getAllProductsWithDesigns(6, searchTerm, filterBy, event);
+        setProducts(products);
+      } catch (error) {
+        console.error("Error sorting products:", error);
+        toast({
+          title: "Something went wrong!",
+          variant: "destructive",
+        });
+      } finally {
+        setOpen(false);
+      }
+    };
+    
+    
+    
 
 
     const handleDelete = async () =>{
@@ -733,7 +763,7 @@ const viewProductData = (product : ExtraProduct) => {
                                         </AlertDialogTrigger>
                                           <AlertDialogContent className=" flex flex-col items-center justify-center">
                                               <AlertDialogHeader className="flex flex-col items-center justify-center">
-                                              <Loader className="animate-spin text-blue-800 h-[35%] w-[35%]" />
+                                              <Loader className="text-blue-700 h-[30%] w-[30%] animate-spin mt-3" />
                                               <AlertDialogTitle className="flex flex-col items-center justify-center">Loading</AlertDialogTitle>
                                             </AlertDialogHeader>
                                             <AlertDialogDescription className="flex flex-col items-center justify-center">

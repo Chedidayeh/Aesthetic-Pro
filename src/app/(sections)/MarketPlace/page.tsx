@@ -20,7 +20,6 @@ const Page = async () => {
   const priceRanges = await fetchPriceRanges()
 
 
-
   const { products, totalCount } = await fetchProducts(page, limit);
 
 

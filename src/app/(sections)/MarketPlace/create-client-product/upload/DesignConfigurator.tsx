@@ -860,7 +860,7 @@ const handleSortChange = (event: string) => {
                               <AlertDialogDescription className="flex flex-col items-center">
                                 This will take a moment.
                                 {/* Replace Loader with your loader component */}
-                                <Loader className="text-blue-700 h-[35%] w-[35%] animate-spin mt-3" />
+          <Loader className="text-blue-700 h-[30%] w-[30%] animate-spin mt-3" />
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogCancel className="hidden" ref={alertDialogCancelRef}>Cancel</AlertDialogCancel>
@@ -932,7 +932,7 @@ const handleSortChange = (event: string) => {
                                           />
                                           <div className="flex flex-wrap justify-center gap-2">
                                             <Badge variant="secondary">{category.label}</Badge>
-                                            <Badge variant="secondary">{category.price} TND</Badge>
+                                            <Badge variant="secondary">{category.price.toFixed(2)} TND</Badge>
                                           </div>
                                         </CardContent>
                                       </Card>
@@ -952,7 +952,7 @@ const handleSortChange = (event: string) => {
                                 <p className='text-xs text-zinc-500 ml-5'>PNG, JPG, JPEG max (5MB)</p>
                                 <p className="text-xs text-zinc-500 ml-5">recommended (3000px*3000px)</p>
                                 <p className="text-xs text-zinc-500 ml-5">Acceptable range (1000px - 4000px)</p>
-                                <p className='text-xs text-zinc-500 ml-5'>One Design will cost {platform.clientDesignPrice} TND !</p>  
+                                <p className='text-xs text-zinc-500 ml-5'>One Design will cost {platform.clientDesignPrice.toFixed(2)} TND !</p>  
                               <div className="flex flex-col lg:flex-row justify-center lg:space-x-4 space-y-4 lg:space-y-0">
                                 {/* front design input */}
                                 {addFrontDesign && (
@@ -1059,7 +1059,7 @@ const handleSortChange = (event: string) => {
                                       onClick={() => handleFrontClick(design, index)}
                                     >
                                       <Badge className="" variant={`${selectedFrontIndex === index ? 'default' : 'secondary' }`}>
-                                        {design.price}TND
+                                        {design.price.toFixed(2)}TND
                                       </Badge>
                                       <NextImage
                                         alt={`front design image ${index + 1}`}
@@ -1104,7 +1104,7 @@ const handleSortChange = (event: string) => {
                                       onClick={() => handleBackClick(design,index)}
                                     >
                                        <Badge className=" " variant={`${selectedBackIndex === index ? 'default' : 'secondary' }`}>
-                                        {design.price}TND
+                                        {design.price.toFixed(2)}TND
                                       </Badge>
                                       <NextImage
                                         loading="eager"

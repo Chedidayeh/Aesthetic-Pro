@@ -244,7 +244,7 @@ interface OrderViewProps {
                               </AlertDialogTitle>
                               <AlertDialogDescription className="flex flex-col items-center">
                                 This will take a moment.
-                                <Loader className="text-blue-700 h-[35%] w-[35%] animate-spin mt-3" />
+          <Loader className="text-blue-700 h-[30%] w-[30%] animate-spin mt-3" />
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogCancel className="hidden" ref={alertDialogCancelRef}>Cancel</AlertDialogCancel>
@@ -523,7 +523,7 @@ interface OrderViewProps {
                          </div>
                          <div>
                              <p className="font-bold">order Amount:</p>
-                             <p>{selectedOrder.amount} TND</p>
+                             <p>{selectedOrder.amount.toFixed(2)} TND</p>
                          </div>
                      </div>
                  </CardDescription>

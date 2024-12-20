@@ -5,7 +5,7 @@ import { createAffiliateNotification, getUser } from "@/actions/actions";
 import { db } from "@/db";
 import { OrderStatus, OrderType } from "@prisma/client";
 import { createNotification } from "../../../notifications/action";
-import { sendLevelUpEmail } from "@/lib/mailer";
+import { sendAffiliateProductSoldEmail, sendDesignSoldEmail, sendLevelUpEmail, sendProductSoldEmail } from "@/lib/mailer";
 
 
 export const getOrderWithItemsAndProducts = async (orderId : string) => {
@@ -310,11 +310,14 @@ export async function calculateTotalSellerProfitForProducts(orderId: string) {
               });
 
               // Update total income for the affiliate
-              await db.affiliate.update({
+              const affiliate = await db.affiliate.update({
                 where: { id: affiliateLink.affiliateId }, // Ensure this field exists in your AffiliateLink
                 data: {
                   totalIncome: { increment: orderItem.commission.profit }, // Increment total income
                 },
+                include : {
+                  user : true
+                }
               });
 
               const product = await db.product.findFirst({
@@ -325,6 +328,7 @@ export async function calculateTotalSellerProfitForProducts(orderId: string) {
                 const notificationContent = `Great News: Your affiliate product "${product.title}" has been sold`;
                 await createAffiliateNotification(affiliateLink.affiliateId, notificationContent, 'Admin');
                 // send email
+                await sendAffiliateProductSoldEmail(affiliate.user.email , affiliate.user.name , product.title , orderItem.commission.profit)
               }
             }
           }
@@ -364,12 +368,16 @@ export async function calculateTotalSellerProfitForProducts(orderId: string) {
               revenue: { increment: newRevenue },
               totalSales: { increment: 1 },
             },
+            include : {
+              user : true
+            }
           });
           const notificationContent = `Great News: Your product "${item.product.title}" has been sold`;
 
           await createNotification(item.product.store.id,notificationContent , "Admin")
 
           // to do send email 
+          await sendProductSoldEmail(store.user.email , store.user.name , store.storeName , item.product.title , newRevenue)
 
           await updateStoreLevel(store.id)
 
@@ -580,16 +588,21 @@ export async function updateRevenueAndSalesForDesigns(orderId: string, platformP
 
       // Update store's revenue and total sales
       if (design.store) {
-        await db.store.update({
+       const store =  await db.store.update({
           where: { id: design.store.id },
           data: {
             revenue: { increment: newRevenue },
             totalSales: { increment: 1 },
           },
+          include : {
+            user : true
+          }
         });
         const notificationContent = `Great News: Your Design "${design.name}" has been sold`;
 
         await createNotification(design.store.id,notificationContent , "Admin")
+
+        await sendDesignSoldEmail(store.user.email , store.user.name , store.storeName , design.name , newRevenue)
       } else {
         throw new Error(`Store not found for seller design ${designId}`);
       }
@@ -669,8 +682,3 @@ async function checkAndSetTopSales(productId : string) {
   }
 }
 
-
-export async function getAllPodProductsOrdersIds() {
-    const orders = await db.order.findMany()
-    return orders.map(order => order.id)
-}

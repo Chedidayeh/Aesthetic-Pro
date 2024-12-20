@@ -226,7 +226,7 @@ const handleChange = async () =>{
                         </div>
                         <div>
                             <p className="font-bold">order Amount:</p>
-                            <p>{order.amount} TND</p>
+                            <p>{order.amount.toFixed(2)} TND</p>
                         </div>
                         <div>
                         <Button onClick={handleChange} variant={"link"}>Change Printing State</Button>
@@ -289,7 +289,7 @@ const handleChange = async () =>{
                         </div>
                         <div>
                             <p className="font-bold">Product Price:</p>
-                            <p>{selectedItem.productPrice} TND</p>
+                            <p>{selectedItem.productPrice.toFixed(2)} TND</p>
                         </div>
                         
                     </div>

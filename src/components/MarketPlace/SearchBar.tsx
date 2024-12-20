@@ -92,7 +92,7 @@ const SearchBar = () => {
                   This will take a moment.
                 </AlertDialogDescription>
               </AlertDialogHeader>
-              <Loader className="text-blue-700 h-[8%] w-[8%] animate-spin mt-3" />
+          <Loader className="text-blue-700 h-[30%] w-[30%] animate-spin mt-3" />
             </AlertDialogContent>
           </AlertDialog>
 

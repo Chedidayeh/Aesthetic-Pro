@@ -215,7 +215,7 @@ const FavList = ({ products, user , categories , collections }: ProductReelProps
   <div className="mt-1 text-gray-600 text-sm flex-1">
     <div className="mt-1"> {priceRange[0] === 0 && priceRange[1] === 0
       ? 'Select a price range'
-      : `${priceRange[0]} TND - ${priceRange[1]} TND`}</div>
+      : `${priceRange[0].toFixed(2)} TND - ${priceRange[1].toFixed(2)} TND`}</div>
     </div>
   <div className="mt-3 text-gray-600 text-sm">
     Products found: {products!.length}

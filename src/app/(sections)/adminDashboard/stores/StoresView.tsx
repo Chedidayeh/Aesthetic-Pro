@@ -81,20 +81,40 @@ interface StoresViewProps {
     const [sortBy, setSortBy] = useState<string>("");
 
 
-        const handleStoreSearchChange = async () => {
-          setOpen(true)
-          const stores   = await getAllStoresWithUsersAndCounts(10, storeSearchQuery , sortBy);
-          setStores(stores);
-          setOpen(false)
-        }
+    const handleStoreSearchChange = async () => {
+      try {
+        setOpen(true);
+        const stores = await getAllStoresWithUsersAndCounts(10, storeSearchQuery, sortBy);
+        setStores(stores);
+      } catch (error) {
+        console.error("Error fetching stores:", error);
+        toast({
+          title: "Something went wrong!",
+          variant: "destructive",
+        });
+      } finally {
+        setOpen(false);
+      }
+    };
+    
 
-            const handleSortBy = async (event: string) => {
-              setOpen(true)
-              setSortBy(event)
-              const stores   = await getAllStoresWithUsersAndCounts(10, storeSearchQuery , event );
-              setStores(stores);
-              setOpen(false)
-            }
+    const handleSortBy = async (event: string) => {
+      try {
+        setOpen(true);
+        setSortBy(event);
+        const stores = await getAllStoresWithUsersAndCounts(10, storeSearchQuery, event);
+        setStores(stores);
+      } catch (error) {
+        console.error("Error sorting stores:", error);
+        toast({
+          title: "Something went wrong!",
+          variant: "destructive",
+        });
+      } finally {
+        setOpen(false);
+      }
+    };
+    
     
 
     const handleDelete = async () =>{
@@ -133,30 +153,7 @@ interface StoresViewProps {
       <>
 
 
-                          {/* The AlertDialog delete store component  */}
-                          <AlertDialog open={isDeleteOpen}>
-               <AlertDialogTrigger asChild>
-                         </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                   <AlertDialogHeader className="flex flex-col items-center">
-                                       <div className="text-red-500 mb-2">
-                                           <OctagonAlert className=''/>
-                                               </div>
-                                              <AlertDialogTitle className="text-xl font-bold text-center">
-                                                 Are you absolutely sure you want to delete this store ?
-                                               </AlertDialogTitle>
-                                                <AlertDialogDescription>
-                                                   This action cannot be undone. 
-                                                   It will permanently remove the store from our MarketPlace.<br/><br/>
-                                                    </AlertDialogDescription>
-                                                   </AlertDialogHeader>
-                                                  <AlertDialogFooter>
-                                              <AlertDialogCancel onClick={()=>setisDeleteOpen(false)}>Cancel</AlertDialogCancel>
-                                      <AlertDialogAction onClick={() => handleDelete()} 
-                                     className='bg-red-500 hover:bg-red-500' >Delete</AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                     </AlertDialog> 
+
   
   <p className="text-sm text-gray-700 mb-2">AdminDashboard/Stores</p>
   <h1 className="text-2xl font-semibold">Manage Stores</h1>
@@ -317,7 +314,30 @@ interface StoresViewProps {
     </div>
   
     <LoadingState isOpen={open} />
-
+                          {/* The AlertDialog delete store component  */}
+                          <AlertDialog open={isDeleteOpen}>
+               <AlertDialogTrigger asChild>
+                         </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                   <AlertDialogHeader className="flex flex-col items-center">
+                                       <div className="text-red-500 mb-2">
+                                           <OctagonAlert className=''/>
+                                               </div>
+                                              <AlertDialogTitle className="text-xl font-bold text-center">
+                                                 Are you absolutely sure you want to delete this store ?
+                                               </AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                   This action cannot be undone. 
+                                                   It will permanently remove the store from our MarketPlace.<br/><br/>
+                                                    </AlertDialogDescription>
+                                                   </AlertDialogHeader>
+                                                  <AlertDialogFooter>
+                                              <AlertDialogCancel onClick={()=>setisDeleteOpen(false)}>Cancel</AlertDialogCancel>
+                                      <AlertDialogAction onClick={() => handleDelete()} 
+                                     className='bg-red-500 hover:bg-red-500' >Delete</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                     </AlertDialog> 
 
     </>
     );

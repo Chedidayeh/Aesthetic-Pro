@@ -36,7 +36,6 @@ import ImageSlider from "@/components/MarketPlace/ImageSlider"
 import LoadingState from "@/components/LoadingState"
 
 interface ExtraOrderItem extends OrderItem {
-    product: Product | null 
     frontsellerDesign : SellerDesign | null
     backsellerDesign : SellerDesign | null
     frontclientDesign : ClientDesign | null
@@ -305,7 +304,7 @@ const handleUpdate = async (orderId : string , platformProfit : number) =>{
                         </div>
                         <div>
                             <p className="font-bold">order Amount:</p>
-                            <p>{order.amount} TND</p>
+                            <p>{(order.amount).toFixed(2)} TND</p>
                         </div>
                         <div>
                         <Button onClick={handleChange} variant={"link"}>Change Status <DatabaseBackup className="ml-1"/></Button>
@@ -350,15 +349,15 @@ const handleUpdate = async (orderId : string , platformProfit : number) =>{
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-7 gap-8 mt-2">
                         <div>
                             <p className="font-bold">Order Amount:</p>
-                            <p>{order.amount} TND</p>
+                            <p>{(order.amount).toFixed(2)} </p>
                         </div>
                         <div>
                             <p className="font-bold">Total Seller Profit:</p>
-                            <p>{profit.totalOrderProfit} TND</p>
+                            <p>{(profit.totalOrderProfit).toFixed(2)} TND</p>
                         </div>
                         <div>
                             <p className="font-bold">Total Platform Profit:</p>
-                            <p>{order.amount - profit.totalOrderProfit} TND</p>
+                            <p>{(order.amount - profit.totalOrderProfit).toFixed(2)} TND</p>
                         </div>
 
                         <div>
@@ -404,7 +403,7 @@ const handleUpdate = async (orderId : string , platformProfit : number) =>{
                         <TableCell>{item.designId}</TableCell>
                         <TableCell>{item.designName}</TableCell>
                         <TableCell>{item.productQuantity}</TableCell>
-                        <TableCell>{item.totalProfit} TND</TableCell>
+                        <TableCell>{(item.totalProfit).toFixed(2)} TND</TableCell>
                         <TableCell>{item.designType}</TableCell>
                         <TableCell>{item.store}</TableCell>
                       </TableRow>
@@ -450,13 +449,8 @@ const handleUpdate = async (orderId : string , platformProfit : number) =>{
                         </div>
                         <div>
                             <p className="font-bold">Product Price:</p>
-                            <p>{selectedItem.productPrice} TND</p>
+                            <p>{(selectedItem.productPrice).toFixed(2)} TND</p>
                         </div>
-                        <div>
-                            <p className="font-bold">Product Base Price:</p>
-                            <p>{selectedItem.product?.basePrice} TND</p>
-                        </div>
-                        
                     </div>
                 </CardDescription>
 

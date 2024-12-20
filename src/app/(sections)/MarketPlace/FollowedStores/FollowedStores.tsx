@@ -25,6 +25,7 @@ import { useState } from "react"
 import ProductListing from "@/components/MarketPlace/ProductListing"
 import { getFollowedStoreProductsFirst } from './actions'
 import LoadingState from '@/components/LoadingState'
+import { useToast } from '@/components/ui/use-toast'
 
 interface Productswithstore extends Product {
   store : Store
@@ -54,70 +55,111 @@ const FollowedStores = ({ initialProducts,totalCount,initialPage, limit, priceRa
 
   const [open, setOpen] = useState<boolean>(false);
 
+  const { toast } = useToast()
+
   
   const handleSortChange = async (event: string) => {
-    setOpen(true)
-    setCurrentPage(1); // Reset to first page on sort change
-    setSortBy(event);
-    const { products , totalCount } = await getFollowedStoreProductsFirst(user.id,1, limit, event, filterByCategory, filterByCollection, priceRange);
-    setProducts(products);
-    setTotalCountState(totalCount)
-    setOpen(false)
+    try {
+      setOpen(true);
+      setCurrentPage(1); // Reset to first page on sort change
+      setSortBy(event);
+      const { products, totalCount } = await getFollowedStoreProductsFirst(user.id, 1, limit, event, filterByCategory, filterByCollection, priceRange);
+      setProducts(products);
+      setTotalCountState(totalCount);
+    } catch (error) {
+      console.error("Error fetching sorted products:", error);
+      toast({
+        title: "Error!",
+        description: "There was an issue fetching the sorted products.",
+        variant: "destructive",
+      });
+    } finally {
+      setOpen(false);
+    }
   };
   
   const handleCategorySortChange = async (event: string) => {
-    setOpen(true)
-    setCurrentPage(1); // Reset to first page on category change
-    setFilterByCategory(event);
-    const { products , totalCount} = await getFollowedStoreProductsFirst(user.id,1, limit, sortBy, event, filterByCollection, priceRange);
-    setProducts(products);
-    setTotalCountState(totalCount)
-    setOpen(false)
-
-
+    try {
+      setOpen(true);
+      setCurrentPage(1); // Reset to first page on category change
+      setFilterByCategory(event);
+      const { products, totalCount } = await getFollowedStoreProductsFirst(user.id, 1, limit, sortBy, event, filterByCollection, priceRange);
+      setProducts(products);
+      setTotalCountState(totalCount);
+    } catch (error) {
+      console.error("Error fetching products by category:", error);
+      toast({
+        title: "Error!",
+        description: "There was an issue fetching products by category.",
+        variant: "destructive",
+      });
+    } finally {
+      setOpen(false);
+    }
   };
   
   const handleCollectionSortChange = async (event: string) => {
-    setOpen(true)
-    setCurrentPage(1); // Reset to first page on collection change
-    setFilterByCollection(event);
-    const { products , totalCount} = await getFollowedStoreProductsFirst(user.id,1, limit, sortBy, filterByCategory, event, priceRange);
-    setProducts(products);
-    setTotalCountState(totalCount)
-    setOpen(false)
-
-
+    try {
+      setOpen(true);
+      setCurrentPage(1); // Reset to first page on collection change
+      setFilterByCollection(event);
+      const { products, totalCount } = await getFollowedStoreProductsFirst(user.id, 1, limit, sortBy, filterByCategory, event, priceRange);
+      setProducts(products);
+      setTotalCountState(totalCount);
+    } catch (error) {
+      console.error("Error fetching products by collection:", error);
+      toast({
+        title: "Error!",
+        description: "There was an issue fetching products by collection.",
+        variant: "destructive",
+      });
+    } finally {
+      setOpen(false);
+    }
   };
   
   const handlePriceRangeChange = async (value: string) => {
-    setOpen(true)
-    const rangeIndex = parseInt(value, 10);
-    setPriceRange(priceRanges[rangeIndex]);
-    setCurrentPage(1); // Reset to first page on price range change
-    const { products, totalCount } = await getFollowedStoreProductsFirst(user.id,1, limit, sortBy, filterByCategory, filterByCollection, priceRanges[rangeIndex]);
-    setProducts(products);
-    setTotalCountState(totalCount)
-    setOpen(false)
-
-
-  };
-  
-
-
-
-
-
-  const handlePageChange = async (page: number) => {
-    setOpen(true)
-    if (page >= 1 && page <= totalPages) {
-      const { products , totalCount} = await getFollowedStoreProductsFirst(user.id,page, limit, sortBy, filterByCategory, filterByCollection, priceRange);
+    try {
+      setOpen(true);
+      const rangeIndex = parseInt(value, 10);
+      setPriceRange(priceRanges[rangeIndex]);
+      setCurrentPage(1); // Reset to first page on price range change
+      const { products, totalCount } = await getFollowedStoreProductsFirst(user.id, 1, limit, sortBy, filterByCategory, filterByCollection, priceRanges[rangeIndex]);
       setProducts(products);
-      setCurrentPage(page);
-      setTotalCountState(totalCount)
-      setOpen(false)
-
+      setTotalCountState(totalCount);
+    } catch (error) {
+      console.error("Error fetching products by price range:", error);
+      toast({
+        title: "Error!",
+        description: "There was an issue fetching products within the selected price range.",
+        variant: "destructive",
+      });
+    } finally {
+      setOpen(false);
     }
   };
+  
+  const handlePageChange = async (page: number) => {
+    try {
+      setOpen(true);
+      if (page >= 1 && page <= totalPages) {
+        const { products, totalCount } = await getFollowedStoreProductsFirst(user.id, page, limit, sortBy, filterByCategory, filterByCollection, priceRange);
+        setProducts(products);
+        setCurrentPage(page);
+        setTotalCountState(totalCount);
+      }
+    } catch (error) {
+      console.error("Error changing page:", error);
+      toast({
+        title: "Error!",
+        description: "There was an issue loading the selected page.",
+        variant: "destructive",
+      });
+    } finally {
+      setOpen(false);
+    }
+  };
+  
 
   const totalPages = Math.ceil(totalCountState / limit)
 
@@ -310,7 +352,7 @@ const FollowedStores = ({ initialProducts,totalCount,initialPage, limit, priceRa
   <div className="mt-1 text-gray-600 text-sm flex-1">
     <div className="mt-1"> {priceRange[0] === 0 && priceRange[1] === 0
       ? 'Select a price range'
-      : `${priceRange[0]} TND - ${priceRange[1]} TND`}</div>
+      : `${priceRange[0].toFixed(2)} TND - ${priceRange[1].toFixed(2)} TND`}</div>
     </div>
   <div className="mt-3 text-gray-600 text-sm">
     Products found: {totalCountState}

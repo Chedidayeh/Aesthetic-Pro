@@ -268,7 +268,7 @@ const [isOpen, setIsOpen] = useState < boolean > (false);
               Creating Your Account !
             </AlertDialogTitle>
           </AlertDialogHeader>
-          <Loader className="text-blue-700 h-[8%] w-[8%] animate-spin mt-3" />
+          <Loader className="text-blue-700 h-[30%] w-[30%] animate-spin mt-3" />
         </AlertDialogContent>
       </AlertDialog>
 
@@ -284,7 +284,7 @@ const [isOpen, setIsOpen] = useState < boolean > (false);
             Please wait while we redirect you !
         </AlertDialogDescription>
       </AlertDialogHeader>
-      <Loader className="text-blue-700 h-[8%] w-[8%] animate-spin mt-3" />
+      <Loader className="text-blue-700 h-[30%] w-[30%] animate-spin mt-3" />
       </AlertDialogContent>
   </AlertDialog>
     </>

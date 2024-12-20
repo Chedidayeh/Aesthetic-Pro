@@ -434,7 +434,7 @@ useEffect(() => {
         <div className='flex text-sm text-muted-foreground'>
           <p className='flex space-x-2 text-sm '>
             <Check className='h-5 w-5 flex-shrink-0 text-green-500' />
-            <span>Free shipping for more than {platform.freeShippingFeeLimit} TND!</span>
+            <span>Free shipping for more than {platform.freeShippingFeeLimit.toFixed(2)} TND!</span>
           </p>
         </div>
       </div>
@@ -468,7 +468,7 @@ useEffect(() => {
                               </AlertDialogTitle>
                               <AlertDialogDescription className="flex flex-col items-center">
                                 This will take a moment.
-                                <Loader className="text-blue-700 h-[35%] w-[35%] animate-spin mt-3" />
+          <Loader className="text-blue-700 h-[30%] w-[30%] animate-spin mt-3" />
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogCancel className="hidden" ref={alertDialogCancelRef}>Cancel</AlertDialogCancel>

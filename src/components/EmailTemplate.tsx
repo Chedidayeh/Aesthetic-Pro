@@ -468,6 +468,121 @@ export const generateLevelUpEmailHTML = (
   return emailHTML;
 };
 
+export const generateProductSoldEmailHTML = (
+  username: string,
+  storeName: string,
+  productName: string,
+  profit: number,
+) => {
+  const emailHTML = `
+    <html>
+      <body style="font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 0; padding: 20px;">
+        <div style="max-width: 600px; margin: 0 auto; background-color: #fff; border: 1px solid #dcdcdc; border-radius: 8px; padding: 20px; text-align: center;">
+          <div style="margin-bottom: 10px;">
+            <img src="https://firebasestorage.googleapis.com/v0/b/tactical-hydra-424919-a1.appspot.com/o/aestheticpro.png?alt=media&token=3d5c4c50-bc46-4e81-af42-4ab3763a9ed5" 
+                 alt="Company Logo - AestheticPro" style="max-width: 100px; margin-bottom: 10px;">
+          </div>
+          <h1 style="font-size: 24px; font-weight: bold; color: #0070f3; margin-bottom: 20px;">Great News, ${username} 🎉!</h1>
+          <p style="font-size: 16px; line-height: 1.6; color: #333;">
+            Your store <strong style="color: #0070f3;">${storeName}</strong> has made a sale!
+          </p>
+          <p style="font-size: 16px; line-height: 1.6; color: #333;">
+            A customer just purchased your product <strong style="color: #0070f3;">${productName}</strong>.
+          </p>
+          <p style="font-size: 16px; line-height: 1.6; color: #333;">
+            You earned <strong style="color: #0070f3;">${profit} TND</strong> in profit from this sale.
+          </p>
+          <p style="font-size: 16px; line-height: 1.6; color: #333; margin-top: 20px;">
+            This is a great step forward! Keep up the excellent work, and continue creating amazing products.
+          </p>
+          <div style="margin-top: 20px; font-size: 12px; color: #777;">
+            <p>&copy; ${new Date().getFullYear()} AestheticPro.tn. All rights reserved.</p>
+            <p>Contact us: <a href="mailto:astheticprocontact@gmail.com" style="color: #0070f3;">astheticprocontact@gmail.com</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  `;
+  return emailHTML;
+};
+
+
+
+export const generateDesignSoldEmailHTML = (
+  username: string,
+  storeName: string,
+  designName: string,
+  designProfit: number,
+) => {
+  const emailHTML = `
+    <html>
+      <body style="font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 0; padding: 20px;">
+        <div style="max-width: 600px; margin: 0 auto; background-color: #fff; border: 1px solid #dcdcdc; border-radius: 8px; padding: 20px; text-align: center;">
+          <div style="margin-bottom: 10px;">
+            <img src="https://firebasestorage.googleapis.com/v0/b/tactical-hydra-424919-a1.appspot.com/o/aestheticpro.png?alt=media&token=3d5c4c50-bc46-4e81-af42-4ab3763a9ed5" 
+                 alt="Company Logo - AestheticPro" style="max-width: 100px; margin-bottom: 10px;">
+          </div>
+          <h1 style="font-size: 24px; font-weight: bold; color: #0070f3; margin-bottom: 20px;">Awesome News, ${username} 🎉!</h1>
+          <p style="font-size: 16px; line-height: 1.6; color: #333;">
+            Your design <strong style="color: #0070f3;">${designName}</strong> has been sold in your store <strong style="color: #0070f3;">${storeName}</strong>!
+          </p>
+          <p style="font-size: 16px; line-height: 1.6; color: #333;">
+            You earned <strong style="color: #0070f3;">${designProfit} TND</strong> in profit from this sale.
+          </p>
+          <p style="font-size: 16px; line-height: 1.6; color: #333; margin-top: 20px;">
+            You're doing great! Keep creating stunning designs to continue impressing your customers.
+          </p>
+          <div style="margin-top: 20px; font-size: 12px; color: #777;">
+            <p>&copy; ${new Date().getFullYear()} AestheticPro.tn. All rights reserved.</p>
+            <p>Contact us: <a href="mailto:astheticprocontact@gmail.com" style="color: #0070f3;">astheticprocontact@gmail.com</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  `;
+  return emailHTML;
+};
+
+
+
+export const generateAffiliateProductSoldEmailHTML = (
+  username: string,
+  productName: string,
+  affiliateCommission: number,
+) => {
+  const emailHTML = `
+    <html>
+      <body style="font-family: Arial, sans-serif; background-color: #f9f9f9; margin: 0; padding: 20px;">
+        <div style="max-width: 600px; margin: 0 auto; background-color: #fff; border: 1px solid #dcdcdc; border-radius: 8px; padding: 20px; text-align: center;">
+          <div style="margin-bottom: 10px;">
+            <img src="https://firebasestorage.googleapis.com/v0/b/tactical-hydra-424919-a1.appspot.com/o/aestheticpro.png?alt=media&token=3d5c4c50-bc46-4e81-af42-4ab3763a9ed5" 
+                 alt="Company Logo - AestheticPro" style="max-width: 100px; margin-bottom: 10px;">
+          </div>
+          <h1 style="font-size: 24px; font-weight: bold; color: #0070f3; margin-bottom: 20px;">Congratulations, ${username} 🎉!</h1>
+          <p style="font-size: 16px; line-height: 1.6; color: #333;">
+            A customer purchased a product you referred! Here's the detail:
+          </p>
+          <p style="font-size: 16px; line-height: 1.6; color: #333;">
+            Product: <strong style="color: #0070f3;">${productName}</strong>
+          </p>
+          <p style="font-size: 16px; line-height: 1.6; color: #333;">
+            Your affiliate commission: <strong>${affiliateCommission} TND</strong>
+          </p>
+          <p style="font-size: 16px; line-height: 1.6; color: #333; margin-top: 20px;">
+            Keep up the great work and keep referring awesome products to earn more!
+          </p>
+          <div style="margin-top: 20px; font-size: 12px; color: #777;">
+            <p>&copy; ${new Date().getFullYear()} AestheticPro.tn. All rights reserved.</p>
+            <p>Contact us: <a href="mailto:astheticprocontact@gmail.com" style="color: #0070f3;">astheticprocontact@gmail.com</a></p>
+          </div>
+        </div>
+      </body>
+    </html>
+  `;
+  return emailHTML;
+};
+
+
 
 
 

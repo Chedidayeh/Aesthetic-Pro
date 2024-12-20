@@ -224,71 +224,111 @@ const ProductView = ({ initialProducts,totalCount,initialPage, limit, user , aff
         });
     };
 
-    const handleSearch = async () => {
-      setOpen(true)
-      setCurrentPage(1);
-      const { products , totalCount } = await fetchAllProducts(1, limit, sortBy, filterByCategory, filterByCollection , searchQuery);
-      setProducts(products);
-      setTotalCountState(totalCount)
-      setOpen(false)
-    }
-
     const handleSearchChange = async (e: ChangeEvent<HTMLInputElement>) => {
       setSearchQuery(e.target.value);
     };
 
-
-
-    const handleSortChange = async (event: string) => {
-      setOpen(true)
-      setCurrentPage(1); // Reset to first page on sort change
-      setSortBy(event);
-      const { products , totalCount } = await fetchAllProducts(1, limit, event, filterByCategory, filterByCollection , searchQuery);
-      setProducts(products);
-      setTotalCountState(totalCount)
-      setOpen(false)
-    };
-    
-    const handleCategorySortChange = async (event: string) => {
-      setOpen(true)
-      setCurrentPage(1); // Reset to first page on category change
-      setFilterByCategory(event);
-      const { products , totalCount} = await fetchAllProducts(1, limit, sortBy, event, filterByCollection , searchQuery);
-      setProducts(products);
-      setTotalCountState(totalCount)
-      setOpen(false)
-  
-  
-    };
-    
-    const handleCollectionSortChange = async (event: string) => {
-      setOpen(true)
-      setCurrentPage(1); // Reset to first page on collection change
-      setFilterByCollection(event);
-      const { products , totalCount} = await fetchAllProducts(1, limit, sortBy, filterByCategory, event , searchQuery);
-      setProducts(products);
-      setTotalCountState(totalCount)
-      setOpen(false)
-  
-  
-    };
-    
-  
-  
-  
-  
-  
-    const handlePageChange = async (page: number) => {
-      setOpen(true)
-      if (page >= 1 && page <= totalPages) {
-        const { products , totalCount} = await fetchAllProducts(page, limit, sortBy, filterByCategory, filterByCollection , searchQuery);
+    const handleSearch = async () => {
+      try {
+        setOpen(true);
+        setCurrentPage(1);
+        const { products, totalCount } = await fetchAllProducts(1, limit, sortBy, filterByCategory, filterByCollection, searchQuery);
         setProducts(products);
-        setCurrentPage(page);
-        setTotalCountState(totalCount)
-        setOpen(false)
-  
+        setTotalCountState(totalCount);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        toast({
+          title: "Something went wrong!",
+          variant: "destructive",
+        });
+      } finally {
+        setOpen(false);
       }
     };
+    
+
+    const handleSortChange = async (event: string) => {
+      try {
+        setOpen(true);
+        setCurrentPage(1); // Reset to first page on sort change
+        setSortBy(event);
+        const { products, totalCount } = await fetchAllProducts(1, limit, event, filterByCategory, filterByCollection, searchQuery);
+        setProducts(products);
+        setTotalCountState(totalCount);
+      } catch (error) {
+        console.error("Error sorting products:", error);
+        toast({
+          title: "Something went wrong!",
+          variant: "destructive",
+        });
+      } finally {
+        setOpen(false);
+      }
+    };
+    
+    
+    const handleCategorySortChange = async (event: string) => {
+      try {
+        setOpen(true);
+        setCurrentPage(1); // Reset to first page on category change
+        setFilterByCategory(event);
+        const { products, totalCount } = await fetchAllProducts(1, limit, sortBy, event, filterByCollection, searchQuery);
+        setProducts(products);
+        setTotalCountState(totalCount);
+      } catch (error) {
+        console.error("Error filtering products by category:", error);
+        toast({
+          title: "Something went wrong!",
+          variant: "destructive",
+        });
+      } finally {
+        setOpen(false);
+      }
+    };
+    
+    
+    const handleCollectionSortChange = async (event: string) => {
+      try {
+        setOpen(true);
+        setCurrentPage(1); // Reset to first page on collection change
+        setFilterByCollection(event);
+        const { products, totalCount } = await fetchAllProducts(1, limit, sortBy, filterByCategory, event, searchQuery);
+        setProducts(products);
+        setTotalCountState(totalCount);
+      } catch (error) {
+        console.error("Error filtering products by collection:", error);
+        toast({
+          title: "Something went wrong!",
+          variant: "destructive",
+        });
+      } finally {
+        setOpen(false);
+      }
+    };
+    
+    
+    const handlePageChange = async (page: number) => {
+      try {
+        setOpen(true);
+        if (page >= 1 && page <= totalPages) {
+          const { products, totalCount } = await fetchAllProducts(page, limit, sortBy, filterByCategory, filterByCollection, searchQuery);
+          setProducts(products);
+          setCurrentPage(page);
+          setTotalCountState(totalCount);
+        }
+      } catch (error) {
+        console.error("Error fetching products for page change:", error);
+        toast({
+          title: "Something went wrong!",
+          variant: "destructive",
+        });
+      } finally {
+        setOpen(false);
+      }
+    };
+
+    
+    
   
     const totalPages = Math.ceil(totalCountState / limit)
   
@@ -401,7 +441,7 @@ const ProductView = ({ initialProducts,totalCount,initialPage, limit, user , aff
                                         </AlertDialogTrigger>
                                           <AlertDialogContent className=" flex flex-col items-center justify-center">
                                               <AlertDialogHeader className="flex flex-col items-center justify-center">
-                                              <Loader className="animate-spin text-blue-800 h-[35%] w-[35%]" />
+          <Loader className="text-blue-700 h-[30%] w-[30%] animate-spin mt-3" />
                                               <AlertDialogTitle className="flex flex-col items-center justify-center">Loading</AlertDialogTitle>
                                             </AlertDialogHeader>
                                             <AlertDialogDescription className="flex flex-col items-center justify-center">
@@ -434,7 +474,7 @@ const ProductView = ({ initialProducts,totalCount,initialPage, limit, user , aff
             <p className="font-bold">Product Price :</p>
             <p>
               <Badge className="text-bold text-white" >
-                {selectedProduct.price} TND
+                {selectedProduct.price.toFixed(2)} TND
               </Badge>
             </p>
           </div>
@@ -451,7 +491,7 @@ const ProductView = ({ initialProducts,totalCount,initialPage, limit, user , aff
 
           <div>
             <p className="font-bold">Your Profit : ( {platform.affiliateUserProfit} % )</p>
-            <p>{(selectedProduct.price * platform.affiliateUserProfit) / 100} TND  ( on every sale )</p>
+            <p>{((selectedProduct.price * platform.affiliateUserProfit) / 100).toFixed(2)} TND  ( on every sale )</p>
           </div>
 
                       <div className="px-2 py-1 z-10 rounded">
@@ -643,7 +683,7 @@ const ProductView = ({ initialProducts,totalCount,initialPage, limit, user , aff
                       <div className="absolute top-2 left-2 px-2 py-1 z-10 rounded">
                         <Badge variant="secondary" className="bg-gray-200">
                           <CircleDollarSign className="mr-2 h-4 w-4 text-green-800 opacity-70" />
-                          <span className="text-xs text-gray-600">{product.price} TND</span>
+                          <span className="text-xs text-gray-600">{product.price.toFixed(2)} TND</span>
                         </Badge>
                       </div>
 

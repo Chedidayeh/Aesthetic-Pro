@@ -997,7 +997,7 @@ const handleFileChange = (file : File) => {
                               <AlertDialogDescription className="flex flex-col items-center">
                                 This will take a moment.
                                 {/* Replace Loader with your loader component */}
-                                <Loader className="text-blue-700 h-[35%] w-[35%] animate-spin mt-3" />
+          <Loader className="text-blue-700 h-[30%] w-[30%] animate-spin mt-3" />
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogCancel className="hidden" ref={alertDialogCancelRef}>Cancel</AlertDialogCancel>
@@ -1048,7 +1048,7 @@ const handleFileChange = (file : File) => {
                                       />
                                       <div className="flex flex-wrap justify-center gap-2">
                                         <Badge variant="secondary">{category.label}</Badge>
-                                        <Badge variant="secondary">{category.price} TND</Badge>
+                                        <Badge variant="secondary">{category.price.toFixed(2)} TND</Badge>
                                       </div>
                                     </CardContent>
                                   </Card>
@@ -1276,7 +1276,7 @@ const handleFileChange = (file : File) => {
                               <div className='flex'>
                                 <CircleDollarSign className="h-4 w-4"/>
                                 <Label className='ml-2'>Your Profit*:</Label>
-                                <p className='text-xs text-zinc-500 ml-5'>Product Base Price: ( {BasePrice} TND )</p>
+                                <p className='text-xs text-zinc-500 ml-5'>Product Base Price: ( {BasePrice.toFixed(2)} TND )</p>
                               </div>                              
                               <div className="mt-4 mb-4">
                                 <Input 
@@ -1296,8 +1296,8 @@ const handleFileChange = (file : File) => {
                               </div>
                               {sellerProfitError === "" && sellerProfit <= platform.maxProductSellerProfit && sellerProfit >= 1 && (
                               <div className='flex'>
-                                <Label className='ml-2 font-bold'>Product Final Price: ( {productPrice} TND )</Label>
-                                <p className='text-xs text-zinc-500 ml-5'>Your Profit: ( {sellerProfit} TND )</p>
+                                <Label className='ml-2 font-bold'>Product Final Price: ( {productPrice.toFixed(2)} TND )</Label>
+                                <p className='text-xs text-zinc-500 ml-5'>Your Profit: ( {sellerProfit.toFixed(2)} TND )</p>
                               </div>
                                  )}
 
@@ -1351,7 +1351,7 @@ const handleFileChange = (file : File) => {
                                 </div>
                                 <div>
                                   <p className='text-xs text-zinc-500'>
-                                    Both Designs Selected ! + extra {platform.ExtraDesignForProductPrice} TND
+                                    Both Designs Selected ! + extra {platform.ExtraDesignForProductPrice.toFixed(2)} TND
                                   </p>
                                 </div>
                               </div>

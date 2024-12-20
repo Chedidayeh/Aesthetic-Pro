@@ -95,9 +95,6 @@ const ThankYouPage = async ({
                   View your orders &rarr;
                 </Link>
               </div>
-              <div className='mt-2'>
-              <span className=' text-blue-500 text-sm'>We'll call you very soon to confirm your order !</span>
-              </div>
 
             <div className='mt-16 text-sm font-medium'>
               <div className='text-muted-foreground'>
@@ -105,6 +102,10 @@ const ThankYouPage = async ({
               </div>
               <div className='mt-2 '>
               {orderId}
+              </div>
+
+              <div className='mt-2'>
+              <span className=' text-blue-500 text-sm'>We'll call you very soon to confirm your order !</span>
               </div>
 
               <ul className='mt-6 divide-y divide-gray-200 border-t border-gray-200 text-sm font-medium text-muted-foreground'>

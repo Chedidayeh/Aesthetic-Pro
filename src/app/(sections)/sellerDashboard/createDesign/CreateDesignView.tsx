@@ -396,8 +396,8 @@ const CreateDesignView = ({platform , store}: ProductViewProps) => {
                                 <Label className='ml-2'>Design Price*:</Label>
                                 {designPrice <= platform.maxDesignSellerProfit && designPrice >= platform.platformDesignProfit + 1 && (
                                   <>
-                                <p className='text-xs text-zinc-500 ml-5'>Design Price: ( {designPrice} TND )</p>
-                                <p className='text-xs text-zinc-500 ml-5'>Your Profit: ( {sellerProfit} TND  )</p>
+                                <p className='text-xs text-zinc-500 ml-5'>Design Price: ( {designPrice.toFixed(2)} TND )</p>
+                                <p className='text-xs text-zinc-500 ml-5'>Your Profit: ( {sellerProfit.toFixed(2)} TND  )</p>
                                 </>
                               )}
                               </div>                              
@@ -436,7 +436,7 @@ const CreateDesignView = ({platform , store}: ProductViewProps) => {
                               <AlertDialogDescription className="flex flex-col items-center">
                                 This will take a moment.
                                 {/* Replace Loader with your loader component */}
-                                <Loader className="text-blue-700 h-[35%] w-[35%] animate-spin mt-3" />
+          <Loader className="text-blue-700 h-[30%] w-[30%] animate-spin mt-3" />
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogCancel className="hidden" ref={alertDialogCancelRef}>Cancel</AlertDialogCancel>

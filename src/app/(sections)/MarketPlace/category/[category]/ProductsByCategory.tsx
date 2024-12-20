@@ -25,6 +25,7 @@ import ProductListing from "@/components/MarketPlace/ProductListing"
 import { useState } from "react"
 import { fetchProductsByCategory } from './actions'
 import LoadingState from '@/components/LoadingState'
+import { useToast } from '@/components/ui/use-toast'
 
 interface Productswithstore extends Product {
   store : Store
@@ -53,55 +54,94 @@ const ProductsByCategory = ({ initialProducts,totalCount,initialPage, limit,pric
 
   const [open, setOpen] = useState<boolean>(false);
 
+  const { toast } = useToast()
 
 
   const handleSortChange = async (event: string) => {
-    setOpen(true)
-    setCurrentPage(1); // Reset to first page on sort change
-    setSortBy(event);
-    const { products , totalCount } = await fetchProductsByCategory(category ,1, limit, event, filterByCollection, priceRange);
-    setProducts(products);
-    setTotalCountState(totalCount)
-    setOpen(false)
+    try {
+      setOpen(true);
+      setCurrentPage(1); // Reset to first page on sort change
+      setSortBy(event);
+      const { products, totalCount } = await fetchProductsByCategory(category, 1, limit, event, filterByCollection, priceRange);
+      setProducts(products);
+      setTotalCountState(totalCount);
+    } catch (error) {
+      console.error("Error fetching sorted products:", error);
+      toast({
+        title: "Something went wrong!",
+        variant: "destructive",
+      });
+    } finally {
+      setOpen(false);
+    }
   };
+  
   
   
   const handleCollectionSortChange = async (event: string) => {
-    setOpen(true)
-    setCurrentPage(1); // Reset to first page on collection change
-    setFilterByCollection(event);
-    const { products , totalCount} = await fetchProductsByCategory(category ,1, limit, sortBy, event, priceRange);
-    setProducts(products);
-    setTotalCountState(totalCount)
-    setOpen(false)
-
-
+    try {
+      setOpen(true);
+      setCurrentPage(1); // Reset to first page on collection change
+      setFilterByCollection(event);
+      const { products, totalCount } = await fetchProductsByCategory(category, 1, limit, sortBy, event, priceRange);
+      setProducts(products);
+      setTotalCountState(totalCount);
+    } catch (error) {
+      console.error("Error fetching products by collection:", error);
+      toast({
+        title: "Something went wrong!",
+        variant: "destructive",
+      });
+    } finally {
+      setOpen(false);
+    }
   };
   
+
+  
   const handlePriceRangeChange = async (value: string) => {
-    setOpen(true)
-    const rangeIndex = parseInt(value, 10);
-    setPriceRange(priceRanges[rangeIndex]);
-    setCurrentPage(1); // Reset to first page on price range change
-    const { products, totalCount } = await fetchProductsByCategory(category ,1, limit, sortBy, filterByCollection, priceRanges[rangeIndex]);
-    setProducts(products);
-    setTotalCountState(totalCount)
-    setOpen(false)
+    try {
+      setOpen(true);
+      const rangeIndex = parseInt(value, 10);
+      setPriceRange(priceRanges[rangeIndex]);
+      setCurrentPage(1); // Reset to first page on price range change
+      const { products, totalCount } = await fetchProductsByCategory(category, 1, limit, sortBy, filterByCollection, priceRanges[rangeIndex]);
+      setProducts(products);
+      setTotalCountState(totalCount);
+    } catch (error) {
+      console.error("Error fetching products by price range:", error);
+      toast({
+        title: "Something went wrong!",
+        variant: "destructive",
+      });
+    } finally {
+      setOpen(false);
+    }
   };
   
 
 
   const handlePageChange = async (page: number) => {
-    setOpen(true)
-    if (page >= 1 && page <= totalPages) {
-      const { products , totalCount} = await fetchProductsByCategory(category ,page, limit, sortBy, filterByCollection, priceRange);
-      setProducts(products);
-      setCurrentPage(page);
-      setTotalCountState(totalCount)
-      setOpen(false)
-
+    try {
+      setOpen(true);
+      if (page >= 1 && page <= totalPages) {
+        const { products, totalCount } = await fetchProductsByCategory(category, page, limit, sortBy, filterByCollection, priceRange);
+        setProducts(products);
+        setCurrentPage(page);
+        setTotalCountState(totalCount);
+      }
+    } catch (error) {
+      console.error("Error changing page:", error);
+      toast({
+        title: "Something went wrong!",
+        variant: "destructive",
+      });
+    } finally {
+      setOpen(false);
     }
   };
+
+  
 
   const totalPages = Math.ceil(totalCountState / limit)
 
@@ -272,7 +312,7 @@ const ProductsByCategory = ({ initialProducts,totalCount,initialPage, limit,pric
   <div className="mt-1 text-gray-600 text-sm flex-1">
   <div className="mt-1"> {priceRange[0] === 0 && priceRange[1] === 0
       ? 'Select a price range'
-      : `${priceRange[0]} TND - ${priceRange[1]} TND`}</div>
+      : `${priceRange[0].toFixed(2)} TND - ${priceRange[1].toFixed(2)} TND`}</div>
     </div>
   <div className="mt-3 text-gray-600 text-sm">
     Products found: {totalCountState}

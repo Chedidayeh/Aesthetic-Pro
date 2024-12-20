@@ -306,7 +306,7 @@ const CreateOrder = ({
                               <AlertDialogDescription className="flex flex-col items-center">
                                 This will take a moment.
                                 {/* Replace Loader with your loader component */}
-                                <Loader className="text-blue-700 h-[35%] w-[35%] animate-spin mt-3" />
+          <Loader className="text-blue-700 h-[30%] w-[30%] animate-spin mt-3" />
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogCancel className="hidden" ref={alertDialogCancelRef}>Cancel</AlertDialogCancel>
@@ -494,7 +494,7 @@ const CreateOrder = ({
                                   <Badge variant="secondary" className="absolute bg-gray-200 top-2 left-2 px-2 py-1 rounded">
                                   <div className="flex items-center">
                                         <CircleDollarSign className="mr-2 h-4 w-4 text-green-800 opacity-70" />{" "}
-                                        <span className="text-xs text-gray-600">{product.price} TND</span>
+                                        <span className="text-xs text-gray-600">{product.price.toFixed(2)} TND</span>
                                     </div>                                  
                                     </Badge>
 

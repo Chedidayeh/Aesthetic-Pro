@@ -11,6 +11,7 @@ import {
   Shirt,
   ShoppingBasket,
   Store,
+  User,
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
@@ -77,6 +78,19 @@ const SideBar = () => {
                 <LayoutDashboard className="h-4 w-4" />
               </div>
               Dashboard
+            </Button>
+
+            <Button
+            variant="ghost"
+              className={cn("justify-start gap-2 rounded-lg px-3 py-2 text-zinc-900 transition-all hover:text-blue-600 dark:text-zinc-400 dark:hover:text-gray-50", {
+                " gap-2 rounded-lg bg-gray-100 px-3 py-2 text-blue-600  transition-all hover:text-blue-600 dark:bg-blue-200 dark:text-blue-600 dark:hover:text-blue-600": pathname === "/adminDashboard/users"
+              })}
+              onClick={()=>router.push("/adminDashboard/users")}
+            >
+              <div className="border rounded-lg dark:bg-black dark:border-gray-800 border-gray-400 p-1 bg-white">
+                <User className="h-4 w-4" />
+              </div>
+              Manage Users
             </Button>
 
             <Button

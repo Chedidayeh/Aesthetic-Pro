@@ -76,7 +76,7 @@ interface itemProfit {
   productTitle: string | null;
   totalProfit: number;
   affiliateProfit: number;
-  affiliateUser : string
+  affiliateUser : string | undefined
 }
 
 interface Profit {
@@ -257,7 +257,6 @@ const handleUpdate = async (orderId : string , platformProfit : number) =>{
     return(
 
         <>
-<LoadingState isOpen={open} />
 
         {order && (
             <>
@@ -608,7 +607,7 @@ const handleUpdate = async (orderId : string , platformProfit : number) =>{
 
             </>
         )}
-
+<LoadingState isOpen={open} />
 
         </>
         

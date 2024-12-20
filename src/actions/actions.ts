@@ -63,21 +63,7 @@ export async function banUser(userId:string) {
 
 
 // get user by type 
-export async function getUsersByType() {
-  try {
-    const users = await db.user.findMany({
-      where: {
-        userType: {
-          in: [UserType.SELLER, UserType.USER , UserType.ADMIN , UserType.FACTORY ]
-        }
-      }
-    });
-    return users;
-  } catch (error) {
-    console.error('Error retrieving users:', error);
-    throw error;
-  }
-}
+
 
 // delete user by id 
 export async function deleteUserById(userId : string) {
