@@ -335,7 +335,7 @@ const View = ({ initialProducts,totalCount,initialPage, limit, priceRanges, user
           <SelectLabel>Select Price Range</SelectLabel>
           {priceRanges.map((range, index) => (
             <SelectItem key={index} value={index.toString()}>
-              {range[0].toFixed(2)} TND - {range[1].toFixed(2)} TND
+              {range[0]} TND - {range[1]} TND
             </SelectItem>
           ))}
         </SelectGroup>

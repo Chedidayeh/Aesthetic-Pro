@@ -90,6 +90,7 @@ const CreateDesignView = ({platform , store}: ProductViewProps) => {
               variant: 'destructive',
             });
             setFile(null)
+            return
           } else {
             setisDesignUploaded(true)            
             const reader = new FileReader();
@@ -98,8 +99,22 @@ const CreateDesignView = ({platform , store}: ProductViewProps) => {
               if (e.target) {
                 const image = new Image();
                 image.onload = () => {
-                  setdesignwidth(image.width);
-                  setdesignheight(image.height);
+                  const { width, height } = image;
+                  if (width >= 1000 && width <= 4000 && height >= 1000 && height <= 4000) {
+                    setdesignwidth(width);
+                    setdesignheight(height);
+                  }
+                  else {
+                    setisDesignUploaded(false)            
+                    setFile(null)
+                    toast({
+                      title: 'Invalid front design dimensions.',
+                      description: 'Please upload a design with width and height between 1000px and 4000px.',
+                      variant: 'destructive',
+                    });
+                    return
+
+                  }
                 };
                 image.src = e.target.result as string;
               }

@@ -298,6 +298,7 @@ const handleFileChange = (file : File) => {
               setIsBorderHidden(false);
               setselectedFrontDesign(dataUrl);
             }else {
+              setisDesignUploaded(false)
               setIsBorderHidden(true);
               setselectedFrontDesign("");
               setFrontDesignFile(undefined)
@@ -356,6 +357,7 @@ const handleFileChange = (file : File) => {
               setisBackBorderHidden(false);
               setselectedBackDesign(dataUrl);
             } else {
+              setisBackDesignUploaded(false)
               setisBackBorderHidden(true);
               setselectedBackDesign("");
               setBackDesignFile(undefined);

@@ -23,6 +23,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import LoadingState from "@/components/LoadingState"
+import { useToast } from "@/components/ui/use-toast"
 const emailSchema = z.string().email("Invalid email address");
 
 const Page = () => {
@@ -35,6 +37,7 @@ const Page = () => {
   const [emailError, setEmailError] = useState("");
   const [emailsuccess, setEmailSuccess] = useState("");
   const [isLoading, setisLoading] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   const [showPassword, setShowPassword] = useState(false); // State for showing/hiding password
   const togglePasswordVisibility = () => {
@@ -44,6 +47,7 @@ const Page = () => {
   const [error , setError] = useState<string>("")
   const [success , setSuccess] = useState<string>("")
   const [isPending , stratTranstion ] = useTransition()
+  const { toast } = useToast()
 
   const redirectUrl = useSelector((state: RootState) => state.url);
   const dispatch = useDispatch();
@@ -105,9 +109,20 @@ const Page = () => {
 
 
   const handleClick = async () => {
-   dispatch(saveRedirectUrl(null));
-   await GoogleLogin(redirectUrl)
+    try {
+      setOpen(true);
+      dispatch(saveRedirectUrl(null));
+      await GoogleLogin(redirectUrl);
+    } catch (error) {
+      console.error("An error occurred during Google Login:", error);
+      toast({
+        title: "Error logging in",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
+  
 
 
   return (
@@ -261,6 +276,7 @@ const Page = () => {
   </Card>
 </div>
 
+<LoadingState isOpen={open} />
 
       
     </>
