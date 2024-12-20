@@ -91,6 +91,10 @@ const CommissionsTable: React.FC<CommissionsTableProps> = ({ commissions, affili
 
   return (
     <>
+    <div className="flex mt-4 flex-col gap-5 w-full">
+  
+  <section className="grid w-full grid-cols-1 gap-4 gap-x-8 transition-all sm:grid-cols-1 xl:grid-cols-1">
+
       <Card x-chunk="dashboard-05-chunk-3">
         <CardHeader className="flex flex-row items-center">
           <div className="grid gap-2">
@@ -126,12 +130,12 @@ const CommissionsTable: React.FC<CommissionsTableProps> = ({ commissions, affili
         </CardDescription>
         <CardContent>
           {sortedCommissions && (
-            <ScrollArea className="w-full h-72 mt-4">
               <Table>
+                 <ScrollArea className="w-full h-72 mt-4">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="hidden md:table-cell">Commission Id</TableHead>
-                    <TableHead className="hidden md:table-cell">Affiliate Link Id</TableHead>
+                    <TableHead>Commission Id</TableHead>
+                    <TableHead>Affiliate Link Id</TableHead>
                     <TableHead>Product Title</TableHead>
                     <TableHead>Profit</TableHead>
                     <TableHead>Created At</TableHead>
@@ -140,8 +144,8 @@ const CommissionsTable: React.FC<CommissionsTableProps> = ({ commissions, affili
                 <TableBody>
                   {sortedCommissions.map((commission) => (
                     <TableRow key={commission.commissionId}>
-                      <TableCell className="hidden md:table-cell">{commission.commissionId}</TableCell>
-                      <TableCell className="hidden md:table-cell">{commission.affiliateLinkId}</TableCell>
+                      <TableCell>{commission.commissionId}</TableCell>
+                      <TableCell>{commission.affiliateLinkId}</TableCell>
                       <TableCell>{commission.productTitle}</TableCell>
                       <TableCell>{commission.profit.toFixed(2)} TND</TableCell>
                       <TableCell>
@@ -150,11 +154,15 @@ const CommissionsTable: React.FC<CommissionsTableProps> = ({ commissions, affili
                     </TableRow>
                   ))}
                 </TableBody>
+                </ScrollArea>
+
               </Table>
-            </ScrollArea>
           )}
         </CardContent>
       </Card>
+
+      </section>
+      </div>
     </>
   );
 };

@@ -289,18 +289,18 @@ const handleToggle = async () => {
     
         </div>
 
-        <ScrollArea className="mt-4 w-full h-96">
             <Table>
+            <ScrollArea className="mt-4 w-full h-96">
               <TableHeader>
                 <TableRow>
-                  <TableHead className="hidden sm:table-cell">Order Id</TableHead>
-                  <TableHead className="hidden sm:table-cell">Order Status</TableHead>
-                  <TableHead className="hidden sm:table-cell">Order Type</TableHead>
-                  <TableHead className="hidden sm:table-cell">Is Order Printed</TableHead>
-                  <TableHead className="hidden sm:table-cell">Is Order Paid</TableHead>
+                  <TableHead >Order Id</TableHead>
+                  <TableHead >Order Status</TableHead>
+                  <TableHead >Order Type</TableHead>
+                  <TableHead >Is Order Printed</TableHead>
+                  <TableHead >Is Order Paid</TableHead>
                   <TableHead>Order Creation Date</TableHead>
                   <TableHead>Total Items</TableHead>
-                  <TableHead className="hidden sm:table-cell">Order Amount</TableHead>
+                  <TableHead>Order Amount</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -309,8 +309,8 @@ const handleToggle = async () => {
                   <TableRow
                   key={order.id}
                 >
-                    <TableCell className="hidden sm:table-cell">{order.id}</TableCell>
-                    <TableCell className="hidden sm:table-cell">
+                    <TableCell >{order.id}</TableCell>
+                    <TableCell>
                       <Badge className={` text-white ${{
                               'PROCESSING': 'bg-blue-700',
                               'DELIVERED': 'bg-green-700',
@@ -320,24 +320,24 @@ const handleToggle = async () => {
                               {order.status}
                         </Badge>
                       </TableCell >
-                    <TableCell className="hidden sm:table-cell">
+                    <TableCell >
                     <Badge className={`text-white ${order.type === 'CONFIRMED' ? 'bg-green-700' : order.type === 'NOT_CONFIRMED' ? 'bg-orange-400' : order.type === 'CANCELED' ? 'bg-red-700' : 'bg-gray-700'} hover:bg-gray-700`}>
                       {order.type}
                     </Badge>
                       </TableCell>
-                    <TableCell className="hidden sm:table-cell">
+                    <TableCell>
                       <Badge className={` text-white ${order.printed ? 'bg-green-700' :  'bg-red-700'} hover:bg-gray-700`}>
                     {order.printed ? "Printed" : "Not Printed"}
                       </Badge>
                       </TableCell>
-                    <TableCell className="hidden sm:table-cell">
+                    <TableCell >
                       <Badge className={` text-white ${order.isPaid ? 'bg-green-700' :  'bg-red-700'} hover:bg-gray-700`}>
                     {order.isPaid ? "Is Paid" : "Not Paid"}
                       </Badge>
                       </TableCell>
                     <TableCell>{order.createdAt ? new Date(order.createdAt).toLocaleString() : ''}</TableCell>
                     <TableCell>{order.orderItems?.length || 0} items</TableCell>
-                    <TableCell className="hidden sm:table-cell">{order.amount.toFixed(2)} TND</TableCell>
+                    <TableCell>{order.amount.toFixed(2)} TND</TableCell>
                     <TableCell>
                     <TooltipProvider>
                     {/* View Icon */}
@@ -364,8 +364,8 @@ const handleToggle = async () => {
                   </TableRow>
                 ))}
               </TableBody>
+              </ScrollArea>
             </Table>
-          </ScrollArea>
         </CardContent>
       </Card>  
         

@@ -181,7 +181,7 @@ interface StoresViewProps {
         <div className='mt-2 m-2 gap-4 flex flex-wrap items-center justify-center'>
         <Input
               type="search"
-              className='w-full sm:w-auto mb-2 sm:mb-0'
+              className='w-full sm:w-auto'
               placeholder="Enter the Store Id, name to make a search..."
               value={storeSearchQuery}
               onChange={(e) => setStoreSearchQuery(e.target.value)}
@@ -212,96 +212,96 @@ interface StoresViewProps {
         </CardDescription>
 
         <CardContent>
-        <ScrollArea className="w-full mt-8 h-72">
         <Table>
-  <TableHeader>
-    <TableRow>
-      {/* Store Id column */}
-      <TableHead className="hidden sm:table-cell">Store Id</TableHead>
+        <ScrollArea className="w-full mt-8 h-96">
+        <TableHeader>
+          <TableRow>
+            {/* Store Id column */}
+            <TableHead >Store Id</TableHead>
 
-      {/* Store Name column */}
-      <TableHead>Store Name</TableHead>
+            {/* Store Name column */}
+            <TableHead>Store Name</TableHead>
 
-      {/* User Name column */}
-      <TableHead className="hidden md:table-cell">User Name</TableHead>
+            {/* User Name column */}
+            <TableHead>User Name</TableHead>
 
-      {/* User Phone Number column */}
-      <TableHead className="hidden lg:table-cell">User Phone Number</TableHead>
+            {/* User Phone Number column */}
+            <TableHead>User Phone Number</TableHead>
 
-      {/* User Email column */}
-      <TableHead className="hidden lg:table-cell">User Email</TableHead>
+            {/* User Email column */}
+            <TableHead >User Email</TableHead>
 
-      {/* Total Products column */}
-      <TableHead className="hidden xl:table-cell">Total Products</TableHead>
+            {/* Total Products column */}
+            <TableHead>Total Products</TableHead>
 
-      {/* Total Designs column */}
-      <TableHead className="hidden xl:table-cell">Total Designs</TableHead>
+            {/* Total Designs column */}
+            <TableHead>Total Designs</TableHead>
 
-      {/* Total Rejected Elements column */}
-      <TableHead>Total Rejected Elements</TableHead>
+            {/* Total Rejected Elements column */}
+            <TableHead>Total Rejected Elements</TableHead>
 
-      {/* Store Profit column */}
-      <TableHead className="hidden md:table-cell">Store Profit</TableHead>
+            {/* Store Profit column */}
+            <TableHead>Store Profit</TableHead>
 
-      {/* Total Sales column */}
-      <TableHead className="hidden lg:table-cell">Total Sales</TableHead>
+            {/* Total Sales column */}
+            <TableHead>Total Sales</TableHead>
 
-      {/* Action column */}
-      <TableHead>Action</TableHead>
-    </TableRow>
-  </TableHeader>
-  <TableBody>
-    {stores.map((store, index) => (
-      <TableRow
-        key={store.id}
-      >
-        {/* Store Id cell */}
-        <TableCell className="hidden sm:table-cell">{store.id}</TableCell>
+            {/* Action column */}
+            <TableHead>Action</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {stores.map((store, index) => (
+            <TableRow
+              key={store.id}
+            >
+              {/* Store Id cell */}
+              <TableCell>{store.id}</TableCell>
 
-        {/* Store Name cell */}
-        <TableCell className="text-left">{store.storeName}</TableCell>
+              {/* Store Name cell */}
+              <TableCell className="text-left">{store.storeName}</TableCell>
 
-        {/* User Name cell */}
-        <TableCell className="hidden md:table-cell text-left">{store.user.isUserBanned ?  "User Banned" : store.user.userType === "SELLER" ? store.user.name  : "No User"}</TableCell>
+              {/* User Name cell */}
+              <TableCell className=" text-left">{store.user.isUserBanned ?  "User Banned" : store.user.userType === "SELLER" ? store.user.name  : "No User"}</TableCell>
 
-        {/* User Phone Number cell */}
-        <TableCell className="hidden lg:table-cell text-left">{store.userPhoneNumber ?? 'N/A'}</TableCell>
+              {/* User Phone Number cell */}
+              <TableCell className=" text-left">{store.userPhoneNumber ?? 'N/A'}</TableCell>
 
-        {/* User Email cell */}
-        <TableCell className="hidden lg:table-cell text-left">{store.user.userType === "SELLER" ? store.user.email   : "No User"}</TableCell>
+              {/* User Email cell */}
+              <TableCell className=" text-left">{store.user.userType === "SELLER" ? store.user.email   : "No User"}</TableCell>
 
-        {/* Total Products cell */}
-        <TableCell className="hidden xl:table-cell text-left">{store.productsCount}</TableCell>
+              {/* Total Products cell */}
+              <TableCell className=" text-left">{store.productsCount}</TableCell>
 
-        {/* Total Designs cell */}
-        <TableCell className="hidden xl:table-cell text-left">{store.designsCount}</TableCell>
+              {/* Total Designs cell */}
+              <TableCell className=" text-left">{store.designsCount}</TableCell>
 
-        {/* Total Rejected Elements cell */}
-        <TableCell className="text-left">{store.totalRejectedElements}</TableCell>
+              {/* Total Rejected Elements cell */}
+              <TableCell className="text-left">{store.totalRejectedElements}</TableCell>
 
-        {/* Store Profit cell */}
-        <TableCell className="hidden md:table-cell text-left">{store.revenue.toFixed(2)} TND</TableCell>
+              {/* Store Profit cell */}
+              <TableCell className=" text-left">{store.revenue.toFixed(2)} TND</TableCell>
 
-        {/* Total Sales cell */}
-        <TableCell className="hidden lg:table-cell text-left">{store.totalSales}</TableCell>
+              {/* Total Sales cell */}
+              <TableCell className=" text-left">{store.totalSales}</TableCell>
 
-        {/* Action cell */}
-        <TableCell className="text-right">
-          <Trash2
-            size={20}
-            className="cursor-pointer hover:text-red-500"
-            onClick={() => {
-              setisDeleteOpen(true);
-              setStoreId(store.id);
-            }}
-          />
-        </TableCell>
-      </TableRow>
-    ))}
-  </TableBody>
-</Table>
+              {/* Action cell */}
+              <TableCell className="text-right">
+                <Trash2
+                  size={20}
+                  className="cursor-pointer hover:text-red-500"
+                  onClick={() => {
+                    setisDeleteOpen(true);
+                    setStoreId(store.id);
+                  }}
+                />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+        </ScrollArea>
+      </Table>
 
-          </ScrollArea>
         </CardContent>
       </Card> 
 

@@ -295,8 +295,8 @@ const UsersView = ({initialUsers , limit , initialAffiliates }:{initialUsers : U
         </CardDescription>
         <CardContent>
           {users && (
-            <ScrollArea className="w-full h-96 mt-4">
               <Table>
+               <ScrollArea className=" h-96 mt-4">
                 <TableHeader>
                   <TableRow>
                     <TableHead>User Id</TableHead>
@@ -363,10 +363,12 @@ const UsersView = ({initialUsers , limit , initialAffiliates }:{initialUsers : U
                     </TableRow>
                   ))}
                 </TableBody>
+                </ScrollArea>
+
               </Table>
-            </ScrollArea>
           )}
         </CardContent>
+
       </Card>
 
       </section>
@@ -421,8 +423,8 @@ const UsersView = ({initialUsers , limit , initialAffiliates }:{initialUsers : U
   </CardDescription>
   <CardContent>
     {affiliates && (
-      <ScrollArea className="w-full h-96 mt-4">
         <Table>
+           <ScrollArea className="w-full h-96 mt-4">
           <TableHeader>
             <TableRow>
               <TableHead>User Name</TableHead>
@@ -445,8 +447,9 @@ const UsersView = ({initialUsers , limit , initialAffiliates }:{initialUsers : U
               </TableRow>
             ))}
           </TableBody>
+          </ScrollArea>
+
         </Table>
-      </ScrollArea>
     )}
   </CardContent>
 </Card>

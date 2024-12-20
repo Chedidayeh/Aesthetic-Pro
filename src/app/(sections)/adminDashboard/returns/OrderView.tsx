@@ -292,132 +292,131 @@ interface OrderViewProps {
 </div>
 
 
-        <ScrollArea className="mt-4 w-full h-96">
         <Table>
-  <TableHeader>
-    <TableRow>
-      {/* Order Id column */}
-      <TableHead className="hidden sm:table-cell">Order Id</TableHead>
+        <ScrollArea className="mt-4 w-full h-96">
+        <TableHeader>
+          <TableRow>
+            {/* Order Id column */}
+            <TableHead >Order Id</TableHead>
 
-      {/* Order Status column */}
-      <TableHead className="hidden sm:table-cell">Order Status</TableHead>
+            {/* Order Status column */}
+            <TableHead>Order Status</TableHead>
 
-      {/* Order Type column */}
-      <TableHead className="hidden sm:table-cell">Order Type</TableHead>
+            {/* Order Type column */}
+            <TableHead>Order Type</TableHead>
 
-      <TableHead>Creation Date</TableHead>
+            <TableHead>Creation Date</TableHead>
 
-      {/* Is Order Printed column */}
-      <TableHead className="hidden md:table-cell">Is Order Printed</TableHead>
+            {/* Is Order Printed column */}
+            <TableHead>Is Order Printed</TableHead>
 
-      {/* Is Client Made Order column */}
-      <TableHead className="hidden md:table-cell">Is Client Made Order</TableHead>
+            {/* Is Client Made Order column */}
+            <TableHead>Is Client Made Order</TableHead>
 
-      {/* Is Seller Order column */}
-      <TableHead className="hidden md:table-cell">Is Seller Order</TableHead>
+            {/* Is Seller Order column */}
+            <TableHead>Is Seller Order</TableHead>
 
-      {/* Is Order Paid column */}
-      <TableHead className="hidden lg:table-cell">Is Order Paid</TableHead>
+            {/* Is Order Paid column */}
+            <TableHead>Is Order Paid</TableHead>
 
-      {/* Total Items column */}
-      <TableHead className="hidden xl:table-cell">Total Items</TableHead>
+            {/* Total Items column */}
+            <TableHead >Total Items</TableHead>
 
-      {/* Order Amount column */}
-      <TableHead className="hidden xl:table-cell">Order Amount</TableHead>
+            {/* Order Amount column */}
+            <TableHead >Order Amount</TableHead>
 
-      {/* Actions column */}
-      <TableHead>Actions</TableHead>
-    </TableRow>
-  </TableHeader>
-  <TableBody>
-    {filteredOrders.map((order, index) => (
-      <TableRow
-        key={order.id}
-        className={`cursor-pointer ${selectedIndex === index ? 'border-2 border-blue-500' : ''}`}
-        onClick={() => handleRowClick(order, index)}
-      >
-        {/* Order Id cell */}
-        <TableCell className="hidden sm:table-cell text-xs">{order.id}</TableCell>
+            {/* Actions column */}
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {filteredOrders.map((order, index) => (
+            <TableRow
+              key={order.id}
+              className={`cursor-pointer ${selectedIndex === index ? 'border-2 border-blue-500' : ''}`}
+              onClick={() => handleRowClick(order, index)}
+            >
+              {/* Order Id cell */}
+              <TableCell className=" text-xs">{order.id}</TableCell>
 
-        {/* Order Status cell */}
-        <TableCell className="hidden sm:table-cell">
-          <Badge className={`${{
-            'PROCESSING': 'bg-blue-700',
-            'DELIVERED': 'bg-green-700',
-            'REFUSED': 'bg-red-700',
-            'CANCELED': 'bg-red-700'
-          }[order.status]} hover:bg-gray-700`}>
-            {order.status}
-          </Badge>
-        </TableCell>
+              {/* Order Status cell */}
+              <TableCell className="">
+                <Badge className={`${{
+                  'PROCESSING': 'bg-blue-700',
+                  'DELIVERED': 'bg-green-700',
+                  'REFUSED': 'bg-red-700',
+                  'CANCELED': 'bg-red-700'
+                }[order.status]} hover:bg-gray-700`}>
+                  {order.status}
+                </Badge>
+              </TableCell>
 
-        {/* Order Type cell */}
-        <TableCell className="hidden sm:table-cell">
-          <Badge className={`${order.type === 'CONFIRMED' ? 'bg-green-700' : order.type === 'NOT_CONFIRMED' ? 'bg-orange-400' : order.type === 'CANCELED' ? 'bg-red-700' : 'bg-gray-700'} hover:bg-gray-700`}>
-            {order.type}
-          </Badge>
-        </TableCell>
+              {/* Order Type cell */}
+              <TableCell>
+                <Badge className={`${order.type === 'CONFIRMED' ? 'bg-green-700' : order.type === 'NOT_CONFIRMED' ? 'bg-orange-400' : order.type === 'CANCELED' ? 'bg-red-700' : 'bg-gray-700'} hover:bg-gray-700`}>
+                  {order.type}
+                </Badge>
+              </TableCell>
 
-            {/* Order Type cell */}
-          <TableCell>
-          {new Date(order.createdAt).toLocaleString()}
-        </TableCell>
+                  {/* Order Type cell */}
+                <TableCell>
+                {new Date(order.createdAt).toLocaleString()}
+              </TableCell>
 
 
-        {/* Is Order Printed cell */}
-        <TableCell className="hidden md:table-cell">
-          <Badge className={`${order.printed ? 'bg-green-700' : 'bg-red-700'} hover:bg-gray-700`}>
-            {order.printed ? "Printed" : "Not Printed"}
-          </Badge>
-        </TableCell>
+              {/* Is Order Printed cell */}
+              <TableCell>
+                <Badge className={`${order.printed ? 'bg-green-700' : 'bg-red-700'} hover:bg-gray-700`}>
+                  {order.printed ? "Printed" : "Not Printed"}
+                </Badge>
+              </TableCell>
 
-        {/* Is Client Made Order cell */}
-        <TableCell className="hidden md:table-cell">{order.isClientMadeOrder ? 'Yes' : 'No'}</TableCell>
+              {/* Is Client Made Order cell */}
+              <TableCell>{order.isClientMadeOrder ? 'Yes' : 'No'}</TableCell>
 
-        {/* Is Seller Order cell */}
-        <TableCell className="hidden md:table-cell">{order.isSellerOrder ? 'Yes' : 'No'}</TableCell>
+              {/* Is Seller Order cell */}
+              <TableCell>{order.isSellerOrder ? 'Yes' : 'No'}</TableCell>
 
-        {/* Is Order Paid cell */}
-        <TableCell className="hidden lg:table-cell">
-          <Badge className={`${order.isPaid ? 'bg-green-700' : 'bg-red-700'} hover:bg-gray-700`}>
-            {order.isPaid ? "Is Paid" : "Not Paid"}
-          </Badge>
-        </TableCell>
+              {/* Is Order Paid cell */}
+              <TableCell>
+                <Badge className={`${order.isPaid ? 'bg-green-700' : 'bg-red-700'} hover:bg-gray-700`}>
+                  {order.isPaid ? "Is Paid" : "Not Paid"}
+                </Badge>
+              </TableCell>
 
-        {/* Total Items cell */}
-        <TableCell className="hidden xl:table-cell">{order.orderItems?.length || 0} items</TableCell>
+              {/* Total Items cell */}
+              <TableCell >{order.orderItems?.length || 0} items</TableCell>
 
-        {/* Order Amount cell */}
-        <TableCell className="hidden xl:table-cell">{order.amount.toFixed(2)} TND</TableCell>
+              {/* Order Amount cell */}
+              <TableCell>{order.amount.toFixed(2)} TND</TableCell>
 
-        {/* Actions cell */}
-        <TableCell>
-          <TooltipProvider>
-            <div className="flex items-center">
-              {/* Delete Icon */}
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Trash2
-                    onClick={() => {
-                      setisDeleteOpen(true);
-                      setorderId(order.id);
-                    }}
-                    className="cursor-pointer hover:text-red-500 ml-2"
-                  />
-                </TooltipTrigger>
-                <TooltipContent className="bg-red-500">
-                  <p>Delete</p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
-          </TooltipProvider>
-        </TableCell>
-      </TableRow>
-    ))}
-  </TableBody>
-</Table>
-
-          </ScrollArea>
+              {/* Actions cell */}
+              <TableCell>
+                <TooltipProvider>
+                  <div className="flex items-center">
+                    {/* Delete Icon */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Trash2
+                          onClick={() => {
+                            setisDeleteOpen(true);
+                            setorderId(order.id);
+                          }}
+                          className="cursor-pointer hover:text-red-500 ml-2"
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent className="bg-red-500">
+                        <p>Delete</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                </TooltipProvider>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+        </ScrollArea>
+      </Table>
         </CardContent>
       </Card>  
 

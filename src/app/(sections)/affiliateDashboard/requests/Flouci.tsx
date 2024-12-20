@@ -27,6 +27,7 @@ import { deletePaymentRequestById } from "./actions";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import LoadingState from "@/components/LoadingState";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ViewProps {
     paymentRequests: AffiliatePaymentRequest[];
@@ -95,23 +96,30 @@ const handleDelete = async () => {
                         </AlertDialogContent>
                      </AlertDialog> 
 
+
+                     <div className="flex mt-4 flex-col gap-5 w-full">
+  
+  <section className="grid w-full grid-cols-1 gap-4 gap-x-8 transition-all sm:grid-cols-1 xl:grid-cols-1">
+
+
             <Table>
+            <ScrollArea className="w-full h-96 mt-4">
                 <TableHeader>
                     <TableRow>
-                        <TableHead className="hidden md:table-cell">Payment Method</TableHead>
-                        <TableHead className="hidden md:table-cell">Account Holder</TableHead>
-                        <TableHead className="hidden md:table-cell">Bank Account RIB</TableHead>
+                        <TableHead >Payment Method</TableHead>
+                        <TableHead >Account Holder</TableHead>
+                        <TableHead >Bank Account RIB</TableHead>
                         <TableHead>Requested Amount</TableHead>
                         <TableHead>Payment Status</TableHead>
-                        <TableHead className="hidden md:table-cell">Actions</TableHead>
+                        <TableHead >Actions</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {paymentRequests.map((request) => (
                         <TableRow key={request.id}>
-                            <TableCell className="hidden md:table-cell">{request.method}</TableCell>
-                            <TableCell className="hidden md:table-cell">{request.accountHolder || 'N/A'}</TableCell>
-                            <TableCell className="hidden md:table-cell">{request.bankAccount || 'N/A'}</TableCell>
+                            <TableCell >{request.method}</TableCell>
+                            <TableCell >{request.accountHolder || 'N/A'}</TableCell>
+                            <TableCell >{request.bankAccount || 'N/A'}</TableCell>
                             <TableCell>{request.requestedAmount.toFixed(2)} TND</TableCell>
                             <TableCell>
                             <Badge
@@ -126,7 +134,7 @@ const handleDelete = async () => {
                                 {request.status}
                             </Badge>
                 </TableCell >
-                            <TableCell className="hidden md:table-cell">
+                            <TableCell >
                             <TooltipProvider>
                   <>
                     <Tooltip>
@@ -149,7 +157,11 @@ const handleDelete = async () => {
                         </TableRow>
                     ))}
                 </TableBody>
+                </ScrollArea>
             </Table>
+
+            </section>
+            </div>
             <LoadingState isOpen={open} />
 
         </div>

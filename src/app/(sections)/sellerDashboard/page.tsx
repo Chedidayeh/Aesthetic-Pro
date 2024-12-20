@@ -157,18 +157,9 @@ const Page =  async () => {
 
     </section>
     <div className='flex flex-col space-y-5'>
-    <Component storeId={store.id} />
-
-    <div className='hidden xl:flex flex-col space-y-5'>
-
+    <Component storeId={store.id}/>
     <OrderedProducts/>
-
     <OrderedDesigns/>
-
-
-
-
-    </div>
     <StoresTableStats storeId={store.id} chartData={chartData} />
 
     </div>

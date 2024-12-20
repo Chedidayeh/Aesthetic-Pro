@@ -27,6 +27,7 @@ import { deletePaymentRequestById } from "./actions";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import LoadingState from "@/components/LoadingState";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ViewProps {
     paymentRequests: PaymentRequest[];
@@ -71,49 +72,34 @@ const handleDelete = async () => {
         }
 
     return (
-        <div>
-                                <AlertDialog open={isDeleteOpen}>
-               <AlertDialogTrigger asChild>
-                         </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                   <AlertDialogHeader className="flex flex-col items-center">
-                                       <div className="text-red-500 mb-2">
-                                           <OctagonAlert className=''/>
-                                               </div>
-                                              <AlertDialogTitle className="text-xl font-bold text-center">
-                                                 Are you absolutely sure you want to Cancel your request ?
-                                               </AlertDialogTitle>
-                                                <AlertDialogDescription>
-                                                   This action cannot be undone. 
-                                                    </AlertDialogDescription>
-                                                   </AlertDialogHeader>
-                                                  <AlertDialogFooter>
-                                              <AlertDialogCancel onClick={()=>setisDeleteOpen(false)}>Cancel</AlertDialogCancel>
-                                      <AlertDialogAction onClick={() => handleDelete()} 
-                                     className='bg-red-500 hover:bg-red-500' >Delete</AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                     </AlertDialog> 
+        <>
+
+<div className="flex mt-4 flex-col gap-5 w-full">
+  
+  <section className="grid w-full grid-cols-1 gap-4 gap-x-8 transition-all sm:grid-cols-1 xl:grid-cols-1">
+
+
 
             <Table>
+            <ScrollArea className="w-full h-96 mt-4">
                 <TableHeader>
                     <TableRow>
-                        <TableHead className="hidden md:table-cell">Payment Method</TableHead>
-                        <TableHead className="hidden md:table-cell">Bank Name</TableHead>
-                        <TableHead className="hidden md:table-cell">Account Holder</TableHead>
-                        <TableHead className="hidden md:table-cell">Bank Account RIB</TableHead>
+                        <TableHead >Payment Method</TableHead>
+                        <TableHead >Bank Name</TableHead>
+                        <TableHead >Account Holder</TableHead>
+                        <TableHead >Bank Account RIB</TableHead>
                         <TableHead>Requested Amount</TableHead>
                         <TableHead>Payment Status</TableHead>
-                        <TableHead className="hidden md:table-cell">Actions</TableHead>
+                        <TableHead >Actions</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {paymentRequests.map((request) => (
                         <TableRow key={request.id}>
-                            <TableCell className="hidden md:table-cell">{request.method}</TableCell>
-                            <TableCell className="hidden md:table-cell">{request.bankName || 'N/A'}</TableCell>
-                            <TableCell className="hidden md:table-cell">{request.accountHolder || 'N/A'}</TableCell>
-                            <TableCell className="hidden md:table-cell">{request.bankAccount || 'N/A'}</TableCell>
+                            <TableCell >{request.method}</TableCell>
+                            <TableCell >{request.bankName || 'N/A'}</TableCell>
+                            <TableCell >{request.accountHolder || 'N/A'}</TableCell>
+                            <TableCell >{request.bankAccount || 'N/A'}</TableCell>
                             <TableCell>{request.requestedAmount.toFixed(2)} TND</TableCell>
                             <TableCell>
                             <Badge
@@ -128,7 +114,7 @@ const handleDelete = async () => {
                                 {request.status}
                             </Badge>
                 </TableCell >
-                            <TableCell className="hidden md:table-cell">
+                            <TableCell >
                             <TooltipProvider>
                   <>
                     <Tooltip>
@@ -151,10 +137,38 @@ const handleDelete = async () => {
                         </TableRow>
                     ))}
                 </TableBody>
-            </Table>
-            <LoadingState isOpen={open} />
+                </ScrollArea>
 
-        </div>
+            </Table>
+
+            </section>
+            </div>
+
+
+            <LoadingState isOpen={open} />
+                                <AlertDialog open={isDeleteOpen}>
+               <AlertDialogTrigger asChild>
+                         </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                   <AlertDialogHeader className="flex flex-col items-center">
+                                       <div className="text-red-500 mb-2">
+                                           <OctagonAlert className=''/>
+                                               </div>
+                                              <AlertDialogTitle className="text-xl font-bold text-center">
+                                                 Are you absolutely sure you want to Cancel your request ?
+                                               </AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                   This action cannot be undone. 
+                                                    </AlertDialogDescription>
+                                                   </AlertDialogHeader>
+                                                  <AlertDialogFooter>
+                                              <AlertDialogCancel onClick={()=>setisDeleteOpen(false)}>Cancel</AlertDialogCancel>
+                                      <AlertDialogAction onClick={() => handleDelete()} 
+                                     className='bg-red-500 hover:bg-red-500' >Delete</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                     </AlertDialog> 
+        </>
     );
 }
 

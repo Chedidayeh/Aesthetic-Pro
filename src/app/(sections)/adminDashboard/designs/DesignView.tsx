@@ -105,7 +105,7 @@ interface DesignViewProps {
     const handleSearch = async () => {
       try {
         setOpen(true);
-        const designs = await getAllDesignsWithProducts(6, searchTerm, filterBy, sortBy);
+        const designs = await getAllDesignsWithProducts(10, searchTerm, filterBy, sortBy);
         setDesigns(designs);
       } catch (error) {
         console.error("Error searching designs:", error);
@@ -122,7 +122,7 @@ interface DesignViewProps {
       try {
         setOpen(true);
         setFilterBy(event);
-        const designs = await getAllDesignsWithProducts(6, searchTerm, event, sortBy);
+        const designs = await getAllDesignsWithProducts(10, searchTerm, event, sortBy);
         setDesigns(designs);
       } catch (error) {
         console.error("Error filtering designs:", error);
@@ -139,7 +139,7 @@ interface DesignViewProps {
       try {
         setOpen(true);
         setSortBy(event);
-        const designs = await getAllDesignsWithProducts(6, searchTerm, filterBy, event);
+        const designs = await getAllDesignsWithProducts(10, searchTerm, filterBy, event);
         setDesigns(designs);
       } catch (error) {
         console.error("Error sorting designs:", error);
@@ -373,103 +373,103 @@ const handleSwitchChange = () => {
                           </SelectContent>
                         </Select>
 
-      </div>
-
-        <ScrollArea className="mt-4 w-full h-full">
-<Table>
-  <TableHeader>
-    <TableRow>
-      {/* Design Id column */}
-      <TableHead className="hidden sm:table-cell">Design Id</TableHead>
-
-      {/* Design Name column */}
-      <TableHead>Design Name</TableHead>
-
-      {/* Design price column */}
-      <TableHead className="hidden sm:table-cell">Design Price</TableHead>
-
-      {/* Design Store column */}
-      <TableHead className="hidden md:table-cell">Design Store</TableHead>
-
-      {/* Is Design Accepted column */}
-      <TableHead className="hidden md:table-cell">Is Design Accepted</TableHead>
-
-      {/* Is Design Refused column */}
-      <TableHead className="hidden md:table-cell">Is Design Refused</TableHead>
-
-      {/* Ordered Items column */}
-      <TableHead className="hidden md:table-cell">Ordered Items</TableHead>
-
-      {/* Actions column */}
-      <TableHead>Actions</TableHead>
-    </TableRow>
-  </TableHeader>
-  <TableBody>
-    {designs.map((design) => (
-      <TableRow key={design.id}>
-        {/* Design Id cell */}
-        <TableCell className="hidden sm:table-cell">{design.id}</TableCell>
-
-        {/* Design Name cell */}
-        <TableCell>{design.name}</TableCell>
-
-        {/* Design price cell */}
-        <TableCell className="hidden sm:table-cell">{(design.price).toFixed(2)} TND</TableCell>
-
-        {/* Design Store cell */}
-        <TableCell className="hidden md:table-cell">{design.store.storeName}</TableCell>
-
-        {/* Is Design Accepted cell */}
-        <TableCell className="hidden md:table-cell">{design.isDesignAccepted ? 'Yes' : 'No'}</TableCell>
-
-        {/* Is Design Refused cell */}
-        <TableCell className="hidden md:table-cell">{design.isDesignRefused ? 'Yes' : 'No'}</TableCell>
-
-        {/* Ordered Items cell */}
-        <TableCell className="hidden md:table-cell text-center">{design.frontOrders.length + design.backOrders.length}</TableCell>
-
-        {/* Actions cell */}
-        <TableCell>
-          <TooltipProvider>
-            <div className="flex items-center">
-              {/* View Icon */}
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Eye
-                    onClick={() => {
-                     setSelectedDesign(design)
-                    }}
-                    className="cursor-pointer hover:text-blue-500"
-                  />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>View</p>
-                </TooltipContent>
-              </Tooltip>
-
-              {/* Delete Icon */}
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Trash2
-                    onClick={() => {
-                      setisDeleteOpen(true);
-                      setDesignId(design.id);
-                    }}
-                    className="cursor-pointer hover:text-red-500 ml-2"
-                  />
-                </TooltipTrigger>
-                <TooltipContent className="bg-red-500">
-                  <p>Delete</p>
-                </TooltipContent>
-              </Tooltip>
             </div>
-          </TooltipProvider>
-        </TableCell>
-      </TableRow>
-    ))}
-  </TableBody>
-</Table>
-          </ScrollArea>
+
+      <Table>
+      <ScrollArea className="mt-4 w-full h-96">
+        <TableHeader>
+          <TableRow>
+            {/* Design Id column */}
+            <TableHead>Design Id</TableHead>
+
+            {/* Design Name column */}
+            <TableHead>Design Name</TableHead>
+
+            {/* Design price column */}
+            <TableHead>Design Price</TableHead>
+
+            {/* Design Store column */}
+            <TableHead>Design Store</TableHead>
+
+            {/* Is Design Accepted column */}
+            <TableHead>Is Design Accepted</TableHead>
+
+            {/* Is Design Refused column */}
+            <TableHead>Is Design Refused</TableHead>
+
+            {/* Ordered Items column */}
+            <TableHead>Ordered Items</TableHead>
+
+            {/* Actions column */}
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {designs.map((design) => (
+            <TableRow key={design.id}>
+              {/* Design Id cell */}
+              <TableCell >{design.id}</TableCell>
+
+              {/* Design Name cell */}
+              <TableCell>{design.name}</TableCell>
+
+              {/* Design price cell */}
+              <TableCell>{(design.price).toFixed(2)} TND</TableCell>
+
+              {/* Design Store cell */}
+              <TableCell>{design.store.storeName}</TableCell>
+
+              {/* Is Design Accepted cell */}
+              <TableCell>{design.isDesignAccepted ? 'Yes' : 'No'}</TableCell>
+
+              {/* Is Design Refused cell */}
+              <TableCell >{design.isDesignRefused ? 'Yes' : 'No'}</TableCell>
+
+              {/* Ordered Items cell */}
+              <TableCell className="text-center">{design.frontOrders.length + design.backOrders.length}</TableCell>
+
+              {/* Actions cell */}
+              <TableCell>
+                <TooltipProvider>
+                  <div className="flex items-center">
+                    {/* View Icon */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Eye
+                          onClick={() => {
+                          setSelectedDesign(design)
+                          }}
+                          className="cursor-pointer hover:text-blue-500"
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>View</p>
+                      </TooltipContent>
+                    </Tooltip>
+
+                    {/* Delete Icon */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Trash2
+                          onClick={() => {
+                            setisDeleteOpen(true);
+                            setDesignId(design.id);
+                          }}
+                          className="cursor-pointer hover:text-red-500 ml-2"
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent className="bg-red-500">
+                        <p>Delete</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                </TooltipProvider>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+        </ScrollArea>
+      </Table>
         </CardContent>
       </Card>  
         

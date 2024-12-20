@@ -71,7 +71,7 @@ useEffect(() => {
             <span className="sr-only">Toggle navigation menu</span>
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="flex flex-col">
+        <SheetContent side="left" className="flex flex-col w-[50%]">
         <ScrollArea className="h-full w-full">
           <nav className="grid gap-2 text-lg font-medium">
 

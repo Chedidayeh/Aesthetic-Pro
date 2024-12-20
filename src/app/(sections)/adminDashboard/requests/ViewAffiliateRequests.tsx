@@ -42,9 +42,7 @@ interface ViewProps {
 }
 
 const ViewAffiliateRequests = ({  affiliatePaymentRequests }: ViewProps) => {
-  const [open, setOpen] = useState<boolean>(false);
-  const router = useRouter();
-  const { toast } = useToast()
+
   
   
   const [filterBy, setFilterBy] = useState<string>('');
@@ -155,8 +153,6 @@ const ViewAffiliateRequests = ({  affiliatePaymentRequests }: ViewProps) => {
 
         </CardContent>
       </Card>
-
-<LoadingState isOpen={open} />
 
     </>
   );

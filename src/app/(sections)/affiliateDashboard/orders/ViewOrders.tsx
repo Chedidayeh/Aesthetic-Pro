@@ -178,84 +178,82 @@ const ViewOrders = ({ orderItems }: ViewProps) => {
 </div>
 
 
-        <ScrollArea className="mt-4 w-full h-96">
         <Table>
-  <TableHeader>
-    <TableRow>
-      {/* Order Status column */}
-      <TableHead className="">Order Status</TableHead>
+        <ScrollArea className="mt-4 w-full h-96">
+          <TableHeader>
+            <TableRow>
+              {/* Order Status column */}
+              <TableHead className="">Order Status</TableHead>
 
-      {/* Order Type column */}
-      <TableHead className="">Order Type</TableHead>
+              {/* Order Type column */}
+              <TableHead className="">Order Type</TableHead>
 
-      <TableHead className="hidden lg:table-cell">Creation Date</TableHead>
+              <TableHead>Creation Date</TableHead>
 
-      {/* Is Order Printed column */}
-      <TableHead className="hidden md:table-cell">Is Order Printed</TableHead>
+              {/* Is Order Printed column */}
+              <TableHead>Is Order Printed</TableHead>
 
-      {/* Is Order Paid column */}
-      <TableHead className="hidden lg:table-cell">Is Order Paid</TableHead>
+              {/* Is Order Paid column */}
+              <TableHead>Is Order Paid</TableHead>
 
-      <TableHead className="">Commission Id</TableHead>
+              <TableHead className="">Commission Id</TableHead>
 
-      <TableHead className="hidden md:table-cell">Your Profit</TableHead>
+              <TableHead>Your Profit</TableHead>
 
 
-    </TableRow>
-  </TableHeader>
-  <TableBody>
-  {filteredOrders.map((orderWithCommission, index) => {
-    const { orderItem, commissionProfit } = orderWithCommission;
-    if (!orderItem) return null; // Skip rendering if order is null
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+          {filteredOrders.map((orderWithCommission, index) => {
+            const { orderItem, commissionProfit } = orderWithCommission;
+            if (!orderItem) return null; // Skip rendering if order is null
 
-    return (
-      <TableRow key={orderItem.id}>
-        <TableCell className="">
-          <Badge className={{
-            'PROCESSING': 'bg-blue-700 text-white',
-            'DELIVERED': 'bg-green-700 text-white',
-            'REFUSED': 'bg-red-700 text-white',
-            'CANCELED': 'bg-red-700 text-white'
-          }[orderItem.order.status] || 'bg-gray-700 text-white'}>
-            {orderItem.order.status}
-          </Badge>
-        </TableCell>
+            return (
+              <TableRow key={orderItem.id}>
+                <TableCell className="">
+                  <Badge className={{
+                    'PROCESSING': 'bg-blue-700 text-white',
+                    'DELIVERED': 'bg-green-700 text-white',
+                    'REFUSED': 'bg-red-700 text-white',
+                    'CANCELED': 'bg-red-700 text-white'
+                  }[orderItem.order.status] || 'bg-gray-700 text-white'}>
+                    {orderItem.order.status}
+                  </Badge>
+                </TableCell>
 
-        <TableCell className="">
-          <Badge className={orderItem.order.type === 'CONFIRMED' ? 'bg-green-700 text-white' : orderItem.order.type === 'NOT_CONFIRMED' ? 'bg-orange-400 text-white' : orderItem.order.type === 'CANCELED' ? 'bg-red-700 text-white' : 'bg-gray-700 text-white'}>
-            {orderItem.order.type}
-          </Badge>
-        </TableCell>
+                <TableCell className="">
+                  <Badge className={orderItem.order.type === 'CONFIRMED' ? 'bg-green-700 text-white' : orderItem.order.type === 'NOT_CONFIRMED' ? 'bg-orange-400 text-white' : orderItem.order.type === 'CANCELED' ? 'bg-red-700 text-white' : 'bg-gray-700 text-white'}>
+                    {orderItem.order.type}
+                  </Badge>
+                </TableCell>
 
-        <TableCell className="hidden lg:table-cell">{new Date(orderItem.createdAt).toLocaleString()}</TableCell>
+                <TableCell>{new Date(orderItem.createdAt).toLocaleString()}</TableCell>
 
-        <TableCell className="hidden md:table-cell">
-          <Badge className={orderItem.order.printed ? 'bg-green-700 text-white' : 'text-white bg-red-700'}>
-            {orderItem.order.printed ? "Printed" : "Not Printed"}
-          </Badge>
-        </TableCell>
+                <TableCell>
+                  <Badge className={orderItem.order.printed ? 'bg-green-700 text-white' : 'text-white bg-red-700'}>
+                    {orderItem.order.printed ? "Printed" : "Not Printed"}
+                  </Badge>
+                </TableCell>
 
-        <TableCell className="hidden lg:table-cell">
-          <Badge className={orderItem.order.isPaid ? 'bg-green-700 text-white' : 'bg-red-700 text-white'}>
-            {orderItem.order.isPaid ? "Is Paid" : "Not Paid"}
-          </Badge>
-        </TableCell>
+                <TableCell>
+                  <Badge className={orderItem.order.isPaid ? 'bg-green-700 text-white' : 'bg-red-700 text-white'}>
+                    {orderItem.order.isPaid ? "Is Paid" : "Not Paid"}
+                  </Badge>
+                </TableCell>
 
-        <TableCell className="text-xs">
-          {orderItem.commission!.id}
-        </TableCell>
+                <TableCell className="text-xs">
+                  {orderItem.commission!.id}
+                </TableCell>
 
-        <TableCell className="hidden md:table-cell">
-          {commissionProfit.toFixed(2)} TND
-        </TableCell>
-      </TableRow>
-    );
-  })}
-</TableBody>
-
-</Table>
-
-          </ScrollArea>
+                <TableCell>
+                  {commissionProfit.toFixed(2)} TND
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+        </ScrollArea>
+        </Table>
         </CardContent>
       </Card>  
 

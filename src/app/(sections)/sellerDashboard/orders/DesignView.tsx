@@ -119,7 +119,10 @@ const DesignView: React.FC<DesignViewProps> = ({ orderedDesigns }) => {
 
                                        
 
-<div>
+<div className="flex mt-4 flex-col gap-5 w-full">
+  
+  <section className="grid w-full grid-cols-1 gap-4 gap-x-8 transition-all sm:grid-cols-1 xl:grid-cols-1">
+
 
 <Card className="xl:col-span-full mt-4" x-chunk="dashboard-01-chunk-4">
   <CardHeader className="px-4 gap-4 sm:px-7">
@@ -164,25 +167,25 @@ const DesignView: React.FC<DesignViewProps> = ({ orderedDesigns }) => {
     </div>
   </CardHeader>
   <CardContent>
-  <ScrollArea  className="h-[384px] w-full border rounded-lg">
     <Table className='mt-8'>
+    <ScrollArea  className="h-[384px] w-full border rounded-lg">
       <TableHeader>
         <TableRow>
-          <TableHead className="hidden sm:table-cell">Order Id</TableHead>
+          <TableHead>Order Id</TableHead>
           <TableHead>Order Status</TableHead>
-          <TableHead className="hidden sm:table-cell">Order Type</TableHead>
-          <TableHead className="hidden sm:table-cell">Order Payment</TableHead>
+          <TableHead>Order Type</TableHead>
+          <TableHead >Order Payment</TableHead>
           <TableHead>Front Design Name</TableHead>
           <TableHead>Back Design Name</TableHead>
-          <TableHead className="hidden sm:table-cell">Product Quantity</TableHead>
-          <TableHead className="hidden sm:table-cell">Front Design Profit</TableHead>
-          <TableHead className="hidden sm:table-cell">Back Design Profit</TableHead>
+          <TableHead>Product Quantity</TableHead>
+          <TableHead>Front Design Profit</TableHead>
+          <TableHead>Back Design Profit</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {filteredOrders.map((orderItem) => (
           <TableRow key={orderItem.order.id}>
-            <TableCell className="hidden sm:table-cell">{orderItem.order.id}</TableCell>
+            <TableCell>{orderItem.order.id}</TableCell>
             <TableCell>
               <Badge className={`${{
                 'PROCESSING': 'bg-blue-700',
@@ -193,31 +196,32 @@ const DesignView: React.FC<DesignViewProps> = ({ orderedDesigns }) => {
                 {orderItem.order.status}
               </Badge>
             </TableCell>
-            <TableCell className="hidden sm:table-cell">
+            <TableCell>
               <Badge className={`${orderItem.order.type === 'CONFIRMED' ? 'bg-green-700' : orderItem.order.type === 'NOT_CONFIRMED' ? 'bg-orange-400' : orderItem.order.type === 'CANCELED' ? 'bg-red-700' : 'bg-gray-700'} hover:bg-gray-700`}>
                 {orderItem.order.type}
               </Badge>
             </TableCell>
-            <TableCell className="hidden sm:table-cell">
+            <TableCell >
               <Badge className={`${orderItem.order.isPaid ? 'bg-green-700' : 'bg-red-700'} hover:bg-gray-700`}>
                 {orderItem.order.isPaid ? "Is Paid" : "Not Paid"}
               </Badge>
             </TableCell>
             <TableCell>{orderItem.frontDesignName || 'N/A'}</TableCell>
             <TableCell>{orderItem.backDesignName || 'N/A'}</TableCell>
-            <TableCell className="hidden sm:table-cell">{orderItem.quantity}</TableCell>
-            <TableCell className="hidden sm:table-cell">{orderItem.frontDesignProfit.toFixed(2)} TND</TableCell>
-            <TableCell className="hidden sm:table-cell">{orderItem.backDesignProfit.toFixed(2)} TND</TableCell>
+            <TableCell >{orderItem.quantity}</TableCell>
+            <TableCell >{orderItem.frontDesignProfit.toFixed(2)} TND</TableCell>
+            <TableCell>{orderItem.backDesignProfit.toFixed(2)} TND</TableCell>
           </TableRow>
         ))}
       </TableBody>
+      </ScrollArea>
+
     </Table>
-    </ScrollArea>
   </CardContent>
 </Card>
 
 
-
+</section>
 </div>
 
                             </>

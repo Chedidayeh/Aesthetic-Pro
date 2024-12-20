@@ -325,7 +325,7 @@ const CategoryView: React.FC<CatProps> = ({ categories }) => {
   <TableHeader>
     <TableRow>
       {/* Category Id column */}
-      <TableHead className="hidden sm:table-cell">Category Id</TableHead>
+      <TableHead>Category Id</TableHead>
 
       {/* Category Label column */}
       <TableHead>Category Label</TableHead>
@@ -334,10 +334,10 @@ const CategoryView: React.FC<CatProps> = ({ categories }) => {
       <TableHead>Category Price</TableHead>
 
       {/* Category Colors column */}
-      <TableHead className="hidden md:table-cell">Category Colors</TableHead>
+      <TableHead>Category Colors</TableHead>
 
       {/* Category Sizes column */}
-      <TableHead className="hidden lg:table-cell">Category Sizes</TableHead>
+      <TableHead>Category Sizes</TableHead>
 
       {/* Action column */}
       <TableHead>Actions</TableHead>
@@ -347,7 +347,7 @@ const CategoryView: React.FC<CatProps> = ({ categories }) => {
     {categories.map((category) => (
       <TableRow key={category.id}>
         {/* Category Id cell */}
-        <TableCell className="hidden sm:table-cell">{category.id}</TableCell>
+        <TableCell>{category.id}</TableCell>
 
         {/* Category Label cell */}
         <TableCell>{category.label}</TableCell>
@@ -356,7 +356,7 @@ const CategoryView: React.FC<CatProps> = ({ categories }) => {
         <TableCell>{category.price.toFixed(2)} TND</TableCell>
 
         {/* Category Colors cell */}
-        <TableCell className="hidden md:table-cell">
+        <TableCell>
           {category.colors.map((color) => (
             <Badge key={color.id} className="mr-1">
               {color.label}
@@ -365,7 +365,7 @@ const CategoryView: React.FC<CatProps> = ({ categories }) => {
         </TableCell>
 
         {/* Category Sizes cell */}
-        <TableCell className="hidden lg:table-cell">
+        <TableCell>
           {category.sizes.map((size) => (
             <Badge key={size.id} className="mr-1">
               {size.label}

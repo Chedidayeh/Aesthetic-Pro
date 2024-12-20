@@ -99,9 +99,9 @@ export function Component() {
 
   return (
     <>
-        <LoadingState isOpen={isLoading} />
+    <LoadingState isOpen={isLoading} />
 
-    <Card className="col-span-4">
+    <Card className="col-span-full">
       <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 py-5 sm:py-6">
           <CardTitle>Orders Stats</CardTitle>
@@ -202,8 +202,8 @@ export function Component() {
             />
           </LineChart>
         </ChartContainer>
-        <div className="flex space-x-4 mt-4">
-          {Object.keys(chartConfig).map((key) => (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+        {Object.keys(chartConfig).map((key) => (
                 <Button
                 variant={activeChart === key ? "default" : "secondary"}
                 size="sm"

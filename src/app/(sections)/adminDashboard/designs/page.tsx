@@ -9,7 +9,7 @@ import DesignView from "./DesignView"
 
 const Page =  async () => {
   noStore()
-  const initialDesigns = await getAllDesignsWithProducts(2);
+  const initialDesigns = await getAllDesignsWithProducts(10);
 
   return (
     <>

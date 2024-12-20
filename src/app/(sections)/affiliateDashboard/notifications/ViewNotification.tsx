@@ -117,8 +117,9 @@ const ViewNotification = ({ notifications }: NotiViewProps) => {
         )}
         </CardHeader>
         <CardContent>
-        <ScrollArea className="h-[384px] w-full border rounded-lg">
+          
           <Table>
+          <ScrollArea className="h-[384px] w-full border rounded-lg">
             <TableHeader>
               <TableRow>
                 <TableHead>Sender</TableHead>
@@ -159,8 +160,8 @@ const ViewNotification = ({ notifications }: NotiViewProps) => {
                 </TableRow>
               ))}
             </TableBody>
+            </ScrollArea>
           </Table>
-          </ScrollArea>
         </CardContent>
       </Card>
 

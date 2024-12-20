@@ -123,12 +123,12 @@ export function StoresTableStats({chartData} : {chartData : ChartData[]}) {
         <Table className="min-w-full">
           <TableHeader>
             <TableRow>
-             <TableHead className="px-4 py-2 text-left">Logo</TableHead>
-              <TableHead className="px-4 py-2 text-left">Rank</TableHead>
-              <TableHead className="px-4 py-2 text-left">Store</TableHead>
-              <TableHead className="px-4 py-2 text-left">Level</TableHead>
+             <TableHead className=" text-left">Logo</TableHead>
+              <TableHead className=" text-left">Rank</TableHead>
+              <TableHead className=" text-left">Store</TableHead>
+              <TableHead className=" text-left">Level</TableHead>
 
-              <TableHead className="px-4 py-2 text-left">
+              <TableHead className=" text-left">
                 {chartConfig[activeChart].label}
               </TableHead>
             </TableRow>
@@ -146,20 +146,20 @@ export function StoresTableStats({chartData} : {chartData : ChartData[]}) {
                     height={300}
                   />
                 </TableCell>
-                <TableCell className="px-4 py-2">{item.rank}</TableCell>
-                <TableCell className="px-4 py-2">{item.store}</TableCell>
-                <TableCell className="px-4 py-2">{item.level}</TableCell>
-                <TableCell className="px-4 py-2">{item[activeChart]} {activeChart==="totalRevenue" ? "TND" : ""}</TableCell>
+                <TableCell className="">{item.rank}</TableCell>
+                <TableCell className="">{item.store}</TableCell>
+                <TableCell className="">{item.level}</TableCell>
+                <TableCell className="">{item[activeChart]} {activeChart==="totalRevenue" ? "TND" : ""}</TableCell>
               </TableRow>
             ))}
           </TableBody>
           {/* Display total value for the active chart */}
           <tfoot>
             <TableRow>
-              <TableCell colSpan={3} className="px-4 py-2 text-right font-bold">
+              <TableCell colSpan={3} className=" text-right font-bold">
                {chartConfig[activeChart].label}:
               </TableCell>
-              <TableCell className="px-4 py-2">
+              <TableCell className="">
                 {totalValues[activeChart]} {activeChart === "totalRevenue" ? "TND" : ""}
               </TableCell>
             </TableRow>

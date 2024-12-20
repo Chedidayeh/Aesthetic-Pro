@@ -94,15 +94,14 @@ export function StoresTableStats({ storeId , chartData }: { storeId: string , ch
           ))}
         </div>
 
-        <div className="overflow-x-auto">
-  <Table className="min-w-full">
+  <Table>
     <TableHeader>
       <TableRow>
-        <TableHead className="px-4 py-2 text-right">Logo</TableHead>
-        <TableHead className="px-4 py-2 text-left">Rank</TableHead>
-        <TableHead className="px-4 py-2 text-left">Store</TableHead>
-        <TableHead className="px-4 py-2 text-left">Level</TableHead>
-        <TableHead className="px-4 py-2 text-left">
+        <TableHead className="px-4 py-2 text-left">Logo</TableHead>
+        <TableHead className=" text-left">Rank</TableHead>
+        <TableHead className=" text-left">Store</TableHead>
+        <TableHead className=" text-left">Level</TableHead>
+        <TableHead className=" text-left">
           {chartConfig[activeChart].label}
         </TableHead>
       </TableRow>
@@ -120,17 +119,16 @@ export function StoresTableStats({ storeId , chartData }: { storeId: string , ch
               height={300}
             />
           </TableCell>
-          <TableCell className="px-4 py-2">{item.rank}</TableCell>
-          <TableCell className="px-4 py-2">{item.store}</TableCell>
-          <TableCell className="px-4 py-2">{item.level}</TableCell>
-          <TableCell className="px-4 py-2">
+          <TableCell >{item.rank}</TableCell>
+          <TableCell >{item.store}</TableCell>
+          <TableCell >{item.level}</TableCell>
+          <TableCell >
             {item[activeChart]} {activeChart === "totalRevenue" ? "TND" : ""}
           </TableCell>
         </TableRow>
       ))}
     </TableBody>
   </Table>
-</div>
 
 
       </CardContent>

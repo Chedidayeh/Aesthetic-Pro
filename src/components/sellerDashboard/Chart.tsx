@@ -218,6 +218,7 @@ export function Component({storeId} : {storeId : string}) {
         </ChartContainer>
       </CardContent>
     </Card>
+    
 
 </>
   );

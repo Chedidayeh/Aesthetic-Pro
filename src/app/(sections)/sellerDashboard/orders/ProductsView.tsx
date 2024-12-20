@@ -218,92 +218,74 @@ const ProductsView = ({
 
 
 
-                    {/* The AlertDialog delete order component  */}
-                    <AlertDialog open={isDeleteOpen}>
-               <AlertDialogTrigger asChild>
-                         </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                   <AlertDialogHeader className="flex flex-col items-center">
-                                       <div className="text-red-500 mb-2">
-                                           <OctagonAlert className=''/>
-                                               </div>
-                                              <AlertDialogTitle className="text-xl font-bold text-center">
-                                                 Are you absolutely sure you want to delete your Client Order ?
-                                               </AlertDialogTitle>
-                                                <AlertDialogDescription>
-                                                   This action cannot be undone. 
-                                                   It will permanently remove your order from our MarketPlace.<br/><br/>
-                                                    </AlertDialogDescription>
-                                                   </AlertDialogHeader>
-                                                  <AlertDialogFooter>
-                                              <AlertDialogCancel onClick={()=>setisDeleteOpen(false)}>Cancel</AlertDialogCancel>
-                                      <AlertDialogAction onClick={() => handleDelete()} 
-                                     className='bg-red-500 hover:bg-red-500' >Delete</AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                     </AlertDialog> 
+<div className="flex mt-4 flex-col gap-5 w-full">
+  
+  <section className="grid w-full grid-cols-1 gap-4 gap-x-8 transition-all sm:grid-cols-1 xl:grid-cols-1">
 
-                                       
-
-<div>
-
-<Card className="xl:col-span-full" x-chunk="dashboard-01-chunk-4">
-<CardHeader className="px-4 gap-4 sm:px-7">
-    <div>
+      <Card className="xl:col-span-4" x-chunk="dashboard-01-chunk-4">
+    <CardHeader className="px-4 gap-4 sm:px-7">
+    <div className="space-y-4">
       <CardTitle>Products Details</CardTitle>
       <CardDescription>Total Orders: {ordersData.length}</CardDescription>
     </div>
     <div className="ml-0 sm:ml-5 mt-2">
-    <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
-          <Input
-            type="search"
-            className="w-full md:w-[80%] "
-            placeholder="Enter the order Id to make a search..."
-            value={searchQuery}
-            onChange={handleSearchChange}
-          />
-          <Select onValueChange={handleFilterChange}>
-            <SelectTrigger className="w-full md:w-[180px] ">
-              <SelectValue placeholder="Filter By" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Select</SelectLabel>
-                <SelectItem value="CONFIRMED">Confirmed</SelectItem>
-                <SelectItem value="NOT_CONFIRMED">Not Confirmed</SelectItem>
-                <SelectItem value="CANCELED">Canceled</SelectItem>
-                <SelectItem value="DELIVERED">Delivered</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          <Select onValueChange={handleFilterChange}>
-            <SelectTrigger className="w-full md:w-[180px] ">
-              <SelectValue placeholder="Filter By" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Select</SelectLabel>
-                <SelectItem value="Paid">Paid</SelectItem>
-                <SelectItem value="NOT_Paid">Not Paid</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          <Link href="/sellerDashboard/createOrder">
-            <Button
-              className="w-full md:w-auto text-white"
-              type="submit"
-              loadingText="Redirecting"
-              isLoading={isClicked}
-              disabled={isClicked}
-              onClick={() => setIsClicked(true)}
-              variant="default"
-            >
-              Create Order
-              <PenTool className="h-4 w-4 ml-2" />
-            </Button>
-          </Link>
-      </div>
-      <div className="mt-2">
+
+      
+    <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4">
+  <Input
+    type="search"
+    className="w-full sm:flex-1 md:w-[80%]"
+    placeholder="Enter the order Id to make a search..."
+    value={searchQuery}
+    onChange={handleSearchChange}
+  />
+  <Select onValueChange={handleFilterChange}>
+    <SelectTrigger className="w-full sm:w-auto md:w-[180px]">
+      <SelectValue placeholder="Filter By" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectGroup>
+        <SelectLabel>Select</SelectLabel>
+        <SelectItem value="CONFIRMED">Confirmed</SelectItem>
+        <SelectItem value="NOT_CONFIRMED">Not Confirmed</SelectItem>
+        <SelectItem value="CANCELED">Canceled</SelectItem>
+        <SelectItem value="DELIVERED">Delivered</SelectItem>
+      </SelectGroup>
+    </SelectContent>
+  </Select>
+
+  <Select onValueChange={handleFilterChange}>
+    <SelectTrigger className="w-full sm:w-auto md:w-[180px]">
+      <SelectValue placeholder="Filter By" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectGroup>
+        <SelectLabel>Select</SelectLabel>
+        <SelectItem value="Paid">Paid</SelectItem>
+        <SelectItem value="NOT_Paid">Not Paid</SelectItem>
+      </SelectGroup>
+    </SelectContent>
+  </Select>
+
+  <Link href="/sellerDashboard/createOrder">
+    <Button
+      className="w-full sm:w-auto text-white"
+      type="submit"
+      loadingText="Redirecting"
+      isLoading={isClicked}
+      disabled={isClicked}
+      onClick={() => setIsClicked(true)}
+      variant="default"
+    >
+      Create Order
+      <PenTool className="h-4 w-4 ml-2" />
+    </Button>
+  </Link>
+</div>
+
+
+
+      <div className="mt-6">
         <p className="text-gray-600 text-sm">
           <span className="text-blue-600 font-medium">Note: </span>
           The orders Ids with the <span className="text-blue-600">blue</span> color are your own orders!
@@ -317,22 +299,25 @@ const ProductsView = ({
           Any changes you make on your products or designs <span className="text-red-600">won't affect the current orders!</span>
         </p>
       </div>
+
     </div>
   </CardHeader>
   <CardContent>
-  <ScrollArea  className="h-[384px] w-full">
+
+    
   <Table className="mt-8">
+  <ScrollArea  className="h-96 w-full">
   <TableHeader>
     <TableRow>
-      <TableHead className="hidden sm:table-cell">Order Id</TableHead>
+      <TableHead>Order Id</TableHead>
       <TableHead>Order Status</TableHead>
-      <TableHead className="hidden sm:table-cell">Order Type</TableHead>
-      <TableHead className="hidden sm:table-cell">Order Payment</TableHead>
-      <TableHead className="hidden md:table-cell">Product Category</TableHead>
+      <TableHead>Order Type</TableHead>
+      <TableHead>Order Payment</TableHead>
+      <TableHead>Product Category</TableHead>
       <TableHead>Product Title</TableHead>
-      <TableHead className="hidden md:table-cell">Product Quantity</TableHead>
-      <TableHead className="hidden md:table-cell">Product Price</TableHead>
-      <TableHead className="hidden md:table-cell text-center">
+      <TableHead>Product Quantity</TableHead>
+      <TableHead>Product Price</TableHead>
+      <TableHead className=" text-center">
         Amount
         <p className="text-xs">Product Price x Quantity</p>
       </TableHead>
@@ -347,7 +332,7 @@ const ProductsView = ({
           <TableRow key={item.id}>
             {index === 0 && (
               <>
-                <TableCell className="hidden sm:table-cell text-left" rowSpan={order.items.length}>
+                <TableCell className=" text-left" rowSpan={order.items.length}>
                   {order.isSellerOrder ? (
                     <span className="text-blue-500">{order.id}</span>
                   ) : (
@@ -368,7 +353,7 @@ const ProductsView = ({
                     {order.status}
                   </Badge>
                 </TableCell >
-                <TableCell className=" hidden sm:table-cell text-left" rowSpan={order.items.length}>
+                <TableCell className="text-left" rowSpan={order.items.length}>
                   <Badge
                     className={`text-white ${
                       order.type === 'CONFIRMED'
@@ -383,7 +368,7 @@ const ProductsView = ({
                     {order.type}
                   </Badge>
                 </TableCell>
-                <TableCell className="hidden sm:table-cell text-left" rowSpan={order.items.length}>
+                <TableCell className=" text-left" rowSpan={order.items.length}>
                   <Badge
                     className={`text-white ${order.isPaid ? 'bg-green-700' : 'bg-red-700'} hover:bg-gray-700`}
                   >
@@ -392,11 +377,11 @@ const ProductsView = ({
                 </TableCell>
               </>
             )}
-            <TableCell className="hidden md:table-cell text-left">{item.productCategory}</TableCell>
+            <TableCell className=" text-left">{item.productCategory}</TableCell>
             <TableCell className="text-left">{item.productTitle}</TableCell>
-            <TableCell className="hidden md:table-cell text-center">{item.quantity}</TableCell>
-            <TableCell className="hidden md:table-cell text-left">{item.productPrice.toFixed(2)} TND</TableCell>
-            <TableCell className="hidden md:table-cell text-center">
+            <TableCell className=" text-center">{item.quantity}</TableCell>
+            <TableCell className=" text-left">{item.productPrice.toFixed(2)} TND</TableCell>
+            <TableCell className=" text-center">
               {(item.productPrice * item.quantity).toFixed(2)} TND
             </TableCell>
             <TableCell className="flex items-center justify-center">
@@ -428,18 +413,42 @@ const ProductsView = ({
       </React.Fragment>
     ))}
   </TableBody>
+  </ScrollArea>
+
 </Table>
 
-</ScrollArea>
 
   </CardContent>
 </Card>
 
-
-
+</section>
 </div>
 
-                             
+
+                      {/* The AlertDialog delete order component  */}
+                      <AlertDialog open={isDeleteOpen}>
+               <AlertDialogTrigger asChild>
+                         </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                   <AlertDialogHeader className="flex flex-col items-center">
+                                       <div className="text-red-500 mb-2">
+                                           <OctagonAlert className=''/>
+                                               </div>
+                                              <AlertDialogTitle className="text-xl font-bold text-center">
+                                                 Are you absolutely sure you want to delete your Client Order ?
+                                               </AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                   This action cannot be undone. 
+                                                   It will permanently remove your order from our MarketPlace.<br/><br/>
+                                                    </AlertDialogDescription>
+                                                   </AlertDialogHeader>
+                                                  <AlertDialogFooter>
+                                              <AlertDialogCancel onClick={()=>setisDeleteOpen(false)}>Cancel</AlertDialogCancel>
+                                      <AlertDialogAction onClick={() => handleDelete()} 
+                                     className='bg-red-500 hover:bg-red-500' >Delete</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                     </AlertDialog>                            
  
 
                             

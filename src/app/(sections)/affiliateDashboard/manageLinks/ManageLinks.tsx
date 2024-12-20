@@ -32,6 +32,7 @@ import {
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ExtraAffiliateLink extends AffiliateLink {
   product : Product
@@ -110,6 +111,12 @@ const ManageLinks = ({ Links , platform }: ViewProps) => {
 
       <p className="text-sm text-gray-700 mb-2">AffiliateDashboard/manageLinks</p>
       <h1 className="text-2xl font-semibold mb-8">All Links</h1>
+
+      <div className="flex mt-2 flex-col gap-5 w-full">
+  
+  <section className="grid w-full grid-cols-1 gap-4 gap-x-8 transition-all sm:grid-cols-1 xl:grid-cols-1">
+
+
       <Card>
         <CardHeader>
           <CardTitle>Links</CardTitle>
@@ -150,9 +157,10 @@ const ManageLinks = ({ Links , platform }: ViewProps) => {
         <CardContent>
 
         <Table>
+        <ScrollArea className="w-full h-96 mt-4">
                 <TableHeader>
                     <TableRow>
-                        <TableHead className="hidden md:table-cell">Link Id</TableHead>
+                        <TableHead>Link Id</TableHead>
                         <TableHead className="">Product Title</TableHead>
                         <TableHead className="">Product Price</TableHead>
                         <TableHead className="">Your Profit {platform.affiliateUserProfit}%</TableHead>
@@ -164,7 +172,7 @@ const ManageLinks = ({ Links , platform }: ViewProps) => {
                 <TableBody>
                     {filteredLinks.map((link) => (
                         <TableRow key={link.id}>
-                            <TableCell className="hidden md:table-cell">{link.id}</TableCell>
+                            <TableCell>{link.id}</TableCell>
                             <TableCell className="">{link.product.title}</TableCell>
                             <TableCell className="">{(link.product.price).toFixed(2)} TND</TableCell>
                             <TableCell className="">{(link.probableProfit.toFixed(2))} TND</TableCell>
@@ -187,10 +195,14 @@ const ManageLinks = ({ Links , platform }: ViewProps) => {
                         </TableRow>
                     ))}
                 </TableBody>
+                </ScrollArea>
             </Table>
 
         </CardContent>
       </Card>
+
+      </section>
+      </div>
 
     </>
   );

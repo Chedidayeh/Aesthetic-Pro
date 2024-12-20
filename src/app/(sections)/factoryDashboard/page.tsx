@@ -145,23 +145,23 @@ const Page =  async () => {
           </div>
         </CardHeader>
         <CardContent>
-        <ScrollArea className="w-full h-72">
             <Table>
+            <ScrollArea className="w-full h-72">
               <TableHeader>
                 <TableRow>
-                  <TableHead className="hidden sm:table-cell">Order Id</TableHead>
-                  <TableHead className="hidden sm:table-cell">Order Status</TableHead>
+                  <TableHead >Order Id</TableHead>
+                  <TableHead >Order Status</TableHead>
                   <TableHead>Order Type</TableHead>
                   <TableHead>Order Creation Date</TableHead>
-                  <TableHead className="hidden sm:table-cell">Is Order Printed</TableHead>
+                  <TableHead>Is Order Printed</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {orders !== null && (
                 orders.map(order => (
                   <TableRow key={order.id}>
-                    <TableCell className="hidden sm:table-cell">{order.id}</TableCell>
-                    <TableCell className="hidden sm:table-cell">
+                    <TableCell>{order.id}</TableCell>
+                    <TableCell>
                       <Badge className={`text-white ${{
                                'PROCESSING': 'bg-blue-700',
                                'DELIVERED': 'bg-green-700',
@@ -177,7 +177,7 @@ const Page =  async () => {
                       </Badge>
                     </TableCell>
                     <TableCell>{order.createdAt ? new Date(order.createdAt).toLocaleString() : ''}</TableCell>
-                    <TableCell className="hidden sm:table-cell">
+                    <TableCell>
                       <Badge className={`text-white ${order.printed ? 'bg-green-700' :  'bg-red-700'} hover:bg-gray-700`}>
                             {order.printed ? "Is Printed" : "Not Printed"}
                       </Badge>
@@ -186,8 +186,8 @@ const Page =  async () => {
                 ))
                 )}
               </TableBody>
+              </ScrollArea>
             </Table>
-          </ScrollArea>
         </CardContent>
       </Card>  
 

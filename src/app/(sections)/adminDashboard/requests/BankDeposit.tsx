@@ -34,6 +34,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import LoadingState from "@/components/LoadingState";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ExtraStore extends Store {
     user : User
@@ -129,42 +130,25 @@ const handleDelete = async () => {
 
     return (
         <div>
-                                <AlertDialog open={isDeleteOpen}>
-               <AlertDialogTrigger asChild>
-                         </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                   <AlertDialogHeader className="flex flex-col items-center">
-                                       <div className="text-red-500 mb-2">
-                                           <OctagonAlert className=''/>
-                                               </div>
-                                              <AlertDialogTitle className="text-xl font-bold text-center">
-                                                 Are you absolutely sure you want to delete this request ?
-                                               </AlertDialogTitle>
-                                                <AlertDialogDescription>
-                                                   This action cannot be undone. 
-                                                    </AlertDialogDescription>
-                                                   </AlertDialogHeader>
-                                                  <AlertDialogFooter>
-                                              <AlertDialogCancel onClick={()=>setisDeleteOpen(false)}>Cancel</AlertDialogCancel>
-                                      <AlertDialogAction onClick={() => handleDelete()} 
-                                     className='bg-red-500 hover:bg-red-500' >Delete</AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                     </AlertDialog> 
 
-                     <div>
+
+<div className="flex mt-4 flex-col gap-5 w-full">
+  
+  <section className="grid w-full grid-cols-1 gap-4 gap-x-8 transition-all sm:grid-cols-1 xl:grid-cols-1">
+
       <Table>
+      <ScrollArea className="w-full h-96 mt-4">
         <TableHeader>
           <TableRow>
-            <TableHead className="hidden md:table-cell">Bank Name</TableHead>
-            <TableHead className="hidden md:table-cell" >Account Holder</TableHead>
-            <TableHead className="hidden md:table-cell" >Bank Account RIB</TableHead>
-            <TableHead className="hidden md:table-cell">Requested Amount</TableHead>
+            <TableHead>Bank Name</TableHead>
+            <TableHead >Account Holder</TableHead>
+            <TableHead >Bank Account RIB</TableHead>
+            <TableHead>Requested Amount</TableHead>
             <TableHead >Seller Store</TableHead>
-            <TableHead className="hidden md:table-cell">Seller Email</TableHead>
+            <TableHead>Seller Email</TableHead>
             <TableHead >Seller Phone Number</TableHead>
-            <TableHead className="hidden md:table-cell">Payment Status</TableHead>
-            <TableHead className="hidden md:table-cell">Actions</TableHead>
+            <TableHead>Payment Status</TableHead>
+            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -175,14 +159,14 @@ const handleDelete = async () => {
             onClick={() => handleRowClick(request, index)}
         
             >
-              <TableCell className="hidden md:table-cell"> {request.bankName || 'N/A'}</TableCell>
-              <TableCell className="hidden md:table-cell">{request.accountHolder || 'N/A'}</TableCell>
-              <TableCell className="hidden md:table-cell">{request.bankAccount || 'N/A'}</TableCell>
-              <TableCell className="hidden md:table-cell">{request.requestedAmount.toFixed(2)} TND</TableCell>
+              <TableCell> {request.bankName || 'N/A'}</TableCell>
+              <TableCell>{request.accountHolder || 'N/A'}</TableCell>
+              <TableCell>{request.bankAccount || 'N/A'}</TableCell>
+              <TableCell>{request.requestedAmount.toFixed(2)} TND</TableCell>
               <TableCell>{request.store.storeName}</TableCell>
-              <TableCell className="hidden md:table-cell">{request.store.user.email}</TableCell>
+              <TableCell>{request.store.user.email}</TableCell>
               <TableCell>{request.store.userPhoneNumber}</TableCell>
-              <TableCell className="hidden md:table-cell">
+              <TableCell>
                 <Badge
                   className={`${
                     {
@@ -195,7 +179,7 @@ const handleDelete = async () => {
                   {request.status}
                 </Badge>
               </TableCell>
-              <TableCell className="hidden md:table-cell">
+              <TableCell>
                 <TooltipProvider>
                   <>
                     <Tooltip>
@@ -217,8 +201,10 @@ const handleDelete = async () => {
               </TableCell>
             </TableRow>
           ))}
-        </TableBody>
+        </TableBody>      
+        </ScrollArea>
       </Table>
+      </section>
                      </div>
 
 
@@ -228,10 +214,10 @@ const handleDelete = async () => {
                  <div className="grid gap-2">
              <CardTitle className="font-extrabold">Request Infos :</CardTitle>
              <CardDescription>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 mt-2">
-                          <div>
+             <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-10 mt-2">
+             <div>
                              <p className="font-bold">Request Id:</p>
-                             <p>{selectedRequest.id}</p>
+                             <p className="text-xs">{selectedRequest.id}</p>
                          </div>
                          <div>
                             <p className="font-bold">Request Status:</p>
@@ -286,6 +272,29 @@ const handleDelete = async () => {
          </CardHeader>
        </Card>
       )}
+
+                                      <AlertDialog open={isDeleteOpen}>
+               <AlertDialogTrigger asChild>
+                         </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                   <AlertDialogHeader className="flex flex-col items-center">
+                                       <div className="text-red-500 mb-2">
+                                           <OctagonAlert className=''/>
+                                               </div>
+                                              <AlertDialogTitle className="text-xl font-bold text-center">
+                                                 Are you absolutely sure you want to delete this request ?
+                                               </AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                   This action cannot be undone. 
+                                                    </AlertDialogDescription>
+                                                   </AlertDialogHeader>
+                                                  <AlertDialogFooter>
+                                              <AlertDialogCancel onClick={()=>setisDeleteOpen(false)}>Cancel</AlertDialogCancel>
+                                      <AlertDialogAction onClick={() => handleDelete()} 
+                                     className='bg-red-500 hover:bg-red-500' >Delete</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                     </AlertDialog> 
 
             <LoadingState isOpen={open} />
 

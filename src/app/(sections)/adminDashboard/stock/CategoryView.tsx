@@ -273,47 +273,7 @@ interface fetchedCat extends Category {
   return (
     <>
 
-                              {/* The AlertDialog delete size component  */}
-                              <AlertDialog open={isSizeDeleteOpen}>
-               <AlertDialogTrigger asChild>
-                         </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                   <AlertDialogHeader className="flex flex-col items-center">
-                                       <div className="text-red-500 mb-2">
-                                           <OctagonAlert className=''/>
-                                               </div>
-                                              <AlertDialogTitle className="text-xl font-bold text-center">
-                                                 Are you absolutely sure you want to delete this size ?
-                                               </AlertDialogTitle>
-                                                   </AlertDialogHeader>
-                                                  <AlertDialogFooter>
-                                              <AlertDialogCancel onClick={()=>setIsSizeDeleteOpen(false)}>Cancel</AlertDialogCancel>
-                                      <AlertDialogAction onClick={() => handleSizeDelete()} 
-                                     className='bg-red-500 hover:bg-red-500' >Delete</AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                     </AlertDialog> 
 
-                              {/* The AlertDialog delete size component  */}
-                              <AlertDialog open={isColorDeleteOpen}>
-               <AlertDialogTrigger asChild>
-                         </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                   <AlertDialogHeader className="flex flex-col items-center">
-                                       <div className="text-red-500 mb-2">
-                                           <OctagonAlert className=''/>
-                                               </div>
-                                              <AlertDialogTitle className="text-xl font-bold text-center">
-                                                 Are you absolutely sure you want to delete this color ?
-                                               </AlertDialogTitle>
-                                                   </AlertDialogHeader>
-                                                  <AlertDialogFooter>
-                                              <AlertDialogCancel onClick={()=>setIsColorDeleteOpen(false)}>Cancel</AlertDialogCancel>
-                                      <AlertDialogAction onClick={() => handleColorDelete()} 
-                                     className='bg-red-500 hover:bg-red-500' >Delete</AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                     </AlertDialog> 
 
 
  <p className="text-sm text-gray-700 mb-2">adminDashboard/stock</p>
@@ -335,7 +295,7 @@ interface fetchedCat extends Category {
         </div>
 
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 p-2">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 p-2">
         {categories.map((category, index) => (
         <div
             key={index}
@@ -607,6 +567,48 @@ interface fetchedCat extends Category {
 ) }
 
     </div>
+
+                                  {/* The AlertDialog delete size component  */}
+                                  <AlertDialog open={isSizeDeleteOpen}>
+               <AlertDialogTrigger asChild>
+                         </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                   <AlertDialogHeader className="flex flex-col items-center">
+                                       <div className="text-red-500 mb-2">
+                                           <OctagonAlert className=''/>
+                                               </div>
+                                              <AlertDialogTitle className="text-xl font-bold text-center">
+                                                 Are you absolutely sure you want to delete this size ?
+                                               </AlertDialogTitle>
+                                                   </AlertDialogHeader>
+                                                  <AlertDialogFooter>
+                                              <AlertDialogCancel onClick={()=>setIsSizeDeleteOpen(false)}>Cancel</AlertDialogCancel>
+                                      <AlertDialogAction onClick={() => handleSizeDelete()} 
+                                     className='bg-red-500 hover:bg-red-500' >Delete</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                     </AlertDialog> 
+
+                              {/* The AlertDialog delete size component  */}
+                              <AlertDialog open={isColorDeleteOpen}>
+               <AlertDialogTrigger asChild>
+                         </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                   <AlertDialogHeader className="flex flex-col items-center">
+                                       <div className="text-red-500 mb-2">
+                                           <OctagonAlert className=''/>
+                                               </div>
+                                              <AlertDialogTitle className="text-xl font-bold text-center">
+                                                 Are you absolutely sure you want to delete this color ?
+                                               </AlertDialogTitle>
+                                                   </AlertDialogHeader>
+                                                  <AlertDialogFooter>
+                                              <AlertDialogCancel onClick={()=>setIsColorDeleteOpen(false)}>Cancel</AlertDialogCancel>
+                                      <AlertDialogAction onClick={() => handleColorDelete()} 
+                                     className='bg-red-500 hover:bg-red-500' >Delete</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                     </AlertDialog> 
     
     <LoadingState isOpen={open} />
 

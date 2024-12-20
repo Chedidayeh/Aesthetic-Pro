@@ -315,38 +315,38 @@ interface OrderViewProps {
 </div>
 
 
-        <ScrollArea className="mt-4 w-full h-96">
         <Table>
+        <ScrollArea className="mt-4 w-full h-96">
   <TableHeader>
     <TableRow>
       {/* Order Id column */}
-      <TableHead className="hidden sm:table-cell">Order Id</TableHead>
+      <TableHead>Order Id</TableHead>
 
       {/* Order Status column */}
-      <TableHead className="hidden sm:table-cell">Order Status</TableHead>
+      <TableHead>Order Status</TableHead>
 
       {/* Order Type column */}
-      <TableHead className="hidden sm:table-cell">Order Type</TableHead>
+      <TableHead>Order Type</TableHead>
 
       <TableHead>Creation Date</TableHead>
 
       {/* Is Order Printed column */}
-      <TableHead className="hidden md:table-cell">Is Order Printed</TableHead>
+      <TableHead>Is Order Printed</TableHead>
 
       {/* Is Client Made Order column */}
-      <TableHead className="hidden md:table-cell">Is Client Made Order</TableHead>
+      <TableHead >Is Client Made Order</TableHead>
 
       {/* Is Seller Order column */}
-      <TableHead className="hidden md:table-cell">Is Seller Order</TableHead>
+      <TableHead >Is Seller Order</TableHead>
 
       {/* Is Order Paid column */}
-      <TableHead className="hidden lg:table-cell">Is Order Paid</TableHead>
+      <TableHead>Is Order Paid</TableHead>
 
       {/* Total Items column */}
-      <TableHead className="hidden xl:table-cell">Total Items</TableHead>
+      <TableHead>Total Items</TableHead>
 
       {/* Order Amount column */}
-      <TableHead className="hidden xl:table-cell">Order Amount</TableHead>
+      <TableHead>Order Amount</TableHead>
 
       {/* Actions column */}
       <TableHead>Actions</TableHead>
@@ -360,10 +360,10 @@ interface OrderViewProps {
         onClick={() => handleRowClick(order, index)}
       >
         {/* Order Id cell */}
-        <TableCell className="hidden sm:table-cell text-xs">{order.id}</TableCell>
+        <TableCell className=" text-xs">{order.id}</TableCell>
 
         {/* Order Status cell */}
-        <TableCell className="hidden sm:table-cell">
+        <TableCell className="">
           <Badge className={`${{
             'PROCESSING': 'bg-blue-700',
             'DELIVERED': 'bg-green-700',
@@ -375,7 +375,7 @@ interface OrderViewProps {
         </TableCell>
 
         {/* Order Type cell */}
-        <TableCell className="hidden sm:table-cell">
+        <TableCell >
           <Badge className={`${order.type === 'CONFIRMED' ? 'bg-green-700' : order.type === 'NOT_CONFIRMED' ? 'bg-orange-400' : order.type === 'CANCELED' ? 'bg-red-700' : 'bg-gray-700'} hover:bg-gray-700`}>
             {order.type}
           </Badge>
@@ -388,31 +388,31 @@ interface OrderViewProps {
 
 
         {/* Is Order Printed cell */}
-        <TableCell className="hidden md:table-cell">
+        <TableCell>
           <Badge className={`${order.printed ? 'bg-green-700' : 'bg-red-700'} hover:bg-gray-700`}>
             {order.printed ? "Printed" : "Not Printed"}
           </Badge>
         </TableCell>
 
         {/* Is Client Made Order cell */}
-        <TableCell className="hidden md:table-cell">{order.isClientMadeOrder ? 'Yes' : 'No'}</TableCell>
+        <TableCell>{order.isClientMadeOrder ? 'Yes' : 'No'}</TableCell>
 
         {/* Is Seller Order cell */}
-        <TableCell className="hidden md:table-cell">{order.isSellerOrder ? 'Yes' : 'No'}</TableCell>
+        <TableCell>{order.isSellerOrder ? 'Yes' : 'No'}</TableCell>
 
         {/* Is Order Paid cell */}
-        <TableCell className="hidden lg:table-cell">
+        <TableCell>
           <Badge className={`${order.isPaid ? 'bg-green-700' : 'bg-red-700'} hover:bg-gray-700`}>
             {order.isPaid ? "Is Paid" : "Not Paid"}
           </Badge>
         </TableCell>
 
         {/* Total Items cell */}
-        <TableCell className="hidden xl:table-cell">{order.orderItems?.length || 0} items</TableCell>
+        <TableCell >{order.orderItems?.length || 0} items</TableCell>
 
 
         {/* Order Amount cell */}
-        <TableCell className="hidden xl:table-cell">{order.amount.toFixed(2)} TND</TableCell>
+        <TableCell>{order.amount.toFixed(2)} TND</TableCell>
 
         {/* Actions cell */}
         <TableCell>
@@ -455,9 +455,10 @@ interface OrderViewProps {
       </TableRow>
     ))}
   </TableBody>
+  </ScrollArea>
+
 </Table>
 
-          </ScrollArea>
         </CardContent>
       </Card>  
 

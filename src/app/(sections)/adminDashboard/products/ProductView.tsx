@@ -390,33 +390,33 @@ const viewProductData = (product : ExtraProduct) => {
 
       </div>
 
-        <ScrollArea className="mt-4 w-full h-full">
         <Table>
+        <ScrollArea className="mt-4 w-full h-96">
   <TableHeader>
     <TableRow>
       {/* Product Id column */}
-      <TableHead className="hidden sm:table-cell">Product Id</TableHead>
+      <TableHead>Product Id</TableHead>
 
       {/* Product Title column */}
       <TableHead>Product Title</TableHead>
 
       {/* Product Category column */}
-      <TableHead className="hidden sm:table-cell">Product Category</TableHead>
+      <TableHead>Product Category</TableHead>
 
       {/* Product price column */}
-      <TableHead className="hidden sm:table-cell">Product Price</TableHead>
+      <TableHead >Product Price</TableHead>
 
       {/* Product Store column */}
-      <TableHead className="hidden md:table-cell">Product Store</TableHead>
+      <TableHead>Product Store</TableHead>
 
       {/* Is Product Accepted column */}
-      <TableHead className="hidden md:table-cell w-[5%]">Is Product Accepted</TableHead>
+      <TableHead className="w-[5%]">Is Product Accepted</TableHead>
 
       {/* Is Product Refused column */}
-      <TableHead className="hidden md:table-cell w-[5%]">Is Product Refused</TableHead>
+      <TableHead className=" w-[5%]">Is Product Refused</TableHead>
 
       {/* Ordered Items column */}
-      <TableHead className="hidden md:table-cell w-[5%]">Ordered Items</TableHead>
+      <TableHead className=" w-[5%]">Ordered Items</TableHead>
 
       {/* Actions column */}
       <TableHead>Actions</TableHead>
@@ -426,28 +426,28 @@ const viewProductData = (product : ExtraProduct) => {
     {products.map((product) => (
       <TableRow key={product.id}>
         {/* Product Id cell */}
-        <TableCell className="hidden sm:table-cell">{product.id}</TableCell>
+        <TableCell>{product.id}</TableCell>
 
         {/* Product Title cell */}
         <TableCell>{product.title}</TableCell>
 
         {/* Product Category cell */}
-        <TableCell className="hidden sm:table-cell">{product.category}</TableCell>
+        <TableCell >{product.category}</TableCell>
 
         {/* Product price cell */}
-        <TableCell className="hidden sm:table-cell">{product.price.toFixed(2)} TND</TableCell>
+        <TableCell>{product.price.toFixed(2)} TND</TableCell>
 
         {/* Product Store cell */}
-        <TableCell className="hidden md:table-cell">{product.store.storeName}</TableCell>
+        <TableCell >{product.store.storeName}</TableCell>
 
         {/* Is Product Accepted cell */}
-        <TableCell className="hidden md:table-cell">{product.isProductAccepted ? 'Yes' : 'No'}</TableCell>
+        <TableCell>{product.isProductAccepted ? 'Yes' : 'No'}</TableCell>
 
         {/* Is Product Refused cell */}
-        <TableCell className="hidden md:table-cell">{product.isProductRefused ? 'Yes' : 'No'}</TableCell>
+        <TableCell>{product.isProductRefused ? 'Yes' : 'No'}</TableCell>
 
         {/* Ordered Items cell */}
-        <TableCell className="hidden md:table-cell text-center">{product.order.length}</TableCell>
+        <TableCell>{product.order.length}</TableCell>
 
         {/* Actions cell */}
         <TableCell>
@@ -489,9 +489,10 @@ const viewProductData = (product : ExtraProduct) => {
       </TableRow>
     ))}
   </TableBody>
+  </ScrollArea>
+
         </Table>
 
-          </ScrollArea>
         </CardContent>
       </Card>  
         
